@@ -245,6 +245,7 @@ void Beatmap::ReadNextObject()
 
 
 std::string& Beatmap::BeatmapChecksum() {
+	std::string checksum = "";
 	//TODO: figure out some way to uniquely identify every beatmap without it being too intensive
-	return "<insert md5 hash here>";
+	return checksum;
 }
