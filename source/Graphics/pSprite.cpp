@@ -19,5 +19,12 @@ pSprite::pSprite(TextureType texture, s32 x, s32 y, u32 width, u32 height, DrawO
 }
 
 void pSprite::Draw() {
-    
+    GraphicsManager::Graphics().Draw(this->Texture,
+									 this->X, this->Y,
+									 this->Width, this->Height,
+									 this->Origin, this->Field,
+									 this->Color, this->Alpha, this->Angle,
+									 this->Z, 
+                                     this->UV
+    );
 }

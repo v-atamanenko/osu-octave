@@ -23,7 +23,7 @@ void SpriteManager::Draw()
 	
 	for (spriteIterator it = mSprites.begin(); it != mSprites.end(); ++it, ++i)
 	{
-		pSprite* spr = *it;
+		pDrawable* spr = *it;
 		
 		//if for some reason sprite is nonexistent then mark for deletion
 		if (spr == NULL)
@@ -45,13 +45,7 @@ void SpriteManager::Draw()
 		if (spr->Width == 0 || spr->Height == 0 || spr->Alpha == 0)
 			continue;
 		
-		GraphicsManager::Graphics().Draw(	spr->Texture,
-											spr->X, spr->Y,
-											spr->Width, spr->Height,
-											spr->Origin, spr->Field,
-											spr->Color, spr->Alpha, spr->Angle,
-											spr->Z, spr->UV);
-		
+		spr->Draw();
 	}
 	
 	//delete dead sprites

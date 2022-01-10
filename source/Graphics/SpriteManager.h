@@ -8,10 +8,8 @@
 #ifndef __SPRITEMANAGER_H__
 #define __SPRITEMANAGER_H__
 
-
-
-typedef std::vector<pSprite*>::iterator spriteIterator;
-typedef std::vector<pSprite*>::const_iterator spriteIteratorConst;
+typedef std::vector<pDrawable*>::iterator spriteIterator;
+typedef std::vector<pDrawable*>::const_iterator spriteIteratorConst;
 
 class SpriteManager
 {
@@ -22,13 +20,13 @@ class SpriteManager
 		void Draw();
 		void HandleTouchInput();
 		
-		void Add(pSprite* spr);
-		void Add(const std::vector<pSprite*>& spr);
+		void Add(pDrawable* spr);
+		void Add(const std::vector<pDrawable*>& spr);
 		
-		std::vector<pSprite*>& Sprites() { return mSprites; }
+		std::vector<pDrawable*>& Sprites() { return mSprites; }
 	
 	protected:
-		std::vector<pSprite*> mSprites;
+		std::vector<pDrawable*> mSprites;
 };
 
 #endif
