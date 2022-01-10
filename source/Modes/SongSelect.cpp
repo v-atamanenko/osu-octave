@@ -99,7 +99,7 @@ void SongSelect::Update()
 		for (int j=0; j<2; ++j)
 		{
 			int index = i*2 + j;
-			pSprite* spr = mSpriteManager.Sprites()[index];
+			//pSprite* spr = mSpriteManager.Sprites()[index];
 			
 			index += mColCurrent*2;
 			if (index >= BeatmapManager::SongCount())
@@ -108,10 +108,10 @@ void SongSelect::Update()
 
 			TextManager::Bottom().SetFont(FONT_CONSOLE);
 			
-			TextManager::Bottom().PrintLocate(
-				spr->X + 2, spr->Y + spr->Height, ORIGIN_BOTTOMLEFT,
-				"%s\n%s\n%s", map->Artist().c_str(), map->Title().c_str(), map->Version().c_str()
-			);
+			//TextManager::Bottom().PrintLocate(
+			//	spr->X + 2, spr->Y + spr->Height, ORIGIN_BOTTOMLEFT,
+			//	"%s\n%s\n%s", map->Artist().c_str(), map->Title().c_str(), map->Version().c_str()
+			//);
 		}
 	}
 }
