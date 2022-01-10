@@ -17,15 +17,15 @@ typedef enum {
 	SCORE_MISS = 0
 } ScoreType;
 
-class ScoreManager
+class Score
 {
 	public:
-		ScoreManager();
+		Score();
 		
 		void Add(ScoreType score, bool forceNoCombo = false);
 		
-		u32 Score() { return mScore; }
-		u32 Combo() { return mCombo; }
+		u32 CurrentScore() { return mScore; }
+		u32 CurrentCombo() { return mCombo; }
 	
 	protected:
 		u32 mScore;

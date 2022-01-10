@@ -3,7 +3,7 @@
 
 #include "Beatmaps/BeatmapElements.h"
 #include "Beatmaps/DifficultyManager.h"
-#include "GameplayElements/ScoreManager.h"
+#include "GameplayElements/Score.h"
 #include "Graphics/pSprite.h"
 #include "Graphics/pAnimation.h"
 #include "Graphics/GfxInfo.h"

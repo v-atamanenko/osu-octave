@@ -1,12 +1,12 @@
-#include "ScoreManager.h"
+#include "Score.h"
 
-ScoreManager::ScoreManager()
+Score::Score()
 {
 	mScore = 0;
 	mCombo = 0;
 }
 
-void ScoreManager::Add(ScoreType score, bool forceNoCombo)
+void Score::Add(ScoreType score, bool forceNoCombo)
 {
 	if (score == SCORE_MISS)
 	{
