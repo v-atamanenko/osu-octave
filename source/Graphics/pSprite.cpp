@@ -15,6 +15,7 @@ pSprite::pSprite(TextureType texture, s32 x, s32 y, u32 width, u32 height, DrawO
 	Angle = 0;
 	UV = NULL;
 	Z = z;
+    Clickable = false;
 }
 
 pSprite::~pSprite()

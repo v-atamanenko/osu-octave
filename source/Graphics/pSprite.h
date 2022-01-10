@@ -83,6 +83,7 @@ class pSprite
 		TextureType Texture;
 
 		void(*OnClick)(u16 x, u16 y);
+        bool Clickable;
 	
 	protected:
 		u32 mOrigWidth, mOrigHeight;
