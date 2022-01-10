@@ -48,6 +48,8 @@ class Beatmap
 		
 		s32 SkipTime() { return mSkipTime; }
 		s32 StartTime() { return mFirstObjectTime; }
+
+		std::string& BeatmapChecksum();
 	
 	protected:
 		FileReader* mReader;
@@ -73,6 +75,9 @@ class Beatmap
 		std::string mAudioFilename;
 		
 		std::string mBaseDir;
+	private:
+		std::string mChecksumString;
+		std::string mBeatmapChecksum;
 };
 
 #endif
