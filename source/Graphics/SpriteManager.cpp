@@ -35,7 +35,7 @@ void SpriteManager::Draw()
 		spr->Update();
 		
 		//if sprite is dead then mark for deletion
-		if (spr->Draw() == false)
+		if (spr->Alive() == false)
 		{
 			deadSprites.push_back(i);
 			continue;
