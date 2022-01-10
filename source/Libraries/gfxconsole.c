@@ -205,11 +205,7 @@ ssize_t gfxnocash_write(struct _reent *r, int fd, const char *ptr, size_t len) {
 
 	while(count < len)
 	{
-
-		nocashMessage(ptr + count);
-
 		count += (len - count) > 80 ? 80 : len - count;
-
 	}
 
 	return len;

@@ -124,7 +124,6 @@ u32 FileReader::ReadVarInt() const
 		++i;
 	} while ((b & 0x80) > 0);
 
-    nocashMessage((std::string("   ") + std::to_string(value)).c_str());
 	return value;
 }
 

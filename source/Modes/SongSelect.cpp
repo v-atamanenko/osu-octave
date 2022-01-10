@@ -4,7 +4,7 @@ SongSelect::SongSelect()
 {
 	for (int i=0; i<8; ++i)
 	{
-		pSprite* spr = new pSprite(TX_WHITE, 0, 0, 160, 120, ORIGIN_TOPLEFT, FIELD_SCREEN, RGB15(4,4,4), 20);
+		pSprite* spr = new pSprite(TX_WHITE, 0, 0, 160, 120, ORIGIN_TOPLEFT, FIELD_SCREEN, RGB15(4,4,4), 20 + i);
 		mSpriteManager.Add(spr);
 	}
 	
@@ -67,8 +67,8 @@ void SongSelect::HandleInput()
 			if (mSpriteManager.Sprites()[index]->Alpha == 31)
 			{
 				// load beatmap
-				BeatmapManager::Load(index + mColCurrent*2); // take scrolling offset into account
-				ChangeMode(MODE_PLAYER);
+				//BeatmapManager::Load(index + mColCurrent*2); // take scrolling offset into account
+				//ChangeMode(MODE_PLAYER);
 				return;
 			}
 		}
@@ -105,7 +105,10 @@ void SongSelect::Update()
 			if (index >= BeatmapManager::SongCount())
 				break;
 			Beatmap* map = BeatmapManager::Beatmaps()[index];
-			
+
+			spr->tag = map->Title();
+			spr->Z = j + i;
+
 			TextManager::Bottom().SetFont(FONT_CONSOLE);
 			
 			TextManager::Bottom().PrintLocate(

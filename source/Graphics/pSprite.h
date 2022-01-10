@@ -1,5 +1,7 @@
 #include <nds.h>
 #include <vector>
+#include <string>
+
 #include "GraphicsManager.h"
 #include "Transformation.h"
 #include "System/GameClock.h"
@@ -73,6 +75,8 @@ class pSprite
 		s32 Angle;
 		float Z;
 		u32* UV;
+
+		std::string tag;
 		
 		DrawOrigin Origin;
 		FieldType Field;

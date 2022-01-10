@@ -56,7 +56,6 @@ void Beatmap::Initialize()
 		mCreator = mReader->ReadString();
 		mVersion = mReader->ReadString();
 		mAudioFilename = mReader->ReadString();
-        nocashMessage(mAudioFilename.c_str());
 		
 		DifficultyManager::DifficultyHpDrain = mReader->ReadInt8();
 		DifficultyManager::DifficultyCircleSize = mReader->ReadInt8();
@@ -77,10 +76,8 @@ void Beatmap::Initialize()
 			BeatmapElements::Element().AddTimingPoint(time, beattime, samplesetid);
 		}
 
-        nocashMessage("hio\n");
-
 		u32 breakcount = mReader->ReadVarInt();
-        nocashMessage(std::to_string(breakcount).c_str());
+
 		for (u32 j=0; j<breakcount; ++j)
 		{
 			s32 starttime = mReader->ReadInt32();
@@ -88,8 +85,6 @@ void Beatmap::Initialize()
 			
 			BeatmapElements::Element().AddBreakPoint(starttime, endtime);
 		}
-
-        nocashMessage("hio\n");
 
 		iprintf("\x1b[2J");
 		mHitObjectCount = mReader->ReadVarInt();

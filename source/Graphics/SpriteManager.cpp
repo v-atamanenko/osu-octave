@@ -1,5 +1,8 @@
 #include "SpriteManager.h"
 
+#include <algorithm>
+#include <string>
+
 SpriteManager::SpriteManager()
 {
 }
@@ -16,7 +19,7 @@ SpriteManager::~SpriteManager()
 void SpriteManager::Draw()
 {
 	u32 i = 0;
-	std::vector<u32> list;
+	std::vector<u32> deadSprites;
 	
 	for (spriteIterator it = mSprites.begin(); it != mSprites.end(); ++it, ++i)
 	{
@@ -25,7 +28,7 @@ void SpriteManager::Draw()
 		//if for some reason sprite is nonexistent then mark for deletion
 		if (spr == NULL)
 		{
-			list.push_back(i);
+			deadSprites.push_back(i);
 			continue;
 		}
 		
@@ -34,7 +37,7 @@ void SpriteManager::Draw()
 		//if sprite is dead then mark for deletion
 		if (spr->Draw() == false)
 		{
-			list.push_back(i);
+			deadSprites.push_back(i);
 			continue;
 		}
 		
@@ -52,16 +55,18 @@ void SpriteManager::Draw()
 	}
 	
 	//delete dead sprites
-	while (list.size() > 0)
+	while (deadSprites.size() > 0)
 	{
-		spriteIterator it = mSprites.begin() + list.back();
+		spriteIterator it = mSprites.begin() + deadSprites.back();
 		
 		if (*it != NULL)
 			delete *it;
 		
 		mSprites.erase(it);
-		list.pop_back();
+		deadSprites.pop_back();
 	}
+
+	this->HandleTouchInput();
 }
 
 void SpriteManager::Add(pSprite* spr)
@@ -74,5 +79,26 @@ void SpriteManager::Add(const std::vector<pSprite*>& spr)
 	for (spriteIteratorConst it = spr.begin(); it != spr.end(); ++it)
 	{
 		Add(*it);
+	}
+}
+
+void SpriteManager::HandleTouchInput() {
+	if (!InputHelper::KeyDown(KEY_TOUCH))
+		return;
+
+	touchPosition touchPos = InputHelper::TouchRead();
+
+	std::vector<pSprite*> sprites = this->mSprites;
+
+	std::sort(sprites.begin(), sprites.end(), [](const pSprite* first, const pSprite* second) {
+		return first->Z > second->Z;
+	});
+
+	for(int i = 0; i != sprites.size(); i++) {
+		pSprite* current = sprites[i];
+
+		if(current->InBounds(touchPos.px, touchPos.py)) {
+
+		}
 	}
 }

@@ -47,8 +47,6 @@ void BeatmapManager::BuildCollection()
 					if (length < 4)
 						continue;
 
-                    nocashMessage(ext);
-
                     //ext is now the extension of the current file
                     ext += length - 4;
 
