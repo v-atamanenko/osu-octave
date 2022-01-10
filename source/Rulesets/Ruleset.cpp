@@ -28,7 +28,7 @@ void Ruleset::OnGameOver()
 
 void Ruleset::Update()
 {
-	list<HitObject*> hitObjectList;
+	std::list<HitObject*> hitObjectList;
 	BeatmapManager::Current().Buffer(hitObjectList);
 	
 	for (hitObjectIterator it = hitObjectList.begin(); it != hitObjectList.end(); ++it)

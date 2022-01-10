@@ -26,7 +26,7 @@
 #include "spinnerbonus_bin.h"
 #include "spinnerspin_bin.h"
 
-using namespace std;
+
 
 typedef enum {
 	SND_NORMAL = 1,
@@ -72,7 +72,7 @@ class AudioManager
 		
 		//music
 		friend void MusicTimerHandler();
-		int MusicPlay(string& filename);
+		int MusicPlay(std::string& filename);
 		int MusicSkipTo(u32 milliseconds);
 		void MusicStop();
 		void MusicUpdate(); //must be called frequently

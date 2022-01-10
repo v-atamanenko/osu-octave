@@ -23,7 +23,7 @@ typedef enum {
 	FONT_VERDANA
 } FONT;
 
-using namespace std;
+
 	
 class TextManager
 {

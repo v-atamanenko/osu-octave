@@ -8,7 +8,7 @@
 #define ARGS_PUSH(array, id, argument) array[id] = (void*)(&argument);
 #define ARGS_POP(array, id, type) *((type*)array[id])
 
-using namespace std;
+
 
 class ICallback
 {

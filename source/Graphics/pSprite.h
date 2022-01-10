@@ -7,9 +7,9 @@
 #ifndef __PSPRITE_H__
 #define __PSPRITE_H__
 
-using namespace std;
 
-typedef vector<Transformation*>::iterator transformIterator;
+
+typedef std::vector<Transformation*>::iterator transformIterator;
 
 class pSprite
 {
@@ -94,7 +94,7 @@ class pSprite
 		FieldType mFieldType;
 		Texture mTexture;
 		*/
-		vector<Transformation*> mTransformations;
+		std::vector<Transformation*> mTransformations;
 		
 		void Transform(Transformation* transform);
 };

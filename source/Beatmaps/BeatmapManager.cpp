@@ -1,7 +1,7 @@
 #include "BeatmapManager.h"
 
 Beatmap* BeatmapManager::mBeatmapCurrent = NULL;
-vector<Beatmap*> BeatmapManager::mBeatmaps;
+std::vector<Beatmap*> BeatmapManager::mBeatmaps;
 
 void BeatmapManager::Load(u32 index)
 {

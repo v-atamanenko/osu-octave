@@ -16,7 +16,7 @@ SpriteManager::~SpriteManager()
 void SpriteManager::Draw()
 {
 	u32 i = 0;
-	vector<u32> list;
+	std::vector<u32> list;
 	
 	for (spriteIterator it = mSprites.begin(); it != mSprites.end(); ++it, ++i)
 	{
@@ -69,7 +69,7 @@ void SpriteManager::Add(pSprite* spr)
 	mSprites.push_back(spr);
 }
 
-void SpriteManager::Add(const vector<pSprite*>& spr)
+void SpriteManager::Add(const std::vector<pSprite*>& spr)
 {
 	for (spriteIteratorConst it = spr.begin(); it != spr.end(); ++it)
 	{

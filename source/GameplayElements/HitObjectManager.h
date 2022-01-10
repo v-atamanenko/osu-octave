@@ -11,9 +11,9 @@
 #ifndef __HITOBJECTMANAGER_H__
 #define __HITOBJECTMANAGER_H__
 
-using namespace std;
 
-typedef list<HitObject*>::iterator hitObjectIterator;
+
+typedef std::list<HitObject*>::iterator hitObjectIterator;
 
 class HitObjectManager
 {
@@ -24,7 +24,7 @@ class HitObjectManager
 		void HandleInput();
 	
 	protected:
-		list<HitObject*> mHitObjects;
+		std::list<HitObject*> mHitObjects;
 };
 
 #endif

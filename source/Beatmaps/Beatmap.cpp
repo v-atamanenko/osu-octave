@@ -126,7 +126,7 @@ Beatmap::~Beatmap()
 		delete mReader;
 }
 
-void Beatmap::Buffer(list<HitObject*>& hitObjectList)
+void Beatmap::Buffer(std::list<HitObject*>& hitObjectList)
 {
 	if (!fReady)
 	{
@@ -166,7 +166,7 @@ void Beatmap::Buffer(list<HitObject*>& hitObjectList)
 				u32 lengthtime = mReader->ReadInt32();
 				
 				u32 pointcount = mReader->ReadVarInt();
-				vector<HitObjectPoint*> points;
+				std::vector<HitObjectPoint*> points;
 				points.reserve(pointcount);
 				
 				for (u32 i=0; i<pointcount; ++i)
@@ -180,7 +180,7 @@ void Beatmap::Buffer(list<HitObject*>& hitObjectList)
 				}
 				
 				u32 tickcount = mReader->ReadVarInt();
-				vector<HitObjectPoint*> ticks;
+				std::vector<HitObjectPoint*> ticks;
 				ticks.reserve(tickcount);
 				
 				for (u32 i=0; i<tickcount; ++i)

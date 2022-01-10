@@ -7,7 +7,7 @@
 #ifndef __BEATMAPELEMENTS_H__
 #define __BEATMAPELEMENTS_H__
 
-using namespace std;
+
 
 typedef struct {
 	s32 Time;
@@ -39,9 +39,9 @@ class BeatmapElements
 	protected:
 		static BeatmapElements sInstance;
 		
-		vector<TimingPoint> mTimingPoints;
-		vector<BreakPoint> mBreakPoints;
-		vector<rgb> mColours;
+		std::vector<TimingPoint> mTimingPoints;
+		std::vector<BreakPoint> mBreakPoints;
+		std::vector<rgb> mColours;
 		u32 mCurrentColour;
 	
 	private:

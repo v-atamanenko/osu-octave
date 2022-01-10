@@ -7,10 +7,10 @@
 #ifndef __SPRITEMANAGER_H__
 #define __SPRITEMANAGER_H__
 
-using namespace std;
 
-typedef vector<pSprite*>::iterator spriteIterator;
-typedef vector<pSprite*>::const_iterator spriteIteratorConst;
+
+typedef std::vector<pSprite*>::iterator spriteIterator;
+typedef std::vector<pSprite*>::const_iterator spriteIteratorConst;
 
 class SpriteManager
 {
@@ -21,12 +21,12 @@ class SpriteManager
 		void Draw();
 		
 		void Add(pSprite* spr);
-		void Add(const vector<pSprite*>& spr);
+		void Add(const std::vector<pSprite*>& spr);
 		
-		vector<pSprite*>& Sprites() { return mSprites; }
+		std::vector<pSprite*>& Sprites() { return mSprites; }
 	
 	protected:
-		vector<pSprite*> mSprites;
+		std::vector<pSprite*> mSprites;
 };
 
 #endif
