@@ -9,7 +9,7 @@
 #ifndef __PDRAWABLE_H__
 #define __PDRAWABLE_H__
 
-
+#include <functional>
 
 typedef std::vector<Transformation*>::iterator transformIterator;
 
@@ -77,13 +77,13 @@ class pDrawable
 		float Z;
 		u32* UV;
 
-		std::string tag;
+		void* Tag;
 		
 		DrawOrigin Origin;
 		FieldType Field;
 		TextureType Texture;
 
-		void(*OnClick)(u16 x, u16 y);
+		void(*OnClick)(pDrawable* self, u16 x, u16 y);
         bool Clickable;
 	
 	protected:

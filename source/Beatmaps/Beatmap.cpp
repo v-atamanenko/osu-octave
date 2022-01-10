@@ -18,6 +18,7 @@ Beatmap::Beatmap(const char* filename, const char* basedir)
 		char id[4] = { r.ReadInt8(), r.ReadInt8(), r.ReadInt8(), 0 };
 		if (strcmp(id, "ODS") == 0)
 		{
+			
 			u8 odsver = r.ReadInt8();
 			
 			mTitle = r.ReadString();
@@ -25,8 +26,9 @@ Beatmap::Beatmap(const char* filename, const char* basedir)
 			mCreator = r.ReadString();
 			mVersion = r.ReadString();
 			mAudioFilename = r.ReadString();
-			
+				
 			fLoadable = true;
+		} else {
 		}
 	}
 	
@@ -40,7 +42,7 @@ void Beatmap::Initialize()
 		if (!fLoadable)
 		{
 			iprintf("\x1b[0;0Hcannot load this file");
-			return;
+			//return;
 		}
 		
 		chdir(mBaseDir.c_str());

@@ -20,6 +20,10 @@ void SpriteManager::Draw()
 {
 	u32 i = 0;
 	std::vector<u32> deadSprites;
+
+	std::sort(mSprites.begin(), mSprites.end(), [](const pDrawable* first, const pDrawable* second) {
+		return first->Z > second->Z;
+	});
 	
 	for (spriteIterator it = mSprites.begin(); it != mSprites.end(); ++it, ++i)
 	{
@@ -92,7 +96,7 @@ void SpriteManager::HandleTouchInput() {
 		pDrawable* current = sprites[i];
 
 		if(current->InBounds(touchPos.px, touchPos.py) && current->Clickable) {
-			current->OnClick(touchPos.px, touchPos.py);
+			current->OnClick(current, touchPos.px, touchPos.py);
 		}
 	}
 }
