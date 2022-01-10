@@ -81,6 +81,8 @@ class pSprite
 		DrawOrigin Origin;
 		FieldType Field;
 		TextureType Texture;
+
+		void(*OnClick)(u16 x, u16 y);
 	
 	protected:
 		u32 mOrigWidth, mOrigHeight;

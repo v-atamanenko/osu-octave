@@ -67,8 +67,8 @@ void SongSelect::HandleInput()
 			if (mSpriteManager.Sprites()[index]->Alpha == 31)
 			{
 				// load beatmap
-				//BeatmapManager::Load(index + mColCurrent*2); // take scrolling offset into account
-				//ChangeMode(MODE_PLAYER);
+				BeatmapManager::Load(index + mColCurrent*2); // take scrolling offset into account
+				ChangeMode(MODE_PLAYER);
 				return;
 			}
 		}
@@ -105,9 +105,6 @@ void SongSelect::Update()
 			if (index >= BeatmapManager::SongCount())
 				break;
 			Beatmap* map = BeatmapManager::Beatmaps()[index];
-
-			spr->tag = map->Title();
-			spr->Z = j + i;
 
 			TextManager::Bottom().SetFont(FONT_CONSOLE);
 			

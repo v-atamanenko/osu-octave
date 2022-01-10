@@ -97,8 +97,8 @@ void SpriteManager::HandleTouchInput() {
 	for(int i = 0; i != sprites.size(); i++) {
 		pSprite* current = sprites[i];
 
-		if(current->InBounds(touchPos.px, touchPos.py)) {
-
+		if(current->InBounds(touchPos.px, touchPos.py) && current->OnClick != NULL) {
+			current->OnClick(touchPos.px, touchPos.py);
 		}
 	}
 }
