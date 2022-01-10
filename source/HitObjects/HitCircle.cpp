@@ -57,7 +57,7 @@ void HitCircle::Hit()
 		//too early, give the hitcircle a shake
 		for (spriteIterator it = mSprites.begin(); it != mSprites.end(); ++it)
 		{
-			pSprite* spr = *it;
+			pDrawable* spr = *it;
 			
 			spr->Move(now, now+20, mX+5, mY);
 			spr->Move(now+20, now+40, mX-5, mY);
@@ -72,7 +72,7 @@ void HitCircle::Hit()
 			//if within the window for 50, the person hit it
 			for (u32 i=0; i<2; ++i)
 			{
-				pSprite* spr = mSprites[i];
+				pDrawable* spr = mSprites[i];
 				
 				//circle explosion
 				spr->Transform(TR_FADE, now, now+200, 31, 10);

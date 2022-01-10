@@ -63,12 +63,12 @@ void SpriteManager::Draw()
 	this->HandleTouchInput();
 }
 
-void SpriteManager::Add(pSprite* spr)
+void SpriteManager::Add(pDrawable* spr)
 {
 	mSprites.push_back(spr);
 }
 
-void SpriteManager::Add(const std::vector<pSprite*>& spr)
+void SpriteManager::Add(const std::vector<pDrawable*>& spr)
 {
 	for (spriteIteratorConst it = spr.begin(); it != spr.end(); ++it)
 	{
@@ -82,14 +82,14 @@ void SpriteManager::HandleTouchInput() {
 
 	touchPosition touchPos = InputHelper::TouchRead();
 
-	std::vector<pSprite*> sprites = this->mSprites;
+	std::vector<pDrawable*> sprites = this->mSprites;
 
-	std::sort(sprites.begin(), sprites.end(), [](const pSprite* first, const pSprite* second) {
+	std::sort(sprites.begin(), sprites.end(), [](const pDrawable* first, const pDrawable* second) {
 		return first->Z > second->Z;
 	});
 
 	for(int i = 0; i != sprites.size(); i++) {
-		pSprite* current = sprites[i];
+		pDrawable* current = sprites[i];
 
 		if(current->InBounds(touchPos.px, touchPos.py) && current->Clickable) {
 			current->OnClick(touchPos.px, touchPos.py);
