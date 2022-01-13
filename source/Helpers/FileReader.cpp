@@ -7,7 +7,7 @@ FileReader::FileReader(u8* source)
 	Init(NULL, source);
 }
 
-FileReader::FileReader(string& filename)
+FileReader::FileReader(std::string& filename)
 {
 	FILE* handle = fopen(filename.c_str(), "rb");
 	Init(handle, NULL);
@@ -124,12 +124,11 @@ u32 FileReader::ReadVarInt() const
 		++i;
 	} while ((b & 0x80) > 0);
 
-    nocashMessage((std::string("   ") + std::to_string(value)).c_str());
 	return value;
 }
 
 
-string FileReader::ReadString() const
+std::string FileReader::ReadString() const
 {
 	u32 l = ReadVarInt();
 	if (l == 0)
@@ -142,7 +141,7 @@ string FileReader::ReadString() const
 		c[i] = mBuffer[pos++];
 	c[l] = '\0';
 	
-	string s(c);
+	std::string s(c);
 	return s;
 }
 

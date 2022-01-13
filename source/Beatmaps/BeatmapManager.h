@@ -13,9 +13,9 @@
 #ifndef __BEATMAPMANAGER_H__
 #define __BEATMAPMANAGER_H__
 
-using namespace std;
 
-typedef vector<Beatmap*>::iterator beatmapIterator;
+
+typedef std::vector<Beatmap*>::iterator beatmapIterator;
 
 class BeatmapManager
 {
@@ -27,12 +27,12 @@ class BeatmapManager
 		static u32 MapCount();
 		static u32 SongCount();
 		
-		static vector<Beatmap*>& Beatmaps() { return mBeatmaps; }
+		static std::vector<Beatmap*>& Beatmaps() { return mBeatmaps; }
 	
 	protected:
 		static Beatmap* mBeatmapCurrent;
 		
-		static vector<Beatmap*> mBeatmaps;
+		static std::vector<Beatmap*> mBeatmaps;
 };
 
 #endif

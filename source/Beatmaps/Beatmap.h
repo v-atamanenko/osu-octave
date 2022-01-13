@@ -21,7 +21,7 @@
 #ifndef __BEATMAP_H__
 #define __BEATMAP_H__
 
-using namespace std;
+
 
 //typedef list<HitObject*>::iterator hitObjectIterator;
 
@@ -34,20 +34,22 @@ class Beatmap
 		void Initialize();
 		void CleanUp();
 		
-		void Buffer(list<HitObject*>& hitObjectList);
+		void Buffer(std::list<HitObject*>& hitObjectList);
 		bool GameOver() { return mHitObjectRead == mHitObjectCount && GameClock::Clock().Time() >= mLastObjectEndTime + 3000; }
 		
-		string& Filename() { return mFilename; }
-		string& Title() { return mTitle; }
-		string& Artist() { return mArtist; }
-		string& Creator() { return mCreator; }
-		string& Version() { return mVersion; }
-		string& AudioFilename() { return mAudioFilename; }
+		std::string& Filename() { return mFilename; }
+		std::string& Title() { return mTitle; }
+		std::string& Artist() { return mArtist; }
+		std::string& Creator() { return mCreator; }
+		std::string& Version() { return mVersion; }
+		std::string& AudioFilename() { return mAudioFilename; }
 		
-		string& BaseDir() { return mBaseDir; }
+		std::string& BaseDir() { return mBaseDir; }
 		
 		s32 SkipTime() { return mSkipTime; }
 		s32 StartTime() { return mFirstObjectTime; }
+
+		std::string& BeatmapChecksum();
 	
 	protected:
 		FileReader* mReader;
@@ -65,14 +67,17 @@ class Beatmap
 		
 		bool fReady, fLoadable;
 		
-		string mFilename;
-		string mTitle;
-		string mArtist;
-		string mCreator;
-		string mVersion;
-		string mAudioFilename;
+		std::string mFilename;
+		std::string mTitle;
+		std::string mArtist;
+		std::string mCreator;
+		std::string mVersion;
+		std::string mAudioFilename;
 		
-		string mBaseDir;
+		std::string mBaseDir;
+	private:
+		std::string mChecksumString;
+		std::string mBeatmapChecksum;
 };
 
 #endif

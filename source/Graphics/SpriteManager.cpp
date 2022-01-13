@@ -1,5 +1,8 @@
 #include "SpriteManager.h"
 
+#include <algorithm>
+#include <string>
+
 SpriteManager::SpriteManager()
 {
 }
@@ -16,25 +19,29 @@ SpriteManager::~SpriteManager()
 void SpriteManager::Draw()
 {
 	u32 i = 0;
-	vector<u32> list;
+	std::vector<u32> deadSprites;
+
+	std::sort(mSprites.begin(), mSprites.end(), [](const pDrawable* first, const pDrawable* second) {
+		return first->Z > second->Z;
+	});
 	
 	for (spriteIterator it = mSprites.begin(); it != mSprites.end(); ++it, ++i)
 	{
-		pSprite* spr = *it;
+		pDrawable* spr = *it;
 		
 		//if for some reason sprite is nonexistent then mark for deletion
 		if (spr == NULL)
 		{
-			list.push_back(i);
+			deadSprites.push_back(i);
 			continue;
 		}
 		
 		spr->Update();
 		
 		//if sprite is dead then mark for deletion
-		if (spr->Draw() == false)
+		if (spr->Alive() == false)
 		{
-			list.push_back(i);
+			deadSprites.push_back(i);
 			continue;
 		}
 		
@@ -42,37 +49,54 @@ void SpriteManager::Draw()
 		if (spr->Width == 0 || spr->Height == 0 || spr->Alpha == 0)
 			continue;
 		
-		GraphicsManager::Graphics().Draw(	spr->Texture,
-											spr->X, spr->Y,
-											spr->Width, spr->Height,
-											spr->Origin, spr->Field,
-											spr->Color, spr->Alpha, spr->Angle,
-											spr->Z, spr->UV);
-		
+		spr->Draw();
 	}
 	
 	//delete dead sprites
-	while (list.size() > 0)
+	while (deadSprites.size() > 0)
 	{
-		spriteIterator it = mSprites.begin() + list.back();
+		spriteIterator it = mSprites.begin() + deadSprites.back();
 		
 		if (*it != NULL)
 			delete *it;
 		
 		mSprites.erase(it);
-		list.pop_back();
+		deadSprites.pop_back();
 	}
+
+	this->HandleTouchInput();
 }
 
-void SpriteManager::Add(pSprite* spr)
+void SpriteManager::Add(pDrawable* spr)
 {
 	mSprites.push_back(spr);
 }
 
-void SpriteManager::Add(const vector<pSprite*>& spr)
+void SpriteManager::Add(const std::vector<pDrawable*>& spr)
 {
 	for (spriteIteratorConst it = spr.begin(); it != spr.end(); ++it)
 	{
 		Add(*it);
+	}
+}
+
+void SpriteManager::HandleTouchInput() {
+	if (!InputHelper::KeyDown(KEY_TOUCH))
+		return;
+
+	touchPosition touchPos = InputHelper::TouchRead();
+
+	std::vector<pDrawable*> sprites = this->mSprites;
+
+	std::sort(sprites.begin(), sprites.end(), [](const pDrawable* first, const pDrawable* second) {
+		return first->Z > second->Z;
+	});
+
+	for(int i = 0; i != sprites.size(); i++) {
+		pDrawable* current = sprites[i];
+
+		if(current->InBounds(touchPos.px, touchPos.py) && current->Clickable) {
+			current->OnClick(current, touchPos.px, touchPos.py);
+		}
 	}
 }

@@ -6,13 +6,13 @@
 #ifndef __FILEREADER_H__
 #define __FILEREADER_H__
 
-using namespace std;
+
 
 class FileReader
 {
 	public:
 		FileReader(u8* source);
-		FileReader(string& filename);
+		FileReader(std::string& filename);
 		FileReader(const char* filename);
 		~FileReader();
 		
@@ -21,7 +21,7 @@ class FileReader
 		u32 ReadInt32() const;
 		float ReadFloat() const;
 		u32 ReadVarInt() const;
-		string ReadString() const;
+		std::string ReadString() const;
 		
 		bool Ready() const { return fReady; }
 		

@@ -1,6 +1,6 @@
 #include "HitSlider.h"
 
-HitSlider::HitSlider(s32 x, s32 y, s32 time, u32 lengthtime, vector<HitObjectPoint*>& points, vector<HitObjectPoint*>& ticks, u32 repeats, HitObjectType type, HitObjectSound sound)
+HitSlider::HitSlider(s32 x, s32 y, s32 time, u32 lengthtime, std::vector<HitObjectPoint*>& points, std::vector<HitObjectPoint*>& ticks, u32 repeats, HitObjectType type, HitObjectSound sound)
 	: HitObject(x, y, time, type, sound)
 {
 	fTouching = false;
@@ -516,7 +516,7 @@ void HitSlider::Hit()
 	mHit = true;
 }
 
-void HitSlider::MapSliderPath(pSprite* spr, vector<HitObjectPoint*>& points, s32 time, u32 lengthtime, u32 repeats)
+void HitSlider::MapSliderPath(pSprite* spr, std::vector<HitObjectPoint*>& points, s32 time, u32 lengthtime, u32 repeats)
 {
 	u32 timeperpoint = lengthtime / points.size();
 	

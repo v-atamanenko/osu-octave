@@ -6,3 +6,5 @@
 .idea
 cmake-build-debug
 build
+.vscode
+source/defines.h

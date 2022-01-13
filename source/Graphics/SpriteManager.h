@@ -3,14 +3,13 @@
 
 #include "pSprite.h"
 #include "GraphicsManager.h"
+#include "Helpers/InputHelper.h"
 
 #ifndef __SPRITEMANAGER_H__
 #define __SPRITEMANAGER_H__
 
-using namespace std;
-
-typedef vector<pSprite*>::iterator spriteIterator;
-typedef vector<pSprite*>::const_iterator spriteIteratorConst;
+typedef std::vector<pDrawable*>::iterator spriteIterator;
+typedef std::vector<pDrawable*>::const_iterator spriteIteratorConst;
 
 class SpriteManager
 {
@@ -19,14 +18,15 @@ class SpriteManager
 		virtual ~SpriteManager();
 		
 		void Draw();
+		void HandleTouchInput();
 		
-		void Add(pSprite* spr);
-		void Add(const vector<pSprite*>& spr);
+		void Add(pDrawable* spr);
+		void Add(const std::vector<pDrawable*>& spr);
 		
-		vector<pSprite*>& Sprites() { return mSprites; }
+		std::vector<pDrawable*>& Sprites() { return mSprites; }
 	
 	protected:
-		vector<pSprite*> mSprites;
+		std::vector<pDrawable*> mSprites;
 };
 
 #endif

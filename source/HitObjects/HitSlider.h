@@ -5,9 +5,9 @@
 #ifndef __HITSLIDER_H__
 #define __HITSLIDER_H__
 
-using namespace std;
 
-typedef vector<HitObjectPoint*>::iterator pointIterator;
+
+typedef std::vector<HitObjectPoint*>::iterator pointIterator;
 
 typedef struct {
 	pSprite* Tick;
@@ -17,7 +17,7 @@ typedef struct {
 class HitSlider : public HitObject
 {
 	public:
-		HitSlider(s32 x, s32 y, s32 time, u32 lengthtime, vector<HitObjectPoint*>& points, vector<HitObjectPoint*>& ticks, u32 repeats, HitObjectType type, HitObjectSound sound);
+		HitSlider(s32 x, s32 y, s32 time, u32 lengthtime, std::vector<HitObjectPoint*>& points, std::vector<HitObjectPoint*>& ticks, u32 repeats, HitObjectType type, HitObjectSound sound);
 		~HitSlider();
 		
 		bool InBounds(s32 x, s32 y);
@@ -31,7 +31,7 @@ class HitSlider : public HitObject
 		void Hit();
 	
 	protected:
-		static void MapSliderPath(pSprite* spr, vector<HitObjectPoint*>& points, s32 time, u32 lengthtime, u32 repeats);
+		static void MapSliderPath(pSprite* spr, std::vector<HitObjectPoint*>& points, s32 time, u32 lengthtime, u32 repeats);
 		
 		bool fTouching, fStarted, fFinished;
 		TickSprites* mTicks;

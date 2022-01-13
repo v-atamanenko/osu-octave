@@ -113,7 +113,7 @@ void MusicTimerHandler()
 	AudioManager::Engine().fFill = true;
 }
 
-int AudioManager::MusicPlay(string& filename)
+int AudioManager::MusicPlay(std::string& filename)
 {
 	if (mChannel != -1)
 		MusicStop();

@@ -1,7 +1,6 @@
 #include <nds.h>
 #include <stdio.h>
 
-#include "ScoreManager.h"
 #include "System/GameClock.h"
 #include "Graphics/SpriteContainer.h"
 #include "Beatmaps/BeatmapManager.h"

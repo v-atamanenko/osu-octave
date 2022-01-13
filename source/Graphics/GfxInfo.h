@@ -42,6 +42,9 @@
 
 #include "white_bin.h"
 
+#include <nds/arm9/video.h>
+#include <nds/arm9/videoGL.h>
+
 //#include "songbg_osu_bin.h"
 
 typedef enum {

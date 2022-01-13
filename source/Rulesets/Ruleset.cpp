@@ -28,7 +28,7 @@ void Ruleset::OnGameOver()
 
 void Ruleset::Update()
 {
-	list<HitObject*> hitObjectList;
+	std::list<HitObject*> hitObjectList;
 	BeatmapManager::Current().Buffer(hitObjectList);
 	
 	for (hitObjectIterator it = hitObjectList.begin(); it != hitObjectList.end(); ++it)
@@ -45,10 +45,10 @@ void Ruleset::Update()
 	
 	TextManager::Bottom().SetFont(FONT_SCORE);
 	
-	TextManager::Bottom().PrintLocate(635, 5, ORIGIN_TOPRIGHT, "  %08i", mScoreManager.Score());
+	TextManager::Bottom().PrintLocate(635, 5, ORIGIN_TOPRIGHT, "  %08i", mCurrentScore.CurrentScore());
 	
-	if (mScoreManager.Combo() > 0)
-		TextManager::Bottom().PrintLocate(5, 475, ORIGIN_BOTTOMLEFT, "%ix    ", mScoreManager.Combo());
+	if (mCurrentScore.CurrentCombo() > 0)
+		TextManager::Bottom().PrintLocate(5, 475, ORIGIN_BOTTOMLEFT, "%ix    ", mCurrentScore.CurrentCombo());
 	else
 		TextManager::Bottom().PrintLocate(5, 475, ORIGIN_BOTTOMLEFT, "       ");
 }

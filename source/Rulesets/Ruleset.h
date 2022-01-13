@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 #include "Beatmaps/BeatmapManager.h"
-#include "GameplayElements/ScoreManager.h"
+#include "GameplayElements/Score.h"
 #include "Graphics/SpriteManager.h"
 #include "GameplayElements/Lifebar.h"
 #include "GameplayElements/HitObjectManager.h"
@@ -25,7 +25,7 @@ class Ruleset
 		virtual void HandleInput();
 	
 	protected:
-		ScoreManager mScoreManager;
+		Score mCurrentScore;
 		HitObjectManager mHitObjectManager;
 		SpriteManager mSpriteManager;
 		Lifebar mLifebar;

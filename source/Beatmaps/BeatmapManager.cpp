@@ -1,7 +1,7 @@
 #include "BeatmapManager.h"
 
 Beatmap* BeatmapManager::mBeatmapCurrent = NULL;
-vector<Beatmap*> BeatmapManager::mBeatmaps;
+std::vector<Beatmap*> BeatmapManager::mBeatmaps;
 
 void BeatmapManager::Load(u32 index)
 {
@@ -46,8 +46,6 @@ void BeatmapManager::BuildCollection()
 					int length = strlen(ext);
 					if (length < 4)
 						continue;
-
-                    nocashMessage(ext);
 
                     //ext is now the extension of the current file
                     ext += length - 4;

@@ -4,7 +4,7 @@
 
 #include "System/GameClock.h"
 
-#include "GameplayElements/ScoreManager.h"
+#include "GameplayElements/Score.h"
 #include "Graphics/SpriteManager.h"
 #include "Helpers/AudioManager.h"
 #include "GameplayElements/Lifebar.h"

@@ -8,9 +8,9 @@
 #ifndef __SPRITECONTAINER_H__
 #define __SPRITECONTAINER_H__
 
-using namespace std;
 
-typedef vector<pSprite*>::iterator spriteIterator;
+
+typedef std::vector<pDrawable*>::iterator spriteIterator;
 
 /* a generic base class for all objects that require sprites
  * sprite cleanup is automatically handled
@@ -22,7 +22,7 @@ class SpriteContainer
 		void AddToSpriteManager(SpriteManager& spriteManager);
 	
 	protected:
-		vector<pSprite*> mSprites;
+		std::vector<pDrawable*> mSprites;
 	
 	private:
 		bool mSpriteOwner;

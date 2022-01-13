@@ -96,7 +96,7 @@ void TextManager::PrintLocate(int x, int y, DrawOrigin origin, char* format, ...
 	va_end(args);
 	
 	// for calculating width
-	vector<char*> lines;
+	std::vector<char*> lines;
 	lines.reserve(10);
 	
 	// height depends on the number of new lines
