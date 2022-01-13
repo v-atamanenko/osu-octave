@@ -51,17 +51,18 @@ GraphicsManager::GraphicsManager()
     videoSetModeSub(MODE_5_2D);
 
     vramSetBankA(VRAM_A_TEXTURE);
+	vramSetBankB(VRAM_B_MAIN_BG_0x06020000);
     vramSetBankC(VRAM_C_SUB_BG);
     vramSetBankD(VRAM_D_MAIN_BG_0x06000000);
     vramSetBankE(VRAM_E_TEX_PALETTE);
 
-    REG_BG0CNT = 1;
+	REG_BG0CNT = 1;
 
     glInit();
     glEnable(GL_BLEND | GL_TEXTURE_2D | GL_ANTIALIAS);
 
     // setup the rear plane
-    glClearColor(20,20,31,31);
+    glClearColor(20,20,31,0);
     glClearPolyID(63);
     glClearDepth(0x7FFF);
 
@@ -260,6 +261,7 @@ void GraphicsManager::Draw(TextureType tex, s32 x, s32 y, u32 width, u32 height,
     glVertex2lu1f(x1, y2, z);
 
     glEnd();
+//	glClearColor()
 
     glPopMatrix(1);
 }

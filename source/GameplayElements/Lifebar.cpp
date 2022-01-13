@@ -28,15 +28,15 @@ void Lifebar::Initialize()
 	mHpLossPerMs = DifficultyManager::DifficultyHpDrainRate * 2; //units are hp/ms based off a 200 point scale
 	mHpCurrent = 0;
 	mHpDisplay = 0;
-	
+
 	mTimeLastUpdate = GameClock::Clock().Time();
 	mFillTime = MathHelper::Min(10000, BeatmapManager::Current().StartTime());
 	mFillRate = MAXHP/((mFillTime-700)/(float)1000*60);
-	
+
 	for (u32 time = BeatmapManager::Current().StartTime() - mFillTime;
-            time < MathHelper::Max(BeatmapManager::Current().StartTime(), 701)-700; time += 150)
-    {
-		mSprites[2]->Scale(time, time+90, 1.5, 1);
+	     time < MathHelper::Max(BeatmapManager::Current().StartTime(), 701) - 700; time += 150)
+	{
+		mSprites[2]->Scale(time, time + 90, 1.5, 1);
 	}
 }
 

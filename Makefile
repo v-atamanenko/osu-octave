@@ -15,6 +15,7 @@ include $(DEVKITARM)/ds_rules
 # INCLUDES is a list of directories containing extra header files
 # MAXMOD_SOUNDBANK contains a directory of music and sound effect files
 #---------------------------------------------------------------------------------
+GRIT		:=  grit
 TARGET		:=	osuNDS
 BUILD		:=	build
 SOURCES		:=	source				\
@@ -26,7 +27,8 @@ SOURCES		:=	source				\
 				source/GameplayElements	\
 				source/HitObjects	\
 				source/Rulesets		\
-				source/Modes
+				source/Modes		\
+				build
 DATA		:=  data/textures		\
 				data/sounds
 INCLUDES	:=	source				\
@@ -73,7 +75,8 @@ export OUTPUT	:=	$(CURDIR)/$(TARGET)
 
 export VPATH	:=	$(foreach dir,$(SOURCES),$(CURDIR)/$(dir)) \
 					$(foreach dir,$(DATA),$(CURDIR)/$(dir)) \
-					$(foreach dir,$(FONTS),$(CURDIR)/$(dir))
+					$(foreach dir,$(FONTS),$(CURDIR)/$(dir)) \
+                    $(foreach dir, $(GRAPHICS), $(CURDIR)/$(dir))
 
 export DEPSDIR	:=	$(CURDIR)/$(BUILD)
 
@@ -82,6 +85,7 @@ CPPFILES	 :=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.cpp)))
 SFILES		 :=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.s)))
 BINFILES	 :=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.*)))
 FONTFILES    := $(foreach dir,$(FONTS),$(notdir $(wildcard $(dir)/*.bmf)))
+GFXFILES    := $(foreach dir, $(GRAPHICS), $(notdir $(wildcard $(dir)/*.png)))
  
 #---------------------------------------------------------------------------------
 # use CXX for linking C++ projects, CC for standard C
@@ -99,6 +103,7 @@ endif
 
 export OFILES	:=	$(addsuffix .o,$(BINFILES)) \
 					$(addsuffix .o,$(FONTFILES)) \
+                    $(GFXFILES:.png=.o)         \
 					$(CPPFILES:.cpp=.o) $(CFILES:.c=.o) $(SFILES:.s=.o)
  
 export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
@@ -134,6 +139,17 @@ $(OUTPUT).elf	:	$(OFILES)
 #---------------------------------------------------------------------------------
 	@echo $(notdir $<)
 	@$(bin2o)
+
+
+# With matching grit-file
+%.c %.h	: %.png %.grit
+	@echo $<
+
+	$(GRIT) $<
+
+# No grit-file: try using dir.grit
+# %.c %.h	: %.png
+# 	$(GRIT) $< -ff $(<D)/$(notdir $(<D)).grit
 
 #---------------------------------------------------------------------------------
 %.bmf.o	:	%.bmf

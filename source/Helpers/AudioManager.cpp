@@ -119,9 +119,10 @@ int AudioManager::MusicPlay(std::string& filename)
 		MusicStop();
 	
 	mFile = fopen(filename.c_str(), "rb");
-	if (mFile == NULL)
+	if (mFile == NULL) {
 		return -1;
-	
+	}
+
 	MusicBuffer();
 	
 	return mChannel;

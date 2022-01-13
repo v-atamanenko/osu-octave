@@ -1,4 +1,5 @@
 #include "TextManager.h"
+#include "menuBG.h"
 
 TextManager TextManager::sTop;
 TextManager TextManager::sBottom;
@@ -19,6 +20,10 @@ void TextManager::Init()
 	AddFont(FONT_SCORE, gomics_bmf);
 	AddFont(FONT_NUMBERING, _370_bmf);
 	AddFont(FONT_VERDANA, ver08_bmf);
+
+	bgInit(2, BgType_Bmp16, BgSize_B16_256x256, 8, 0);
+	bgSetPriority(2, 1);
+	memcpy(BG_BMP_RAM(8), menuBGBitmap, menuBGBitmapLen);
 }
 
 void TextManager::AddFont(FONT font, const u8* data)
@@ -44,6 +49,7 @@ void TextManager::SetFont(FONT font)
 {
 	gfxConsoleSetFont(mConsole, mFonts[font]);
 }
+
 
 void TextManager::PrintFloat(char* format, ...)
 {

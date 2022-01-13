@@ -22,6 +22,7 @@ class FileReader
 		float ReadFloat() const;
 		u32 ReadVarInt() const;
 		std::string ReadString() const;
+		void ReadData(void* ptr, u32 size) const;
 		
 		bool Ready() const { return fReady; }
 		

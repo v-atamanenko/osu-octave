@@ -33,6 +33,8 @@ class Beatmap
 		
 		void Initialize();
 		void CleanUp();
+
+		void InitBG();
 		
 		void Buffer(std::list<HitObject*>& hitObjectList);
 		bool GameOver() { return mHitObjectRead == mHitObjectCount && GameClock::Clock().Time() >= mLastObjectEndTime + 3000; }
@@ -73,6 +75,7 @@ class Beatmap
 		std::string mCreator;
 		std::string mVersion;
 		std::string mAudioFilename;
+		u8 odsver;
 		
 		std::string mBaseDir;
 	private:

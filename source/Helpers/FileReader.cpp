@@ -145,6 +145,12 @@ std::string FileReader::ReadString() const
 	return s;
 }
 
+void FileReader::ReadData(void* ptr, u32 size) const
+{
+	dmaCopyAsynch(&mBuffer[pos], ptr, size);
+	pos += size;
+}
+
 void FileReader::Reset() const
 {
 	if (mHandle == NULL)

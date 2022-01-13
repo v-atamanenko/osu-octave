@@ -51,7 +51,7 @@ void Beatmap::Initialize()
 		//skip header
 		mReader->Skip(3);
 		
-		u8 odsver = mReader->ReadInt8();
+		odsver = mReader->ReadInt8();
 		
 		mTitle = mReader->ReadString();
 		mArtist = mReader->ReadString();
@@ -89,23 +89,6 @@ void Beatmap::Initialize()
 		}
 
 		iprintf("\x1b[2J");
-		mHitObjectCount = mReader->ReadVarInt();
-		mHitObjectRead = 0;
-		mLastObjectEndTime = 0;
-		mForceNewCombo = true;
-		
-		//read ahead
-		ReadNextObject();
-		mFirstObjectTime = mNextObjectTime;
-		
-		//the time to skip to is the first object - 8 beats
-		mSkipTime = MathHelper::Max(0, (s32)mNextObjectTime - (BeatmapElements::Element().GetTimingPoint(mNextObjectTime).BeatTime*8));
-		
-		//strangely calling this in ctor of BeatmapElements causes game to not load :/
-		BeatmapElements::Element().ResetColours(true);
-		
-		//now we can play this map
-		fReady = true;
 	}
 }
 
@@ -125,7 +108,35 @@ Beatmap::~Beatmap()
 		delete mReader;
 }
 
-void Beatmap::Buffer(std::list<HitObject*>& hitObjectList)
+void Beatmap::InitBG() {
+	if (odsver > 1) {
+		for (int i = 0; i < 256 * 192; i++) {
+			*(u16 *) (BG_BMP_RAM(8) + i) = mReader->ReadInt16();
+		}
+		bgUpdate();
+		bgSetPriority(2, 1);
+	}
+
+	mHitObjectCount = mReader->ReadVarInt();
+	mHitObjectRead = 0;
+	mLastObjectEndTime = 0;
+	mForceNewCombo = true;
+
+	//read ahead
+	ReadNextObject();
+	mFirstObjectTime = mNextObjectTime;
+
+	//the time to skip to is the first object - 8 beats
+	mSkipTime = MathHelper::Max(0, (s32)mNextObjectTime - (BeatmapElements::Element().GetTimingPoint(mNextObjectTime).BeatTime*8));
+
+	//strangely calling this in ctor of BeatmapElements causes game to not load :/
+	BeatmapElements::Element().ResetColours(true);
+
+	//now we can play this map
+	fReady = true;
+}
+
+void Beatmap::Buffer(list<HitObject*>& hitObjectList)
 {
 	if (!fReady)
 	{
