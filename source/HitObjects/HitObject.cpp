@@ -1,12 +1,12 @@
 #include "HitObject.h"
 
-rgb HitObject::mColour = 0;
+SDL_Color HitObject::mColour = {0,0,0};
 float HitObject::sScoreDeltaZ = 0;
 float HitObject::sSliderDeltaZ = 0;
-s32 HitObject::sLastSliderTime = 0;
+int32_t HitObject::sLastSliderTime = 0;
 ICallback* HitObject::mScoreCallback = NULL;
 
-HitObject::HitObject(s32 x, s32 y, s32 time, HitObjectType type, HitObjectSound sound)
+HitObject::HitObject(int32_t x, int32_t y, int32_t time, HitObjectType type, HitObjectSound sound)
 {
 	mX = x;
 	mY = y;
@@ -37,7 +37,7 @@ void HitObject::IncreaseScore(ScoreType score, bool forceNoCombo, bool forceNoAn
 	IncreaseScore(score, forceNoCombo, forceNoAnimation, mScoreSpriteId);
 }
 
-void HitObject::IncreaseScore(ScoreType score, bool forceNoCombo, bool forceNoAnimation, u32 spriteId)
+void HitObject::IncreaseScore(ScoreType score, bool forceNoCombo, bool forceNoAnimation, uint32_t spriteId)
 {
 	HitObjectPoint point = {
 		mSprites[spriteId]->X,
@@ -53,7 +53,7 @@ void HitObject::IncreaseScore(ScoreType score, bool forceNoCombo, bool forceNoAn
 	ARGS_PUSH(args, 3, point);
 	ARGS_PUSH(args, 4, mComboEnd);
 	
-	if (mScoreCallback != NULL)
+	if (mScoreCallback != nullptr)
 		mScoreCallback->DoCallback(args);
 	
 	delete[] args;
@@ -67,7 +67,7 @@ void HitObject::SetScoreCallback(ICallback* scoreCallback)
 	mScoreCallback = scoreCallback;
 }
 
-void HitObject::SetPostCreateOptions(bool comboend, s32 nextx, s32 nexty)
+void HitObject::SetPostCreateOptions(bool comboend, int32_t nextx, int32_t nexty)
 {
 	//set whether this is the last object of a combo
 	mComboEnd = comboend;

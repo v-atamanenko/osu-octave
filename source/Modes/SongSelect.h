@@ -1,5 +1,5 @@
-#include <nds.h>
-#include <stdio.h>
+#include "SDL.h"
+#include <cstdio>
 
 #include "Mode.h"
 #include "Beatmaps/BeatmapManager.h"
@@ -21,20 +21,20 @@ class SongSelect : public Mode
 	protected:
 		SpriteManager mSpriteManager;
 		
-		static const s32 kSongListXOffset = 37;
-		static const s32 kSongListYOffset = 80;
-		static const s32 kSongListSpacing = 203;
+		static const int32_t kSongListXOffset = 37;
+		static const int32_t kSongListYOffset = 80;
+		static const int32_t kSongListSpacing = 203;
 		
-		s32 mCurrentX;
-		s32 mDeltaX;
-		s32 mIndex;
+		int32_t mCurrentX;
+        int32_t mDeltaX;
+        int32_t mIndex;
+
+        uint32_t mColTarget;
+        uint32_t mColCurrent;
+        uint32_t mColMax;
+        uint32_t mColSpill;
 		
-		u32 mColTarget;
-		u32 mColCurrent;
-		u32 mColMax;
-		u32 mColSpill;
-		
-		void MoveSongList(s32 x);
+		void MoveSongList(int32_t x);
 		void MoveSongListLeft();
 		void MoveSongListRight();
 };

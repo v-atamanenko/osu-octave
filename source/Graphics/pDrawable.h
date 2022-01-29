@@ -1,6 +1,6 @@
-#include <nds.h>
 #include <vector>
 #include <string>
+#include "SDL.h"
 
 #include "GraphicsManager.h"
 #include "Transformation.h"
@@ -19,47 +19,47 @@ class pDrawable
 		virtual ~pDrawable();
 		
 		virtual void Update();
-		bool InBounds(s32 x, s32 y);
-		void Kill(s32 time);
+		bool InBounds(int32_t x, int32_t y);
+		void Kill(int32_t time);
 		void ClearTransforms();
 		
-		void Transform(TransformType type, s32 starttime, s32 endtime, s32 startvalue, s32 endvalue);
-		void Scale(s32 starttime, s32 endtime, float start, float end);
-		void Move(s32 starttime, s32 endtime, s32 startx, s32 starty, s32 endx, s32 endy);
-		void Move(s32 starttime, s32 endtime, s32 endx, s32 endy);
-		void Move(s32 x, s32 y);
-		void Rotate(s32 starttime, s32 endtime, s32 starta, s32 enda);
-		void Rotate(s32 angle);
+		void Transform(TransformType type, int32_t starttime, int32_t endtime, int32_t startvalue, int32_t endvalue);
+		void Scale(int32_t starttime, int32_t endtime, float start, float end);
+		void Move(int32_t starttime, int32_t endtime, int32_t startx, int32_t starty, int32_t endx, int32_t endy);
+		void Move(int32_t starttime, int32_t endtime, int32_t endx, int32_t endy);
+		void Move(int32_t x, int32_t y);
+		void Rotate(int32_t starttime, int32_t endtime, int32_t starta, int32_t enda);
+		void Rotate(int32_t angle);
 		
 		void Show();
-		void Show(s32 time);
-		void Show(s32 starttime, s32 endtime);
+		void Show(int32_t time);
+		void Show(int32_t starttime, int32_t endtime);
 		void Hide();
-		void Hide(s32 time);
-		void Hide(s32 starttime, s32 endtime);
+		void Hide(int32_t time);
+		void Hide(int32_t starttime, int32_t endtime);
 		
 		/*
-		s32 x() 		{ return mX; }
-		s32 y() 		{ return mY; }
-		u32 width()		{ return mWidth; }
-		u32 height()	{ return mHeight; }
+		int32_t x() 		{ return mX; }
+		int32_t y() 		{ return mY; }
+		uint32_t width()		{ return mWidth; }
+		uint32_t height()	{ return mHeight; }
 		rgb color()		{ return mColor; }
-		u32 alpha()		{ return mAlpha; }
-		s32 angle()		{ return mAngle; }
+		uint32_t alpha()		{ return mAlpha; }
+		int32_t angle()		{ return mAngle; }
 		float deltaz()	{ return mDeltaZ; }
-		u32* uv()		{ return mUV; }
+		uint32_t* uv()		{ return mUV; }
 		
 		void SetTexture(Texture tex) { mTexture = tex; }
 		
 		//for spinners... a bit hacky but meh -.-
-		s32& Angle() { return mAngle; }
-		void SetCustomBounds(u32* uv) { mUV = uv; }
-		void SetHeight(s32 height) { mHeight = height; }
-		void SetWidth(s32 width) { mWidth = width; }
+		int32_t& Angle() { return mAngle; }
+		void SetCustomBounds(uint32_t* uv) { mUV = uv; }
+		void SetHeight(int32_t height) { mHeight = height; }
+		void SetWidth(int32_t width) { mWidth = width; }
 		
 		//for score sprites (more hax)
 		void SetDeltaZ(float z) { mDeltaZ = z; }
-		u32& Alpha() { return mAlpha; }
+		uint32_t& Alpha() { return mAlpha; }
 		
 		DrawOrigin origin()		{ return mOrigin; }
 		FieldType fieldType()	{ return mFieldType; }
@@ -69,13 +69,13 @@ class pDrawable
 
 		virtual void Draw() = 0;
 		
-		s32 X, Y;
-		u32 Width, Height;
-		rgb Color;
-		u32 Alpha;
-		s32 Angle;
+		int32_t X, Y;
+		uint32_t Width, Height;
+		SDL_Color Color;
+		uint32_t Alpha;
+		int32_t Angle;
 		float Z;
-		u32* UV;
+		uint32_t* UV;
 
 		void* Tag;
 		
@@ -83,20 +83,20 @@ class pDrawable
 		FieldType Field;
 		TextureType Texture;
 
-		void(*OnClick)(pDrawable* self, u16 x, u16 y);
+		void(*OnClick)(pDrawable* self, uint16_t x, uint16_t y);
         bool Clickable;
 	
 	protected:
-		u32 mOrigWidth, mOrigHeight;
+		uint32_t mOrigWidth, mOrigHeight;
 		bool mAlive;
 		/*
-		s32 mX, mY;
-		u32 mWidth, mHeight;
+		int32_t mX, mY;
+		uint32_t mWidth, mHeight;
 		rgb mColor;
-		u32 mAlpha;
-		s32 mAngle;
+		uint32_t mAlpha;
+		int32_t mAngle;
 		float mDeltaZ;
-		u32* mUV;
+		uint32_t* mUV;
 		
 		DrawOrigin mOrigin;
 		FieldType mFieldType;

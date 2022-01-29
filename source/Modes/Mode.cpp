@@ -1,14 +1,9 @@
-#include "defines.h"
-
 #include "Mode.h"
 
-Mode* Mode::sCurrentMode = NULL;
+Mode* Mode::sCurrentMode = nullptr;
 
 void Mode::ChangeToOsuDir()
 {
-#ifdef HARDWARE
-	chdir("fat:/osuds");
-#else
-	chdir("nitro:/osuds");
-#endif
+    //chdir("ux0:data/osu");
+    chdir("/Users/v/Repos/osu-ds/cmake-build-debug");
 }

@@ -1,4 +1,4 @@
-#include <nds.h>
+#include "SDL.h"
 #include <vector>
 
 #include "Helpers/MathHelper.h"
@@ -7,17 +7,15 @@
 #ifndef __BEATMAPELEMENTS_H__
 #define __BEATMAPELEMENTS_H__
 
-
-
 typedef struct {
-	s32 Time;
+	int32_t Time;
 	float BeatTime;
-	u8 SampleSetId;
+	uint8_t SampleSetId;
 } TimingPoint;
 
 typedef struct {
-	s32 StartTime;
-	s32 EndTime;
+	int32_t StartTime;
+	int32_t EndTime;
 } BreakPoint;
 
 class BeatmapElements
@@ -25,15 +23,15 @@ class BeatmapElements
 	public:
 		static BeatmapElements& Element() { return sInstance; }
 		
-		const TimingPoint& GetTimingPoint(s32 time);
+		const TimingPoint& GetTimingPoint(int32_t time);
 		const TimingPoint& GetTimingPoint();
 		
 		const bool IsBreak();
+
+        SDL_Color GetNextColour();
 		
-		rgb GetNextColour();
-		
-		void AddTimingPoint(s32 time, float beattime, u8 samplesetid);
-		void AddBreakPoint(s32 start, s32 end);
+		void AddTimingPoint(int32_t time, float beattime, uint8_t samplesetid);
+		void AddBreakPoint(int32_t start, int32_t end);
 		void ResetColours(bool fill);
 	
 	protected:
@@ -41,8 +39,8 @@ class BeatmapElements
 		
 		std::vector<TimingPoint> mTimingPoints;
 		std::vector<BreakPoint> mBreakPoints;
-		std::vector<rgb> mColours;
-		u32 mCurrentColour;
+		std::vector<SDL_Color> mColours;
+		uint32_t mCurrentColour;
 	
 	private:
 		BeatmapElements() {}
@@ -50,4 +48,3 @@ class BeatmapElements
 };
 
 #endif
-

@@ -1,5 +1,4 @@
 #include <string>
-#include <nds.h>
 
 #include "pDrawable.h"
 #include "System/TextManager.h"
@@ -12,7 +11,7 @@ public:
     std::string Text;
     FONT Font;
 
-    pText(std::string text, FONT font, u16 x, u16 y);
+    pText(std::string text, FONT font, uint16_t x, uint16_t y);
 
     void Draw() override;
 };

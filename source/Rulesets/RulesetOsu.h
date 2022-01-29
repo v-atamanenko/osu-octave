@@ -1,5 +1,4 @@
-#include <nds.h>
-#include <stdio.h>
+#include <cstdio>
 
 #include "Ruleset.h"
 #include "HitObjects/HitObject.h"
@@ -21,7 +20,7 @@ class RulesetOsu : public Ruleset, public ICallback
 		void DoCallback(void** args);
 	
 	protected:
-		u32 mSpecialScore;
+		int mSpecialScore;
 		float mScoreZ;
 };
 

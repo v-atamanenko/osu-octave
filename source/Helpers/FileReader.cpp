@@ -1,39 +1,50 @@
+#include <unistd.h>
 #include "FileReader.h"
 
-u32 FileReader::BUFFERSIZE = 1024;
+uint32_t FileReader::BUFFERSIZE = 1024;
 
-FileReader::FileReader(u8* source)
+FileReader::FileReader(uint8_t* source)
 {
-	Init(NULL, source);
+	Init(nullptr, source);
 }
 
 FileReader::FileReader(std::string& filename)
 {
 	FILE* handle = fopen(filename.c_str(), "rb");
-	Init(handle, NULL);
+    if (handle == nullptr) {
+        char temp[1024];
+        getcwd(temp, sizeof(temp));
+        fprintf(stderr, "failed to open handle for filename: %s. cwd: %s. return: %i\n", filename.c_str(), temp, errno);
+    }
+	Init(handle, nullptr);
 }
 
 FileReader::FileReader(const char* filename)
 {
 	FILE* handle = fopen(filename, "rb");
-	Init(handle, NULL);
+    if (handle == nullptr) {
+        char temp[1024];
+        getcwd(temp, sizeof(temp));
+        fprintf(stderr, "failed to open handle for filename: %s. cwd: %s. return: %i\n", filename, temp, errno);
+    }
+	Init(handle, nullptr);
 }
 
-void FileReader::Init(FILE* handle, u8* buffer)
+void FileReader::Init(FILE* handle, uint8_t* buffer)
 {
-	if (buffer == NULL && handle == NULL)
+	if (buffer == nullptr && handle == nullptr)
 	{
-		iprintf("\x1b[0;0Hno source");
-		mHandle = NULL;
-		mBuffer = NULL;
+		printf("\x1b[0;0Hno source");
+		mHandle = nullptr;
+		mBuffer = nullptr;
 		
 		fReady = false;
 		return;
 	}
 	
 	mBuffer = buffer;
-	if (buffer == NULL)
-		mBuffer = new u8[BUFFERSIZE];
+	if (buffer == nullptr)
+		mBuffer = new uint8_t[BUFFERSIZE];
 	
 	mHandle = handle;
 	
@@ -43,12 +54,12 @@ void FileReader::Init(FILE* handle, u8* buffer)
 
 FileReader::~FileReader()
 {
-	if (mHandle != NULL)
+	if (mHandle != nullptr)
 	{
 		fclose(mHandle);
 	}
 	
-	if (mBuffer != NULL)
+	if (mBuffer != nullptr)
 	{
 		delete[] mBuffer;
 	}
@@ -56,7 +67,7 @@ FileReader::~FileReader()
 
 int FileReader::FillBuffer() const
 {
-	if (mHandle == NULL || feof(mHandle))
+	if (mHandle == nullptr || feof(mHandle))
 		return -1;
 	if (pos == 0)
 		return 0;
@@ -68,31 +79,31 @@ int FileReader::FillBuffer() const
 	return bytesread;
 }
 
-void FileReader::PrepareBuffer(u8 datasize) const
+void FileReader::PrepareBuffer(uint8_t datasize) const
 {
 	//todo: handle eof
-	if (mHandle != NULL && BUFFERSIZE - datasize < pos)
+	if (mHandle != nullptr && BUFFERSIZE - datasize < pos)
 		FillBuffer();
 }
 
-u8 FileReader::ReadInt8() const
+uint8_t FileReader::ReadInt8() const
 {
 	PrepareBuffer(1);
 	return mBuffer[pos++];
 }
 
-u16 FileReader::ReadInt16() const
+uint16_t FileReader::ReadInt16() const
 {
 	PrepareBuffer(2);
-	u16 t = mBuffer[pos++];
+	uint16_t t = mBuffer[pos++];
 	t += mBuffer[pos++] << 8;
 	return t;
 }
 
-u32 FileReader::ReadInt32() const
+uint32_t FileReader::ReadInt32() const
 {
 	PrepareBuffer(4);
-	u32 t = mBuffer[pos++];
+	uint32_t t = mBuffer[pos++];
 	t += mBuffer[pos++] << 8;
 	t += mBuffer[pos++] << 16;
 	t += mBuffer[pos++] << 24;
@@ -102,7 +113,7 @@ u32 FileReader::ReadInt32() const
 float FileReader::ReadFloat() const
 {
 	PrepareBuffer(4);
-	u8 c[4];
+	uint8_t c[4];
 	c[0] = mBuffer[pos++];
 	c[1] = mBuffer[pos++];
 	c[2] = mBuffer[pos++];
@@ -111,12 +122,12 @@ float FileReader::ReadFloat() const
 }
 
 // Read Integers of variable size, kind of like in midi
-u32 FileReader::ReadVarInt() const
+uint32_t FileReader::ReadVarInt() const
 {
 	PrepareBuffer(4);
-	u32 value = 0;
-	u8 i = 0;
-	u8 b;
+	uint32_t value = 0;
+	uint8_t i = 0;
+	uint8_t b;
 	do                                      // Bits in the file:            10010101 11000101 00100010
 	{                                       // Bits in the Output: 00000000  0010101  1000101  0100010
 		b = mBuffer[pos++];
@@ -130,14 +141,14 @@ u32 FileReader::ReadVarInt() const
 
 std::string FileReader::ReadString() const
 {
-	u32 l = ReadVarInt();
+	uint32_t l = ReadVarInt();
 	if (l == 0)
-		return NULL;
+		return nullptr;
 	
 	PrepareBuffer(l);
 	
 	char* c = new char[l+1];
-	for (u32 i=0; i<l; ++i)
+	for (uint32_t i=0; i<l; ++i)
 		c[i] = mBuffer[pos++];
 	c[l] = '\0';
 	
@@ -145,15 +156,15 @@ std::string FileReader::ReadString() const
 	return s;
 }
 
-void FileReader::ReadData(void* ptr, u32 size) const
+void FileReader::ReadData(void* ptr, uint32_t size) const
 {
-	dmaCopyAsynch(&mBuffer[pos], ptr, size);
+    memcpy(ptr, &mBuffer[pos], size);
 	pos += size;
 }
 
 void FileReader::Reset() const
 {
-	if (mHandle == NULL)
+	if (mHandle == nullptr)
 	{
 		pos = 0;
 	}
@@ -164,7 +175,7 @@ void FileReader::Reset() const
 	}
 }
 
-void FileReader::Skip(u32 count) const
+void FileReader::Skip(uint32_t count) const
 {
 	PrepareBuffer(count);
 	pos += count;

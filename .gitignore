@@ -7,4 +7,4 @@
 cmake-build-debug
 build
 .vscode
-source/defines.h
+.DS_Store

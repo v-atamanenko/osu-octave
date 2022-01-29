@@ -1,5 +1,4 @@
-#include <nds.h>
-#include <stdio.h>
+#include <cstdio>
 #include <vector>
 
 #ifndef __ICALLBACK_H__
@@ -7,8 +6,6 @@
 
 #define ARGS_PUSH(array, id, argument) array[id] = (void*)(&argument);
 #define ARGS_POP(array, id, type) *((type*)array[id])
-
-
 
 class ICallback
 {

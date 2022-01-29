@@ -2,22 +2,20 @@
 
 pDrawable::~pDrawable()
 {
-	for (transformIterator it = mTransformations.begin(); it != mTransformations.end(); ++it)
+	for (auto & mTransformation : mTransformations)
 	{
-		if (*it != NULL)
-			delete *it;
+		delete mTransformation;
 	}
 	
-	if (UV != NULL)
+	if (UV != nullptr)
 		delete UV;
 }
 
 void pDrawable::Update()
 {
-	for (transformIterator it = mTransformations.begin(); it != mTransformations.end(); ++it)
+	for (auto tr : mTransformations)
 	{
-		Transformation* tr = (*it);
-		tr->Update();
+        tr->Update();
 		
 		if (tr->Active())
 		{
@@ -49,7 +47,7 @@ void pDrawable::Update()
 	}
 }
 
-bool pDrawable::InBounds(s32 x, s32 y)
+bool pDrawable::InBounds(int32_t x, int32_t y)
 {
 	if (Field == FIELD_PLAY)
 	{
@@ -67,8 +65,8 @@ bool pDrawable::InBounds(s32 x, s32 y)
 		
 		case ORIGIN_CENTER:
 		{
-			s32 halfWidth = Width>>1;
-			s32 halfHeight = Height>>1;
+			int32_t halfWidth = Width>>1;
+			int32_t halfHeight = Height>>1;
 			
 			return x >= X-halfWidth && x <= X+halfWidth
 				&& y >= Y-halfHeight && y <= Y+halfHeight;
@@ -85,17 +83,16 @@ bool pDrawable::InBounds(s32 x, s32 y)
 	}
 }
 
-void pDrawable::Kill(s32 time)
+void pDrawable::Kill(int32_t time)
 {
 	Transform(TR_KILL, time, time, 0, 0);
 }
 
 void pDrawable::ClearTransforms()
 {
-	for (transformIterator it = mTransformations.begin(); it != mTransformations.end(); ++it)
+	for (auto & mTransformation : mTransformations)
 	{
-		if (*it != NULL)
-			delete *it;
+		delete mTransformation;
 	}
 	
 	mTransformations.clear();
@@ -106,40 +103,40 @@ void pDrawable::Transform(Transformation* transform)
 	mTransformations.push_back(transform);
 }
 
-void pDrawable::Transform(TransformType type, s32 starttime, s32 endtime, s32 startvalue, s32 endvalue)
+void pDrawable::Transform(TransformType type, int32_t starttime, int32_t endtime, int32_t startvalue, int32_t endvalue)
 {
 	Transform(new Transformation(type, starttime, endtime, startvalue, endvalue));
 }
 
-void pDrawable::Scale(s32 starttime, s32 endtime, float start, float end)
+void pDrawable::Scale(int32_t starttime, int32_t endtime, float start, float end)
 {
 	Transform(TR_SCALEX, starttime, endtime, mOrigWidth*start, mOrigWidth*end);
 	Transform(TR_SCALEY, starttime, endtime, mOrigHeight*start, mOrigHeight*end);
 }
 
-void pDrawable::Move(s32 starttime, s32 endtime, s32 startx, s32 starty, s32 endx, s32 endy)
+void pDrawable::Move(int32_t starttime, int32_t endtime, int32_t startx, int32_t starty, int32_t endx, int32_t endy)
 {
 	Transform(TR_MOVEX, starttime, endtime, startx, endx);
 	Transform(TR_MOVEY, starttime, endtime, starty, endy);
 }
 
-void pDrawable::Move(s32 starttime, s32 endtime, s32 endx, s32 endy)
+void pDrawable::Move(int32_t starttime, int32_t endtime, int32_t endx, int32_t endy)
 {
 	Move(starttime, endtime, X, Y, endx, endy);
 }
 
-void pDrawable::Move(s32 endx, s32 endy)
+void pDrawable::Move(int32_t endx, int32_t endy)
 {
 	X = endx;
 	Y = endy;
 }
 
-void pDrawable::Rotate(s32 starttime, s32 endtime, s32 starta, s32 enda)
+void pDrawable::Rotate(int32_t starttime, int32_t endtime, int32_t starta, int32_t enda)
 {
 	Transform(TR_ROTATE, starttime, endtime, starta, enda);
 }
 
-void pDrawable::Rotate(s32 angle)
+void pDrawable::Rotate(int32_t angle)
 {
 	Transform(TR_ROTATE, GameClock::Clock().Time(), GameClock::Clock().Time(), angle, angle);
 }
@@ -149,12 +146,12 @@ void pDrawable::Show()
 	Show(GameClock::Clock().Time());
 }
 
-void pDrawable::Show(s32 time)
+void pDrawable::Show(int32_t time)
 {
 	Transform(TR_FADE, time, time, 31, 31);
 }
 
-void pDrawable::Show(s32 starttime, s32 endtime)
+void pDrawable::Show(int32_t starttime, int32_t endtime)
 {
 	Transform(TR_FADE, starttime, endtime, 0, 31);
 }
@@ -164,12 +161,12 @@ void pDrawable::Hide()
 	Hide(GameClock::Clock().Time());
 }
 
-void pDrawable::Hide(s32 time)
+void pDrawable::Hide(int32_t time)
 {
 	Transform(TR_FADE, time, time, 0, 0);
 }
 
-void pDrawable::Hide(s32 starttime, s32 endtime)
+void pDrawable::Hide(int32_t starttime, int32_t endtime)
 {
 	Transform(TR_FADE, starttime, endtime, 31, 0);
 }

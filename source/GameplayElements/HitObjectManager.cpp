@@ -3,10 +3,9 @@
 HitObjectManager::~HitObjectManager()
 {
 	//delete hitobjects
-	for (hitObjectIterator it = mHitObjects.begin(); it != mHitObjects.end(); ++it)
+	for (auto & mHitObject : mHitObjects)
 	{
-		if (*it != NULL)
-			delete *it;
+		delete mHitObject;
 	}
 }
 
@@ -27,18 +26,18 @@ void HitObjectManager::HandleInput()
 	{
 		process = false;
 		
-		if (mHitObjects.size() == 0)
+		if (mHitObjects.empty())
 			return;
 		
 		// process hitobjects one at a time
 		hitObject = mHitObjects.front();
 		
-		if (hitObject->GetEndTime() <= GameClock::Clock().Time() || hitObject->GetHit() == true)
+		if (hitObject->GetEndTime() <= GameClock::Clock().Time() || hitObject->GetHit())
 		{
 			// sprites are handled by spritemanager and will not be deleted (see HitObject.h)
 			
 			// TODO: this is a bit hacky - find a way to guarantee this won't cause a crash
-			if (GameClock::Clock().Time() - hitObject->GetEndTime() < 1000 && hitObject->GetHit() == false)
+			if (GameClock::Clock().Time() - hitObject->GetEndTime() < 1000 && !hitObject->GetHit())
 				hitObject->Hit();
 			
 			mHitObjects.pop_front();
@@ -50,13 +49,13 @@ void HitObjectManager::HandleInput()
 	
 	// now we are left with the next hitobject that can react to user interaction
 	
-	if (InputHelper::KeyDown(KEY_TOUCH))
+	if (InputHelper::KeyDown(SDL_BUTTON_LEFT, IH_KEY_MOUSE))
 		hitObject->OnTouchDown(touch);
 	
-	if (InputHelper::KeyHeld(KEY_TOUCH))
+	if (InputHelper::KeyHeld(SDL_BUTTON_LEFT, IH_KEY_MOUSE))
 		hitObject->OnTouch(touch);
 	
-	if (InputHelper::KeyUp(KEY_TOUCH))
+	if (InputHelper::KeyUp(SDL_BUTTON_LEFT, IH_KEY_MOUSE))
 		hitObject->OnTouchUp(touch);
 	
 	hitObject->Update();

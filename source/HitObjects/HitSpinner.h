@@ -1,5 +1,4 @@
-#include <nds.h>
-#include <math.h>
+#include <cmath>
 #include "HitObject.h"
 
 #ifndef __HITSPINNER_H__
@@ -8,7 +7,7 @@
 class HitSpinner : public HitObject
 {
 	public:
-		HitSpinner(s32 time, s32 endtime, HitObjectSound sound);
+		HitSpinner(int32_t time, int32_t endtime, HitObjectSound sound);
 		~HitSpinner();
 		
 		void Update();
@@ -19,17 +18,17 @@ class HitSpinner : public HitObject
 		void Hit();
 	
 	protected:
-		s32 GetAngle(s32 x, s32 y);
+		int32_t GetAngle(int32_t x, int32_t y);
 		
-		s32 mLastAngle;
+		int32_t mLastAngle;
 		bool fSpinning;
-		s32 mDirection, mZeroPoint;
+		int32_t mDirection, mZeroPoint;
 		float mTotalRotation;
-		u32 mCurrentRotation;
-		u32 mTotalSpins;
-		u32 mRequiredSpins;
+		uint32_t mCurrentRotation;
+		uint32_t mTotalSpins;
+		uint32_t mRequiredSpins;
 		
-		u32* mUV;
+		uint32_t* mUV;
 		
 		int mChannel;
 };

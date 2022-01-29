@@ -1,11 +1,8 @@
-#include <nds.h>
 #include <vector>
 #include "HitObject.h"
 
 #ifndef __HITSLIDER_H__
 #define __HITSLIDER_H__
-
-
 
 typedef std::vector<HitObjectPoint*>::iterator pointIterator;
 
@@ -17,10 +14,10 @@ typedef struct {
 class HitSlider : public HitObject
 {
 	public:
-		HitSlider(s32 x, s32 y, s32 time, u32 lengthtime, std::vector<HitObjectPoint*>& points, std::vector<HitObjectPoint*>& ticks, u32 repeats, HitObjectType type, HitObjectSound sound);
+		HitSlider(int32_t x, int32_t y, int32_t time, uint32_t lengthtime, std::vector<HitObjectPoint*>& points, std::vector<HitObjectPoint*>& ticks, uint32_t repeats, HitObjectType type, HitObjectSound sound);
 		~HitSlider();
 		
-		bool InBounds(s32 x, s32 y);
+		bool InBounds(int32_t x, int32_t y);
 		
 		void Update();
 		
@@ -31,18 +28,18 @@ class HitSlider : public HitObject
 		void Hit();
 	
 	protected:
-		static void MapSliderPath(pSprite* spr, std::vector<HitObjectPoint*>& points, s32 time, u32 lengthtime, u32 repeats);
+		static void MapSliderPath(pSprite* spr, std::vector<HitObjectPoint*>& points, int32_t time, uint32_t lengthtime, uint32_t repeats);
 		
 		bool fTouching, fStarted, fFinished;
 		TickSprites* mTicks;
-		s32* mTickTimes;
-		u32 mTickTime, mLengthTime;
+		int32_t* mTickTimes;
+		uint32_t mTickTime, mLengthTime;
 		
-		u32 mTickCount, mTicksHit, mTicksTarget;
-		u32 mRepeats, mRepeatCurrent;
-		s32 mTimeLast;
+		uint32_t mTickCount, mTicksHit, mTicksTarget;
+		uint32_t mRepeats, mRepeatCurrent;
+		int32_t mTimeLast;
 		
-		u32 mSecondaryScoreSpriteId;
+		uint32_t mSecondaryScoreSpriteId;
 		
 		int mChannel;
 };

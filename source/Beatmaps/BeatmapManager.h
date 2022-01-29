@@ -1,8 +1,7 @@
-#include <nds.h>
-#include <stdio.h>
+#include <cstdio>
 #include <string>
 #include <dirent.h>
-#include <string.h>
+#include <cstring>
 #include <vector>
 
 #include "Beatmap.h"
@@ -13,8 +12,6 @@
 #ifndef __BEATMAPMANAGER_H__
 #define __BEATMAPMANAGER_H__
 
-
-
 typedef std::vector<Beatmap*>::iterator beatmapIterator;
 
 class BeatmapManager
@@ -23,9 +20,9 @@ class BeatmapManager
 		static Beatmap& Current() { return *mBeatmapCurrent; }
 		
 		static void BuildCollection();
-		static void Load(u32 index);
-		static u32 MapCount();
-		static u32 SongCount();
+		static void Load(uint32_t index);
+		static uint32_t MapCount();
+		static uint32_t SongCount();
 		
 		static std::vector<Beatmap*>& Beatmaps() { return mBeatmaps; }
 	

@@ -1,4 +1,4 @@
-#include <nds.h>
+#include <SDL.h>
 #include "HitObject.h"
 
 #ifndef __HITCIRCLE_H__
@@ -7,9 +7,9 @@
 class HitCircle : public HitObject
 {
 	public:
-		HitCircle(s32 x, s32 y, s32 time, HitObjectType type, HitObjectSound sound);
+		HitCircle(int32_t x, int32_t y, int32_t time, HitObjectType type, HitObjectSound sound);
 		
-		bool InBounds(s32 x, s32 y);
+		bool InBounds(int32_t x, int32_t y);
 		
 		void OnTouchDown(const touchPosition& touch);
 		

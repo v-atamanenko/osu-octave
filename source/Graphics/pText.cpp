@@ -1,6 +1,6 @@
 #include "pText.h"
 
-pText::pText(std::string text, FONT font, u16 x, u16 y) {
+pText::pText(std::string text, FONT font, uint16_t x, uint16_t y) {
     this->X = x;
     this->Y = y;
     this->Text = text;
@@ -21,5 +21,6 @@ void pText::Draw() {
 		(char*) this->Text.c_str()
 	);
 
-    nocashMessage(this->Text.c_str());
+    //debug to no$gba
+    //nocashMessage(this->Text.c_str());
 }

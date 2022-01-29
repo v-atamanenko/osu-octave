@@ -6,10 +6,10 @@
 
 void ChangeMode(ModeType mode)
 {
-	//dim screen
+	/*/dim screen
 	if (Mode::sCurrentMode != NULL)
 	{
-		for (s32 b = 0; b >= -16; --b)
+		for (int b = 0; b >= -16; --b)
 		{
 			setBrightness(1, b);
 			swiWaitForVBlank();
@@ -18,7 +18,7 @@ void ChangeMode(ModeType mode)
 	else
 	{
 		setBrightness(1, -16);
-	}
+	}*/
 	
 	TextManager::Bottom().Clear();
 	TextManager::Top().Clear();
@@ -27,7 +27,7 @@ void ChangeMode(ModeType mode)
 	//otherwise bad things happen with sprites
 	GameClock::Clock().Reset();
 	
-	if (Mode::sCurrentMode != NULL)
+	if (Mode::sCurrentMode != nullptr)
 		delete Mode::sCurrentMode;
 	
 	switch (mode)
@@ -40,14 +40,14 @@ void ChangeMode(ModeType mode)
 			break;
 	}
 	
-	swiWaitForVBlank();
+	//swiWaitForVBlank();
 	Mode::CurrentMode().Update();
-	glFlush(1);
+	//glFlush(1);
 	
-	//return screen to full brightness
+	/*/return screen to full brightness
 	for (s32 b = -16; b <= 0; ++b)
 	{
 		setBrightness(1, b);
 		swiWaitForVBlank();
-	}
+	}*/
 }

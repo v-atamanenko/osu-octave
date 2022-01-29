@@ -1,5 +1,4 @@
-#include <nds.h>
-#include <stdio.h>
+#include <cstdio>
 #include <list>
 
 #include "HitObjects/HitObject.h"
@@ -10,8 +9,6 @@
 
 #ifndef __HITOBJECTMANAGER_H__
 #define __HITOBJECTMANAGER_H__
-
-
 
 typedef std::list<HitObject*>::iterator hitObjectIterator;
 

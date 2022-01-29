@@ -1,6 +1,6 @@
 #include "HitSlider.h"
 
-HitSlider::HitSlider(s32 x, s32 y, s32 time, u32 lengthtime, std::vector<HitObjectPoint*>& points, std::vector<HitObjectPoint*>& ticks, u32 repeats, HitObjectType type, HitObjectSound sound)
+HitSlider::HitSlider(int32_t x, int32_t y, int32_t time, uint32_t lengthtime, std::vector<HitObjectPoint*>& points, std::vector<HitObjectPoint*>& ticks, uint32_t repeats, HitObjectType type, HitObjectSound sound)
 	: HitObject(x, y, time, type, sound)
 {
 	fTouching = false;
@@ -9,8 +9,8 @@ HitSlider::HitSlider(s32 x, s32 y, s32 time, u32 lengthtime, std::vector<HitObje
 	mTimeLast = time;
 	mChannel = -1;
 	
-	u32 pointCount = points.size();
-	u32 tickCount = ticks.size();
+	uint32_t pointCount = points.size();
+	uint32_t tickCount = ticks.size();
 	
 	mTickCount = tickCount;
 	mTicksHit = 0;
@@ -19,18 +19,18 @@ HitSlider::HitSlider(s32 x, s32 y, s32 time, u32 lengthtime, std::vector<HitObje
 	mTicksTarget = (tickCount + 1) * repeats + 1;
 	
 	mTicks = new TickSprites[tickCount];
-	mTickTimes = new s32[mTicksTarget-1];
+	mTickTimes = new int32_t[mTicksTarget-1];
 	
-	u32 beatTime = BeatmapElements::Element().GetTimingPoint(time).BeatTime;
+	uint32_t beatTime = BeatmapElements::Element().GetTimingPoint(time).BeatTime;
 	
 	//populate tick times excluding first hit
 	mTickTime = beatTime / DifficultyManager::SliderTickRate;
-	u32 specialTickTime = lengthtime - mTickCount*mTickTime;
+	uint32_t specialTickTime = lengthtime - mTickCount*mTickTime;
 	
 	//easy if we don't have any ticks, just keep adding lengthtime
 	if (tickCount == 0)
 	{
-		for (u32 i=0; i<mTicksTarget-1; ++i)
+		for (uint32_t i=0; i<mTicksTarget-1; ++i)
 		{
 			mTickTimes[i] = time + (lengthtime * (i+1));
 		}
@@ -43,11 +43,11 @@ HitSlider::HitSlider(s32 x, s32 y, s32 time, u32 lengthtime, std::vector<HitObje
 		
 		//long story short - it just works :D
 		
-		u32 iterator = 0;
+		uint32_t iterator = 0;
 		while (iterator < repeats)
 		{
-			u32 j;
-			for (u32 i=0; i<tickCount; ++i)
+			uint32_t j;
+			for (uint32_t i=0; i<tickCount; ++i)
 			{
 				j = iterator*(tickCount+1)+i;
 				if (j==0)
@@ -62,7 +62,7 @@ HitSlider::HitSlider(s32 x, s32 y, s32 time, u32 lengthtime, std::vector<HitObje
 			if (iterator < repeats)
 			{
 				mTickTimes[iterator*(tickCount+1)] = mTickTimes[iterator*(tickCount+1)-1] + specialTickTime;
-				for (u32 i=1; i<tickCount+1; ++i)
+				for (uint32_t i=1; i<tickCount+1; ++i)
 				{
 					j = iterator*(tickCount+1)+i;
 					mTickTimes[j] = mTickTimes[j-1] + mTickTime;
@@ -72,30 +72,30 @@ HitSlider::HitSlider(s32 x, s32 y, s32 time, u32 lengthtime, std::vector<HitObje
 		}
 	}
 	
-	u32 circleSize = DifficultyManager::GetCircleSize();
-	u32 ballSize = (circleSize >> 3) * 7; // 7/8 size
-	u32 tickSize = circleSize >> 2; // 1/4 size
+	uint32_t circleSize = DifficultyManager::GetCircleSize();
+	uint32_t ballSize = (circleSize >> 3) * 7; // 7/8 size
+	uint32_t tickSize = circleSize >> 2; // 1/4 size
 	
-	u32 preempt = DifficultyManager::GetPreemptTime();
-	s32 fadeInStart = time - preempt;
-	s32 fadeInEnd = fadeInStart + (preempt >> 3);
+	uint32_t preempt = DifficultyManager::GetPreemptTime();
+	int32_t fadeInStart = time - preempt;
+	int32_t fadeInEnd = fadeInStart + (preempt >> 3);
 	mEndTime = time + (repeats * lengthtime);
 	mLengthTime = lengthtime;
 	
 	pSprite* spr;
 	
 	//todo: fix formula
-	//u32 fps = (u32)(DifficultyManager::SliderMultiplier*3.142*ballSize*1000/beatTime);
-	u32 fps = 60;
+	//uint32_t fps = (uint32_t)(DifficultyManager::SliderMultiplier*3.142*ballSize*1000/beatTime);
+	uint32_t fps = 60;
 	
 	//slider ball
-	spr = new pAnimation(TX_PLAY_SLIDERB0, 10, fps, x, y, ballSize, ballSize, ORIGIN_CENTER, FIELD_PLAY, RGB15(31,31,31), 0);
+	spr = new pAnimation(TX_PLAY_SLIDERB0, 10, fps, x, y, ballSize, ballSize, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({31,31,31}), 0);
 	spr->Show(time);
 	MapSliderPath(spr, points, time, lengthtime, repeats);
 	spr->Kill(mEndTime);
 	mSprites.push_back(spr);
 	
-	spr = new pSprite(TX_PLAY_SLIDERFOLLOW, x, y, ballSize, ballSize, ORIGIN_CENTER, FIELD_PLAY, RGB15(31,31,31), 0);
+	spr = new pSprite(TX_PLAY_SLIDERFOLLOW, x, y, ballSize, ballSize, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({31,31,31}), 0);
 	spr->Scale(time, time+50, 1, 2);
 	spr->Scale(mEndTime, mEndTime+50, 2, 1.5);
 	MapSliderPath(spr, points, time, lengthtime, repeats);
@@ -121,7 +121,7 @@ HitSlider::HitSlider(s32 x, s32 y, s32 time, u32 lengthtime, std::vector<HitObje
 	spr->Kill(mEndTime);
 	mSprites.push_back(spr);
 	
-	spr = new pSprite(TX_PLAY_CIRCLEOVERLAY, x, y, circleSize, circleSize, ORIGIN_CENTER, FIELD_PLAY, RGB15(31,31,31), 0);
+	spr = new pSprite(TX_PLAY_CIRCLEOVERLAY, x, y, circleSize, circleSize, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({31,31,31}), 0);
 	spr->Show(fadeInStart, fadeInEnd);
 	spr->Kill(mEndTime+1000);
 	mSprites.push_back(spr);
@@ -132,7 +132,7 @@ HitSlider::HitSlider(s32 x, s32 y, s32 time, u32 lengthtime, std::vector<HitObje
 	mSprites.push_back(spr);
 	
 	//slider end
-	spr = new pSprite(TX_PLAY_CIRCLEOVERLAY, points[pointCount-1]->x, points[pointCount-1]->y, circleSize, circleSize, ORIGIN_CENTER, FIELD_PLAY, RGB15(31,31,31), 0);
+	spr = new pSprite(TX_PLAY_CIRCLEOVERLAY, points[pointCount-1]->x, points[pointCount-1]->y, circleSize, circleSize, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({31,31,31}), 0);
 	spr->Show(fadeInStart, fadeInEnd);
 	spr->Kill(mEndTime+1000);
 	mSprites.push_back(spr);
@@ -143,19 +143,19 @@ HitSlider::HitSlider(s32 x, s32 y, s32 time, u32 lengthtime, std::vector<HitObje
 	mSprites.push_back(spr);
 	
 	//slider30 sprites
-	spr = new pSprite(TX_PLAY_SLIDER30, points[0]->x, points[0]->y, 40, 40, ORIGIN_CENTER, FIELD_PLAY, RGB15(31,31,31), 0);
+	spr = new pSprite(TX_PLAY_SLIDER30, points[0]->x, points[0]->y, 40, 40, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({31,31,31}), 0);
 	spr->Kill(mEndTime+1000);
 	mSprites.push_back(spr);
 	
-	spr = new pSprite(TX_PLAY_SLIDER30, points[pointCount-1]->x, points[pointCount-1]->y, 40, 40, ORIGIN_CENTER, FIELD_PLAY, RGB15(31,31,31), 0);
+	spr = new pSprite(TX_PLAY_SLIDER30, points[pointCount-1]->x, points[pointCount-1]->y, 40, 40, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({31,31,31}), 0);
 	spr->Kill(mEndTime+1000);
 	mSprites.push_back(spr);
 	
 	//slider repeats
-	for (u32 i=1; i<repeats; ++i) //start at 1 because no repeats if repeats==1
+	for (uint32_t i=1; i<repeats; ++i) //start at 1 because no repeats if repeats==1
 	{
 		HitObjectPoint* p;
-		s32 tAnimStart, tFadeInEnd, tAngle;
+		int32_t tAnimStart, tFadeInEnd, tAngle;
 		
 		if ((i&0x1)==0) //if even - slider start
 		{
@@ -173,7 +173,7 @@ HitSlider::HitSlider(s32 x, s32 y, s32 time, u32 lengthtime, std::vector<HitObje
 			tFadeInEnd = fadeInEnd;
 		}
 		
-		spr = new pSprite(TX_PLAY_SLIDERREVERSE, p->x, p->y, ballSize, ballSize, ORIGIN_CENTER, FIELD_PLAY, RGB15(31,31,31), 0);
+		spr = new pSprite(TX_PLAY_SLIDERREVERSE, p->x, p->y, ballSize, ballSize, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({31,31,31}), 0);
 		spr->Show(tAnimStart, tFadeInEnd);
 		//todo: slider repeat explosion?
 		spr->Hide(time+(lengthtime*i));
@@ -181,7 +181,7 @@ HitSlider::HitSlider(s32 x, s32 y, s32 time, u32 lengthtime, std::vector<HitObje
 		//animate arrow
 		do
 		{
-			s32 tAnimEnd = tAnimStart + 500;
+			int32_t tAnimEnd = tAnimStart + 500;
 			spr->Rotate(tAnimStart, tAnimEnd, tAngle, tAngle+3000);
 			spr->Scale(tAnimStart, tAnimEnd, 1, 0.9);
 			tAnimStart = tAnimEnd;
@@ -192,9 +192,9 @@ HitSlider::HitSlider(s32 x, s32 y, s32 time, u32 lengthtime, std::vector<HitObje
 	}
 	
 	//slider ticks & score sprites
-	for (u32 i=0; i<tickCount; ++i)
+	for (uint32_t i=0; i<tickCount; ++i)
 	{
-		spr = new pSprite(TX_PLAY_SLIDERTICK, ticks[i]->x, ticks[i]->y, tickSize, tickSize, ORIGIN_CENTER, FIELD_PLAY, RGB15(31,31,31), 0);
+		spr = new pSprite(TX_PLAY_SLIDERTICK, ticks[i]->x, ticks[i]->y, tickSize, tickSize, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({31,31,31}), 0);
 		spr->Show(fadeInStart, fadeInEnd);
 		spr->Hide(mEndTime, mEndTime+120);
 		spr->Kill(mEndTime+120);
@@ -203,7 +203,7 @@ HitSlider::HitSlider(s32 x, s32 y, s32 time, u32 lengthtime, std::vector<HitObje
 		//add to list for tracking ticks
 		mTicks[i].Tick = spr;
 		
-		spr = new pSprite(TX_PLAY_SLIDER10, ticks[i]->x, ticks[i]->y, 40, 40, ORIGIN_CENTER, FIELD_PLAY, RGB15(31,31,31),0);
+		spr = new pSprite(TX_PLAY_SLIDER10, ticks[i]->x, ticks[i]->y, 40, 40, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({31,31,31}),0);
 		spr->Kill(mEndTime+1000);
 		mSprites.push_back(spr);
 		
@@ -212,7 +212,7 @@ HitSlider::HitSlider(s32 x, s32 y, s32 time, u32 lengthtime, std::vector<HitObje
 	}
 	
 	//slider path
-	for (u32 i=0; i<pointCount; ++i)
+	for (uint32_t i=0; i<pointCount; ++i)
 	{
 		spr = new pSprite(TX_PLAY_DISC, points[i]->x, points[i]->y, ballSize, ballSize, ORIGIN_CENTER, FIELD_PLAY, mColour, 0, 0.015f);
 		spr->Show(fadeInStart+30, fadeInEnd);
@@ -231,7 +231,7 @@ HitSlider::~HitSlider()
 		AudioManager::Engine().StopChannel(mChannel);
 }
 
-bool HitSlider::InBounds(s32 x, s32 y)
+bool HitSlider::InBounds(int32_t x, int32_t y)
 {
 	//hit is based on sliderfollowcircle
 	return mSprites[1]->InBounds(x, y);
@@ -239,7 +239,7 @@ bool HitSlider::InBounds(s32 x, s32 y)
 
 void HitSlider::Update()
 {
-	s32 now = GameClock::Clock().Time();
+	int32_t now = GameClock::Clock().Time();
 	
 	//trigger score calculation once slider is finished
 	if (now >= mEndTime)
@@ -248,7 +248,7 @@ void HitSlider::Update()
 	//process slider behaviour
 	{
 		//find the next tick
-		u32 i = 0;
+		uint32_t i = 0;
 		for (; i < mTicksTarget; ++i)
 		{
 			if (mTickTimes[i] > mTimeLast)
@@ -268,7 +268,7 @@ void HitSlider::Update()
 				{
 					if (fTouching)
 					{
-						u32 real;
+						uint32_t real;
 						
 						//fairly straightfoward if this is the first (or only) repeat
 						if (mRepeatCurrent == 0)
@@ -317,7 +317,7 @@ void HitSlider::Update()
 						++mTicksHit;
 						mSprites[1]->Scale(now, now+60, 2.5, 2);
 						
-						u32 tSpriteId;
+						uint32_t tSpriteId;
 						
 						if ((mRepeatCurrent&1)==1) //if ODD
 							tSpriteId = 7;
@@ -349,7 +349,7 @@ void HitSlider::Update()
 			{
 				++mTicksHit;
 				
-				u32 tSpriteId;
+				uint32_t tSpriteId;
 				
 				if ((mRepeats&1)==0) //if EVEN - mRepeats is always greater than the maximum value of mRepeatCurrent by 1
 					tSpriteId = 7;
@@ -372,7 +372,7 @@ void HitSlider::Update()
 	//reset ticks if ball goes to a repeat regardless of fTouching
 	if (now >= mTime + (mLengthTime * (mRepeatCurrent + 1)))
 	{
-		for (u32 j=0; j<mTickCount; ++j)
+		for (uint32_t j=0; j<mTickCount; ++j)
 		{
 			//no need to reshow visible sprites
 			if (mTicks[j].Tick->Alpha != 31)
@@ -388,8 +388,8 @@ void HitSlider::OnTouchDown(const touchPosition& touch)
 {
 	if (InBounds(touch.px, touch.py))
 	{
-		s32 now = GameClock::Clock().Time();
-		u32 delta = MathHelper::Abs(mTime - now);
+		int32_t now = GameClock::Clock().Time();
+		uint32_t delta = MathHelper::Abs(mTime - now);
 		
 		//slider start
 		if (delta < DifficultyManager::GetHitWindow() && !fStarted)
@@ -427,8 +427,8 @@ void HitSlider::OnTouchDown(const touchPosition& touch)
 
 void HitSlider::OnTouch(const touchPosition& touch)
 {
-	s32 now = GameClock::Clock().Time();
-	u32 delta = MathHelper::Abs(mTime - now);
+	int32_t now = GameClock::Clock().Time();
+	uint32_t delta = MathHelper::Abs(mTime - now);
 	
 	if (InBounds(touch.px, touch.py) && now >= mTime && now <= mEndTime + DifficultyManager::GetHitWindow())
 	{
@@ -455,7 +455,7 @@ void HitSlider::OnTouch(const touchPosition& touch)
 
 void HitSlider::OnTouchUp(const touchPosition& touch)
 {
-	s32 now = GameClock::Clock().Time();
+	int32_t now = GameClock::Clock().Time();
 	mSprites[1]->Transform(TR_FADE, now, mEndTime, 0, 0);
 	
 	if (mChannel != -1)
@@ -475,7 +475,7 @@ void HitSlider::Hit()
 		IncreaseScore(SCORE_MISS, true, false, mSecondaryScoreSpriteId); //miss shows on both slider start and end
 		
 		//fade hitcircles
-		for (u32 i=3; i<=6; ++i)
+		for (uint32_t i=3; i<=6; ++i)
 		{
 			mSprites[i]->Transform(TR_FADE, mEndTime, mEndTime+100, 31, 0);
 		}
@@ -496,7 +496,7 @@ void HitSlider::Hit()
 		}
 		
 		//animate hitcircles
-		for (u32 i=3; i<=6; ++i)
+		for (uint32_t i=3; i<=6; ++i)
 		{
 			mSprites[i]->Transform(TR_FADE, mEndTime, mEndTime+200, 31, 10);
 			mSprites[i]->Transform(TR_FADE, mEndTime+200, mEndTime+270, 10, 0);
@@ -516,14 +516,14 @@ void HitSlider::Hit()
 	mHit = true;
 }
 
-void HitSlider::MapSliderPath(pSprite* spr, std::vector<HitObjectPoint*>& points, s32 time, u32 lengthtime, u32 repeats)
+void HitSlider::MapSliderPath(pSprite* spr, std::vector<HitObjectPoint*>& points, int32_t time, uint32_t lengthtime, uint32_t repeats)
 {
-	u32 timeperpoint = lengthtime / points.size();
+	uint32_t timeperpoint = lengthtime / points.size();
 	
-	u32 loops = 0;
+	uint32_t loops = 0;
 	while (loops < repeats)
 	{
-		for (u32 i=0; i<points.size()-1; ++i)
+		for (uint32_t i=0; i<points.size()-1; ++i)
 		{
 			spr->Move(time+(loops*lengthtime)+(timeperpoint*i), time+(loops*lengthtime)+(timeperpoint*(i+1)), points[i]->x, points[i]->y, points[i+1]->x, points[i+1]->y);
 			spr->Rotate(time+(loops*lengthtime)+(timeperpoint*i), time+(loops*lengthtime)+(timeperpoint*(i+1)), points[i]->angle, points[i+1]->angle);
@@ -532,7 +532,7 @@ void HitSlider::MapSliderPath(pSprite* spr, std::vector<HitObjectPoint*>& points
 		
 		if (loops < repeats)
 		{
-			for (u32 i=0; i<points.size()-1; ++i)
+			for (uint32_t i=0; i<points.size()-1; ++i)
 			{
 				spr->Move(time+(loops*lengthtime)+(timeperpoint*i), time+(loops*lengthtime)+(timeperpoint*(i+1)), points[points.size()-i-1]->x, points[points.size()-i-1]->y, points[points.size()-i-2]->x, points[points.size()-i-2]->y);
 				spr->Rotate(time+(loops*lengthtime)+(timeperpoint*i), time+(loops*lengthtime)+(timeperpoint*(i+1)), points[points.size()-i-1]->angle+0x4000, points[points.size()-i-2]->angle+0x4000);

@@ -1,5 +1,4 @@
-#include <nds.h>
-#include <stdio.h>
+#include <cstdio>
 #include <string>
 
 #include "Helpers/MathHelper.h"
@@ -28,36 +27,36 @@ class Score
 		
 		void Add(ScoreType score, bool forceNoCombo = false, bool gekiKatu = false);
 		
-		u32 CurrentScore()            { return mScore; }
-		u32 CurrentCombo()            { return mCombo; }
-		u32 MaxCombo()                { return mMaxCombo; }
-		u32 Count300()                { return mCount300; }
-		u32 Count100()                { return mCount100; }
-		u32 Count50()                 { return mCount50; }
-		u32 CountMiss()               { return mCountMiss; }
-		u32 CountGeki()               { return mCountGeki; }
-		u32 CountKatu()               { return mCountKatu; }
+		uint32_t CurrentScore()            { return mScore; }
+		uint32_t CurrentCombo()            { return mCombo; }
+		uint32_t MaxCombo()                { return mMaxCombo; }
+		uint32_t Count300()                { return mCount300; }
+		uint32_t Count100()                { return mCount100; }
+		uint32_t Count50()                 { return mCount50; }
+		uint32_t CountMiss()               { return mCountMiss; }
+		uint32_t CountGeki()               { return mCountGeki; }
+		uint32_t CountKatu()               { return mCountKatu; }
 		std::string BeatmapChecksum() { return mBeatmapChecksum; }
 	
 	protected:
 		//The Final score
-		u32 mScore;
+		uint32_t mScore;
 		//The Ending combo
-		u32 mCombo;
+		uint32_t mCombo;
 		//The Maximum combo achieved
-		u32 mMaxCombo;
+		uint32_t mMaxCombo;
 		//Amount of 300s
-		u32 mCount300;
+		uint32_t mCount300;
 		//Amount of 100s
-		u32 mCount100;
+		uint32_t mCount100;
 		//Amount of 50s 
-		u32 mCount50;
+		uint32_t mCount50;
 		//Amount of Misses
-		u32 mCountMiss;
+		uint32_t mCountMiss;
 		//Amount of Gekis
-		u32 mCountGeki;
+		uint32_t mCountGeki;
 		//Amount of Katus
-		u32 mCountKatu;
+		uint32_t mCountKatu;
 		//Checksum of the Map this play belongs to
 		std::string mBeatmapChecksum;
 };

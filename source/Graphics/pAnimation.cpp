@@ -1,6 +1,6 @@
 #include "pAnimation.h"
 
-pAnimation::pAnimation(TextureType texture, u32 framecount, u32 fps, s32 x, s32 y, u32 width, u32 height, DrawOrigin origin, FieldType type, rgb color, u32 alpha)
+pAnimation::pAnimation(TextureType texture, uint32_t framecount, uint32_t fps, int32_t x, int32_t y, uint32_t width, uint32_t height, DrawOrigin origin, FieldType type, SDL_Color color, uint32_t alpha)
 	: pSprite(texture, x, y, width, height, origin, type, color, alpha)
 {
 	mFrameCount = framecount;

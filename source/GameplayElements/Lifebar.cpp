@@ -1,23 +1,28 @@
 #include "Lifebar.h"
+#include "SDL.h"
+
+#ifndef TEXTURE_PACK
+#define TEXTURE_PACK(u, v) (((u) & 0xFFFF) | ((v) << 16))
+#endif
 
 Lifebar::Lifebar()
 {
 	pSprite* spr;
 	
-	spr = new pSprite(TX_PLAY_SCOREBAR, 0, 0, 640, 42, ORIGIN_TOPLEFT, FIELD_SCREEN, RGB15(31,31,31), 31);
+	spr = new pSprite(TX_PLAY_SCOREBAR, 0, 0, 640, 42, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color({31, 31, 31}), 31);
 	mSprites.push_back(spr);
 	
-	spr = new pSprite(TX_PLAY_SCOREBAR_BAR, 0, 0, 400, 40, ORIGIN_TOPLEFT, FIELD_SCREEN, RGB15(31,31,31), 31, -0.01f);
+	spr = new pSprite(TX_PLAY_SCOREBAR_BAR, 0, 0, 400, 40, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color({31, 31, 31}), 31, -0.01f);
 	mSprites.push_back(spr);
 	
-	spr = new pSprite(TX_PLAY_SCOREBAR_KI, 400, 18, 80, 80, ORIGIN_CENTER, FIELD_SCREEN, RGB15(31,31,31), 31, -0.02f);
+	spr = new pSprite(TX_PLAY_SCOREBAR_KI, 400, 18, 80, 80, ORIGIN_CENTER, FIELD_SCREEN, SDL_Color({31, 31, 31}), 31, -0.02f);
 	mSprites.push_back(spr);
 	
-	mUV = new u32[4]; //deleted by pSprite
-	mUV[0] = TEXTURE_PACK(inttot16(0),inttot16(0));
-	mUV[1] = TEXTURE_PACK(inttot16(160),inttot16(0));
-	mUV[2] = TEXTURE_PACK(inttot16(160),inttot16(16));
-	mUV[3] = TEXTURE_PACK(inttot16(0),inttot16(16));
+	mUV = new uint32_t[4]; //deleted by pSprite
+	mUV[0] = TEXTURE_PACK(0, 0);
+	mUV[1] = TEXTURE_PACK(160, 0);
+	mUV[2] = TEXTURE_PACK(160, 16);
+	mUV[3] = TEXTURE_PACK(0, 16);
 	
 	mSprites[1]->UV = mUV;
 }
@@ -33,7 +38,7 @@ void Lifebar::Initialize()
 	mFillTime = MathHelper::Min(10000, BeatmapManager::Current().StartTime());
 	mFillRate = MAXHP/((mFillTime-700)/(float)1000*60);
 
-	for (u32 time = BeatmapManager::Current().StartTime() - mFillTime;
+	for (uint32_t time = BeatmapManager::Current().StartTime() - mFillTime;
 	     time < MathHelper::Max(BeatmapManager::Current().StartTime(), 701) - 700; time += 150)
 	{
 		mSprites[2]->Scale(time, time + 90, 1.5, 1);
@@ -42,10 +47,10 @@ void Lifebar::Initialize()
 
 void Lifebar::Update()
 {
-	s32 now = GameClock::Clock().Time();
-	s32 startTime = BeatmapManager::Current().StartTime();
+	int32_t now = GameClock::Clock().Time();
+	int32_t startTime = BeatmapManager::Current().StartTime();
 	
-	if (now > startTime && BeatmapElements::Element().IsBreak() == false)
+	if (now > startTime && !BeatmapElements::Element().IsBreak())
 	{
 		mHpCurrent -= (now - mTimeLastUpdate) * mHpLossPerMs;
 		if (mHpCurrent < 0)
@@ -71,9 +76,9 @@ void Lifebar::Update()
 	else
 		mSprites[2]->Texture = TX_PLAY_SCOREBAR_KIDANGER2;
 	
-	mSprites[1]->Width = (u32)mHpDisplay;
-	mUV[1] = TEXTURE_PACK(inttot16((u32)(mHpDisplay/2.5)),inttot16(0));
-	mUV[2] = TEXTURE_PACK(inttot16((u32)(mHpDisplay/2.5)),inttot16(16));
+	mSprites[1]->Width = (uint32_t)mHpDisplay;
+	mUV[1] = TEXTURE_PACK((uint32_t)(mHpDisplay/2.5),0);
+	mUV[2] = TEXTURE_PACK((uint32_t)(mHpDisplay/2.5),16);
 	
 	mTimeLastUpdate = now;
 }
@@ -100,16 +105,16 @@ void Lifebar::Increase(float value)
 
 void Lifebar::Bulge()
 {
-	s32 now = GameClock::Clock().Time();
+	int32_t now = GameClock::Clock().Time();
 	
 	mSprites[2]->Scale(now, now+90, 1.5, 1);
 }
 
 void Lifebar::ClearTransforms()
 {
-	for (spriteIterator it = mSprites.begin(); it != mSprites.end(); ++it)
+	for (auto & mSprite : mSprites)
 	{
-		(*it)->ClearTransforms();
+		mSprite->ClearTransforms();
 	}
 }
 

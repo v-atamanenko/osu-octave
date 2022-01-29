@@ -1,15 +1,14 @@
-#include <nds.h>
-#include <stdio.h>
-#include <stdarg.h>
+#include <cstdio>
+#include <cstdarg>
 #include <vector>
+#include "SDL_ttf.h"
 
 #include "Graphics/GraphicsManager.h"
-#include "Libraries/gfxconsole.h"
 
-#include "hoo06_bmf.h"
-#include "gomics_bmf.h"
-#include "370_bmf.h"
-#include "ver08_bmf.h"
+//#include "hoo06_bmf.h"
+//#include "gomics_bmf.h"
+//#include "370_bmf.h"
+//#include "ver08_bmf.h"
 
 #ifndef __TEXTMANAGER_H__
 #define __TEXTMANAGER_H__
@@ -23,34 +22,36 @@ typedef enum {
 	FONT_VERDANA
 } FONT;
 
-
-	
 class TextManager
 {
 	public:
-		static TextManager& Top() { return sTop; }
-		static TextManager& Bottom() { return sBottom; }
+        //TODO: No top/bottom anymore
+		static TextManager& Top() { return sTM; }
+		static TextManager& Bottom() { return sTM; }
 		
 		static void Init();
 		
 		static void Warn(char* format, ...);
 		
 		void SetFont(FONT font);
-		
-		void PrintFloat(char* format, ...);
+
+        void drawTex();
 		void Print(char* format, ...);
 		void Clear();
 		
 		void PrintLocate(int x, int y, DrawOrigin origin, char* format, ...);
 	
 	protected:
-		gfxPrintConsole* mConsole;
-		int mFonts[NUMBER_OF_FONTS];
-		
-		static TextManager sTop, sBottom;
-		
-		static void AddFont(FONT font, const u8* data);
-	
+		//gfxPrintConsole* mConsole;
+        TTF_Font* mFonts[NUMBER_OF_FONTS];
+        FONT currentFont;
+        SDL_Texture* mConsole;
+
+		static TextManager sTM;
+
+		static void AddFont(FONT font, std::string path, int ptsize=18);
+        static void updateTex(const std::string &text, SDL_Color color, int x, int y);
+        static void initTex();
 	private:
 		TextManager();
 

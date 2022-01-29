@@ -1,7 +1,6 @@
 #include "SpriteManager.h"
 
 #include <algorithm>
-#include <string>
 
 SpriteManager::SpriteManager()
 {
@@ -9,28 +8,27 @@ SpriteManager::SpriteManager()
 
 SpriteManager::~SpriteManager()
 {
-	for (spriteIterator it = mSprites.begin(); it != mSprites.end(); ++it)
+	for (auto & mSprite : mSprites)
 	{
-		if (*it != NULL)
-			delete *it;
+		delete mSprite;
 	}
 }
 
 void SpriteManager::Draw()
 {
-	u32 i = 0;
-	std::vector<u32> deadSprites;
+	uint32_t i = 0;
+	std::vector<uint32_t> deadSprites;
 
 	std::sort(mSprites.begin(), mSprites.end(), [](const pDrawable* first, const pDrawable* second) {
 		return first->Z > second->Z;
 	});
 	
-	for (spriteIterator it = mSprites.begin(); it != mSprites.end(); ++it, ++i)
+	for (auto it = mSprites.begin(); it != mSprites.end(); ++it, ++i)
 	{
 		pDrawable* spr = *it;
 		
 		//if for some reason sprite is nonexistent then mark for deletion
-		if (spr == NULL)
+		if (spr == nullptr)
 		{
 			deadSprites.push_back(i);
 			continue;
@@ -39,7 +37,7 @@ void SpriteManager::Draw()
 		spr->Update();
 		
 		//if sprite is dead then mark for deletion
-		if (spr->Alive() == false)
+		if (!spr->Alive())
 		{
 			deadSprites.push_back(i);
 			continue;
@@ -53,9 +51,9 @@ void SpriteManager::Draw()
 	}
 	
 	//delete dead sprites
-	while (deadSprites.size() > 0)
+	while (!deadSprites.empty())
 	{
-		spriteIterator it = mSprites.begin() + deadSprites.back();
+		auto it = mSprites.begin() + deadSprites.back();
 		
 		if (*it != NULL)
 			delete *it;
@@ -74,14 +72,14 @@ void SpriteManager::Add(pDrawable* spr)
 
 void SpriteManager::Add(const std::vector<pDrawable*>& spr)
 {
-	for (spriteIteratorConst it = spr.begin(); it != spr.end(); ++it)
+	for (auto it : spr)
 	{
-		Add(*it);
+		Add(it);
 	}
 }
 
 void SpriteManager::HandleTouchInput() {
-	if (!InputHelper::KeyDown(KEY_TOUCH))
+	if (!InputHelper::KeyDown(SDL_BUTTON_LEFT, IH_KEY_MOUSE))
 		return;
 
 	touchPosition touchPos = InputHelper::TouchRead();
@@ -92,10 +90,8 @@ void SpriteManager::HandleTouchInput() {
 		return first->Z > second->Z;
 	});
 
-	for(int i = 0; i != sprites.size(); i++) {
-		pDrawable* current = sprites[i];
-
-		if(current->InBounds(touchPos.px, touchPos.py) && current->Clickable) {
+	for(auto current : sprites) {
+        if(current->InBounds(touchPos.px, touchPos.py) && current->Clickable) {
 			current->OnClick(current, touchPos.px, touchPos.py);
 		}
 	}

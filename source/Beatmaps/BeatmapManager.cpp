@@ -3,9 +3,9 @@
 Beatmap* BeatmapManager::mBeatmapCurrent = NULL;
 std::vector<Beatmap*> BeatmapManager::mBeatmaps;
 
-void BeatmapManager::Load(u32 index)
+void BeatmapManager::Load(uint32_t index)
 {
-	if (mBeatmapCurrent != NULL)
+	if (mBeatmapCurrent != nullptr)
 		mBeatmapCurrent->CleanUp();
 	
 	Mode::ChangeToOsuDir();
@@ -20,7 +20,7 @@ void BeatmapManager::BuildCollection()
 	DIR* dir = opendir(".");
 	struct dirent* entry;
 	
-	while ((entry = readdir(dir)) != NULL)
+	while ((entry = readdir(dir)) != nullptr)
 	{
 		//ignore generic names
 		//if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
@@ -31,19 +31,19 @@ void BeatmapManager::BuildCollection()
 		DIR* subdir = opendir(".");
 		
 		//if this is a folder, find all the .ods files inside
-		if (subdir != NULL)
+		if (subdir != nullptr)
 		{
 			struct dirent* subentry;
 			
-			while ((subentry = readdir(subdir)) != NULL)
+			while ((subentry = readdir(subdir)) != nullptr)
 			{
 				DIR* filetest = opendir(subentry->d_name);
 				
-				if (filetest == NULL)
+				if (filetest == nullptr)
 				{
 					char* ext = subentry->d_name;
 					
-					int length = strlen(ext);
+					size_t length = strlen(ext);
 					if (length < 4)
 						continue;
 
@@ -70,12 +70,12 @@ void BeatmapManager::BuildCollection()
 	closedir(dir);
 }
 
-u32 BeatmapManager::MapCount()
+uint32_t BeatmapManager::MapCount()
 {
-	return 8;//mBeatmaps.size();
+	return mBeatmaps.size();
 }
 
-u32 BeatmapManager::SongCount()
+uint32_t BeatmapManager::SongCount()
 {
 	//TODO: algorithm plz
 	return mBeatmaps.size();

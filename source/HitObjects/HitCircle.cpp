@@ -1,17 +1,17 @@
 #include "HitCircle.h"
 
-HitCircle::HitCircle(s32 x, s32 y, s32 time, HitObjectType type, HitObjectSound sound) : HitObject(x, y, time, type, sound)
+HitCircle::HitCircle(int32_t x, int32_t y, int32_t time, HitObjectType type, HitObjectSound sound) : HitObject(x, y, time, type, sound)
 {
-	u32 size = DifficultyManager::GetCircleSize();
+	uint32_t size = DifficultyManager::GetCircleSize();
 	
-	u32 preempt = DifficultyManager::GetPreemptTime();
-	s32 fadeInStart = time - preempt;
-	s32 fadeInEnd = fadeInStart + (preempt >> 3);
+	uint32_t preempt = DifficultyManager::GetPreemptTime();
+	int32_t fadeInStart = time - preempt;
+	int32_t fadeInEnd = fadeInStart + (preempt >> 3);
 	mEndTime = time + DifficultyManager::GetHitWindow50();
 	
 	pSprite* spr;
 	
-	spr = new pSprite(TX_PLAY_CIRCLEOVERLAY, x, y, size, size, ORIGIN_CENTER, FIELD_PLAY, RGB15(31,31,31), 0);
+	spr = new pSprite(TX_PLAY_CIRCLEOVERLAY, x, y, size, size, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({31, 31, 31}), 0);
 	spr->Show(fadeInStart, fadeInEnd);
 	spr->Hide(time, mEndTime);
 	spr->Kill(mEndTime+1000);
@@ -33,7 +33,7 @@ HitCircle::HitCircle(s32 x, s32 y, s32 time, HitObjectType type, HitObjectSound 
 	mScoreSpriteId = 1;
 }
 
-bool HitCircle::InBounds(s32 x, s32 y)
+bool HitCircle::InBounds(int32_t x, int32_t y)
 {
 	//all sprites are the same, it doesn't matter which one
 	return mSprites[1]->InBounds(x, y);
@@ -49,17 +49,15 @@ void HitCircle::OnTouchDown(const touchPosition& touch)
 
 void HitCircle::Hit()
 {
-	s32 now = GameClock::Clock().Time();
-	u32 delta = MathHelper::Abs(mTime - now);
+	int32_t now = GameClock::Clock().Time();
+	uint32_t delta = MathHelper::Abs(mTime - now);
 	
 	if (delta > DifficultyManager::GetHitWindow())
 	{
 		//too early, give the hitcircle a shake
-		for (spriteIterator it = mSprites.begin(); it != mSprites.end(); ++it)
+		for (auto spr : mSprites)
 		{
-			pDrawable* spr = *it;
-			
-			spr->Move(now, now+20, mX+5, mY);
+				spr->Move(now, now+20, mX+5, mY);
 			spr->Move(now+20, now+40, mX-5, mY);
 			spr->Move(now+40, now+60, mX+5, mY);
 			spr->Move(now+60, now+80, mX, mY);
@@ -70,7 +68,7 @@ void HitCircle::Hit()
 		if (delta < DifficultyManager::GetHitWindow50())
 		{
 			//if within the window for 50, the person hit it
-			for (u32 i=0; i<2; ++i)
+			for (uint32_t i=0; i<2; ++i)
 			{
 				pDrawable* spr = mSprites[i];
 				
@@ -101,7 +99,7 @@ void HitCircle::Hit()
 		else
 		{
 			//otherwise missed
-			for (u32 i=0; i<3; ++i)
+			for (uint32_t i=0; i<3; ++i)
 			{
 				mSprites[i]->Kill(now);
 			}

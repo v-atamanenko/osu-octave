@@ -1,12 +1,15 @@
-#include <nds.h>
-#include <stdio.h>
+#include <cstdio>
 #include <string>
+
+#include "SDL.h"
+#include "SDL_mixer.h"
 
 #include "Beatmaps/BeatmapElements.h"
 
 #ifndef __AUDIOMANAGER_H__
 #define __AUDIOMANAGER_H__
 
+/*
 #include "normal_hitnormal_bin.h"
 #include "normal_hitwhistle_bin.h"
 #include "normal_hitfinish_bin.h"
@@ -25,19 +28,19 @@
 
 #include "spinnerbonus_bin.h"
 #include "spinnerspin_bin.h"
-
-
+*/
 
 typedef enum {
 	SND_NORMAL = 1,
 	SND_WHISTLE = 2,
 	SND_FINISH = 4,
-	SND_CLAP = 8
+	SND_CLAP = 8,
+    SND_BONUS = 32 // Spinner only
 } HitObjectSound;
 
 typedef struct {
-	const u8* data;
-	u32 size;
+	const char* filename;
+    Mix_Chunk * chunk;
 } SampleSetInfo;
 
 typedef struct {
@@ -48,6 +51,8 @@ typedef struct {
 	SampleSetInfo slidertick;
 	SampleSetInfo sliderslide;
 	SampleSetInfo sliderwhistle;
+    SampleSetInfo spinnerspin;
+    SampleSetInfo spinnerbonus;
 } SampleSet;
 
 //intended usage:
@@ -59,9 +64,8 @@ class AudioManager
 	public:
 		static AudioManager& Engine() { return sEngine; }
 		
-		int PlaySample(const u8* data, u32 size, bool loop = false);
 		int PlaySample(SampleSetInfo info, bool loop = false);
-		void SetChannelFreq(int channel, u16 freq);
+        //FIXME: void SetChannelFreq(int channel, uint16_t freq);
 		void StopChannel(int channel);
 		
 		//sounds
@@ -69,31 +73,28 @@ class AudioManager
 		void PlayHitSound(HitObjectSound sound);
 		int PlaySliderSound(HitObjectSound sound);
 		void PlaySliderTick();
+        int PlaySpinnerSound(HitObjectSound sound);
 		
 		//music
-		friend void MusicTimerHandler();
 		int MusicPlay(std::string& filename);
-		int MusicSkipTo(u32 milliseconds);
+		int MusicSkipTo(uint32_t milliseconds);
 		void MusicStop();
-		void MusicUpdate(); //must be called frequently
 	
 	protected:
 		static AudioManager sEngine;
-		
-		void MusicBuffer();
 		
 		SampleSet mSampleNormal;
 		SampleSet mSampleSoft;
 		SampleSet* mSampleSets[3];
 		
 		//music
-		static const u32 SIZE = 11025; //size of each HALF of the buffer
-		u8* mBuffer;
+		static const uint32_t SIZE = 11025; //size of each HALF of the buffer
+		uint8_t * mBuffer;
 		FILE* mFile;
 		bool fSwap, fFill;
-		u32 fEof;
+		uint32_t fEof;
 		int mChannel;
-		u16 mTimerData;
+		uint16_t mTimerData;
 	
 	private:
 		AudioManager();

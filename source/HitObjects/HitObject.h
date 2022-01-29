@@ -1,5 +1,5 @@
-#include <nds.h>
-#include <stdio.h>
+#include <cstdio>
+#include "SDL.h"
 
 #include "Beatmaps/BeatmapElements.h"
 #include "Beatmaps/DifficultyManager.h"
@@ -15,8 +15,8 @@
 #define __HITOBJECT_H__
 
 typedef struct {
-	s32 x, y;
-	s32 angle;
+	int32_t x, y;
+	int32_t angle;
 } HitObjectPoint;
 
 typedef enum {
@@ -33,10 +33,10 @@ class HitObject : public SpriteContainer
 	public:
 		virtual ~HitObject();
 		
-		virtual bool InBounds(s32 x, s32 y) { return true; }
+		virtual bool InBounds(int32_t x, int32_t y) { return true; }
 		
 		bool GetHit() { return mHit; }
-		s32 GetEndTime() { return mEndTime; }
+		int32_t GetEndTime() { return mEndTime; }
 		
 		virtual void Update() {}
 		
@@ -46,33 +46,33 @@ class HitObject : public SpriteContainer
 		
 		virtual void Hit();
 		
-		void SetPostCreateOptions(bool comboend, s32 nextx, s32 nexty);
+		void SetPostCreateOptions(bool comboend, int32_t nextx, int32_t nexty);
 		
 		static void SetScoreCallback(ICallback* scoreCallback);
 	
 	protected:
-		HitObject(s32 x, s32 y, s32 time, HitObjectType type, HitObjectSound sound);
+		HitObject(int32_t x, int32_t y, int32_t time, HitObjectType type, HitObjectSound sound);
 		
-		s32 mX, mY;
-		s32 mTime, mEndTime;
+		int32_t mX, mY;
+		int32_t mTime, mEndTime;
 		HitObjectType mType;
 		HitObjectSound mSound;
-		static rgb mColour;
+		static SDL_Color mColour;
 		
 		bool mHit;
 		bool mComboEnd;
 		
-		u32 mScoreSpriteId;
+		uint32_t mScoreSpriteId;
 		
 		void IncreaseScore(ScoreType score, bool forceNoCombo = false, bool forceNoAnimation = false);
-		void IncreaseScore(ScoreType score, bool forceNoCombo, bool forceNoAnimation, u32 spriteId);
+		void IncreaseScore(ScoreType score, bool forceNoCombo, bool forceNoAnimation, uint32_t spriteId);
 	
 	private:
 		float mScoreDeltaZ;
 		
 		static float sScoreDeltaZ;
 		static float sSliderDeltaZ;
-		static s32 sLastSliderTime;
+		static int32_t sLastSliderTime;
 		
 		static ICallback* mScoreCallback;
 };

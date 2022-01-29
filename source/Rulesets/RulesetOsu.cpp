@@ -1,3 +1,4 @@
+#include "SDL.h"
 #include "RulesetOsu.h"
 
 RulesetOsu::RulesetOsu()
@@ -9,7 +10,7 @@ RulesetOsu::RulesetOsu()
 
 void RulesetOsu::IncreaseScore(ScoreType score, bool forceNoCombo, bool forceNoAnimation, HitObjectPoint point, bool comboEnd)
 {
-	s32 now = GameClock::Clock().Time();
+	int now = GameClock::Clock().Time();
 	
 	TextureType tex;
 	float hpIncrease;
@@ -80,7 +81,7 @@ void RulesetOsu::IncreaseScore(ScoreType score, bool forceNoCombo, bool forceNoA
 	
 	if (!forceNoAnimation)
 	{	
-		pSprite* spr = new pSprite(tex, point.x, point.y, 160, 160, ORIGIN_CENTER, FIELD_PLAY, RGB15(31,31,31), 0, mScoreZ);
+		pSprite* spr = new pSprite(tex, point.x, point.y, 160, 160, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({31,31,31}), 0, mScoreZ);
 		spr->Show(now, now+100);
 		spr->Hide(now+500, now+1000);
 		spr->Kill(now+1500);

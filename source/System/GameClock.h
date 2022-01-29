@@ -1,25 +1,23 @@
-#include <nds.h>
-
 #ifndef __GAMECLOCK_H__
 #define __GAMECLOCK_H__
 
 class GameClock
 {
 	public:
-		s32 Time();
+		int Time();
 		
 		void Update(); //calls should be synced with vblank
-		void SkipTo(s32 time);
+		void SkipTo(int time);
 		void Reset();
 		
 		static GameClock& Clock() { return sClock; }
 	
 	protected:
-		s32 mTime;
-		s32 mFraction;
+		int mTime;
+		int mFraction;
 		
-		static const s32 kTimeInterval = 16;
-		static const s32 kFractionInterval = 715112635;
+		static const int kTimeInterval = 16;
+		static const int kFractionInterval = 666666667;
 		
 		static GameClock sClock;
 	

@@ -6,7 +6,7 @@ Beatmap::Beatmap(const char* filename, const char* basedir)
 	
 	mFilename = filename;
 	mBaseDir = basedir;
-	mReader = NULL;
+	mReader = nullptr;
 
 	mChecksumString = "";
 	
@@ -18,8 +18,7 @@ Beatmap::Beatmap(const char* filename, const char* basedir)
 		char id[4] = { r.ReadInt8(), r.ReadInt8(), r.ReadInt8(), 0 };
 		if (strcmp(id, "ODS") == 0)
 		{
-			
-			u8 odsver = r.ReadInt8();
+			odsver = r.ReadInt8();
 			
 			mTitle = r.ReadString();
 			mArtist = r.ReadString();
@@ -41,7 +40,7 @@ void Beatmap::Initialize()
 	{
 		if (!fLoadable)
 		{
-			iprintf("\x1b[0;0Hcannot load this file");
+			printf("\x1b[0;0Hcannot load this file");
 			//return;
 		}
 		
@@ -58,7 +57,7 @@ void Beatmap::Initialize()
 		mCreator = mReader->ReadString();
 		mVersion = mReader->ReadString();
 		mAudioFilename = mReader->ReadString();
-		
+
 		DifficultyManager::DifficultyHpDrain = mReader->ReadInt8();
 		DifficultyManager::DifficultyCircleSize = mReader->ReadInt8();
 		DifficultyManager::DifficultyOverall = mReader->ReadInt8();
@@ -68,27 +67,27 @@ void Beatmap::Initialize()
 		DifficultyManager::DifficultyPeppyStars = mReader->ReadInt8();
 		DifficultyManager::DifficultyEyupStars = mReader->ReadFloat();
 
-		u32 tpointcount = mReader->ReadVarInt();
-		for (u32 j=0; j<tpointcount; ++j)
+		uint32_t tpointcount = mReader->ReadVarInt();
+		for (uint32_t j=0; j<tpointcount; ++j)
 		{
-			s32 time = mReader->ReadInt32();
+			int32_t time = mReader->ReadInt32();
 			float beattime = mReader->ReadFloat();
-			u8 samplesetid = mReader->ReadInt8();
+			uint8_t samplesetid = mReader->ReadInt8();
 			
 			BeatmapElements::Element().AddTimingPoint(time, beattime, samplesetid);
 		}
 
-		u32 breakcount = mReader->ReadVarInt();
+		uint32_t breakcount = mReader->ReadVarInt();
 
-		for (u32 j=0; j<breakcount; ++j)
+		for (uint32_t j=0; j<breakcount; ++j)
 		{
-			s32 starttime = mReader->ReadInt32();
-			s32 endtime = mReader->ReadInt32();
+			int32_t starttime = mReader->ReadInt32();
+			int32_t endtime = mReader->ReadInt32();
 			
 			BeatmapElements::Element().AddBreakPoint(starttime, endtime);
 		}
 
-		iprintf("\x1b[2J");
+		printf("\x1b[2J");
 	}
 }
 
@@ -96,38 +95,65 @@ void Beatmap::CleanUp()
 {
 	//set object back to uninitialised state
 	fReady = false;
-	
-	if (mReader != NULL)
-		delete mReader;
-	mReader = NULL;
+	delete mReader;
+	mReader = nullptr;
 }
 
 Beatmap::~Beatmap()
 {
-	if (mReader != NULL)
-		delete mReader;
+	delete mReader;
 }
 
 void Beatmap::InitBG() {
 	if (odsver > 1) {
-		for (int i = 0; i < 256 * 192; i++) {
-			*(u16 *) (BG_BMP_RAM(8) + i) = mReader->ReadInt16();
-		}
-		bgUpdate();
-		bgSetPriority(2, 1);
+        size_t framebuf_size = 256 * 192 * sizeof(uint16_t);
+        auto* pixels = static_cast<uint16_t *>(malloc(framebuf_size));
+
+        for (int i = 0; i < 256*192; i++) {
+			*(uint16_t *) (pixels + i) = mReader->ReadInt16();
+        }
+
+        int bpp = 16;
+        Uint32 Rmask, Gmask, Bmask, Amask;
+
+        SDL_PixelFormatEnumToMasks(SDL_PIXELFORMAT_ABGR1555, &bpp, &Rmask, &Gmask, &Bmask, &Amask);
+
+        SDL_Surface* surface =
+                    SDL_CreateRGBSurfaceFrom(
+                            pixels,
+                            256,
+                            192,
+                            2*8,  // in bits, so bytes per pixel * 8
+                            2*256, // 2 bytes per pixel * pixels per row
+                            Rmask,
+                            Gmask,
+                            Bmask,
+                            Amask
+                    );
+
+        if (surface == nullptr) {
+            fprintf(stderr, "\nFailed to create surface for beatmap bg: %s\n", SDL_GetError());
+        }
+
+        GraphicsManager::Graphics().loadBgFromSurface(surface);
+        free(pixels);
 	}
 
 	mHitObjectCount = mReader->ReadVarInt();
 	mHitObjectRead = 0;
 	mLastObjectEndTime = 0;
 	mForceNewCombo = true;
-
+    printf("mHitObjectCount: %i\n", mHitObjectCount);
 	//read ahead
 	ReadNextObject();
 	mFirstObjectTime = mNextObjectTime;
 
+    printf("mNextObjectTime: %i\n", mNextObjectTime);
+    printf("mNextObjectTimeBeats8: %i\n", (BeatmapElements::Element().GetTimingPoint(mNextObjectTime).BeatTime*8));
 	//the time to skip to is the first object - 8 beats
-	mSkipTime = MathHelper::Max(0, (s32)mNextObjectTime - (BeatmapElements::Element().GetTimingPoint(mNextObjectTime).BeatTime*8));
+    int var1 = (int32_t)mNextObjectTime;
+    int var2 = (BeatmapElements::Element().GetTimingPoint(mNextObjectTime).BeatTime*8);
+	mSkipTime = MathHelper::Max(0, (int32_t)mNextObjectTime - (BeatmapElements::Element().GetTimingPoint(mNextObjectTime).BeatTime*8));
 
 	//strangely calling this in ctor of BeatmapElements causes game to not load :/
 	BeatmapElements::Element().ResetColours(true);
@@ -136,15 +162,15 @@ void Beatmap::InitBG() {
 	fReady = true;
 }
 
-void Beatmap::Buffer(list<HitObject*>& hitObjectList)
+void Beatmap::Buffer(std::list<HitObject*>& hitObjectList)
 {
 	if (!fReady)
 	{
-		iprintf("\x1b[0;0Hnot ready to buffer");
+		printf("\x1b[0;std::listt ready to buffer");
 		return;
 	}
-	
-	//we buffer objects to 10 seconds ahead
+
+    //we buffer objects to 10 seconds ahead
 	while (mHitObjectRead < mHitObjectCount && mNextObjectTime < GameClock::Clock().Time() + 3000)
 	{
 		HitObject* object;
@@ -152,8 +178,8 @@ void Beatmap::Buffer(list<HitObject*>& hitObjectList)
 		//all coordinates are s16 in file but s32 in RAM
 		
 		HitObjectType type = mNextObjectType;
-		s32 x = mNextObjectX;
-		s32 y = mNextObjectY;
+		int32_t x = mNextObjectX;
+		int32_t y = mNextObjectY;
 		HitObjectSound sound = (HitObjectSound)mReader->ReadInt8();
 		
 		if (mForceNewCombo)
@@ -172,33 +198,32 @@ void Beatmap::Buffer(list<HitObject*>& hitObjectList)
 			
 			case HIT_SLIDER:
 			{
-				u32 repeats = mReader->ReadInt16();
-				u32 lengthtime = mReader->ReadInt32();
-				
-				u32 pointcount = mReader->ReadVarInt();
+				uint32_t repeats = mReader->ReadInt16();
+                uint32_t lengthtime = mReader->ReadInt32();
+
+                uint32_t pointcount = mReader->ReadVarInt();
 				std::vector<HitObjectPoint*> points;
 				points.reserve(pointcount);
 				
-				for (u32 i=0; i<pointcount; ++i)
+				for (uint32_t i=0; i<pointcount; ++i)
 				{
 					HitObjectPoint* tPoint = new HitObjectPoint();
-					tPoint->x = (s16)mReader->ReadInt16(); //s32 x
-					tPoint->y = (s16)mReader->ReadInt16(); //s32 y
+					tPoint->x = (int16_t)mReader->ReadInt16(); //s32 x
+					tPoint->y = (int16_t)mReader->ReadInt16(); //s32 y
 					tPoint->angle = mReader->ReadInt32(); //s32 angle
 					
 					points.push_back(tPoint);
 				}
 				
-				u32 tickcount = mReader->ReadVarInt();
+				uint32_t tickcount = mReader->ReadVarInt();
 				std::vector<HitObjectPoint*> ticks;
 				ticks.reserve(tickcount);
 				
-				for (u32 i=0; i<tickcount; ++i)
+				for (uint32_t i=0; i<tickcount; ++i)
 				{
 					HitObjectPoint* tPoint = new HitObjectPoint();
-					tPoint->x = (s16)mReader->ReadInt16(); //s32 x
-					tPoint->y = (s16)mReader->ReadInt16(); //s32 y
-
+					tPoint->x = (int16_t)mReader->ReadInt16(); //s32 x
+					tPoint->y = (int16_t)mReader->ReadInt16(); //s32 y
 
 					ticks.push_back(tPoint);
 				}
@@ -206,10 +231,10 @@ void Beatmap::Buffer(list<HitObject*>& hitObjectList)
 				object = new HitSlider(x, y, mNextObjectTime, lengthtime, points, ticks, repeats, type, sound);
 				
 				//free allocated memory
-				for (u32 i=0; i<pointcount; ++i)
+				for (uint32_t i=0; i<pointcount; ++i)
 					delete points[i];
 				
-				for (u32 i=0; i<tickcount; ++i)
+				for (uint32_t i=0; i<tickcount; ++i)
 					delete ticks[i];
 				
 				break;
@@ -217,7 +242,7 @@ void Beatmap::Buffer(list<HitObject*>& hitObjectList)
 			
 			case HIT_SPINNER:
 			{
-				s32 endtime = mReader->ReadInt32();
+				int32_t endtime = mReader->ReadInt32();
 				object = new HitSpinner(mNextObjectTime, endtime, sound);
 				mForceNewCombo = true;
 				break;
@@ -247,8 +272,8 @@ void Beatmap::ReadNextObject()
 {
 	mNextObjectTime = mReader->ReadInt32();
 	mNextObjectType = (HitObjectType)mReader->ReadInt8();
-	mNextObjectX = (s16)mReader->ReadInt16();
-	mNextObjectY = (s16)mReader->ReadInt16();
+	mNextObjectX = (int16_t)mReader->ReadInt16();
+	mNextObjectY = (int16_t)mReader->ReadInt16();
 }
 
 

@@ -1,5 +1,5 @@
 #include "Player.h"
-#include "menuBG.h"
+//#include "menuBG.h"
 
 Player::Player()
 {
@@ -19,7 +19,8 @@ Player::~Player()
 {
 	//delete mBaseDir;
 	AudioManager::Engine().MusicStop();
-	memcpy(BG_BMP_RAM(8), menuBGBitmap, menuBGBitmapLen);
+
+    GraphicsManager::Graphics().resetBg();
 }
 
 void Player::Update()
@@ -41,7 +42,7 @@ void Player::Update()
 
 		case PLAYSTATE_GAMEOVER:
 		{
-			iprintf("\x1b[0;0HGame over");
+			printf("\x1b[0;0HGame over");
 			break;
 		}
 
@@ -49,7 +50,7 @@ void Player::Update()
 			break;
 	}
 
-	AudioManager::Engine().MusicUpdate();
+	//AudioManager::Engine().MusicUpdate();
 }
 
 void Player::HandleInput()
@@ -57,12 +58,16 @@ void Player::HandleInput()
 	mRuleset.HandleInput();
 
 	//handle play mode input
-	if (InputHelper::KeyDown(KEY_A))
+	if (InputHelper::KeyDown(SDLK_SPACE, IH_KEY_KEYBOARD) ||
+        InputHelper::KeyDown(SDLK_ESCAPE, IH_KEY_KEYBOARD) ||
+        InputHelper::KeyDown(SDL_CONTROLLER_BUTTON_A, IH_KEY_CONTROLLER)
+        )
 	{
 		mRuleset.Skip();
 	}
 
-	if (InputHelper::KeyDown(KEY_SELECT))
+	if (InputHelper::KeyDown(SDLK_ESCAPE, IH_KEY_KEYBOARD) ||
+        InputHelper::KeyDown(SDL_CONTROLLER_BUTTON_START, IH_KEY_CONTROLLER))
 	{
 		ChangeMode(MODE_SONGSELECT);
 		return;

@@ -1,5 +1,4 @@
-#include <nds.h>
-#include <string.h>
+#include <cstring>
 #include <unistd.h>
 #include <list>
 #include <vector>
@@ -20,8 +19,6 @@
 
 #ifndef __BEATMAP_H__
 #define __BEATMAP_H__
-
-
 
 //typedef list<HitObject*>::iterator hitObjectIterator;
 
@@ -48,23 +45,23 @@ class Beatmap
 		
 		std::string& BaseDir() { return mBaseDir; }
 		
-		s32 SkipTime() { return mSkipTime; }
-		s32 StartTime() { return mFirstObjectTime; }
+		int32_t SkipTime() { return mSkipTime; }
+        int32_t StartTime() { return mFirstObjectTime; }
 
 		std::string& BeatmapChecksum();
 	
 	protected:
 		FileReader* mReader;
 		
-		u32 mHitObjectCount, mHitObjectRead;
-		s32 mFirstObjectTime, mLastObjectEndTime;
+		uint32_t mHitObjectCount, mHitObjectRead;
+        int32_t mFirstObjectTime, mLastObjectEndTime;
 		
 		void ReadNextObject();
-		s32 mNextObjectTime;
-		s32 mNextObjectX, mNextObjectY;
+        int32_t mNextObjectTime;
+        int32_t mNextObjectX, mNextObjectY;
 		HitObjectType mNextObjectType;
-		
-		s32 mSkipTime;
+
+        int32_t mSkipTime;
 		bool mForceNewCombo;
 		
 		bool fReady, fLoadable;
@@ -75,7 +72,7 @@ class Beatmap
 		std::string mCreator;
 		std::string mVersion;
 		std::string mAudioFilename;
-		u8 odsver;
+		uint8_t odsver;
 		
 		std::string mBaseDir;
 	private:

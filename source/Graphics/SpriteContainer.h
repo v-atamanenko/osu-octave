@@ -1,5 +1,4 @@
-#include <nds.h>
-#include <stdio.h>
+#include <cstdio>
 #include <vector>
 
 #include "pSprite.h"
@@ -7,8 +6,6 @@
 
 #ifndef __SPRITECONTAINER_H__
 #define __SPRITECONTAINER_H__
-
-
 
 typedef std::vector<pDrawable*>::iterator spriteIterator;
 

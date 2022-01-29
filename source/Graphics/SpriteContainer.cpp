@@ -4,10 +4,9 @@ SpriteContainer::~SpriteContainer()
 {
 	if (mSpriteOwner)
 	{
-		for (spriteIterator it = mSprites.begin(); it != mSprites.end(); ++it)
+		for (auto & mSprite : mSprites)
 		{
-			if (*it != NULL)
-				delete *it;
+			delete mSprite;
 		}
 	}
 }

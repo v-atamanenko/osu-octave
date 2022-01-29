@@ -1,5 +1,4 @@
-#include <nds.h>
-#include <stdio.h>
+#include <cstdio>
 
 #include "GameClock.h"
 #include "Modes/Mode.h"
@@ -9,6 +8,6 @@ class GameBase
 {
 	public:
 		GameBase();
-		void Update();
+		int Update();
 };
 

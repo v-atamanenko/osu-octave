@@ -1,5 +1,4 @@
-#include <nds.h>
-#include <string.h>
+#include <cstring>
 #include "Mode.h"
 
 #include "System/GameClock.h"

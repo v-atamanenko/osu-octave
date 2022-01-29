@@ -12,6 +12,7 @@ void Ruleset::Initialize()
 
 void Ruleset::Skip()
 {
+    fprintf(stderr, "SkipTime: %i\n",BeatmapManager::Current().SkipTime());
 	if (GameClock::Clock().Time() < BeatmapManager::Current().SkipTime())
 	{
 		AudioManager::Engine().MusicSkipTo(BeatmapManager::Current().SkipTime());
@@ -31,10 +32,9 @@ void Ruleset::Update()
 	std::list<HitObject*> hitObjectList;
 	BeatmapManager::Current().Buffer(hitObjectList);
 	
-	for (hitObjectIterator it = hitObjectList.begin(); it != hitObjectList.end(); ++it)
+	for (auto object : hitObjectList)
 	{
-		HitObject* object = *it;
-		mHitObjectManager.Add(object);
+        mHitObjectManager.Add(object);
 		object->AddToSpriteManager(mSpriteManager);
 	}
 	
@@ -45,12 +45,12 @@ void Ruleset::Update()
 	
 	TextManager::Bottom().SetFont(FONT_SCORE);
 	
-	TextManager::Bottom().PrintLocate(635, 5, ORIGIN_TOPRIGHT, "  %08i", mCurrentScore.CurrentScore());
+	TextManager::Bottom().PrintLocate(635, 140, ORIGIN_TOPRIGHT, "  %08i", mCurrentScore.CurrentScore());
 	
 	if (mCurrentScore.CurrentCombo() > 0)
-		TextManager::Bottom().PrintLocate(5, 475, ORIGIN_BOTTOMLEFT, "%ix    ", mCurrentScore.CurrentCombo());
+		TextManager::Bottom().PrintLocate(5, 375, ORIGIN_BOTTOMLEFT, "%ix    ", mCurrentScore.CurrentCombo());
 	else
-		TextManager::Bottom().PrintLocate(5, 475, ORIGIN_BOTTOMLEFT, "       ");
+		TextManager::Bottom().PrintLocate(5, 375, ORIGIN_BOTTOMLEFT, "       ");
 }
 
 void Ruleset::HandleInput()

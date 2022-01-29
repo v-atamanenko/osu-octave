@@ -1,5 +1,5 @@
 #include "GameClock.h"
-
+#include "cstdio"
 GameClock GameClock::sClock;
 
 GameClock::GameClock()
@@ -14,7 +14,7 @@ GameClock::GameClock()
 	mFraction = 0;
 }
 
-s32 GameClock::Time()
+int GameClock::Time()
 {
 	return mTime;
 }
@@ -27,6 +27,7 @@ void GameClock::Update()
 	if (mFraction > 1000000000)
 	{
 		++mTime;
+        printf("%i\n",mTime);
 		mFraction -= 1000000000;
 	}
 }
@@ -46,7 +47,7 @@ void GameClock::CacheTime()
 }
 */
 
-void GameClock::SkipTo(s32 time)
+void GameClock::SkipTo(int time)
 {
 	mTime = time;
 	mFraction = 0;

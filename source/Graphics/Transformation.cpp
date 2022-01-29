@@ -1,6 +1,6 @@
 #include "Transformation.h"
 
-Transformation::Transformation(TransformType type, s32 starttime, s32 endtime, s32 startvalue, s32 endvalue)
+Transformation::Transformation(TransformType type, int32_t starttime, int32_t endtime, int32_t startvalue, int32_t endvalue)
 {
 	this->type = type;
 	
@@ -21,7 +21,7 @@ Transformation::Transformation(TransformType type, s32 starttime, s32 endtime, s
 
 void Transformation::Update()
 {
-	s32 time = GameClock::Clock().Time();
+	int32_t time = GameClock::Clock().Time();
 	
 	if (!active)
 	{
@@ -39,7 +39,7 @@ void Transformation::Update()
 		return;
 	}
 	
-	currentvalue = (s32)(((time-starttime)/(float)totaltime)*totalvalue + startvalue);
+	currentvalue = (int32_t)(((time-starttime)/(float)totaltime)*totalvalue + startvalue);
 }
 
 bool Transformation::Active()

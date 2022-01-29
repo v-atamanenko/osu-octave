@@ -1,4 +1,3 @@
-#include <nds.h>
 //#include <math.h>
 
 #ifndef __MATHHELPER_H__
@@ -7,16 +6,16 @@
 class MathHelper
 {
 	public:
-		static u32		Abs(s32 value) { return (value > 0 ? value : -value); }
-		static s32		Max(s32 value1, s32 value2) { return (value1 > value2 ? value1 : value2); }
-		static s32		Min(s32 value1, s32 value2) { return (value1 < value2 ? value1 : value2); }
-		static s32		Sgn(s32 value) { return (value == (s32)Abs(value) ? 1 : -1); }
+		static uint32_t		Abs(int32_t value) { return (value > 0 ? value : -value); }
+		static int32_t		Max(int32_t value1, int32_t value2) { return (value1 > value2 ? value1 : value2); }
+		static int32_t		Min(int32_t value1, int32_t value2) { return (value1 < value2 ? value1 : value2); }
+		static int32_t		Sgn(int32_t value) { return (value == (int32_t)Abs(value) ? 1 : -1); }
 		static float	Frc(float value) { return value - (int)value; }
 		
-		static u16 Random(u16 min, u16 max);
+		static uint16_t Random(uint16_t min, uint16_t max);
 	
 	protected:
-		static u16 mSeed;
+		static uint16_t mSeed;
 };
 
 #endif

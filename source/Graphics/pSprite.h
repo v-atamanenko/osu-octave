@@ -5,7 +5,7 @@
 
 class pSprite : public pDrawable {
 public:
-    pSprite(TextureType texture, s32 x, s32 y, u32 width, u32 height, DrawOrigin origin, FieldType fieldtype, rgb color, u32 alpha, float z = 0);
+    pSprite(TextureType texture, int32_t x, int32_t y, uint32_t width, uint32_t height, DrawOrigin origin, FieldType fieldtype, SDL_Color color, uint32_t alpha, float z = 0);
 
     void Draw() override;
 };

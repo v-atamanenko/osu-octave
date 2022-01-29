@@ -1,5 +1,4 @@
-#include <nds.h>
-#include <stdio.h>
+#include <cstdio>
 #include "System/GameClock.h"
 
 #ifndef __TRANSFORMATION_H__
@@ -18,9 +17,9 @@ typedef enum {
 class Transformation
 {
 	public:
-		Transformation(TransformType type, s32 starttime, s32 endtime, s32 startvalue, s32 endvalue);
+		Transformation(TransformType type, int32_t starttime, int32_t endtime, int32_t startvalue, int32_t endvalue);
 		void Update();
-		s32 Value() const { return currentvalue; }
+		int32_t Value() const { return currentvalue; }
 		bool Active();
 		TransformType Type() const { return type; }
 		
@@ -31,10 +30,10 @@ class Transformation
 		
 		bool active, lastactive;
 		
-		s32 starttime, endtime, totaltime;
+		int32_t starttime, endtime, totaltime;
 		
-		s32 startvalue, endvalue, currentvalue;
-		s32 totalvalue;
+		int32_t startvalue, endvalue, currentvalue;
+		int32_t totalvalue;
 };
 
 

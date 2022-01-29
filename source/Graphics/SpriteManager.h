@@ -1,4 +1,3 @@
-#include <nds.h>
 #include <vector>
 
 #include "pSprite.h"

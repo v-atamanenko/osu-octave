@@ -1,4 +1,5 @@
 #include "GameBase.h"
+#include "TextManager.h"
 
 GameBase::GameBase()
 {
@@ -7,9 +8,19 @@ GameBase::GameBase()
 	ChangeMode(MODE_SONGSELECT);
 }
 
-void GameBase::Update()
+int GameBase::Update()
 {
+    if (InputHelper::PollSDL() == -1) return -1;
 	Mode::CurrentMode().HandleInput();
+
+    GraphicsManager::Graphics().clear();
+
+    GraphicsManager::Graphics().bgDraw();
 	Mode::CurrentMode().Update();
+    TextManager::Top().drawTex();
+
+    GraphicsManager::Graphics().present();
+
+    return 0;
 }
 

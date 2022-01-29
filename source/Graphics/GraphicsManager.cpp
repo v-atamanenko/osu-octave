@@ -3,183 +3,164 @@
 
 GraphicsManager GraphicsManager::sGraphicsManager;
 
-int nextPBlock;
+SDL_Texture* GraphicsManager::loadTexture( int texid, const std::string& path )
+{
+    if (textures[texid] != nullptr)
+        SDL_DestroyTexture(textures[texid]);
 
-//---------------------------------------------------------------------------------
-inline uint32 alignVal( uint32 val, uint32 to ) {
-    return (val & (to-1))? (val & ~(to-1)) + to : val;
+    //The final texture
+    SDL_Texture* newTexture = nullptr;
+
+    //Load image at specified path
+    SDL_Surface* loadedSurface = IMG_Load( path.c_str() );
+    if( loadedSurface == nullptr )
+    {
+        fprintf( stderr, "Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError() );
+        return nullptr;
+    }
+
+    if( renderer == nullptr ) {
+        fprintf( stderr, "Unable to create texture! Renderer is null.\n" );
+        SDL_FreeSurface( loadedSurface );
+        return nullptr;
+    }
+
+    //Create texture from surface pixels
+    newTexture = SDL_CreateTextureFromSurface( renderer, loadedSurface );
+    if( newTexture == nullptr )
+    {
+        fprintf( stderr,  "Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError() );
+        SDL_FreeSurface( loadedSurface );
+        return nullptr;
+    }
+
+    //Get rid of old loaded surface
+    SDL_FreeSurface( loadedSurface );
+
+    textures[texid] = newTexture;
 }
 
-//---------------------------------------------------------------------------------
-int getNextPaletteSlot(u16 count, uint8 format) {
-//---------------------------------------------------------------------------------
-    // ensure the result aligns on a palette block for this format
-    uint32 result = alignVal(nextPBlock, 1<<(4-(format==GL_RGB4)));
-
-    // convert count to bytes and align to next (smallest format) palette block
-    count = alignVal( count<<1, 1<<3 );
-
-    // ensure that end is within palette video mem
-    if( result+count > 0x10000 )   // VRAM_F - VRAM_E
-        return -1;
-
-    nextPBlock = result+count;
-    return (int)result;
+void GraphicsManager::resetBg() {
+    loadTexture( TX_CURRENT_BG, "gfx/menuBG.png" );
 }
 
-//---------------------------------------------------------------------------------
-void glTexLoadPal(const u16* pal, u16 count, u32 addr) {
-//---------------------------------------------------------------------------------
-    vramSetBankE(VRAM_E_LCD);
-    swiCopy( pal, &VRAM_E[addr>>1] , count / 2 | COPY_MODE_WORD);
-    vramSetBankE(VRAM_E_TEX_PALETTE);
+void GraphicsManager::loadBgFromSurface(SDL_Surface* bg ) {
+    SDL_Surface* optimizedSurface = nullptr;
+    SDL_Texture* newTexture = nullptr;
+
+    if (textures[TX_CURRENT_BG] != nullptr) {
+        SDL_DestroyTexture(textures[TX_CURRENT_BG]);
+    }
+
+    if( !bg )
+    {
+        fprintf( stderr, "Unable to update background!\n");
+        return;
+    }
+
+    uint32_t pf = SDL_GetWindowPixelFormat(window);
+
+    optimizedSurface = SDL_ConvertSurface(bg, SDL_AllocFormat(pf), 0 );
+    if( optimizedSurface == nullptr )
+    {
+        fprintf( stderr, "Unable to optimize background! SDL Error: %s\n", SDL_GetError() );
+        SDL_FreeSurface(bg);
+        return;
+    }
+
+    SDL_FreeSurface( bg );
+
+    newTexture = SDL_CreateTextureFromSurface( renderer, optimizedSurface );
+    if( newTexture == nullptr )
+    {
+        fprintf( stderr, "Unable to create texture for bg! SDL Error: %s\n", SDL_GetError() );
+    }
+
+    SDL_FreeSurface( optimizedSurface );
+
+    textures[TX_CURRENT_BG] = newTexture;
 }
 
-//---------------------------------------------------------------------------------
-int gluTexLoadPal(const u16* pal, u16 count, uint8 format) {
-//---------------------------------------------------------------------------------
-    int addr = getNextPaletteSlot(count, format);
-    if( addr>=0 )
-        glTexLoadPal(pal, count, (u32) addr);
+void GraphicsManager::bgDraw() {
 
-    return addr;
+    if (textures[TX_CURRENT_BG] != nullptr) {
+        if (SDL_RenderCopy(renderer, textures[TX_CURRENT_BG], nullptr, nullptr) < 0) {
+            fprintf(stderr, "bgDraw failed with: %s \n", SDL_GetError());
+        }
+    }
+}
+
+void GraphicsManager::clear() {
+    SDL_SetRenderDrawColor(renderer, 0,0,0,255);
+    SDL_RenderClear(renderer);
+}
+
+void GraphicsManager::present() {
+    SDL_RenderPresent(renderer);
 }
 
 GraphicsManager::GraphicsManager()
 {
-    videoSetMode(MODE_5_3D);
-    videoSetModeSub(MODE_5_2D);
-
-    vramSetBankA(VRAM_A_TEXTURE);
-	vramSetBankB(VRAM_B_MAIN_BG_0x06020000);
-    vramSetBankC(VRAM_C_SUB_BG);
-    vramSetBankD(VRAM_D_MAIN_BG_0x06000000);
-    vramSetBankE(VRAM_E_TEX_PALETTE);
-
-	REG_BG0CNT = 1;
-
-    glInit();
-    glEnable(GL_BLEND | GL_TEXTURE_2D | GL_ANTIALIAS);
-
-    // setup the rear plane
-    glClearColor(20,20,31,0);
-    glClearPolyID(63);
-    glClearDepth(0x7FFF);
-
-    glViewport(0,0,255,191);
-
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    //gluPerspective(100.3, 4.0/3.0, 0.1, 100); //fovy, aspect(width/height), zNear, zFar
-    glOrtho(0.f, 6.40f, 0.f, 4.80f, 0.1f, 100.f);
-
-    // camera is flipped around a bit - x increases left to right, y increases top to bottom (0,0) to (640,480)
-    gluLookAt(	0, 4.8, -50.0,		//camera position
-                  0, 4.8, 0.0,		//look at
-                  0.0, -1.0, 0.0);	//up
-
-    glMatrixMode(GL_MODELVIEW);
-
-    mPolygonId = 0;
-
     //// LOAD TEXTURES ////
+    resetBg();
 
-    glGenTextures(NUMBER_OF_TEXTURES, textures);
+    loadTexture( TX_PLAY_CIRCLE, "data/textures/circle.png" );
+    loadTexture( TX_PLAY_CIRCLEOVERLAY, "data/textures/circleoverlay.png" );
+    loadTexture( TX_PLAY_CIRCLEAPPROACH, "data/textures/circleapproach.png" );
 
-    int pal0 = gluTexLoadPal(palette0, 4, GL_RGB4);
+    loadTexture( TX_PLAY_DISC, "data/textures/disc.png" );
+    loadTexture( TX_PLAY_SLIDERTICK, "data/textures/slidertick.png" );
+    loadTexture( TX_PLAY_SLIDERREVERSE, "data/textures/sliderreverse.png" );
 
-    LoadGLTexture(TX_PLAY_CIRCLE, 			GL_RGB4, TEXTURE_SIZE_64, TEXTURE_SIZE_64, pal0, uv64x64, circle_bin);
-    LoadGLTexture(TX_PLAY_CIRCLEOVERLAY, 	GL_RGB4, TEXTURE_SIZE_64, TEXTURE_SIZE_64, pal0, uv64x64, circleoverlay_bin);
-    LoadGLTexture(TX_PLAY_CIRCLEAPPROACH, 	GL_RGB4, TEXTURE_SIZE_64, TEXTURE_SIZE_64, pal0, uv64x64, circleapproach_bin);
+    loadTexture( TX_WHITE, "data/textures/white.png" );
 
-    LoadGLTexture(TX_PLAY_DISC,				GL_RGB4, TEXTURE_SIZE_32, TEXTURE_SIZE_32, pal0, uv32x32, disc_bin);
-    LoadGLTexture(TX_PLAY_SLIDERTICK, 		GL_RGB4, TEXTURE_SIZE_16, TEXTURE_SIZE_16, pal0, uv16x16, slidertick_bin);
-    LoadGLTexture(TX_PLAY_SLIDERREVERSE,	GL_RGB4, TEXTURE_SIZE_32, TEXTURE_SIZE_32, pal0, uv32x32, sliderreverse_bin);
+    loadTexture( TX_PLAY_SPINNER, "data/textures/spinner.png" );
+    loadTexture( TX_PLAY_SPINNERBARS, "data/textures/spinnerbars.png" );
+    loadTexture( TX_PLAY_SCOREBAR_BAR, "data/textures/scorebar_colour.png" );
 
-    LoadGLTexture(TX_WHITE,					GL_RGB4, TEXTURE_SIZE_8, TEXTURE_SIZE_8, pal0, uv8x8, white_bin);
+    loadTexture( TX_PLAY_SPINNERBG, "data/textures/spinnerbg.png" );
 
-    int pal1 = gluTexLoadPal(palette1, 16, GL_RGB16);
+    loadTexture( TX_PLAY_SLIDERB0, "data/textures/sliderb0.png" );
+    loadTexture( TX_PLAY_SLIDERB1, "data/textures/sliderb1.png" );
+    loadTexture( TX_PLAY_SLIDERB2, "data/textures/sliderb2.png" );
+    loadTexture( TX_PLAY_SLIDERB3, "data/textures/sliderb3.png" );
+    loadTexture( TX_PLAY_SLIDERB4, "data/textures/sliderb4.png" );
+    loadTexture( TX_PLAY_SLIDERB5, "data/textures/sliderb5.png" );
+    loadTexture( TX_PLAY_SLIDERB6, "data/textures/sliderb6.png" );
+    loadTexture( TX_PLAY_SLIDERB7, "data/textures/sliderb7.png" );
+    loadTexture( TX_PLAY_SLIDERB8, "data/textures/sliderb8.png" );
+    loadTexture( TX_PLAY_SLIDERB9, "data/textures/sliderb9.png" );
+    loadTexture( TX_PLAY_SLIDERFOLLOW, "data/textures/sliderfollow.png" );
 
-    LoadGLTexture(TX_PLAY_SPINNER,			GL_RGB16, TEXTURE_SIZE_128, TEXTURE_SIZE_128, pal1, uv128x128, spinner_bin);
-    LoadGLTexture(TX_PLAY_SPINNERBARS, 		GL_RGB16, TEXTURE_SIZE_256, TEXTURE_SIZE_256, pal1, uv256x192, spinnerbars_bin);
-    LoadGLTexture(TX_PLAY_SCOREBAR_BAR,		GL_RGB16, TEXTURE_SIZE_256, TEXTURE_SIZE_16, pal1, uv256x16, scorebar_colour_bin);
+    loadTexture( TX_PLAY_HIT0, "data/textures/hit0.png" );
+    loadTexture( TX_PLAY_HIT300, "data/textures/hit300.png" );
+    loadTexture( TX_PLAY_HIT300K, "data/textures/hit300k.png" );
+    loadTexture( TX_PLAY_HIT300G, "data/textures/hit300g.png" );
 
-    int pal2 = gluTexLoadPal(palette2, 16, GL_RGB4);
+    loadTexture( TX_PLAY_HIT50, "data/textures/hit50.png" );
+    loadTexture( TX_PLAY_HIT100, "data/textures/hit100.png" );
+    loadTexture( TX_PLAY_HIT100K, "data/textures/hit100k.png" );
 
-    LoadGLTexture(TX_PLAY_SPINNERBG, 		GL_RGB16, TEXTURE_SIZE_256, TEXTURE_SIZE_256, pal2, uv256x192, spinnerbg_bin);
+    loadTexture( TX_PLAY_SLIDER30, "data/textures/slider30.png" );
+    loadTexture( TX_PLAY_SLIDER10, "data/textures/slider10.png" );
 
-    int pal3 = gluTexLoadPal(palette3, 4, GL_RGB4);
+    loadTexture( TX_PLAY_SCOREBAR_KI, "data/textures/scorebar_ki.png" );
+    loadTexture( TX_PLAY_SCOREBAR_KIDANGER, "data/textures/scorebar_kidanger.png" );
+    loadTexture( TX_PLAY_SCOREBAR_KIDANGER2, "data/textures/scorebar_kidanger2.png" );
 
-    LoadGLTexture(TX_PLAY_SLIDERB0, 		GL_RGB4, TEXTURE_SIZE_64, TEXTURE_SIZE_64, pal3, uv64x64, sliderb0_bin);
-    LoadGLTexture(TX_PLAY_SLIDERB1, 		GL_RGB4, TEXTURE_SIZE_64, TEXTURE_SIZE_64, pal3, uv64x64, sliderb1_bin);
-    LoadGLTexture(TX_PLAY_SLIDERB2, 		GL_RGB4, TEXTURE_SIZE_64, TEXTURE_SIZE_64, pal3, uv64x64, sliderb2_bin);
-    LoadGLTexture(TX_PLAY_SLIDERB3, 		GL_RGB4, TEXTURE_SIZE_64, TEXTURE_SIZE_64, pal3, uv64x64, sliderb3_bin);
-    LoadGLTexture(TX_PLAY_SLIDERB4, 		GL_RGB4, TEXTURE_SIZE_64, TEXTURE_SIZE_64, pal3, uv64x64, sliderb4_bin);
-    LoadGLTexture(TX_PLAY_SLIDERB5, 		GL_RGB4, TEXTURE_SIZE_64, TEXTURE_SIZE_64, pal3, uv64x64, sliderb5_bin);
-    LoadGLTexture(TX_PLAY_SLIDERB6, 		GL_RGB4, TEXTURE_SIZE_64, TEXTURE_SIZE_64, pal3, uv64x64, sliderb6_bin);
-    LoadGLTexture(TX_PLAY_SLIDERB7, 		GL_RGB4, TEXTURE_SIZE_64, TEXTURE_SIZE_64, pal3, uv64x64, sliderb7_bin);
-    LoadGLTexture(TX_PLAY_SLIDERB8, 		GL_RGB4, TEXTURE_SIZE_64, TEXTURE_SIZE_64, pal3, uv64x64, sliderb8_bin);
-    LoadGLTexture(TX_PLAY_SLIDERB9, 		GL_RGB4, TEXTURE_SIZE_64, TEXTURE_SIZE_64, pal3, uv64x64, sliderb9_bin);
-    LoadGLTexture(TX_PLAY_SLIDERFOLLOW, 	GL_RGB4, TEXTURE_SIZE_64, TEXTURE_SIZE_64, pal3, uv64x64, sliderfollow_bin);
-
-    int pal4 = gluTexLoadPal(palette4, 16, GL_RGB16);
-
-    LoadGLTexture(TX_PLAY_HIT0,				GL_RGB16, TEXTURE_SIZE_64, TEXTURE_SIZE_64, pal4, uv64x64, hit0_bin);
-    LoadGLTexture(TX_PLAY_HIT300,			GL_RGB16, TEXTURE_SIZE_64, TEXTURE_SIZE_64, pal4, uv64x64, hit300_bin);
-    LoadGLTexture(TX_PLAY_HIT300K,			GL_RGB16, TEXTURE_SIZE_64, TEXTURE_SIZE_64, pal4, uv64x64, hit300k_bin);
-    LoadGLTexture(TX_PLAY_HIT300G,			GL_RGB16, TEXTURE_SIZE_64, TEXTURE_SIZE_64, pal4, uv64x64, hit300g_bin);
-
-    int pal5 = gluTexLoadPal(palette5, 16, GL_RGB16);
-
-    LoadGLTexture(TX_PLAY_HIT50,			GL_RGB16, TEXTURE_SIZE_64, TEXTURE_SIZE_64, pal5, uv64x64, hit50_bin);
-    LoadGLTexture(TX_PLAY_HIT100,			GL_RGB16, TEXTURE_SIZE_64, TEXTURE_SIZE_64, pal5, uv64x64, hit100_bin);
-    LoadGLTexture(TX_PLAY_HIT100K,			GL_RGB16, TEXTURE_SIZE_64, TEXTURE_SIZE_64, pal5, uv64x64, hit100k_bin);
-
-    int pal6 = gluTexLoadPal(palette6, 4, GL_RGB4);
-
-    LoadGLTexture(TX_PLAY_SLIDER30,			GL_RGB4, TEXTURE_SIZE_16, TEXTURE_SIZE_16, pal6, uv16x16, slider30_bin);
-    LoadGLTexture(TX_PLAY_SLIDER10,			GL_RGB4, TEXTURE_SIZE_16, TEXTURE_SIZE_16, pal6, uv16x16, slider10_bin);
-
-    int pal7 = gluTexLoadPal(palette7, 16, GL_RGB16);
-
-    LoadGLTexture(TX_PLAY_SCOREBAR_KI,		GL_RGB16, TEXTURE_SIZE_32, TEXTURE_SIZE_32, pal7, uv32x32, scorebar_ki_bin);
-    LoadGLTexture(TX_PLAY_SCOREBAR_KIDANGER, GL_RGB16, TEXTURE_SIZE_32, TEXTURE_SIZE_32, pal7, uv32x32, scorebar_kidanger_bin);
-    LoadGLTexture(TX_PLAY_SCOREBAR_KIDANGER2, GL_RGB16, TEXTURE_SIZE_32, TEXTURE_SIZE_32, pal7, uv32x32, scorebar_kidanger2_bin);
-
-    int pal8 = gluTexLoadPal(palette8, 16, GL_RGB16);
-
-    LoadGLTexture(TX_PLAY_SCOREBAR, 		GL_RGB16, TEXTURE_SIZE_256, TEXTURE_SIZE_16, pal8, uv256x16, scorebar_bin);
+    loadTexture( TX_PLAY_SCOREBAR, "data/textures/scorebar.png" );
 
     // 16 bit textures
 
     //LoadGLTexture(TX_SONGSELECT_SONGBG,	GL_RGB, TEXTURE_SIZE_64, TEXTURE_SIZE_512, -1, NULL, songbg_osu_bin);
 }
 
-void GraphicsManager::LoadGLTextureEx(TextureType tex, GL_TEXTURE_TYPE_ENUM type, int sizeX, int sizeY, int palette, const u32* uv, const u8* texture, u32 size)
+void GraphicsManager::Draw(TextureType tex, int32_t x, int32_t y, uint32_t width, uint32_t height, DrawOrigin origin, FieldType fieldtype, SDL_Color color, uint32_t alpha, int32_t angle, float z, const uint32_t* uv)
 {
-    /* DON'T TOUCH THIS FUNCTION
-     * there seems to be some sort of memory problem somewhere, but it's completely eluding me where it is
-     * the game only loads the textures if this function is the way it is >.>
-     */
-
-    void* temp = malloc(size);
-
-    glBindTexture(0, textures[tex]);
-    glTexImage2D(0, 0, type, sizeX, sizeY, 0, GL_TEXTURE_COLOR0_TRANSPARENT, (u8*)texture);
-
-    free(temp);
-
-    textureInfo[tex].palette = palette;
-    textureInfo[tex].format = type;
-    textureInfo[tex].uv = uv;
-}
-
-void GraphicsManager::Draw(TextureType tex, s32 x, s32 y, u32 width, u32 height, DrawOrigin origin, FieldType fieldtype, rgb color, u32 alpha, s32 angle, float z, const u32* uv)
-{
-    if (uv == NULL)
+    if (uv == nullptr)
         uv = textureInfo[tex].uv;
 
-    s32 x1 = 270, x2 = 370, y1 = 190, y2 = 290;
+    int32_t x1 = 270, x2 = 370, y1 = 190, y2 = 290;
     //float z = zvalue[tex] + deltaz;
 
     if (fieldtype == FIELD_PLAY)
@@ -221,32 +202,20 @@ void GraphicsManager::Draw(TextureType tex, s32 x, s32 y, u32 width, u32 height,
             y2 = ForceBounds(y + height);
     }
 
-    //need to keep rotating polygonid
-    if (++mPolygonId > 63)
-        mPolygonId = 0;
-
     //don't draw things out of the screen
     if (x1 > 640 || x2 < 0 || y1 > 480 || y2 < 0)
         return;
+    SDL_Rect dst = {x1, y1, x2-x1, y2-y1};
+    SDL_RenderCopyEx( renderer, textures[tex], nullptr, &dst, angle, nullptr, SDL_FLIP_NONE );
 
-    glPushMatrix();
+    //if (angle != 0)
+    //{
+        // //Render m_texture to the target texture with an angle
+        //   SDL_RenderCopyEx( renderer, m_texture, NULL, NULL, angle, NULL, SDL_FLIP_NONE );
+        //
+    //}
 
-    glPolyFmt(POLY_ALPHA(alpha&31) | POLY_ID(mPolygonId) | POLY_CULL_NONE);
-    glColor(color);
-
-    if (angle != 0)
-    {
-        glTranslatef(x/100.0, y/100.0, 0);
-        glRotateZi(angle);
-        glTranslatef(-x/100.0, -y/100.0, 0);
-    }
-
-    glBindTexture(0, textures[tex]);
-
-    if (textureInfo[tex].palette >= 0)
-        GFX_PAL_FORMAT = textureInfo[tex].palette >> (4 - (textureInfo[tex].format == GL_RGB4));
-
-    glBegin(GL_QUADS);
+    /*
 
     GFX_TEX_COORD = uv[0];
     glVertex2lu1f(x1, y1, z);
@@ -259,14 +228,10 @@ void GraphicsManager::Draw(TextureType tex, s32 x, s32 y, u32 width, u32 height,
 
     GFX_TEX_COORD = uv[3];
     glVertex2lu1f(x1, y2, z);
-
-    glEnd();
-//	glClearColor()
-
-    glPopMatrix(1);
+    */
 }
 
-s32 GraphicsManager::ForceBounds(s32 value)
+int32_t GraphicsManager::ForceBounds(int32_t value)
 {
     if (value < -200)
         return -200;
