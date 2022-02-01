@@ -9,20 +9,20 @@ Lifebar::Lifebar()
 {
 	pSprite* spr;
 	
-	spr = new pSprite(TX_PLAY_SCOREBAR, 0, 0, 640, 42, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color({31, 31, 31}), 31);
+	spr = new pSprite(TX_PLAY_SCOREBAR, 0, 0, mapXToScreen(640), mapYToScreen(42), ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color({31, 31, 31}), 31);
 	mSprites.push_back(spr);
 	
-	spr = new pSprite(TX_PLAY_SCOREBAR_BAR, 0, 0, 400, 40, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color({31, 31, 31}), 31, -0.01f);
+	spr = new pSprite(TX_PLAY_SCOREBAR_BAR, 0, 0, mapXToScreen(400), mapYToScreen(40), ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color({31, 31, 31}), 31, -0.01f);
 	mSprites.push_back(spr);
 	
-	spr = new pSprite(TX_PLAY_SCOREBAR_KI, 400, 18, 80, 80, ORIGIN_CENTER, FIELD_SCREEN, SDL_Color({31, 31, 31}), 31, -0.02f);
+	spr = new pSprite(TX_PLAY_SCOREBAR_KI, mapXToScreen(400), mapYToScreen(18), mapXToScreen(80), mapXToScreen(80), ORIGIN_CENTER, FIELD_SCREEN, SDL_Color({31, 31, 31}), 31, -0.02f);
 	mSprites.push_back(spr);
 	
 	mUV = new uint32_t[4]; //deleted by pSprite
 	mUV[0] = TEXTURE_PACK(0, 0);
-	mUV[1] = TEXTURE_PACK(160, 0);
-	mUV[2] = TEXTURE_PACK(160, 16);
-	mUV[3] = TEXTURE_PACK(0, 16);
+	mUV[1] = TEXTURE_PACK(mapXToScreen(160), 0);
+	mUV[2] = TEXTURE_PACK(mapXToScreen(160), mapYToScreen(16));
+	mUV[3] = TEXTURE_PACK(0, mapYToScreen(16));
 	
 	mSprites[1]->UV = mUV;
 }

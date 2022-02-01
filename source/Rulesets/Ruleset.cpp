@@ -44,13 +44,11 @@ void Ruleset::Update()
 	// score/combo output
 	
 	TextManager::Bottom().SetFont(FONT_SCORE);
-	
-	TextManager::Bottom().PrintLocate(635, 140, ORIGIN_TOPRIGHT, "  %08i", mCurrentScore.CurrentScore());
+
+	TextManager::Bottom().PrintScore(mapXToScreen(635), 25, ORIGIN_TOPRIGHT, "  %08u", mCurrentScore.CurrentScore());
 	
 	if (mCurrentScore.CurrentCombo() > 0)
-		TextManager::Bottom().PrintLocate(5, 375, ORIGIN_BOTTOMLEFT, "%ix    ", mCurrentScore.CurrentCombo());
-	else
-		TextManager::Bottom().PrintLocate(5, 375, ORIGIN_BOTTOMLEFT, "       ");
+        TextManager::Bottom().PrintScore(25, 25, ORIGIN_BOTTOMLEFT, "%ix   ", mCurrentScore.CurrentCombo());
 }
 
 void Ruleset::HandleInput()

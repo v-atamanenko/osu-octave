@@ -8,11 +8,8 @@
 
 SDLInitializer SDLInitializer::SDLI;
 
-int WIDTH=960;
-int HEIGHT=544;
-
 SDL_Window *window = nullptr;
-SDL_Renderer *renderer = nullptr;
+    SDL_Renderer *renderer = nullptr;
 SDL_Surface *screen_surface = nullptr;
 
 SDLInitializer::SDLInitializer() {
@@ -39,7 +36,7 @@ SDLInitializer::SDLInitializer() {
     window = SDL_CreateWindow("osu-ds",
                               SDL_WINDOWPOS_UNDEFINED,
                               SDL_WINDOWPOS_UNDEFINED,
-                              WIDTH, HEIGHT,
+                              SCREEN_WIDTH, SCREEN_HEIGHT,
                               0); //SDL_WINDOW_FULLSCREEN_DESKTOP
     if ( window == nullptr ) {
         fprintf(stderr, "Unable to create window: %s\n", SDL_GetError());

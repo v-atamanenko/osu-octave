@@ -22,7 +22,7 @@ if (BUILDTARGET STREQUAL "vita")
     set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d PARENTAL_LEVEL=1 -d ATTRIBUTE2=12")
 endif()
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++14 -Wno-narrowing -O3")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++14 -Wno-narrowing -g -O0 -fno-delete-null-pointer-checks")
 
 include_directories(source)
 include_directories(fonts)
@@ -67,9 +67,9 @@ add_executable(${PROJECT_NAME}
         ${PROJECT_SOURCE_DIR}/source/main.cpp)
 
 if (BUILDTARGET STREQUAL "vita")
+    add_definitions(-DVITA)
     find_package(SDL2 REQUIRED)
     target_link_libraries(${PROJECT_NAME}
-
             SDL2_mixer
             SDL2_ttf
             SDL2_image
@@ -101,6 +101,7 @@ if (BUILDTARGET STREQUAL "vita")
             c
             )
 else()
+    add_definitions(-DDESKTOP)
     #find_package(SDL2 REQUIRED HINTS /usr/local/Cellar/sdl2/2.0.20/)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Qunused-arguments -I/usr/local/Cellar/sdl2/2.0.20/include -I/usr/local/Cellar/sdl2_image/2.0.5/include -I/usr/local/Cellar/sdl2_ttf/2.0.18/include -I/usr/local/Cellar/sdl2_mixer/2.0.4_3/include -L/usr/local/Cellar/sdl2/2.0.20/lib -L/usr/local/Cellar/sdl2_image/2.0.5/lib -L/usr/local/Cellar/sdl2_ttf/2.0.18/lib -L/usr/local/Cellar/sdl2_mixer/2.0.4_3/lib")
 

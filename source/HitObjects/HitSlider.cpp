@@ -143,11 +143,11 @@ HitSlider::HitSlider(int32_t x, int32_t y, int32_t time, uint32_t lengthtime, st
 	mSprites.push_back(spr);
 	
 	//slider30 sprites
-	spr = new pSprite(TX_PLAY_SLIDER30, points[0]->x, points[0]->y, 40, 40, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({31,31,31}), 0);
+	spr = new pSprite(TX_PLAY_SLIDER30, points[0]->x, points[0]->y, mapYToScreen(40), mapYToScreen(40), ORIGIN_CENTER, FIELD_PLAY, SDL_Color({31,31,31}), 0);
 	spr->Kill(mEndTime+1000);
 	mSprites.push_back(spr);
 	
-	spr = new pSprite(TX_PLAY_SLIDER30, points[pointCount-1]->x, points[pointCount-1]->y, 40, 40, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({31,31,31}), 0);
+	spr = new pSprite(TX_PLAY_SLIDER30, points[pointCount-1]->x, points[pointCount-1]->y, mapYToScreen(40), mapYToScreen(40), ORIGIN_CENTER, FIELD_PLAY, SDL_Color({31,31,31}), 0);
 	spr->Kill(mEndTime+1000);
 	mSprites.push_back(spr);
 	
@@ -203,7 +203,7 @@ HitSlider::HitSlider(int32_t x, int32_t y, int32_t time, uint32_t lengthtime, st
 		//add to list for tracking ticks
 		mTicks[i].Tick = spr;
 		
-		spr = new pSprite(TX_PLAY_SLIDER10, ticks[i]->x, ticks[i]->y, 40, 40, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({31,31,31}),0);
+		spr = new pSprite(TX_PLAY_SLIDER10, ticks[i]->x, ticks[i]->y, mapYToScreen(40), mapYToScreen(40), ORIGIN_CENTER, FIELD_PLAY, SDL_Color({31,31,31}),0);
 		spr->Kill(mEndTime+1000);
 		mSprites.push_back(spr);
 		
@@ -295,10 +295,10 @@ void HitSlider::Update()
 						mTicks[real].Score->Hide(now+300, now+350);
 						mTicks[real].Score->Move(now, now+250,
 												mTicks[real].Tick->X, mTicks[real].Tick->Y,
-												mTicks[real].Tick->X, mTicks[real].Tick->Y - 20);
+												mTicks[real].Tick->X, mTicks[real].Tick->Y - mapYToScreen(20));
 						mTicks[real].Score->Move(now+250, now+320, 
-												mTicks[real].Tick->X, mTicks[real].Tick->Y - 20,
-												mTicks[real].Tick->X, mTicks[real].Tick->Y - 30);
+												mTicks[real].Tick->X, mTicks[real].Tick->Y - mapYToScreen(20),
+												mTicks[real].Tick->X, mTicks[real].Tick->Y - mapYToScreen(30));
 						
 						//normal ticks give 10 points
 						IncreaseScore(SCORE_TICK_10, false, true);
@@ -326,9 +326,9 @@ void HitSlider::Update()
 						
 						mSprites[tSpriteId]->Show();
 						mSprites[tSpriteId]->Hide(now+300, now+350);
-						mSprites[tSpriteId]->Move(now, now+250, mSprites[tSpriteId]->X, mSprites[tSpriteId]->Y - 20);
-						mSprites[tSpriteId]->Move(now+250, now+320, mSprites[tSpriteId]->X, mSprites[tSpriteId]->Y - 20,
-											mSprites[tSpriteId]->X, mSprites[tSpriteId]->Y - 30);
+						mSprites[tSpriteId]->Move(now, now+250, mSprites[tSpriteId]->X, mSprites[tSpriteId]->Y - mapYToScreen(20));
+						mSprites[tSpriteId]->Move(now+250, now+320, mSprites[tSpriteId]->X, mSprites[tSpriteId]->Y - mapYToScreen(20),
+											mSprites[tSpriteId]->X, mSprites[tSpriteId]->Y - mapYToScreen(30));
 						mSprites[tSpriteId]->Move(now+350, now+350, mSprites[tSpriteId]->X, mSprites[tSpriteId]->Y);
 						
 						//repeats give 30 points
@@ -358,9 +358,9 @@ void HitSlider::Update()
 				
 				mSprites[tSpriteId]->Show();
 				mSprites[tSpriteId]->Hide(now+300, now+350);
-				mSprites[tSpriteId]->Move(now, now+250, mSprites[tSpriteId]->X, mSprites[tSpriteId]->Y - 20);
-				mSprites[tSpriteId]->Move(now+250, now+320, mSprites[tSpriteId]->X, mSprites[tSpriteId]->Y - 20,
-									mSprites[tSpriteId]->X, mSprites[tSpriteId]->Y - 30);
+				mSprites[tSpriteId]->Move(now, now+250, mSprites[tSpriteId]->X, mSprites[tSpriteId]->Y - mapYToScreen(20));
+				mSprites[tSpriteId]->Move(now+250, now+320, mSprites[tSpriteId]->X, mSprites[tSpriteId]->Y - mapYToScreen(20),
+									mSprites[tSpriteId]->X, mSprites[tSpriteId]->Y - mapYToScreen(30));
 				mSprites[tSpriteId]->Move(now+350, now+350, mSprites[tSpriteId]->X, mSprites[tSpriteId]->Y);
 				
 				IncreaseScore(SCORE_TICK_30, true, true);
@@ -406,9 +406,9 @@ void HitSlider::OnTouchDown(const touchPosition& touch)
 				
 				mSprites[7]->Show();
 				mSprites[7]->Hide(now+300, now+350);
-				mSprites[7]->Move(now, now+250, mSprites[7]->X, mSprites[7]->Y - 20);
-				mSprites[7]->Move(now+250, now+320, mSprites[7]->X, mSprites[7]->Y - 20,
-									mSprites[7]->X, mSprites[7]->Y - 30);
+				mSprites[7]->Move(now, now+250, mSprites[7]->X, mSprites[7]->Y - mapYToScreen(20));
+				mSprites[7]->Move(now+250, now+320, mSprites[7]->X, mSprites[7]->Y - mapYToScreen(20),
+									mSprites[7]->X, mSprites[7]->Y - mapYToScreen(30));
 				mSprites[7]->Move(now+350, now+350, mSprites[7]->X, mSprites[7]->Y);
 				
 				IncreaseScore(SCORE_TICK_30, false, true);
@@ -535,7 +535,7 @@ void HitSlider::MapSliderPath(pSprite* spr, std::vector<HitObjectPoint*>& points
 			for (uint32_t i=0; i<points.size()-1; ++i)
 			{
 				spr->Move(time+(loops*lengthtime)+(timeperpoint*i), time+(loops*lengthtime)+(timeperpoint*(i+1)), points[points.size()-i-1]->x, points[points.size()-i-1]->y, points[points.size()-i-2]->x, points[points.size()-i-2]->y);
-				spr->Rotate(time+(loops*lengthtime)+(timeperpoint*i), time+(loops*lengthtime)+(timeperpoint*(i+1)), points[points.size()-i-1]->angle+0x4000, points[points.size()-i-2]->angle+0x4000);
+				spr->Rotate(time+(loops*lengthtime)+(timeperpoint*i), time+(loops*lengthtime)+(timeperpoint*(i+1)), points[points.size()-i-1]->angle+0x400, points[points.size()-i-2]->angle+0x400);
 			}
 			++loops;
 		}

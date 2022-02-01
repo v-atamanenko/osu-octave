@@ -4,7 +4,7 @@
 #define TEXTURE_PACK(u, v) (((u) & 0xFFFF) | ((v) << 16))
 #endif
 
-HitSpinner::HitSpinner(int32_t time, int32_t endtime, HitObjectSound sound) : HitObject(256, 192, time, HIT_SPINNER, sound)
+HitSpinner::HitSpinner(int32_t time, int32_t endtime, HitObjectSound sound) : HitObject(mapXToScreen(256), mapYToScreen(192), time, HIT_SPINNER, sound)
 {
 	mEndTime = endtime;
 	fSpinning = false;
@@ -18,32 +18,32 @@ HitSpinner::HitSpinner(int32_t time, int32_t endtime, HitObjectSound sound) : Hi
 	
 	mUV = new uint32_t[4]; //deleted by pSprite
 	mUV[0] = TEXTURE_PACK(0,0);
-	mUV[1] = TEXTURE_PACK(256,0);
-	mUV[2] = TEXTURE_PACK(256,192);
-	mUV[3] = TEXTURE_PACK(0,192);
+	mUV[1] = TEXTURE_PACK(mapXToScreen(256),0);
+	mUV[2] = TEXTURE_PACK(mapXToScreen(256), mapYToScreen(192));
+	mUV[3] = TEXTURE_PACK(0, mapYToScreen(192));
 	
 	pSprite* spr;
 	
-	spr = new pSprite(TX_PLAY_CIRCLEAPPROACH, 256, 192, 440, 440, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({10, 10, 31}), 0);
+	spr = new pSprite(TX_PLAY_CIRCLEAPPROACH, mapXToScreen(256), mapYToScreen(192), mapYToScreen(440), mapYToScreen(440), ORIGIN_CENTER, FIELD_PLAY, SDL_Color({10, 10, 31}), 0);
 	spr->Show(time-300, time);
 	spr->Hide(endtime, endtime+300);
 	spr->Scale(time-300, endtime, 1, 0);
 	spr->Kill(endtime+300);
 	mSprites.push_back(spr);
 	
-	spr = new pSprite(TX_PLAY_SPINNER, 256, 192, 400, 400, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({31, 31, 31}), 0, 0.03f);
+	spr = new pSprite(TX_PLAY_SPINNER, mapXToScreen(256), mapYToScreen(192), mapYToScreen(400), mapYToScreen(400), ORIGIN_CENTER, FIELD_PLAY, SDL_Color({31, 31, 31}), 0, 0.03f);
 	spr->Show(time-300, time);
 	spr->Hide(endtime, endtime+300);
 	spr->Kill(endtime+300);
 	mSprites.push_back(spr);
 	
-	spr = new pSprite(TX_PLAY_SPINNERBARS, 0, 480, 640, 480, ORIGIN_BOTTOMLEFT, FIELD_SCREEN, SDL_Color({31, 31, 31}), 0, 0.03f);
+	spr = new pSprite(TX_PLAY_SPINNERBARS, 0, mapYToScreen(480), mapXToScreen(640), mapYToScreen(480), ORIGIN_BOTTOMLEFT, FIELD_SCREEN, SDL_Color({31, 31, 31}), 0, 0.03f);
 	spr->Show(time-300, time);
 	spr->Hide(endtime, endtime+300);
 	spr->Kill(endtime+300);
 	mSprites.push_back(spr);
 	
-	spr = new pSprite(TX_PLAY_SPINNERBG, 320, 240, 640, 480, ORIGIN_CENTER, FIELD_SCREEN, SDL_Color({31, 31, 31}), 0, 0.05f);
+	spr = new pSprite(TX_PLAY_SPINNERBG, mapXToScreen(320), mapYToScreen(240), mapXToScreen(640), mapYToScreen(480), ORIGIN_CENTER, FIELD_SCREEN, SDL_Color({31, 31, 31}), 0, 0.05f);
 	spr->Show(time-300, time+300);
 	spr->Hide(endtime, endtime+300);
 	spr->Kill(endtime+300);
@@ -66,10 +66,10 @@ void HitSpinner::Update()
 	float ratio = (mTotalSpins + MathHelper::Frc(mTotalRotation)) / mRequiredSpins;
 	
 	//set spinner bars
-	uint32_t height = MathHelper::Max(0, MathHelper::Min(192, ratio*192) - MathHelper::Random(0,10));
+	uint32_t height = MathHelper::Max(0, MathHelper::Min(mapYToScreen(192), ratio*mapYToScreen(192)) - MathHelper::Random(0,10));
 	
-	mUV[0] = TEXTURE_PACK(0,192-height);
-	mUV[1] = TEXTURE_PACK(256,192-height);
+	mUV[0] = TEXTURE_PACK(0,mapYToScreen(192)-height);
+	mUV[1] = TEXTURE_PACK(mapXToScreen(256),mapYToScreen(192)-height);
 	mSprites[2]->Height = height*2.5;
 	
 	//set spinner sound

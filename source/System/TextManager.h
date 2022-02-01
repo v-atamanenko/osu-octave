@@ -36,10 +36,11 @@ class TextManager
 		void SetFont(FONT font);
 
         void drawTex();
-		void Print(char* format, ...);
+		void Print(const char* format, ...);
 		void Clear();
 		
-		void PrintLocate(int x, int y, DrawOrigin origin, char* format, ...);
+		void PrintLocate(int x, int y, DrawOrigin origin, const char* format, ...);
+        void PrintScore(int x, int y, DrawOrigin origin, const char* format, uint32_t score);
 	
 	protected:
 		//gfxPrintConsole* mConsole;
@@ -50,7 +51,7 @@ class TextManager
 		static TextManager sTM;
 
 		static void AddFont(FONT font, std::string path, int ptsize=18);
-        static void updateTex(const std::string &text, SDL_Color color, int x, int y);
+        static void updateTex(char *text, SDL_Color color, int x, int y, DrawOrigin origin=ORIGIN_TOPLEFT);
         static void initTex();
 	private:
 		TextManager();

@@ -6,6 +6,10 @@
 
 #define TICKS_FOR_NEXT_FRAME (1000 / 60)
 
+#ifdef VITA
+unsigned int _newlib_heap_size_user = 140 * 1024 * 1024;
+#endif
+
 int main()
 {
     SDLInitializer::initSDL();

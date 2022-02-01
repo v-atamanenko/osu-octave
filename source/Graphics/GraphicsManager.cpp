@@ -160,7 +160,7 @@ void GraphicsManager::Draw(TextureType tex, int32_t x, int32_t y, uint32_t width
     if (uv == nullptr)
         uv = textureInfo[tex].uv;
 
-    int32_t x1 = 270, x2 = 370, y1 = 190, y2 = 290;
+    int32_t x1 = SCREEN_WIDTH, x2 = (SCREEN_WIDTH+100), y1 = SCREEN_HEIGHT, y2 = (SCREEN_HEIGHT+100);
     //float z = zvalue[tex] + deltaz;
 
     if (fieldtype == FIELD_PLAY)
@@ -203,7 +203,7 @@ void GraphicsManager::Draw(TextureType tex, int32_t x, int32_t y, uint32_t width
     }
 
     //don't draw things out of the screen
-    if (x1 > 640 || x2 < 0 || y1 > 480 || y2 < 0)
+    if (x1 > SCREEN_WIDTH || x2 < 0 || y1 > SCREEN_HEIGHT || y2 < 0)
         return;
     SDL_Rect dst = {x1, y1, x2-x1, y2-y1};
     SDL_RenderCopyEx( renderer, textures[tex], nullptr, &dst, angle, nullptr, SDL_FLIP_NONE );
@@ -236,8 +236,8 @@ int32_t GraphicsManager::ForceBounds(int32_t value)
     if (value < -200)
         return -200;
 
-    if (value > 799)
-        return 799;
+    if (value > 1099)
+        return 1099;
 
     return value;
 }

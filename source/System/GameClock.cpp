@@ -27,8 +27,7 @@ void GameClock::Update()
 	if (mFraction > 1000000000)
 	{
 		++mTime;
-        printf("%i\n",mTime);
-		mFraction -= 1000000000;
+        mFraction -= 1000000000;
 	}
 }
 

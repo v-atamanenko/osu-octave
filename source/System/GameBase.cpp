@@ -14,6 +14,7 @@ int GameBase::Update()
 	Mode::CurrentMode().HandleInput();
 
     GraphicsManager::Graphics().clear();
+    TextManager::Top().Clear();
 
     GraphicsManager::Graphics().bgDraw();
 	Mode::CurrentMode().Update();

@@ -8,3 +8,4 @@ cmake-build-debug
 build
 .vscode
 .DS_Store
+build-vita

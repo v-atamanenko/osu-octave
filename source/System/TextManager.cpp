@@ -30,9 +30,10 @@ void TextManager::drawTex()
     SDL_RenderCopy(renderer, sTM.mConsole, nullptr, nullptr);
 }
 
-void TextManager::updateTex(const std::string &text, SDL_Color color, int x, int y)
+void TextManager::updateTex(char *text, SDL_Color color, int x, int y, DrawOrigin origin)
 {
-    SDL_Surface* surfaceMessage = TTF_RenderText_Solid(sTM.mFonts[sTM.currentFont], text.c_str(), color);
+    SDL_Surface* surfaceMessage = TTF_RenderText_Solid(sTM.mFonts[sTM.currentFont], text, color);
+    free(text);
 
     if (surfaceMessage == nullptr) {
         fprintf(stderr, "Failed to create surfaceMessage: %s\n", SDL_GetError());
@@ -46,6 +47,25 @@ void TextManager::updateTex(const std::string &text, SDL_Color color, int x, int
     int texW = 0;
     int texH = 0;
     SDL_QueryTexture(Message, NULL, NULL, &texW, &texH);
+
+    switch (origin)
+    {
+        case ORIGIN_TOPLEFT:
+            break; // do nothing
+
+        case ORIGIN_CENTER:
+            x -= texW >> 1;
+            y -= texH >> 1;
+            break;
+
+        case ORIGIN_BOTTOMLEFT:
+            y = SCREEN_HEIGHT - texH - y;
+            break;
+
+        case ORIGIN_TOPRIGHT:
+            x -= texW;
+            break;
+    }
 
     SDL_Rect Message_rect = {x,y,texW,texH};
 
@@ -67,7 +87,7 @@ void TextManager::Init()
 {
 	//TODO: Use different fonts or remove rendundant font types
 	AddFont(FONT_CONSOLE, "fonts/verdana.ttf");
-	AddFont(FONT_SCORE, "fonts/verdana.ttf");
+	AddFont(FONT_SCORE, "fonts/verdana.ttf", 32);
 	AddFont(FONT_NUMBERING, "fonts/verdana.ttf");
 	AddFont(FONT_VERDANA, "fonts/verdana.ttf");
 
@@ -95,7 +115,7 @@ void TextManager::SetFont(FONT font)
     currentFont = font;
 }
 
-void TextManager::Print(char* format, ...)
+void TextManager::Print(const char* format, ...)
 {
 	char* message;
 	va_list args;
@@ -115,85 +135,24 @@ void TextManager::Clear()
     SDL_SetRenderTarget( renderer, nullptr );
 }
 
-void TextManager::PrintLocate(int x, int y, DrawOrigin origin, char* format, ...)
+void TextManager::PrintLocate(int x, int y, DrawOrigin origin, const char* format, ...)
 {
     char* message;
-	// convert from 640x480 (expected values) to 256x192 (internal values)
-	x = (int)(x/2.5f);
-	y = (int)(y/2.5f);
-	
+
 	va_list args;
 	va_start(args, format);
-	
-	// if we're printing from top left, we don't need to know width and height
-	if (origin == ORIGIN_TOPLEFT)
-	{
-        SDL_asprintf(&message, format, args);
-		va_end(args);
-		return;
-	}
-	
-	// otherwise we need to know the width and height
-	char* tmp;
-
-    SDL_asprintf(&tmp, format, args);
-    SDL_asprintf(&message, format, args);
+    printf(format, args);
+	SDL_asprintf(&message, format, args);
 	va_end(args);
-	
-	// for calculating width
-	std::vector<char*> lines;
-	lines.reserve(10);
-	
-	// height depends on the number of new lines
-	char* pos = strchr(tmp, '\n');
-	while (pos != NULL)
-	{
-		*pos = '\0';
-		lines.push_back(tmp);
-		
-		tmp = pos+1;
-		pos = strchr(tmp, '\n');
-	}
-	lines.push_back(tmp);
-	
-	// multiply by line height for pixel value
-	int height = lines.size() * 16; // FIXME: assuming font height here
-	
-	//width depends on the characters themselves, we use the longest line
-	int width = 0;
-	for (uint32_t i=0; i<lines.size(); i++)
-	{
-		int current = 0;
-		tmp = lines[i];
-		for (int j=0; tmp[j] != '\0'; j++)
-		{
-			current += 10; //FIXME: assuming font height here
-		}
-		
-		if (current > width)
-			width = current;
-	}
-	
-	// now that we have x,y,width,height we can calculate the actual location
-	switch (origin)
-	{
-		case ORIGIN_TOPLEFT:
-			break; // special case  - would not reach this point
-		
-		case ORIGIN_CENTER:
-			x -= width >> 1;
-			y -= height >> 1;
-			break;
-		
-		case ORIGIN_BOTTOMLEFT:
-			y -= height;
-			break;
-		
-		case ORIGIN_TOPRIGHT:
-			x -= width;
-			break;
-	}
 
-    updateTex(message, SDL_Color({255, 255, 255, 255}), x, y);
+    updateTex(message, SDL_Color({255, 255, 255, 255}), x, y, origin);
+}
+
+
+void TextManager::PrintScore(int x, int y, DrawOrigin origin, const char* format, uint32_t score)
+{
+    char* message;
+    SDL_asprintf(&message, format, score);
+    updateTex(message, SDL_Color({255, 255, 255, 255}), x, y, origin);
 }
 

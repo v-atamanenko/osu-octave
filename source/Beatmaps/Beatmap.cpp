@@ -1,5 +1,7 @@
 #include "Beatmap.h"
 
+
+
 Beatmap::Beatmap(const char* filename, const char* basedir)
 {
 	fLoadable = false;
@@ -148,12 +150,8 @@ void Beatmap::InitBG() {
 	ReadNextObject();
 	mFirstObjectTime = mNextObjectTime;
 
-    printf("mNextObjectTime: %i\n", mNextObjectTime);
-    printf("mNextObjectTimeBeats8: %i\n", (BeatmapElements::Element().GetTimingPoint(mNextObjectTime).BeatTime*8));
-	//the time to skip to is the first object - 8 beats
-    int var1 = (int32_t)mNextObjectTime;
-    int var2 = (BeatmapElements::Element().GetTimingPoint(mNextObjectTime).BeatTime*8);
-	mSkipTime = MathHelper::Max(0, (int32_t)mNextObjectTime - (BeatmapElements::Element().GetTimingPoint(mNextObjectTime).BeatTime*8));
+    //the time to skip to is the first object - 8 beats
+    mSkipTime = MathHelper::Max(0, (int32_t)mNextObjectTime - (BeatmapElements::Element().GetTimingPoint(mNextObjectTime).BeatTime*8));
 
 	//strangely calling this in ctor of BeatmapElements causes game to not load :/
 	BeatmapElements::Element().ResetColours(true);
@@ -208,8 +206,8 @@ void Beatmap::Buffer(std::list<HitObject*>& hitObjectList)
 				for (uint32_t i=0; i<pointcount; ++i)
 				{
 					HitObjectPoint* tPoint = new HitObjectPoint();
-					tPoint->x = (int16_t)mReader->ReadInt16(); //s32 x
-					tPoint->y = (int16_t)mReader->ReadInt16(); //s32 y
+					tPoint->x = mapXToScreen((int16_t)mReader->ReadInt16()); //s32 x
+					tPoint->y = mapYToScreen((int16_t)mReader->ReadInt16()); //s32 y
 					tPoint->angle = mReader->ReadInt32(); //s32 angle
 					
 					points.push_back(tPoint);
@@ -222,8 +220,8 @@ void Beatmap::Buffer(std::list<HitObject*>& hitObjectList)
 				for (uint32_t i=0; i<tickcount; ++i)
 				{
 					HitObjectPoint* tPoint = new HitObjectPoint();
-					tPoint->x = (int16_t)mReader->ReadInt16(); //s32 x
-					tPoint->y = (int16_t)mReader->ReadInt16(); //s32 y
+                    tPoint->x = mapXToScreen((int16_t)mReader->ReadInt16()); //s32 x
+                    tPoint->y = mapYToScreen((int16_t)mReader->ReadInt16()); //s32 y
 
 					ticks.push_back(tPoint);
 				}
@@ -272,8 +270,8 @@ void Beatmap::ReadNextObject()
 {
 	mNextObjectTime = mReader->ReadInt32();
 	mNextObjectType = (HitObjectType)mReader->ReadInt8();
-	mNextObjectX = (int16_t)mReader->ReadInt16();
-	mNextObjectY = (int16_t)mReader->ReadInt16();
+    mNextObjectX = mapXToScreen((int16_t)mReader->ReadInt16()); //s32 x
+    mNextObjectY = mapYToScreen((int16_t)mReader->ReadInt16()); //s32 y
 }
 
 
