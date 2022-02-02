@@ -41,6 +41,8 @@ class TextManager
 		
 		void PrintLocate(int x, int y, DrawOrigin origin, const char* format, ...);
         void PrintScore(int x, int y, DrawOrigin origin, const char* format, uint32_t score);
+        void PrintScore(int x, int y, DrawOrigin origin, const char* format, float score);
+        void PrintScore(int x, int y, DrawOrigin origin, const char* format, char * score);
 	
 	protected:
 		//gfxPrintConsole* mConsole;

@@ -42,7 +42,8 @@ void Player::Update()
 
 		case PLAYSTATE_GAMEOVER:
 		{
-			printf("\x1b[0;0HGame over");
+            mRuleset.UpdateGameOver();
+
 			break;
 		}
 

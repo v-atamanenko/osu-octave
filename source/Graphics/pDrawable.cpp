@@ -54,7 +54,13 @@ bool pDrawable::InBounds(int32_t x, int32_t y)
 		x -= GraphicsManager::PlayXOffset;
 		y -= GraphicsManager::PlayYOffset;
 	}
-	
+
+	//uint32_t s_w = Width;
+	//uint32_t s_h = Height;
+	//uint32_t s_x = X;
+	//uint32_t s_y = Y;
+
+
 	switch (Origin)
 	{
 		case ORIGIN_TOPLEFT:

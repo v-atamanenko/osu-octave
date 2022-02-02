@@ -76,4 +76,39 @@ void Score::Add(ScoreType score, bool forceNoCombo, bool gekiKatu)
 	}
 }
 
+float Score::CountAccuracy() {
+    return ((float)((300*(mCount300+mCountGeki)) + (100*(mCount100+mCountKatu)) + (50*mCount50)) /
+           (float)(300*(mCount300+mCountGeki+mCount100+mCountKatu+mCount50+mCountMiss)))*100;
+}
 
+void Score::CalculateGrade() {
+    strncpy(mGrade, "D", GRADE_LEN);
+
+    if (CountAccuracy() == 100.f) {
+        strncpy(mGrade, "SS", GRADE_LEN);
+        return;
+    }
+
+    uint32_t total_count = mCount300 + mCount100 + mCount50 + mCountMiss + mCountGeki + mCountKatu;
+    float p300 = ((float)mCount300 / (float)total_count)*100;
+    float p50 = ((float)mCount50 / (float)total_count)*100;
+    if (p300 > 90.f && p50 < 1.f && mCountMiss == 0) {
+        strncpy(mGrade, "S", GRADE_LEN);
+        return;
+    }
+
+    if ((p300 > 80.f && mCountMiss == 0) || p300 > 90.f) {
+        strncpy(mGrade, "A", GRADE_LEN);
+        return;
+    }
+
+    if ((p300 > 70.f && mCountMiss == 0) || p300 > 80.f) {
+        strncpy(mGrade, "B", GRADE_LEN);
+        return;
+    }
+
+    if (p300 > 60.f) {
+        strncpy(mGrade, "C", GRADE_LEN);
+        return;
+    }
+}

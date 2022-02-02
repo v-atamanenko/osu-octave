@@ -141,7 +141,6 @@ void TextManager::PrintLocate(int x, int y, DrawOrigin origin, const char* forma
 
 	va_list args;
 	va_start(args, format);
-    printf(format, args);
 	SDL_asprintf(&message, format, args);
 	va_end(args);
 
@@ -150,6 +149,20 @@ void TextManager::PrintLocate(int x, int y, DrawOrigin origin, const char* forma
 
 
 void TextManager::PrintScore(int x, int y, DrawOrigin origin, const char* format, uint32_t score)
+{
+    char* message;
+    SDL_asprintf(&message, format, score);
+    updateTex(message, SDL_Color({255, 255, 255, 255}), x, y, origin);
+}
+
+void TextManager::PrintScore(int x, int y, DrawOrigin origin, const char* format, float score)
+{
+    char* message;
+    SDL_asprintf(&message, format, score);
+    updateTex(message, SDL_Color({255, 255, 255, 255}), x, y, origin);
+}
+
+void TextManager::PrintScore(int x, int y, DrawOrigin origin, const char* format, char * score)
 {
     char* message;
     SDL_asprintf(&message, format, score);

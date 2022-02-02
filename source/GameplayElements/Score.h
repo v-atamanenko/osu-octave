@@ -7,6 +7,10 @@
 #ifndef __SCOREMANAGER_H__
 #define __SCOREMANAGER_H__
 
+#ifndef GRADE_LEN
+#define GRADE_LEN 3
+#endif
+
 typedef enum {
 	SCORE_300 = 300,
 	SCORE_GEKI = 301,
@@ -36,6 +40,9 @@ class Score
 		uint32_t CountMiss()               { return mCountMiss; }
 		uint32_t CountGeki()               { return mCountGeki; }
 		uint32_t CountKatu()               { return mCountKatu; }
+        float CountAccuracy();
+        char * GetGrade()                  { return mGrade; };
+        void CalculateGrade();
 		std::string BeatmapChecksum() { return mBeatmapChecksum; }
 	
 	protected:
@@ -43,6 +50,8 @@ class Score
 		uint32_t mScore;
 		//The Ending combo
 		uint32_t mCombo;
+        //The Final grade letter
+        char mGrade[GRADE_LEN];
 		//The Maximum combo achieved
 		uint32_t mMaxCombo;
 		//Amount of 300s

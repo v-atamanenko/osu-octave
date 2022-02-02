@@ -13,6 +13,8 @@ extern SDL_Surface *screen_surface;
 #define mapXToScreen(x) (int32_t)(floor((float)(x) / (640.f/((float)(SCREEN_WIDTH)))))
 #define mapYToScreen(x) (int32_t)(floor((float)(x) / (480.f/((float)(SCREEN_HEIGHT)))))
 
+#define mapXToScreen_noFloor(x) (uint32_t)((float)(x) / (640.f/((float)(SCREEN_WIDTH))))
+
 #ifdef VITA
 #define DATA_DIR "ux0:/data/osu/"
 #endif

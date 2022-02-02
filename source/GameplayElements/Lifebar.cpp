@@ -69,9 +69,9 @@ void Lifebar::Update()
 	
 	//mHpDisplay represents the required width of the sprite
 	mSprites[2]->Move(mHpDisplay, 18);
-	if (mHpDisplay >= 200)
+	if (mHpDisplay >= mapXToScreen_noFloor(200))
 		mSprites[2]->Texture = TX_PLAY_SCOREBAR_KI;
-	else if (mHpDisplay >= 70)
+	else if (mHpDisplay >= mapXToScreen_noFloor(70))
 		mSprites[2]->Texture = TX_PLAY_SCOREBAR_KIDANGER;
 	else
 		mSprites[2]->Texture = TX_PLAY_SCOREBAR_KIDANGER2;

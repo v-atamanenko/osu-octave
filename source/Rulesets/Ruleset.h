@@ -18,10 +18,11 @@ class Ruleset
 		
 		void Initialize();
 		void Skip();
-		
+
+        virtual void HandleInput();
 		virtual void OnGameOver();
 		virtual void Update();
-		virtual void HandleInput();
+        virtual void UpdateGameOver();
 	
 	protected:
 		Score mCurrentScore;
@@ -30,6 +31,8 @@ class Ruleset
 		Lifebar mLifebar;
 		
 		virtual void OnSkip() = 0;
+
+
 };
 
 #endif

@@ -110,7 +110,7 @@ void RulesetOsu::OnSkip()
 
 void RulesetOsu::OnGameOver()
 {
-	//HitObject::SetScoreCallback(NULL);
+	mCurrentScore.CalculateGrade();
 }
 
 void RulesetOsu::DoCallback(void** args)

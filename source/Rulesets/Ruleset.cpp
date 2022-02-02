@@ -27,6 +27,38 @@ void Ruleset::OnGameOver()
 {
 }
 
+void Ruleset::UpdateGameOver()
+{
+    TextManager::Bottom().SetFont(FONT_SCORE);
+
+    TextManager::Bottom().PrintScore(450,75, ORIGIN_TOPLEFT, "Grade: %s", mCurrentScore.GetGrade());
+
+    TextManager::Bottom().PrintScore(0,0, ORIGIN_TOPLEFT, "Score: %i", mCurrentScore.CurrentScore());
+
+    TextManager::Bottom().PrintScore(25, 25, ORIGIN_TOPLEFT, "300: %ix", mCurrentScore.Count300());
+    TextManager::Bottom().PrintScore(225, 25, ORIGIN_TOPLEFT, "Geki: %ix", mCurrentScore.CountGeki());
+    TextManager::Bottom().PrintScore(25, 75, ORIGIN_TOPLEFT, "100: %ix", mCurrentScore.Count100());
+    TextManager::Bottom().PrintScore(225, 75, ORIGIN_TOPLEFT, "Katu: %ix", mCurrentScore.CountKatu());
+    TextManager::Bottom().PrintScore(25, 125, ORIGIN_TOPLEFT, "50: %ix", mCurrentScore.Count50());
+    TextManager::Bottom().PrintScore(225, 125, ORIGIN_TOPLEFT, "Miss: %ix", mCurrentScore.CountMiss());
+
+    TextManager::Bottom().PrintScore(25,175, ORIGIN_TOPLEFT, "Combo: %ix", mCurrentScore.CurrentCombo());
+    TextManager::Bottom().PrintScore(225,175, ORIGIN_TOPLEFT, "Accuracy: %.2f%%", mCurrentScore.CountAccuracy());
+
+
+    /*mScore = 0;
+    mCombo = 0;
+    mScore = 0;
+    mCombo = 0;
+    mMaxCombo = 0;
+    mCount300 = 0;
+    mCount100 = 0;
+    mCount50 = 0;
+    mCountMiss = 0;
+    mCountGeki = 0;
+    mCountKatu = 0;*/
+}
+
 void Ruleset::Update()
 {
 	std::list<HitObject*> hitObjectList;
