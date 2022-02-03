@@ -29,13 +29,18 @@ void Player::Update()
 	{
 		case PLAYSTATE_PLAY:
 		{
-			mRuleset.Update();
+			bool failed = !mRuleset.Update();
 
 			if (BeatmapManager::Current().GameOver())
 			{
 				mPlayState = PLAYSTATE_GAMEOVER;
 				mRuleset.OnGameOver();
 			}
+
+            if (failed) {
+                mPlayState = PLAYSTATE_FAILED;
+                mRuleset.OnFailed();
+            }
 
 			break;
 		}
@@ -46,6 +51,13 @@ void Player::Update()
 
 			break;
 		}
+
+        case PLAYSTATE_FAILED:
+        {
+            mRuleset.UpdateFailed();
+
+            break;
+        }
 
 		default:
 			break;

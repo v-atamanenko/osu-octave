@@ -182,7 +182,7 @@ HitSlider::HitSlider(int32_t x, int32_t y, int32_t time, uint32_t lengthtime, st
 		do
 		{
 			int32_t tAnimEnd = tAnimStart + 500;
-			spr->Rotate(tAnimStart, tAnimEnd, tAngle, tAngle+3000);
+			spr->Rotate(tAnimStart, tAnimEnd, tAngle, tAngle+360);
 			spr->Scale(tAnimStart, tAnimEnd, 1, 0.9);
 			tAnimStart = tAnimEnd;
 		} while (tAnimStart < time+(lengthtime*i));

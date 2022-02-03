@@ -21,8 +21,10 @@ class Ruleset
 
         virtual void HandleInput();
 		virtual void OnGameOver();
-		virtual void Update();
+        virtual void OnFailed();
+		virtual bool Update();
         virtual void UpdateGameOver();
+        virtual void UpdateFailed();
 	
 	protected:
 		Score mCurrentScore;

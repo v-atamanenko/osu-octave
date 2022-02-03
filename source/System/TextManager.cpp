@@ -54,8 +54,8 @@ void TextManager::updateTex(char *text, SDL_Color color, int x, int y, DrawOrigi
             break; // do nothing
 
         case ORIGIN_CENTER:
-            x -= texW >> 1;
-            y -= texH >> 1;
+            x = (int) floor((float)(((float)SCREEN_WIDTH / 2) - ((float)texW / 2)))+x;
+            y = (int) floor((float)(((float)SCREEN_HEIGHT / 2) - ((float)texH / 2)))+y;
             break;
 
         case ORIGIN_BOTTOMLEFT:

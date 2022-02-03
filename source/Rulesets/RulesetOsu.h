@@ -16,6 +16,7 @@ class RulesetOsu : public Ruleset, public ICallback
 		void IncreaseScore(ScoreType score, bool forceNoCombo, bool forceNoAnimation, HitObjectPoint point, bool comboEnd);
 		void OnSkip();
 		void OnGameOver();
+        void OnFailed();
 		
 		void DoCallback(void** args);
 	

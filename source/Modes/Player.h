@@ -16,7 +16,8 @@
 
 typedef enum {
 	PLAYSTATE_PLAY,
-	PLAYSTATE_GAMEOVER
+	PLAYSTATE_GAMEOVER,
+    PLAYSTATE_FAILED
 } PlayState;
 
 class Player : public Mode

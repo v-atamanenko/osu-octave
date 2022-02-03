@@ -27,8 +27,8 @@ void ChangeMode(ModeType mode)
 	//otherwise bad things happen with sprites
 	GameClock::Clock().Reset();
 	
-	if (Mode::sCurrentMode != nullptr)
-		delete Mode::sCurrentMode;
+
+    delete Mode::sCurrentMode; // remove any current mode if present
 	
 	switch (mode)
 	{

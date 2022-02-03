@@ -29,8 +29,6 @@ SongSelect::SongSelect()
 		pText* mapText = new pText(mapString, FONT_CONSOLE, 240, 75 + (i * 75));
 		mapText->Z = 0;
 
-		std::string debugString = mapString + ":::: Y:" + std::to_string(mapText->Y);
-		//nocashMessage(debugString.c_str());
 
 		mSpriteManager.Add(mapText);
 	}

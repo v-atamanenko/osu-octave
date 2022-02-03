@@ -242,3 +242,10 @@ int32_t GraphicsManager::ForceBounds(int32_t value)
     return value;
 }
 
+void GraphicsManager::DrawFullScreenRectangle(SDL_Color c)
+{
+    SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, c.a);
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    SDL_Rect r = {0,0,SCREEN_WIDTH,SCREEN_HEIGHT};
+    SDL_RenderFillRect(renderer, &r);
+}

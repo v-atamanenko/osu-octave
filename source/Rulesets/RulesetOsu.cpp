@@ -113,6 +113,11 @@ void RulesetOsu::OnGameOver()
 	mCurrentScore.CalculateGrade();
 }
 
+void RulesetOsu::OnFailed()
+{
+    //
+}
+
 void RulesetOsu::DoCallback(void** args)
 {
 	IncreaseScore(

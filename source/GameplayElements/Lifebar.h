@@ -17,6 +17,7 @@ class Lifebar : public SpriteContainer
 		void Set(float value, bool limit = true);
 		void Increase(float value);
 		void ClearTransforms();
+        float GetCurrentHP() {return mHpCurrent;}
 		
 		static const uint32_t MAXHP = mapXToScreen_noFloor(418); //matches with actual width of sprite
 		static const uint32_t MAXCHANGE = mapXToScreen_noFloor(10);

@@ -41,6 +41,8 @@ class GraphicsManager
         void resetBg();
         void bgDraw();
 
+        void DrawFullScreenRectangle(SDL_Color c);
+
         void clear();
         void present();
 
@@ -60,6 +62,8 @@ class GraphicsManager
 	private:
 		GraphicsManager();
 		~GraphicsManager() {}
+
+
 };
 
 #endif
