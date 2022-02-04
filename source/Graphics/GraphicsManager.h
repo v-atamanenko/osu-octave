@@ -8,6 +8,7 @@
 #include "GfxInfo.h"
 
 #include "defines.h"
+#include "Modes/Mode.h"
 
 #ifndef __GRAPHICSMANAGER_H__
 #define __GRAPHICSMANAGER_H__
@@ -38,8 +39,10 @@ class GraphicsManager
 		void Draw(TextureType tex, int32_t x, int32_t y, uint32_t width, uint32_t height, DrawOrigin origin, FieldType fieldtype, SDL_Color color, uint32_t alpha, int32_t angle, float z = 0, const uint32_t* uv = nullptr);
 
         void loadBgFromSurface(SDL_Surface* bg );
-        void resetBg();
         void bgDraw();
+
+        void loadTexturesForMode(ModeType mod);
+        void setBgByMode(ModeType mod);
 
         void DrawFullScreenRectangle(SDL_Color c);
 
@@ -62,8 +65,6 @@ class GraphicsManager
 	private:
 		GraphicsManager();
 		~GraphicsManager() {}
-
-
 };
 
 #endif

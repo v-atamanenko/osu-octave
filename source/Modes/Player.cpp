@@ -3,6 +3,7 @@
 
 Player::Player()
 {
+    GraphicsManager::Graphics().loadTexturesForMode(MODE_PLAYER);
 	//initialisation
 	mRuleset.Initialize();
 
@@ -19,8 +20,6 @@ Player::~Player()
 {
 	//delete mBaseDir;
 	AudioManager::Engine().MusicStop();
-
-    GraphicsManager::Graphics().resetBg();
 }
 
 void Player::Update()

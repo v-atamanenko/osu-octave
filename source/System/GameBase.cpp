@@ -5,7 +5,7 @@ GameBase::GameBase()
 {
 	BeatmapManager::BuildCollection();
 	//ChangeMode(MODE_PLAYER);
-	ChangeMode(MODE_SONGSELECT);
+	ChangeMode(MODE_WELCOME);
 }
 
 int GameBase::Update()

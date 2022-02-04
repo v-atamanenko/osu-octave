@@ -1,6 +1,7 @@
 #include "Mode.h"
 #include "Player.h"
 #include "SongSelect.h"
+#include "Welcome.h"
 #include "System/GameClock.h"
 #include "System/TextManager.h"
 
@@ -38,6 +39,9 @@ void ChangeMode(ModeType mode)
 		case MODE_SONGSELECT:
 			Mode::sCurrentMode = new SongSelect();
 			break;
+        case MODE_WELCOME:
+            Mode::sCurrentMode = new Welcome();
+            break;
 	}
 	
 	//swiWaitForVBlank();

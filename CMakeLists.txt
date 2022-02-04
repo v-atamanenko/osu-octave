@@ -34,6 +34,7 @@ add_executable(${PROJECT_NAME}
         ${PROJECT_SOURCE_DIR}/source/Modes/Player.cpp
         ${PROJECT_SOURCE_DIR}/source/Modes/SongSelect.cpp
         ${PROJECT_SOURCE_DIR}/source/Modes/ModeLoader.cpp
+        ${PROJECT_SOURCE_DIR}/source/Modes/Welcome.cpp
         ${PROJECT_SOURCE_DIR}/source/Modes/Mode.cpp
         ${PROJECT_SOURCE_DIR}/source/Beatmaps/BeatmapElements.cpp
         ${PROJECT_SOURCE_DIR}/source/Beatmaps/Beatmap.cpp

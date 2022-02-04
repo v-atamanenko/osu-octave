@@ -91,6 +91,9 @@ void TextManager::Init()
 	AddFont(FONT_NUMBERING, "fonts/verdana.ttf");
 	AddFont(FONT_VERDANA, "fonts/verdana.ttf");
 
+    AddFont(FONT_PIXEL, "fonts/PressStart2P-Regular.ttf", 14);
+
+
     sTM.currentFont = FONT_VERDANA;
 }
 
@@ -135,16 +138,11 @@ void TextManager::Clear()
     SDL_SetRenderTarget( renderer, nullptr );
 }
 
-void TextManager::PrintLocate(int x, int y, DrawOrigin origin, const char* format, ...)
+void TextManager::PrintLocate(int x, int y, DrawOrigin origin, SDL_Color clr, char* txt)
 {
     char* message;
-
-	va_list args;
-	va_start(args, format);
-	SDL_asprintf(&message, format, args);
-	va_end(args);
-
-    updateTex(message, SDL_Color({255, 255, 255, 255}), x, y, origin);
+    SDL_asprintf(&message, "%s", txt);
+    updateTex(message, clr, x, y, origin);
 }
 
 

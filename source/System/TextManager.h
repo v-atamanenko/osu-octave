@@ -13,13 +13,14 @@
 #ifndef __TEXTMANAGER_H__
 #define __TEXTMANAGER_H__
 
-#define NUMBER_OF_FONTS 4
+#define NUMBER_OF_FONTS 5
 
 typedef enum {
 	FONT_CONSOLE,
 	FONT_SCORE,
 	FONT_NUMBERING,
-	FONT_VERDANA
+	FONT_VERDANA,
+    FONT_PIXEL
 } FONT;
 
 class TextManager
@@ -39,7 +40,7 @@ class TextManager
 		void Print(const char* format, ...);
 		void Clear();
 		
-		void PrintLocate(int x, int y, DrawOrigin origin, const char* format, ...);
+		void PrintLocate(int x, int y, DrawOrigin origin, SDL_Color clr, char* txt);
         void PrintScore(int x, int y, DrawOrigin origin, const char* format, uint32_t score);
         void PrintScore(int x, int y, DrawOrigin origin, const char* format, float score);
         void PrintScore(int x, int y, DrawOrigin origin, const char* format, char * score);

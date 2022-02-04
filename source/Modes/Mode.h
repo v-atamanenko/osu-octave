@@ -7,7 +7,8 @@
 
 typedef enum {
 	MODE_PLAYER,
-	MODE_SONGSELECT
+	MODE_SONGSELECT,
+    MODE_WELCOME
 } ModeType;
 
 class Mode

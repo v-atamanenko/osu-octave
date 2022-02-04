@@ -24,26 +24,26 @@ HitSpinner::HitSpinner(int32_t time, int32_t endtime, HitObjectSound sound) : Hi
 	
 	pSprite* spr;
 	
-	spr = new pSprite(TX_PLAY_CIRCLEAPPROACH, mapXToScreen(256), mapYToScreen(192), mapYToScreen(440), mapYToScreen(440), ORIGIN_CENTER, FIELD_PLAY, SDL_Color({10, 10, 31}), 0);
+	spr = new pSprite(TX_PLAY_CIRCLEAPPROACH, 196+(196/2), 10+(10/2), 450, 450, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({10, 10, 31}), 0);
 	spr->Show(time-300, time);
 	spr->Hide(endtime, endtime+300);
 	spr->Scale(time-300, endtime, 1, 0);
 	spr->Kill(endtime+300);
 	mSprites.push_back(spr);
 	
-	spr = new pSprite(TX_PLAY_SPINNER, mapXToScreen(256), mapYToScreen(192), mapYToScreen(400), mapYToScreen(400), ORIGIN_CENTER, FIELD_PLAY, SDL_Color({31, 31, 31}), 0, 0.03f);
+	spr = new pSprite(TX_PLAY_SPINNER, 195, 9, 440, 440, ORIGIN_TOPLEFT, FIELD_PLAY, SDL_Color({31, 31, 31}), 0, 0.03f);
 	spr->Show(time-300, time);
 	spr->Hide(endtime, endtime+300);
 	spr->Kill(endtime+300);
 	mSprites.push_back(spr);
 	
-	spr = new pSprite(TX_PLAY_SPINNERBARS, 0, mapYToScreen(480), mapXToScreen(640), mapYToScreen(480), ORIGIN_BOTTOMLEFT, FIELD_SCREEN, SDL_Color({31, 31, 31}), 0, 0.03f);
+	spr = new pSprite(TX_PLAY_SPINNERBARS, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, ORIGIN_BOTTOMLEFT, FIELD_SCREEN, SDL_Color({31, 31, 31}), 0, 0.03f);
 	spr->Show(time-300, time);
 	spr->Hide(endtime, endtime+300);
 	spr->Kill(endtime+300);
 	mSprites.push_back(spr);
 	
-	spr = new pSprite(TX_PLAY_SPINNERBG, mapXToScreen(320), mapYToScreen(240), mapXToScreen(640), mapYToScreen(480), ORIGIN_CENTER, FIELD_SCREEN, SDL_Color({31, 31, 31}), 0, 0.05f);
+	spr = new pSprite(TX_PLAY_SPINNERBG, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color({31, 31, 31}), 0, 0.05f);
 	spr->Show(time-300, time+300);
 	spr->Hide(endtime, endtime+300);
 	spr->Kill(endtime+300);

@@ -40,8 +40,22 @@ SDL_Texture* GraphicsManager::loadTexture( int texid, const std::string& path )
     textures[texid] = newTexture;
 }
 
-void GraphicsManager::resetBg() {
-    loadTexture( TX_CURRENT_BG, "gfx/menuBG.png" );
+void GraphicsManager::setBgByMode(ModeType mod) {
+    switch (mod) {
+        case MODE_PLAYER:
+            // In player mode, bg is set by Beatmap class using
+            // loadBgFromSurface() function
+            break;
+        case MODE_SONGSELECT:
+            if (textures[TX_CURRENT_BG] != nullptr) {
+                SDL_DestroyTexture(textures[TX_CURRENT_BG]);
+            }
+            loadTexture( TX_CURRENT_BG, "data/ui/song-selector.png" );
+            break;
+        case MODE_WELCOME:
+            // On welcome bg is as sprite.
+            break;
+    }
 }
 
 void GraphicsManager::loadBgFromSurface(SDL_Surface* bg ) {
@@ -99,60 +113,74 @@ void GraphicsManager::present() {
     SDL_RenderPresent(renderer);
 }
 
+void GraphicsManager::loadTexturesForMode(ModeType mod) {
+    switch (mod) {
+        case MODE_PLAYER:
+            loadTexture( TX_PLAY_CIRCLE, "data/textures/circle.png" );
+            loadTexture( TX_PLAY_CIRCLEOVERLAY, "data/textures/circleoverlay.png" );
+            loadTexture( TX_PLAY_CIRCLEAPPROACH, "data/textures/circleapproach.png" );
+
+            loadTexture( TX_PLAY_DISC, "data/textures/disc.png" );
+            loadTexture( TX_PLAY_SLIDERTICK, "data/textures/slidertick.png" );
+            loadTexture( TX_PLAY_SLIDERREVERSE, "data/textures/sliderreverse.png" );
+
+            loadTexture( TX_WHITE, "data/textures/white.png" );
+
+            loadTexture( TX_PLAY_SPINNER, "data/textures/spinner.png" );
+            loadTexture( TX_PLAY_SPINNERBARS, "data/textures/spinnerbars.png" );
+            loadTexture( TX_PLAY_SCOREBAR_BAR, "data/textures/scorebar_colour.png" );
+
+            loadTexture( TX_PLAY_SPINNERBG, "data/textures/spinnerbg.png" );
+
+            loadTexture( TX_PLAY_SLIDERB0, "data/textures/sliderb0.png" );
+            loadTexture( TX_PLAY_SLIDERB1, "data/textures/sliderb1.png" );
+            loadTexture( TX_PLAY_SLIDERB2, "data/textures/sliderb2.png" );
+            loadTexture( TX_PLAY_SLIDERB3, "data/textures/sliderb3.png" );
+            loadTexture( TX_PLAY_SLIDERB4, "data/textures/sliderb4.png" );
+            loadTexture( TX_PLAY_SLIDERB5, "data/textures/sliderb5.png" );
+            loadTexture( TX_PLAY_SLIDERB6, "data/textures/sliderb6.png" );
+            loadTexture( TX_PLAY_SLIDERB7, "data/textures/sliderb7.png" );
+            loadTexture( TX_PLAY_SLIDERB8, "data/textures/sliderb8.png" );
+            loadTexture( TX_PLAY_SLIDERB9, "data/textures/sliderb9.png" );
+            loadTexture( TX_PLAY_SLIDERFOLLOW, "data/textures/sliderfollow.png" );
+
+            loadTexture( TX_PLAY_HIT0, "data/textures/hit0.png" );
+            loadTexture( TX_PLAY_HIT300, "data/textures/hit300.png" );
+            loadTexture( TX_PLAY_HIT300K, "data/textures/hit300k.png" );
+            loadTexture( TX_PLAY_HIT300G, "data/textures/hit300g.png" );
+
+            loadTexture( TX_PLAY_HIT50, "data/textures/hit50.png" );
+            loadTexture( TX_PLAY_HIT100, "data/textures/hit100.png" );
+            loadTexture( TX_PLAY_HIT100K, "data/textures/hit100k.png" );
+
+            loadTexture( TX_PLAY_SLIDER30, "data/textures/slider30.png" );
+            loadTexture( TX_PLAY_SLIDER10, "data/textures/slider10.png" );
+
+            loadTexture( TX_PLAY_SCOREBAR_KI, "data/textures/scorebar_ki.png" );
+            loadTexture( TX_PLAY_SCOREBAR_KIDANGER, "data/textures/scorebar_kidanger.png" );
+            loadTexture( TX_PLAY_SCOREBAR_KIDANGER2, "data/textures/scorebar_kidanger2.png" );
+
+            loadTexture( TX_PLAY_SCOREBAR, "data/textures/scorebar.png" );
+            break;
+        case MODE_SONGSELECT:
+            // X
+            break;
+        case MODE_WELCOME:
+            loadTexture( TX_WELCOME_BG, "data/ui/welcome.png" );
+            loadTexture( TX_TAP_TO_START, "data/ui/tap-to-start.png" );
+            loadTexture( TX_BUTTON_BIG, "data/ui/button-big.png" );
+            loadTexture( TX_BUTTON_MED, "data/ui/button-med.png" );
+            loadTexture( TX_BUTTON_SM, "data/ui/button-sm.png" );
+            break;
+    }
+
+}
+
+
 GraphicsManager::GraphicsManager()
 {
-    //// LOAD TEXTURES ////
-    resetBg();
-
-    loadTexture( TX_PLAY_CIRCLE, "data/textures/circle.png" );
-    loadTexture( TX_PLAY_CIRCLEOVERLAY, "data/textures/circleoverlay.png" );
-    loadTexture( TX_PLAY_CIRCLEAPPROACH, "data/textures/circleapproach.png" );
-
-    loadTexture( TX_PLAY_DISC, "data/textures/disc.png" );
-    loadTexture( TX_PLAY_SLIDERTICK, "data/textures/slidertick.png" );
-    loadTexture( TX_PLAY_SLIDERREVERSE, "data/textures/sliderreverse.png" );
-
-    loadTexture( TX_WHITE, "data/textures/white.png" );
-
-    loadTexture( TX_PLAY_SPINNER, "data/textures/spinner.png" );
-    loadTexture( TX_PLAY_SPINNERBARS, "data/textures/spinnerbars.png" );
-    loadTexture( TX_PLAY_SCOREBAR_BAR, "data/textures/scorebar_colour.png" );
-
-    loadTexture( TX_PLAY_SPINNERBG, "data/textures/spinnerbg.png" );
-
-    loadTexture( TX_PLAY_SLIDERB0, "data/textures/sliderb0.png" );
-    loadTexture( TX_PLAY_SLIDERB1, "data/textures/sliderb1.png" );
-    loadTexture( TX_PLAY_SLIDERB2, "data/textures/sliderb2.png" );
-    loadTexture( TX_PLAY_SLIDERB3, "data/textures/sliderb3.png" );
-    loadTexture( TX_PLAY_SLIDERB4, "data/textures/sliderb4.png" );
-    loadTexture( TX_PLAY_SLIDERB5, "data/textures/sliderb5.png" );
-    loadTexture( TX_PLAY_SLIDERB6, "data/textures/sliderb6.png" );
-    loadTexture( TX_PLAY_SLIDERB7, "data/textures/sliderb7.png" );
-    loadTexture( TX_PLAY_SLIDERB8, "data/textures/sliderb8.png" );
-    loadTexture( TX_PLAY_SLIDERB9, "data/textures/sliderb9.png" );
-    loadTexture( TX_PLAY_SLIDERFOLLOW, "data/textures/sliderfollow.png" );
-
-    loadTexture( TX_PLAY_HIT0, "data/textures/hit0.png" );
-    loadTexture( TX_PLAY_HIT300, "data/textures/hit300.png" );
-    loadTexture( TX_PLAY_HIT300K, "data/textures/hit300k.png" );
-    loadTexture( TX_PLAY_HIT300G, "data/textures/hit300g.png" );
-
-    loadTexture( TX_PLAY_HIT50, "data/textures/hit50.png" );
-    loadTexture( TX_PLAY_HIT100, "data/textures/hit100.png" );
-    loadTexture( TX_PLAY_HIT100K, "data/textures/hit100k.png" );
-
-    loadTexture( TX_PLAY_SLIDER30, "data/textures/slider30.png" );
-    loadTexture( TX_PLAY_SLIDER10, "data/textures/slider10.png" );
-
-    loadTexture( TX_PLAY_SCOREBAR_KI, "data/textures/scorebar_ki.png" );
-    loadTexture( TX_PLAY_SCOREBAR_KIDANGER, "data/textures/scorebar_kidanger.png" );
-    loadTexture( TX_PLAY_SCOREBAR_KIDANGER2, "data/textures/scorebar_kidanger2.png" );
-
-    loadTexture( TX_PLAY_SCOREBAR, "data/textures/scorebar.png" );
-
-    // 16 bit textures
-
-    //LoadGLTexture(TX_SONGSELECT_SONGBG,	GL_RGB, TEXTURE_SIZE_64, TEXTURE_SIZE_512, -1, NULL, songbg_osu_bin);
+    // TODO: Move this call to game initialization
+    //loadGameplayTextures();
 }
 
 void GraphicsManager::Draw(TextureType tex, int32_t x, int32_t y, uint32_t width, uint32_t height, DrawOrigin origin, FieldType fieldtype, SDL_Color color, uint32_t alpha, int32_t angle, float z, const uint32_t* uv)
