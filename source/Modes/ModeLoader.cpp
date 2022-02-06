@@ -21,8 +21,8 @@ void ChangeMode(ModeType mode)
 		setBrightness(1, -16);
 	}*/
 	
-	TextManager::Bottom().Clear();
-	TextManager::Top().Clear();
+	//TextManager::Bottom().Clear();
+	//TextManager::Top().Clear();
 	
 	//must reset clock before calling constructors
 	//otherwise bad things happen with sprites
@@ -45,7 +45,7 @@ void ChangeMode(ModeType mode)
 	}
 	
 	//swiWaitForVBlank();
-	Mode::CurrentMode().Update();
+	//Mode::CurrentMode().Update();
 	//glFlush(1);
 	
 	/*/return screen to full brightness

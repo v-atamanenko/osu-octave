@@ -274,9 +274,9 @@ void Beatmap::ReadNextObject()
     mNextObjectY = mapYToScreen((int16_t)mReader->ReadInt16()); //s32 y
 }
 
-
+/*
 std::string& Beatmap::BeatmapChecksum() {
 	std::string checksum = "";
 	//TODO: figure out some way to uniquely identify every beatmap without it being too intensive
-	return checksum;
-}
+	return nullptr;
+}*/
