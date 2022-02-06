@@ -1,14 +1,8 @@
 #include "pDrawable.h"
 
-pDrawable::~pDrawable()
-{
-	for (auto & mTransformation : mTransformations)
-	{
-		delete mTransformation;
-	}
-	
-	if (UV != nullptr)
-		delete UV;
+pDrawable::~pDrawable() {
+	ClearTransforms();
+	delete UV;
 }
 
 void pDrawable::Update()
@@ -154,12 +148,12 @@ void pDrawable::Show()
 
 void pDrawable::Show(int32_t time)
 {
-	Transform(TR_FADE, time, time, 31, 31);
+	Transform(TR_FADE, time, time, 255, 255);
 }
 
 void pDrawable::Show(int32_t starttime, int32_t endtime)
 {
-	Transform(TR_FADE, starttime, endtime, 0, 31);
+	Transform(TR_FADE, starttime, endtime, 0, 255);
 }
 
 void pDrawable::Hide()
@@ -174,6 +168,6 @@ void pDrawable::Hide(int32_t time)
 
 void pDrawable::Hide(int32_t starttime, int32_t endtime)
 {
-	Transform(TR_FADE, starttime, endtime, 31, 0);
+	Transform(TR_FADE, starttime, endtime, 255, 0);
 }
 

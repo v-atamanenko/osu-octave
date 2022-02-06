@@ -6,6 +6,7 @@ SpriteContainer::~SpriteContainer()
 	{
 		for (auto & mSprite : mSprites)
 		{
+            fprintf(stderr, "we're deleting something\n");
 			delete mSprite;
 		}
 	}

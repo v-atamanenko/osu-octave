@@ -57,7 +57,6 @@ typedef struct {
 
 //intended usage:
 //AudioManager::Engine().PlaySample(SOUND_DATA(sound_name), loop)
-#define SOUND_DATA(name) name, name##_size
 
 class AudioManager
 {
@@ -89,19 +88,12 @@ class AudioManager
 		
 		//music
 		static const uint32_t SIZE = 11025; //size of each HALF of the buffer
-		uint8_t * mBuffer;
-		FILE* mFile;
-		bool fSwap, fFill;
-		uint32_t fEof;
 		int mChannel;
-		uint16_t mTimerData;
-	
+
 	private:
 		AudioManager();
 		~AudioManager() {}
 };
-
-void MusicTimerHandler();
 
 #endif
 

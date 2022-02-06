@@ -40,7 +40,7 @@ class TextManager
 		void Print(const char* format, ...);
 		void Clear();
 		
-		void PrintLocate(int x, int y, DrawOrigin origin, SDL_Color clr, char* txt);
+		void PrintLocate(int x, int y, DrawOrigin origin, SDL_Color clr, const char* txt);
         void PrintScore(int x, int y, DrawOrigin origin, const char* format, uint32_t score);
         void PrintScore(int x, int y, DrawOrigin origin, const char* format, float score);
         void PrintScore(int x, int y, DrawOrigin origin, const char* format, char * score);

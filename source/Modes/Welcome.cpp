@@ -7,12 +7,11 @@ void TapToStartHandler(pDrawable* self, uint16_t x, uint16_t y) {
 }
 
 Welcome::Welcome() {
-    GraphicsManager::Graphics().setBgByMode(MODE_WELCOME);
-    GraphicsManager::Graphics().loadTexturesForMode(MODE_WELCOME);
+    GraphicsManager::Graphics().LoadTexturesForMode(MODE_WELCOME);
 
     pSprite* bg = new pSprite(TX_WELCOME_BG, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255);
-    pSprite* sprite = new pSprite(TX_TAP_TO_START, 396, 422, 168, 10, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255);
-
+    pSprite* sprite = new pSprite(TX_TAP_TO_START, 396, 422, 168, 10, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 0);
+    sprite->Show(GameClock::Clock().Time(), GameClock::Clock().Time()+1000);
     bg->OnClick = TapToStartHandler;
     bg->Clickable = true;
 
@@ -20,7 +19,9 @@ Welcome::Welcome() {
     mSpriteManager.Add(sprite);
 }
 
-Welcome::~Welcome() {}
+Welcome::~Welcome() {
+    GraphicsManager::Graphics().UnloadTexturesForMode(MODE_WELCOME);
+}
 
 void Welcome::HandleInput() {}
 

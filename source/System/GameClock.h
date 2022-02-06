@@ -4,7 +4,7 @@
 class GameClock
 {
 	public:
-		int Time();
+		long Time() const;
 		
 		void Update(); //calls should be synced with vblank
 		void SkipTo(int time);
@@ -23,7 +23,7 @@ class GameClock
 	
 	private:
 		GameClock();
-		~GameClock() {}
+		~GameClock() = default;
 };
 
 #endif

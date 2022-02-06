@@ -1,4 +1,4 @@
-#include "sys_sdl2.h"
+#include "System/SDLInitializer.h"
 
 #include "System/GameBase.h"
 #include "System/GameClock.h"
@@ -26,7 +26,8 @@ int main()
         }
 
 		if (osu.Update() == -1) {
-            break;
+            SDL_Quit();
+            return 0;
         }
 
         //TextManager::Top().SetFont(FONT_CONSOLE);

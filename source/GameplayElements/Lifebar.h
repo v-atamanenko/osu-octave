@@ -19,7 +19,7 @@ class Lifebar : public SpriteContainer
 		void ClearTransforms();
         float GetCurrentHP() {return mHpCurrent;}
 		
-		static const uint32_t MAXHP = mapXToScreen_noFloor(418); //matches with actual width of sprite
+		static const uint32_t MAXHP = 662; //matches with actual width of sprite
 		static const uint32_t MAXCHANGE = mapXToScreen_noFloor(10);
 		
 		//values for increase
@@ -40,8 +40,6 @@ class Lifebar : public SpriteContainer
 		int32_t mFillTime;
 		float mFillRate;
 		int32_t mTimeLastUpdate;
-		
-		uint32_t* mUV;
 		
 		void Bulge();
 };

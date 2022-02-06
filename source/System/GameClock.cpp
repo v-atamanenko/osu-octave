@@ -1,5 +1,4 @@
 #include "GameClock.h"
-#include "cstdio"
 GameClock GameClock::sClock;
 
 GameClock::GameClock()
@@ -14,7 +13,7 @@ GameClock::GameClock()
 	mFraction = 0;
 }
 
-int GameClock::Time()
+long GameClock::Time() const
 {
 	return mTime;
 }

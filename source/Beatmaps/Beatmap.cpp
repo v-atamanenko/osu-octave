@@ -137,7 +137,7 @@ void Beatmap::InitBG() {
             fprintf(stderr, "\nFailed to create surface for beatmap bg: %s\n", SDL_GetError());
         }
 
-        GraphicsManager::Graphics().loadBgFromSurface(surface);
+        GraphicsManager::Graphics().CreateTextureFromSurface(surface, TX_CURRENT_BG);
         free(pixels);
 	}
 

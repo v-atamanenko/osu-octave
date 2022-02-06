@@ -9,24 +9,37 @@ void OnMapSpriteClick(pDrawable* self, uint16_t x, uint16_t y) {
 	ChangeMode(MODE_PLAYER);
 }
 
+void OnBtnQuitClick(pDrawable* self, uint16_t x, uint16_t y) {
+    SDL_Event sdlevent;
+    sdlevent.type = SDL_QUIT;
+    SDL_PushEvent(&sdlevent);
+}
+
 SongSelect::SongSelect()
 {
-    GraphicsManager::Graphics().setBgByMode(MODE_SONGSELECT);
-    GraphicsManager::Graphics().loadTexturesForMode(MODE_SONGSELECT);
+    GraphicsManager::Graphics().LoadTexturesForMode(MODE_SONGSELECT);
 
-    pSprite* btn_import = new pSprite(TX_BUTTON_BIG, 37, 281, 277, 55, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, 1);
+    pSprite* bg = new pSprite(TX_SONGSELECT_BG, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255);
+    mSpriteManager.Add(bg);
+
+    pSprite* btn_import = new pSprite(TX_BUTTON_BIG, 37, 281, 277, 55, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
     mSpriteManager.Add(btn_import);
-    pText* btn_import_label = new pText("import osu! map", FONT_PIXEL, 70, 302, SDL_Color({67,19,115}));
+    pText* btn_import_label = new pText("import osu! map", FONT_PIXEL, 69, 302, SDL_Color({67,19,115}));
+    btn_import_label->Z = -0.02f;
     mSpriteManager.Add(btn_import_label);
 
-    pSprite* btn_settings = new pSprite(TX_BUTTON_BIG, 37, 349, 277, 55, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, 1);
+    pSprite* btn_settings = new pSprite(TX_BUTTON_BIG, 37, 349, 277, 55, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
     mSpriteManager.Add(btn_settings);
     pText* btn_settings_label = new pText("settings", FONT_PIXEL, 119, 370, SDL_Color({67,19,115}));
+    btn_settings_label->Z = -0.02f;
     mSpriteManager.Add(btn_settings_label);
 
-    pSprite* btn_quit = new pSprite(TX_BUTTON_BIG, 37, 418, 277, 55, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, 1);
+    pSprite* btn_quit = new pSprite(TX_BUTTON_BIG, 37, 418, 277, 55, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
+    btn_quit->OnClick = OnBtnQuitClick;
+    btn_quit->Clickable = true;
     mSpriteManager.Add(btn_quit);
-    pText* btn_quit_label = new pText("quit", FONT_PIXEL, 140, 438, SDL_Color({67,19,115}));
+    pText* btn_quit_label = new pText("quit", FONT_PIXEL, 143, 438, SDL_Color({67,19,115}));
+    btn_quit_label->Z = -0.02f;
     mSpriteManager.Add(btn_quit_label);
 
 	for(int i = 0; i != BeatmapManager::SongCount(); i++) {
@@ -51,8 +64,8 @@ SongSelect::SongSelect()
 	}
 }
 
-SongSelect::~SongSelect()
-{
+SongSelect::~SongSelect() {
+    GraphicsManager::Graphics().UnloadTexturesForMode(MODE_SONGSELECT);
 }
 
 void SongSelect::HandleInput()

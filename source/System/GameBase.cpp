@@ -13,14 +13,13 @@ int GameBase::Update()
     if (InputHelper::PollSDL() == -1) return -1;
 	Mode::CurrentMode().HandleInput();
 
-    GraphicsManager::Graphics().clear();
+    GraphicsManager::Graphics().Clear();
     TextManager::Top().Clear();
 
-    GraphicsManager::Graphics().bgDraw();
-	Mode::CurrentMode().Update();
+    Mode::CurrentMode().Update();
     TextManager::Top().drawTex();
 
-    GraphicsManager::Graphics().present();
+    GraphicsManager::Graphics().Present();
 
     return 0;
 }

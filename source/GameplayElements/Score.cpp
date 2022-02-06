@@ -1,4 +1,5 @@
 #include "Score.h"
+#include <cstring>
 
 Score::Score()
 {
@@ -76,7 +77,7 @@ void Score::Add(ScoreType score, bool forceNoCombo, bool gekiKatu)
 	}
 }
 
-float Score::CountAccuracy() {
+float Score::CountAccuracy() const {
     return ((float)((300*(mCount300+mCountGeki)) + (100*(mCount100+mCountKatu)) + (50*mCount50)) /
            (float)(300*(mCount300+mCountGeki+mCount100+mCountKatu+mCount50+mCountMiss)))*100;
 }

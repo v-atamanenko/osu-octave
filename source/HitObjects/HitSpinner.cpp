@@ -16,12 +16,8 @@ HitSpinner::HitSpinner(int32_t time, int32_t endtime, HitObjectSound sound) : Hi
 	mTotalSpins = 0; //counts total number of spins
 	mRequiredSpins = (mEndTime - mTime) / DifficultyManager::GetSpinnerTime(); //total spins required
 	
-	mUV = new uint32_t[4]; //deleted by pSprite
-	mUV[0] = TEXTURE_PACK(0,0);
-	mUV[1] = TEXTURE_PACK(mapXToScreen(256),0);
-	mUV[2] = TEXTURE_PACK(mapXToScreen(256), mapYToScreen(192));
-	mUV[3] = TEXTURE_PACK(0, mapYToScreen(192));
-	
+	//mUV = SDL_Rect({0, 0, 256, 192});
+
 	pSprite* spr;
 	
 	spr = new pSprite(TX_PLAY_CIRCLEAPPROACH, 196+(196/2), 10+(10/2), 450, 450, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({10, 10, 31}), 0);
@@ -50,8 +46,9 @@ HitSpinner::HitSpinner(int32_t time, int32_t endtime, HitObjectSound sound) : Hi
 	mSprites.push_back(spr);
 	
 	mScoreSpriteId = 1;
-	
-	mSprites[2]->UV = mUV;
+
+    delete mSprites[2]->UV;
+    mSprites[2]->UV = new SDL_Rect({0, 0, 256, 192});
 	mChannel = -1;
 }
 
@@ -67,9 +64,9 @@ void HitSpinner::Update()
 	
 	//set spinner bars
 	uint32_t height = MathHelper::Max(0, MathHelper::Min(mapYToScreen(192), ratio*mapYToScreen(192)) - MathHelper::Random(0,10));
-	
-	mUV[0] = TEXTURE_PACK(0,mapYToScreen(192)-height);
-	mUV[1] = TEXTURE_PACK(mapXToScreen(256),mapYToScreen(192)-height);
+
+    delete mSprites[2]->UV;
+    mSprites[2]->UV = new SDL_Rect({0, 0, 256, 192-height});
 	mSprites[2]->Height = height*2.5;
 	
 	//set spinner sound

@@ -9,22 +9,17 @@ Lifebar::Lifebar()
 {
 	pSprite* spr;
 	
-	spr = new pSprite(TX_PLAY_SCOREBAR, 0, 0, mapXToScreen(640), mapYToScreen(42), ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color({31, 31, 31}), 31);
+	spr = new pSprite(TX_PLAY_SCOREBAR, 0, 0, 960, 60, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color({31, 31, 31}), 255);
 	mSprites.push_back(spr);
 	
-	spr = new pSprite(TX_PLAY_SCOREBAR_BAR, 0, 0, mapXToScreen(400), mapYToScreen(40), ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color({31, 31, 31}), 31, -0.01f);
+	spr = new pSprite(TX_PLAY_SCOREBAR_BAR, 0, 0, 960, 60, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color({31, 31, 31}), 255, -0.01f);
 	mSprites.push_back(spr);
 	
-	spr = new pSprite(TX_PLAY_SCOREBAR_KI, mapXToScreen(400), mapYToScreen(18), mapXToScreen(80), mapXToScreen(80), ORIGIN_CENTER, FIELD_SCREEN, SDL_Color({31, 31, 31}), 31, -0.02f);
+	spr = new pSprite(TX_PLAY_SCOREBAR_KI, 640, 28, 36, 36, ORIGIN_CENTER, FIELD_SCREEN, SDL_Color({31, 31, 31}), 255, -0.02f);
 	mSprites.push_back(spr);
-	
-	mUV = new uint32_t[4]; //deleted by pSprite
-	mUV[0] = TEXTURE_PACK(0, 0);
-	mUV[1] = TEXTURE_PACK(mapXToScreen(160), 0);
-	mUV[2] = TEXTURE_PACK(mapXToScreen(160), mapYToScreen(16));
-	mUV[3] = TEXTURE_PACK(0, mapYToScreen(16));
-	
-	mSprites[1]->UV = mUV;
+
+    delete mSprites[1]->UV;
+    mSprites[1]->UV = new SDL_Rect({0, 0, 960, 60});
 }
 
 //can only be called after beatmap has been loaded
@@ -68,18 +63,19 @@ void Lifebar::Update()
 	mHpDisplay += dhp;
 	
 	//mHpDisplay represents the required width of the sprite
-	mSprites[2]->Move(mHpDisplay, 18);
-	if (mHpDisplay >= mapXToScreen_noFloor(200))
+	mSprites[2]->Move(mHpDisplay, 28);
+	if (mHpDisplay >= 345)
 		mSprites[2]->Texture = TX_PLAY_SCOREBAR_KI;
-	else if (mHpDisplay >= mapXToScreen_noFloor(70))
+	else if (mHpDisplay >= 172)
 		mSprites[2]->Texture = TX_PLAY_SCOREBAR_KIDANGER;
 	else
 		mSprites[2]->Texture = TX_PLAY_SCOREBAR_KIDANGER2;
-	
-	mSprites[1]->Width = (uint32_t)mHpDisplay;
-	mUV[1] = TEXTURE_PACK((uint32_t)(mHpDisplay/2.5),0);
-	mUV[2] = TEXTURE_PACK((uint32_t)(mHpDisplay/2.5),16);
-	
+
+    delete mSprites[1]->UV;
+    mSprites[1]->UV = new SDL_Rect({0, 0, (uint32_t)(mHpDisplay), 60});
+    // mSprites[1]->Width = (uint32_t)mHpDisplay;
+    // We don't change width because GraphicsManager::Draw() is handling it when UV is set.
+
 	mTimeLastUpdate = now;
 }
 

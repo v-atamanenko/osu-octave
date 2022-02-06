@@ -1,18 +1,19 @@
 #include "pText.h"
 
+#include <utility>
+
 pText::pText(std::string text, FONT font, uint16_t x, uint16_t y, SDL_Color clr) {
     this->X = x;
     this->Y = y;
-    this->Z = 2.f;
-    this->Text = text;
+    this->Text = std::move(text);
     this->Font = font;
     this->Clickable = false;
     this->mAlive = true;
-    this->Alpha = 100;
+    this->Alpha = 255;
     this->Width = 1;
     this->Height = 1;
     this->Color = clr;
-    UV = NULL;
+    UV = nullptr;
 }
 
 void pText::Draw() {
@@ -20,6 +21,6 @@ void pText::Draw() {
 
 	TextManager::Bottom().PrintLocate(
 		this->X + 2, this->Y, this->Origin,
-        this->Color, (char*) this->Text.c_str()
+        this->Color, this->Text.c_str()
 	);
 }

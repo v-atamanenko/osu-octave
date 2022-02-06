@@ -3,7 +3,7 @@
 
 Player::Player()
 {
-    GraphicsManager::Graphics().loadTexturesForMode(MODE_PLAYER);
+    GraphicsManager::Graphics().LoadTexturesForMode(MODE_PLAYER);
 	//initialisation
 	mRuleset.Initialize();
 
@@ -19,19 +19,19 @@ Player::Player()
 Player::~Player()
 {
 	//delete mBaseDir;
+    GraphicsManager::Graphics().UnloadTexturesForMode(MODE_PLAYER);
 	AudioManager::Engine().MusicStop();
 }
 
 void Player::Update()
 {
-	switch (mPlayState)
-	{
-		case PLAYSTATE_PLAY:
-		{
+    GraphicsManager::Graphics().DrawBeatmapBackground();
+
+    switch (mPlayState) {
+		case PLAYSTATE_PLAY: {
 			bool failed = !mRuleset.Update();
 
-			if (BeatmapManager::Current().GameOver())
-			{
+			if (BeatmapManager::Current().GameOver()) {
 				mPlayState = PLAYSTATE_GAMEOVER;
 				mRuleset.OnGameOver();
 			}
@@ -44,17 +44,13 @@ void Player::Update()
 			break;
 		}
 
-		case PLAYSTATE_GAMEOVER:
-		{
+		case PLAYSTATE_GAMEOVER: {
             mRuleset.UpdateGameOver();
-
 			break;
 		}
 
-        case PLAYSTATE_FAILED:
-        {
+        case PLAYSTATE_FAILED: {
             mRuleset.UpdateFailed();
-
             break;
         }
 

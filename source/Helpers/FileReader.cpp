@@ -59,13 +59,10 @@ FileReader::~FileReader()
 		fclose(mHandle);
 	}
 	
-	if (mBuffer != nullptr)
-	{
-		delete[] mBuffer;
-	}
+	delete[] mBuffer;
 }
 
-int FileReader::FillBuffer() const
+size_t FileReader::FillBuffer() const
 {
 	if (mHandle == nullptr || feof(mHandle))
 		return -1;
@@ -143,7 +140,7 @@ std::string FileReader::ReadString() const
 {
 	uint32_t l = ReadVarInt();
 	if (l == 0)
-		return nullptr;
+		return "";
 	
 	PrepareBuffer(l);
 	

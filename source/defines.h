@@ -5,11 +5,12 @@
 
 extern SDL_Window *window;
 extern SDL_Renderer *renderer;
-extern SDL_Surface *screen_surface;
 
 #define SCREEN_WIDTH 960
 #define SCREEN_HEIGHT 544
 
+//FIXME: The following three mapping functions are used to ease transfer from 640x490 to 960x544. Must be eliminated
+//in future.
 #define mapXToScreen(x) (int32_t)(floor((float)(x) / (640.f/((float)(SCREEN_WIDTH)))))
 #define mapYToScreen(x) (int32_t)(floor((float)(x) / (480.f/((float)(SCREEN_HEIGHT)))))
 

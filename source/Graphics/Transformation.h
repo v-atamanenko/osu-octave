@@ -23,7 +23,7 @@ class Transformation
 		bool Active();
 		TransformType Type() const { return type; }
 		
-		bool Finished() { return GameClock::Clock().Time() > endtime; }
+		bool Finished() const { return GameClock::Clock().Time() > endtime; }
 	
 	protected:
 		TransformType type;

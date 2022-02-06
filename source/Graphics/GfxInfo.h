@@ -1,7 +1,7 @@
 #ifndef __GFXINFO_H__
 #define __GFXINFO_H__
 
-#define NUMBER_OF_TEXTURES 41
+#define NUMBER_OF_TEXTURES 42
 
 typedef enum {
 	TX_PLAY_CIRCLE,
@@ -46,12 +46,12 @@ typedef enum {
     TX_CURRENT_BG,
 
     // UI TEXTURES:
-    TX_TAP_TO_START,
     TX_WELCOME_BG,
+    TX_TAP_TO_START,
+    TX_SONGSELECT_BG,
     TX_BUTTON_BIG,
     TX_BUTTON_MED,
     TX_BUTTON_SM
 } TextureType;
 
 #endif
-

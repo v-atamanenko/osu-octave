@@ -138,7 +138,7 @@ void TextManager::Clear()
     SDL_SetRenderTarget( renderer, nullptr );
 }
 
-void TextManager::PrintLocate(int x, int y, DrawOrigin origin, SDL_Color clr, char* txt)
+void TextManager::PrintLocate(int x, int y, DrawOrigin origin, SDL_Color clr, const char* txt)
 {
     char* message;
     SDL_asprintf(&message, "%s", txt);

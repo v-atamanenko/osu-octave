@@ -35,7 +35,7 @@ class FileReader
 		
 		FILE* mHandle;
 		
-		int FillBuffer() const;
+		size_t FillBuffer() const;
 		void PrepareBuffer(uint8_t datasize) const;
 		
 		bool fReady;

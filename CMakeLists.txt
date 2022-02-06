@@ -30,7 +30,7 @@ include_directories(data)
 include_directories(build)
 
 add_executable(${PROJECT_NAME}
-        ${PROJECT_SOURCE_DIR}/source/sys_sdl2.cpp # Important to be on top!
+        ${PROJECT_SOURCE_DIR}/source/System/SDLInitializer.cpp # Important to be on top!
         ${PROJECT_SOURCE_DIR}/source/Modes/Player.cpp
         ${PROJECT_SOURCE_DIR}/source/Modes/SongSelect.cpp
         ${PROJECT_SOURCE_DIR}/source/Modes/ModeLoader.cpp

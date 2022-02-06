@@ -31,19 +31,19 @@ class Score
 		
 		void Add(ScoreType score, bool forceNoCombo = false, bool gekiKatu = false);
 		
-		uint32_t CurrentScore()            { return mScore; }
-		uint32_t CurrentCombo()            { return mCombo; }
-		uint32_t MaxCombo()                { return mMaxCombo; }
-		uint32_t Count300()                { return mCount300; }
-		uint32_t Count100()                { return mCount100; }
-		uint32_t Count50()                 { return mCount50; }
-		uint32_t CountMiss()               { return mCountMiss; }
-		uint32_t CountGeki()               { return mCountGeki; }
-		uint32_t CountKatu()               { return mCountKatu; }
-        float CountAccuracy();
+		uint32_t CurrentScore() const            { return mScore; }
+		uint32_t CurrentCombo() const            { return mCombo; }
+		uint32_t MaxCombo() const                { return mMaxCombo; }
+		uint32_t Count300() const                { return mCount300; }
+		uint32_t Count100() const                { return mCount100; }
+		uint32_t Count50() const                 { return mCount50; }
+		uint32_t CountMiss() const               { return mCountMiss; }
+		uint32_t CountGeki() const               { return mCountGeki; }
+		uint32_t CountKatu() const               { return mCountKatu; }
+        float CountAccuracy() const;
         char * GetGrade()                  { return mGrade; };
         void CalculateGrade();
-		std::string BeatmapChecksum() { return mBeatmapChecksum; }
+		std::string BeatmapChecksum() const { return mBeatmapChecksum; }
 	
 	protected:
 		//The Final score

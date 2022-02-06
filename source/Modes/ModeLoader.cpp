@@ -29,7 +29,7 @@ void ChangeMode(ModeType mode)
 	GameClock::Clock().Reset();
 	
 
-    delete Mode::sCurrentMode; // remove any current mode if present
+    delete Mode::sCurrentMode; // remove any current mode if Present
 	
 	switch (mode)
 	{

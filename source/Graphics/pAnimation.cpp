@@ -7,7 +7,7 @@ pAnimation::pAnimation(TextureType texture, uint32_t framecount, uint32_t fps, i
 	mFrameCurrent = 0;
 	mOrigTexture = texture;
 	
-	mUpdatesPerFrame = 60.0 / fps;
+	mUpdatesPerFrame = 60.0f / (float)fps;
 	mUpdatesWaited = 0;
 }
 

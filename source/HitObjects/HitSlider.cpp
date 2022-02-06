@@ -396,7 +396,7 @@ void HitSlider::OnTouchDown(const touchPosition& touch)
 		{
 			//fTouching = true; //set in OnTouch() which will always be called if OnTouchDown() is called
 			fStarted = true;
-			mSprites[1]->Transform(TR_FADE, now, mEndTime, 31, 31);
+			mSprites[1]->Transform(TR_FADE, now, mEndTime, 255, 255);
 			mSprites[2]->Kill(now);
 			
 			//if it was hit within the window for any amount of points
@@ -439,7 +439,7 @@ void HitSlider::OnTouch(const touchPosition& touch)
 			IncreaseScore(SCORE_MISS, true, true);
 		}
 		
-		mSprites[1]->Transform(TR_FADE, now, mEndTime, 31, 31);
+		mSprites[1]->Transform(TR_FADE, now, mEndTime, 255, 255);
 		fTouching = true;
 		//mTimeLast = now; //set in Update()
 		

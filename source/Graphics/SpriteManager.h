@@ -18,6 +18,7 @@ class SpriteManager
 		
 		void Draw();
 		void HandleTouchInput();
+        void SortZ();
 		
 		void Add(pDrawable* spr);
 		void Add(const std::vector<pDrawable*>& spr);
