@@ -5,8 +5,8 @@
 void OnMapSpriteClick(pDrawable* self, uint16_t x, uint16_t y) {
 	int index = (int)(size_t) self->Tag;
 
-	BeatmapManager::Load(index); 
-	ChangeMode(MODE_PLAYER);
+	BeatmapManager::Load(index);
+    ChangeModeOnFrameEnd(MODE_PLAYER);
 }
 
 void OnBtnQuitClick(pDrawable* self, uint16_t x, uint16_t y) {

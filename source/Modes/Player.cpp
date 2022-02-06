@@ -77,7 +77,7 @@ void Player::HandleInput()
 	if (InputHelper::KeyDown(SDLK_ESCAPE, IH_KEY_KEYBOARD) ||
         InputHelper::KeyDown(SDL_CONTROLLER_BUTTON_START, IH_KEY_CONTROLLER))
 	{
-		ChangeMode(MODE_SONGSELECT);
+        ChangeModeOnFrameEnd(MODE_SONGSELECT);
 		return;
 	}
 }

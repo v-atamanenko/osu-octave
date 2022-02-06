@@ -8,7 +8,6 @@ SpriteManager::~SpriteManager() {
 		delete mSprite;
 	}
     mSprites.clear();
-    printf("FREE HAPPENED\n");
 }
 
 void SpriteManager::SortZ() {
@@ -62,8 +61,7 @@ void SpriteManager::Add(const std::vector<pDrawable*>& spr) {
 }
 
 void SpriteManager::HandleTouchInput() {
-    printf("TRIED\n");
-	if (!InputHelper::KeyDown(SDL_BUTTON_LEFT, IH_KEY_MOUSE))
+    if (!InputHelper::KeyDown(SDL_BUTTON_LEFT, IH_KEY_MOUSE))
 		return;
 	touchPosition touchPos = InputHelper::TouchRead();
 

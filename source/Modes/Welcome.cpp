@@ -3,7 +3,7 @@
 #include "Graphics/pText.h"
 
 void TapToStartHandler(pDrawable* self, uint16_t x, uint16_t y) {
-    ChangeMode(MODE_SONGSELECT);
+    ChangeModeOnFrameEnd(MODE_SONGSELECT);
 }
 
 Welcome::Welcome() {

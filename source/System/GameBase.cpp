@@ -4,8 +4,9 @@
 GameBase::GameBase()
 {
 	BeatmapManager::BuildCollection();
-	//ChangeMode(MODE_PLAYER);
-	ChangeMode(MODE_WELCOME);
+	//ChangeModeOnFrameEnd(MODE_PLAYER);
+    ChangeModeOnFrameEnd(MODE_WELCOME);
+    ChangeModeOnDemand();
 }
 
 int GameBase::Update()
@@ -20,6 +21,7 @@ int GameBase::Update()
     TextManager::Top().drawTex();
 
     GraphicsManager::Graphics().Present();
+    ChangeModeOnDemand();
 
     return 0;
 }
