@@ -210,14 +210,14 @@ void GraphicsManager::Draw(TextureType tex, int32_t x, int32_t y, uint32_t width
 }
 
 int32_t GraphicsManager::ForceBounds(int32_t value) {
-    //if (value < std::min(((SCREEN_HEIGHT)-200), ((SCREEN_WIDTH)-200))) {
-    //    return std::min(((SCREEN_HEIGHT)-200), ((SCREEN_WIDTH)-200));
-    //}
+    if (value < -200) {
+        return -200;
+    }
 
-    //if (value > std::max(((SCREEN_HEIGHT)+200), ((SCREEN_WIDTH)+200))) {
-//        return std::max(((SCREEN_HEIGHT)+200), ((SCREEN_WIDTH)+200));
- //   }
-    //FIXME : Why do we even need this?..
+    if (value > std::max(((SCREEN_HEIGHT)+200), ((SCREEN_WIDTH)+200))) {
+        return std::max(((SCREEN_HEIGHT)+200), ((SCREEN_WIDTH)+200));
+    }
+
     return value;
 }
 

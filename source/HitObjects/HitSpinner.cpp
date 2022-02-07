@@ -49,13 +49,17 @@ HitSpinner::HitSpinner(int32_t time, int32_t endtime, HitObjectSound sound) : Hi
 
     delete mSprites[2]->UV;
     mSprites[2]->UV = new SDL_Rect({0, 0, SCREEN_WIDTH, SCREEN_HEIGHT});
-	mChannel = -1;
+
+    mChannel = -1;
+    mChannelBonus = -1;
 }
 
 HitSpinner::~HitSpinner()
 {
 	if (mChannel != -1)
-			AudioManager::Engine().StopChannel(mChannel);
+        AudioManager::Engine().StopChannel(mChannel);
+    if (mChannelBonus != -1)
+        AudioManager::Engine().StopChannel(mChannelBonus);
 }
 
 void HitSpinner::Update()
@@ -67,10 +71,8 @@ void HitSpinner::Update()
 
     delete mSprites[2]->UV;
     mSprites[2]->UV = new SDL_Rect({0, SCREEN_HEIGHT-height, SCREEN_WIDTH, height});
-    printf("height %i\n", height);
-	//mSprites[2]->Height = height*2.5;
-	
-	//set spinner sound
+
+    //set spinner sound
 	if (mChannel == -1 && GameClock::Clock().Time() >= mTime)
 		mChannel = AudioManager::Engine().PlaySpinnerSound(SND_NORMAL);
 	
@@ -146,7 +148,7 @@ void HitSpinner::OnTouch(const touchPosition& touch)
 			if (mTotalSpins > mRequiredSpins)
 			{
 				IncreaseScore(SCORE_SPIN_1000, true, true);
-				AudioManager::Engine().PlaySpinnerSound(SND_BONUS);
+				mChannelBonus = AudioManager::Engine().PlaySpinnerSound(SND_BONUS);
 			}
 		}
 		
@@ -185,6 +187,9 @@ void HitSpinner::Hit()
 	
 	if (mChannel != -1)
 		AudioManager::Engine().StopChannel(mChannel);
+
+    if (mChannelBonus != -1)
+        AudioManager::Engine().StopChannel(mChannelBonus);
 	
 	mHit = true;
 }

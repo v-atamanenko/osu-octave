@@ -6,7 +6,7 @@ Mix_Music *music;
 
 AudioManager::AudioManager()
 {
-    Mix_OpenAudio(22050, AUDIO_S16SYS, 2, 640);
+    Mix_OpenAudio(22050, AUDIO_S16SYS, 4, 640);
 
 	//sound init
 	ResetSamples();

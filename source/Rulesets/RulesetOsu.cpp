@@ -76,7 +76,7 @@ void RulesetOsu::IncreaseScore(ScoreType score, bool forceNoCombo, bool forceNoA
 			break;
 	}
 	
-	mCurrentScore.Add(score, forceNoCombo);
+	mCurrentScore.Add(score, forceNoCombo, (mSpecialScore == 2));
 	mLifebar.Increase(hpIncrease);
 	
 	if (!forceNoAnimation)

@@ -40,7 +40,7 @@ SDLInitializer::SDLInitializer() {
         SDL_Quit();
     }
 
-    //SDL_RenderSetLogicalSize(renderer, WIDTH, HEIGHT);
+    //SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
 
     int imgFlags = IMG_INIT_PNG;
     if (!(IMG_Init(imgFlags) & imgFlags)) {

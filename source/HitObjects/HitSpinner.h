@@ -29,6 +29,7 @@ class HitSpinner : public HitObject
 		uint32_t mRequiredSpins;
 		
 		int mChannel;
+        int mChannelBonus;
 };
 
 #endif
