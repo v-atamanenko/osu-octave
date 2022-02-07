@@ -13,7 +13,6 @@ class SongSelect : public Mode
 {
 	public:
 		SongSelect();
-		~SongSelect();
 		
 		void Update();
 		void HandleInput();

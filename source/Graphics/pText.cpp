@@ -20,7 +20,7 @@ void pText::Draw() {
     TextManager::Bottom().SetFont(this->Font);
 
 	TextManager::Bottom().PrintLocate(
-		this->X + 2, this->Y, this->Origin,
+		this->X, this->Y, this->Origin,
         this->Color, this->Text.c_str()
 	);
 }

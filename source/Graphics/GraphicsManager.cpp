@@ -1,11 +1,12 @@
 #include "GraphicsManager.h"
 #include <string>
+#include <algorithm>
 
 GraphicsManager GraphicsManager::sGraphicsManager;
 
-bool GraphicsManager::LoadTexture(int texid, const std::string& path) {
-    if (textures[texid] != nullptr)
-        SDL_DestroyTexture(textures[texid]);
+bool GraphicsManager::LoadTexture(TextureType texid, const std::string& path) {
+    if (maptextures[texid] != nullptr)
+        SDL_DestroyTexture(maptextures[texid]);
 
     SDL_Texture* newTexture = nullptr;
 
@@ -29,7 +30,7 @@ bool GraphicsManager::LoadTexture(int texid, const std::string& path) {
     }
 
     SDL_FreeSurface( loadedSurface );
-    textures[texid] = newTexture;
+    maptextures[texid] = newTexture;
     return true;
 }
 
@@ -62,15 +63,15 @@ void GraphicsManager::CreateTextureFromSurface(SDL_Surface* bg, TextureType texi
 
     SDL_FreeSurface( optimizedSurface );
 
-    if (textures[texid] != nullptr) {
-        SDL_DestroyTexture(textures[texid]);
+    if (maptextures[texid] != nullptr) {
+        SDL_DestroyTexture(maptextures[texid]);
     }
-    textures[texid] = newTexture;
+    maptextures[texid] = newTexture;
 }
 
 void GraphicsManager::DrawBeatmapBackground() {
-    if (textures[TX_CURRENT_BG] != nullptr) {
-        if (SDL_RenderCopy(renderer, textures[TX_CURRENT_BG], nullptr, nullptr) < 0) {
+    if (maptextures[TX_CURRENT_BG] != nullptr) {
+        if (SDL_RenderCopy(renderer, maptextures[TX_CURRENT_BG], nullptr, nullptr) < 0) {
             fprintf(stderr, "DrawBeatmapBackground failed with: %s\n", SDL_GetError());
         }
     }
@@ -147,90 +148,30 @@ void GraphicsManager::LoadTexturesForMode(ModeType mod) {
     }
 }
 
-void GraphicsManager::UnloadTexturesForMode(ModeType mod) {
-    switch (mod) {
-        case MODE_PLAYER:
-            SDL_DestroyTexture(textures[TX_PLAY_CIRCLE]);
-            SDL_DestroyTexture(textures[TX_PLAY_CIRCLEOVERLAY]);
-            SDL_DestroyTexture(textures[TX_PLAY_CIRCLEAPPROACH]);
-
-            SDL_DestroyTexture(textures[TX_PLAY_DISC]);
-            SDL_DestroyTexture(textures[TX_PLAY_SLIDERTICK]);
-            SDL_DestroyTexture(textures[TX_PLAY_SLIDERREVERSE]);
-
-            SDL_DestroyTexture(textures[TX_WHITE]);
-
-            SDL_DestroyTexture(textures[TX_PLAY_SPINNER]);
-            SDL_DestroyTexture(textures[TX_PLAY_SPINNERBARS]);
-            SDL_DestroyTexture(textures[TX_PLAY_SCOREBAR_BAR]);
-
-            SDL_DestroyTexture(textures[TX_PLAY_SPINNERBG]);
-
-            SDL_DestroyTexture(textures[TX_PLAY_SLIDERB0]);
-            SDL_DestroyTexture(textures[TX_PLAY_SLIDERB1]);
-            SDL_DestroyTexture(textures[TX_PLAY_SLIDERB2]);
-            SDL_DestroyTexture(textures[TX_PLAY_SLIDERB3]);
-            SDL_DestroyTexture(textures[TX_PLAY_SLIDERB4]);
-            SDL_DestroyTexture(textures[TX_PLAY_SLIDERB5]);
-            SDL_DestroyTexture(textures[TX_PLAY_SLIDERB6]);
-            SDL_DestroyTexture(textures[TX_PLAY_SLIDERB7]);
-            SDL_DestroyTexture(textures[TX_PLAY_SLIDERB8]);
-            SDL_DestroyTexture(textures[TX_PLAY_SLIDERB9]);
-            SDL_DestroyTexture(textures[TX_PLAY_SLIDERFOLLOW]);
-
-            SDL_DestroyTexture(textures[TX_PLAY_HIT0]);
-            SDL_DestroyTexture(textures[TX_PLAY_HIT300]);
-            SDL_DestroyTexture(textures[TX_PLAY_HIT300K]);
-            SDL_DestroyTexture(textures[TX_PLAY_HIT300G]);
-
-            SDL_DestroyTexture(textures[TX_PLAY_HIT50]);
-            SDL_DestroyTexture(textures[TX_PLAY_HIT100]);
-            SDL_DestroyTexture(textures[TX_PLAY_HIT100K]);
-
-            SDL_DestroyTexture(textures[TX_PLAY_SLIDER30]);
-            SDL_DestroyTexture(textures[TX_PLAY_SLIDER10]);
-
-            SDL_DestroyTexture(textures[TX_PLAY_SCOREBAR_KI]);
-            SDL_DestroyTexture(textures[TX_PLAY_SCOREBAR_KIDANGER]);
-            SDL_DestroyTexture(textures[TX_PLAY_SCOREBAR_KIDANGER2]);
-
-            SDL_DestroyTexture(textures[TX_PLAY_SCOREBAR]);
-            break;
-        case MODE_SONGSELECT:
-            SDL_DestroyTexture(textures[TX_SONGSELECT_BG]);
-            SDL_DestroyTexture(textures[TX_BUTTON_BIG]);
-            SDL_DestroyTexture(textures[TX_BUTTON_MED]);
-            SDL_DestroyTexture(textures[TX_BUTTON_SM]);
-            break;
-        case MODE_WELCOME:
-            SDL_DestroyTexture(textures[TX_WELCOME_BG]);
-            SDL_DestroyTexture(textures[TX_TAP_TO_START]);
-            break;
-    }
+void GraphicsManager::UnloadTextures() {
+    maptextures.clear();
 }
 
 void GraphicsManager::Draw(TextureType tex, int32_t x, int32_t y, uint32_t width, uint32_t height, DrawOrigin origin, FieldType fieldtype, SDL_Color color, uint32_t alpha, int32_t angle, float z, const SDL_Rect* uv)
 {
-    int32_t x1 = SCREEN_WIDTH, x2 = (SCREEN_WIDTH+100), y1 = SCREEN_HEIGHT, y2 = (SCREEN_HEIGHT+100);
-    //float z = zvalue[tex] + deltaz;
+    int32_t x1, y1, x2, y2;
 
+    // We use "UV Coordinates" as a source rect for render copy, thus being able to draw textures partly.
     if (uv != nullptr) {
         width = uv->w;
         height = uv->h;
     }
 
-    if (fieldtype == FIELD_PLAY)
-    {
+    if (fieldtype == FIELD_PLAY) {
         x += PlayXOffset;
         y += PlayYOffset;
     }
 
-    switch (origin)
-    {
+    switch (origin) {
         case ORIGIN_TOPLEFT:
             x1 = ForceBounds(x);
-            x2 = ForceBounds(x + width);
             y1 = ForceBounds(y);
+            x2 = ForceBounds(x + width);
             y2 = ForceBounds(y + height);
             break;
 
@@ -247,8 +188,8 @@ void GraphicsManager::Draw(TextureType tex, int32_t x, int32_t y, uint32_t width
         case ORIGIN_BOTTOMLEFT:
             x1 = ForceBounds(x);
             x2 = ForceBounds(x + width);
-            y1 = ForceBounds(y - height);
-            y2 = ForceBounds(y);
+            y1 = ForceBounds((SCREEN_HEIGHT) - y - height);
+            y2 = ForceBounds((SCREEN_HEIGHT) - y);
             break;
 
         case ORIGIN_TOPRIGHT:
@@ -258,30 +199,30 @@ void GraphicsManager::Draw(TextureType tex, int32_t x, int32_t y, uint32_t width
             y2 = ForceBounds(y + height);
     }
 
+
     //don't draw things out of the screen
     if (x1 > SCREEN_WIDTH || x2 < 0 || y1 > SCREEN_HEIGHT || y2 < 0)
         return;
     SDL_Rect dst = {x1, y1, x2-x1, y2-y1};
 
-    SDL_SetTextureAlphaMod(textures[tex], alpha);
-
-    SDL_RenderCopyEx( renderer, textures[tex], uv, &dst, angle, nullptr, SDL_FLIP_NONE );
+    SDL_SetTextureAlphaMod(maptextures[tex], alpha);
+    SDL_RenderCopyEx(renderer, maptextures[tex], uv, &dst, angle, nullptr, SDL_FLIP_NONE);
 }
 
-int32_t GraphicsManager::ForceBounds(int32_t value)
-{
-    if (value < -200)
-        return -200;
+int32_t GraphicsManager::ForceBounds(int32_t value) {
+    //if (value < std::min(((SCREEN_HEIGHT)-200), ((SCREEN_WIDTH)-200))) {
+    //    return std::min(((SCREEN_HEIGHT)-200), ((SCREEN_WIDTH)-200));
+    //}
 
-    if (value > 1099)
-        return 1099;
-
+    //if (value > std::max(((SCREEN_HEIGHT)+200), ((SCREEN_WIDTH)+200))) {
+//        return std::max(((SCREEN_HEIGHT)+200), ((SCREEN_WIDTH)+200));
+ //   }
+    //FIXME : Why do we even need this?..
     return value;
 }
 
-//TODO: Move to sprites
-void GraphicsManager::DrawFullScreenRectangle(SDL_Color c)
-{
+//TODO: Move to sprites (?)
+void GraphicsManager::DrawFullScreenRectangle(SDL_Color c) {
     SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, c.a);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_Rect r = {0,0,SCREEN_WIDTH,SCREEN_HEIGHT};

@@ -19,7 +19,7 @@ Player::Player()
 Player::~Player()
 {
 	//delete mBaseDir;
-    GraphicsManager::Graphics().UnloadTexturesForMode(MODE_PLAYER);
+    //GraphicsManager::Graphics().UnloadTextures();
 	AudioManager::Engine().MusicStop();
 }
 

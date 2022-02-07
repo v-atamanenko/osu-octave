@@ -19,10 +19,6 @@ Welcome::Welcome() {
     mSpriteManager.Add(sprite);
 }
 
-Welcome::~Welcome() {
-    GraphicsManager::Graphics().UnloadTexturesForMode(MODE_WELCOME);
-}
-
 void Welcome::HandleInput() {}
 
 void Welcome::Update()

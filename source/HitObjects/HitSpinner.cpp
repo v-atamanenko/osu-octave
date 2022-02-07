@@ -20,14 +20,14 @@ HitSpinner::HitSpinner(int32_t time, int32_t endtime, HitObjectSound sound) : Hi
 
 	pSprite* spr;
 	
-	spr = new pSprite(TX_PLAY_CIRCLEAPPROACH, 196+(196/2), 10+(10/2), 450, 450, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({10, 10, 31}), 0);
+	spr = new pSprite(TX_PLAY_CIRCLEAPPROACH, PlayfieldX(479), PlayfieldY(302), 460, 460, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({10, 10, 31}), 0);
 	spr->Show(time-300, time);
 	spr->Hide(endtime, endtime+300);
 	spr->Scale(time-300, endtime, 1, 0);
 	spr->Kill(endtime+300);
 	mSprites.push_back(spr);
 	
-	spr = new pSprite(TX_PLAY_SPINNER, 195, 9, 440, 440, ORIGIN_TOPLEFT, FIELD_PLAY, SDL_Color({31, 31, 31}), 0, 0.03f);
+	spr = new pSprite(TX_PLAY_SPINNER, PlayfieldX(479), PlayfieldY(302), 440, 440, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({31, 31, 31}), 0, 0.03f);
 	spr->Show(time-300, time);
 	spr->Hide(endtime, endtime+300);
 	spr->Kill(endtime+300);
@@ -48,7 +48,7 @@ HitSpinner::HitSpinner(int32_t time, int32_t endtime, HitObjectSound sound) : Hi
 	mScoreSpriteId = 1;
 
     delete mSprites[2]->UV;
-    mSprites[2]->UV = new SDL_Rect({0, 0, 256, 192});
+    mSprites[2]->UV = new SDL_Rect({0, 0, SCREEN_WIDTH, SCREEN_HEIGHT});
 	mChannel = -1;
 }
 
@@ -63,17 +63,19 @@ void HitSpinner::Update()
 	float ratio = (mTotalSpins + MathHelper::Frc(mTotalRotation)) / mRequiredSpins;
 	
 	//set spinner bars
-	uint32_t height = MathHelper::Max(0, MathHelper::Min(mapYToScreen(192), ratio*mapYToScreen(192)) - MathHelper::Random(0,10));
+	uint32_t height = MathHelper::Max(0, MathHelper::Min(SCREEN_HEIGHT, floor(ratio*(float)(SCREEN_HEIGHT))) - MathHelper::Random(0, ScreenY(20)));
 
     delete mSprites[2]->UV;
-    mSprites[2]->UV = new SDL_Rect({0, 0, 256, 192-height});
-	mSprites[2]->Height = height*2.5;
+    mSprites[2]->UV = new SDL_Rect({0, SCREEN_HEIGHT-height, SCREEN_WIDTH, height});
+    printf("height %i\n", height);
+	//mSprites[2]->Height = height*2.5;
 	
 	//set spinner sound
 	if (mChannel == -1 && GameClock::Clock().Time() >= mTime)
 		mChannel = AudioManager::Engine().PlaySpinnerSound(SND_NORMAL);
 	
 	if (mChannel != -1)
+        //TODO: changing freq
 		//AudioManager::Engine().SetChannelFreq(mChannel, MathHelper::Min((uint32_t)(10000 + (ratio * 30000)), 65535));
 	
 	//trigger score calculation once slider is finished
@@ -94,7 +96,7 @@ void HitSpinner::OnTouch(const touchPosition& touch)
 {
 	if (GameClock::Clock().Time() >= mTime && GameClock::Clock().Time() <= mEndTime)
 	{
-		if (MathHelper::Abs(touch.px - 320) < 10 && MathHelper::Abs(touch.py - 265) < 10)
+		if (MathHelper::Abs(touch.px - (SCREEN_WIDTH / 2)) < 10 && MathHelper::Abs(touch.py - (SCREEN_HEIGHT/2)) < 10)
 		{
 			fSpinning = false;
 			return;
@@ -189,12 +191,12 @@ void HitSpinner::Hit()
 
 int32_t HitSpinner::GetAngle(int32_t x, int32_t y)
 {
-	float theta = atan((float)(y-265)/(x-320));
-	int32_t angle = theta*32768/6.2832;
+	float theta = atan((float)((float)y-(SCREEN_HEIGHT/2.f))/((float)x-(SCREEN_WIDTH/2.f)));
+	int32_t angle = floor(theta*32768/6.2832);
 	
 	//hack - let's hope this won't come back to haunt me
-	if (x < 320)
+	if (x < floor(SCREEN_WIDTH/2.f))
 		angle += 16384;
-	
+
 	return angle;
 }

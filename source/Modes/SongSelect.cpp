@@ -64,10 +64,6 @@ SongSelect::SongSelect()
 	}
 }
 
-SongSelect::~SongSelect() {
-    GraphicsManager::Graphics().UnloadTexturesForMode(MODE_SONGSELECT);
-}
-
 void SongSelect::HandleInput()
 {
 

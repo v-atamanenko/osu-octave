@@ -31,14 +31,12 @@ class TextManager
 		static TextManager& Bottom() { return sTM; }
 		
 		static void Init();
-		
-		static void Warn(char* format, ...);
-		
-		void SetFont(FONT font);
+
+    void SetFont(FONT font);
 
         void drawTex();
-		void Print(const char* format, ...);
-		void Clear();
+
+    void Clear();
 		
 		void PrintLocate(int x, int y, DrawOrigin origin, SDL_Color clr, const char* txt);
         void PrintScore(int x, int y, DrawOrigin origin, const char* format, uint32_t score);
@@ -54,7 +52,7 @@ class TextManager
 		static TextManager sTM;
 
 		static void AddFont(FONT font, std::string path, int ptsize=18);
-        static void updateTex(char *text, SDL_Color color, int x, int y, DrawOrigin origin=ORIGIN_TOPLEFT);
+        static void updateTex(const char *text, SDL_Color color, int x, int y, DrawOrigin origin=ORIGIN_TOPLEFT);
         static void initTex();
 	private:
 		TextManager();

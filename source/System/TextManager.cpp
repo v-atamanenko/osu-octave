@@ -30,10 +30,9 @@ void TextManager::drawTex()
     SDL_RenderCopy(renderer, sTM.mConsole, nullptr, nullptr);
 }
 
-void TextManager::updateTex(char *text, SDL_Color color, int x, int y, DrawOrigin origin)
+void TextManager::updateTex(const char *text, SDL_Color color, int x, int y, DrawOrigin origin)
 {
     SDL_Surface* surfaceMessage = TTF_RenderText_Solid(sTM.mFonts[sTM.currentFont], text, color);
-    free(text);
 
     if (surfaceMessage == nullptr) {
         fprintf(stderr, "Failed to create surfaceMessage: %s\n", SDL_GetError());
@@ -88,8 +87,8 @@ void TextManager::Init()
 	//TODO: Use different fonts or remove rendundant font types
 	AddFont(FONT_CONSOLE, "fonts/verdana.ttf");
 	AddFont(FONT_SCORE, "fonts/verdana.ttf", 32);
-	AddFont(FONT_NUMBERING, "fonts/verdana.ttf");
-	AddFont(FONT_VERDANA, "fonts/verdana.ttf");
+	//AddFont(FONT_NUMBERING, "fonts/verdana.ttf");
+	//AddFont(FONT_VERDANA, "fonts/verdana.ttf");
 
     AddFont(FONT_PIXEL, "fonts/PressStart2P-Regular.ttf", 14);
 
@@ -102,31 +101,9 @@ void TextManager::AddFont(FONT font, std::string path, int ptsize)
     sTM.mFonts[font] = TTF_OpenFont(path.c_str(), ptsize);
 }
 
-void TextManager::Warn(char* format, ...)
-{
-    char* message;
-    va_list args;
-    va_start(args, format);
-    SDL_asprintf(&message, format, args);
-    va_end(args);
-
-    updateTex(message, SDL_Color({255, 25, 25, 255}), 0, 0);
-}
-
 void TextManager::SetFont(FONT font)
 {
     currentFont = font;
-}
-
-void TextManager::Print(const char* format, ...)
-{
-	char* message;
-	va_list args;
-	va_start(args, format);
-	SDL_asprintf(&message, format, args);
-	va_end(args);
-
-    updateTex(message, SDL_Color(), 0, 0);
 }
 
 void TextManager::Clear()
@@ -140,9 +117,7 @@ void TextManager::Clear()
 
 void TextManager::PrintLocate(int x, int y, DrawOrigin origin, SDL_Color clr, const char* txt)
 {
-    char* message;
-    SDL_asprintf(&message, "%s", txt);
-    updateTex(message, clr, x, y, origin);
+    updateTex(txt, clr, x, y, origin);
 }
 
 
@@ -151,6 +126,7 @@ void TextManager::PrintScore(int x, int y, DrawOrigin origin, const char* format
     char* message;
     SDL_asprintf(&message, format, score);
     updateTex(message, SDL_Color({255, 255, 255, 255}), x, y, origin);
+    free(message);
 }
 
 void TextManager::PrintScore(int x, int y, DrawOrigin origin, const char* format, float score)
@@ -158,6 +134,7 @@ void TextManager::PrintScore(int x, int y, DrawOrigin origin, const char* format
     char* message;
     SDL_asprintf(&message, format, score);
     updateTex(message, SDL_Color({255, 255, 255, 255}), x, y, origin);
+    free(message);
 }
 
 void TextManager::PrintScore(int x, int y, DrawOrigin origin, const char* format, char * score)
@@ -165,5 +142,6 @@ void TextManager::PrintScore(int x, int y, DrawOrigin origin, const char* format
     char* message;
     SDL_asprintf(&message, format, score);
     updateTex(message, SDL_Color({255, 255, 255, 255}), x, y, origin);
+    free(message);
 }
 

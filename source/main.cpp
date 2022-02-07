@@ -27,7 +27,7 @@ int main()
 
 		if (osu.Update() == -1) {
             SDL_Quit();
-            return 0;
+            break;
         }
 
         //TextManager::Top().SetFont(FONT_CONSOLE);

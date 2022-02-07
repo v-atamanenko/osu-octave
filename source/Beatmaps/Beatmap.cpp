@@ -146,6 +146,7 @@ void Beatmap::InitBG() {
 	mLastObjectEndTime = 0;
 	mForceNewCombo = true;
     printf("mHitObjectCount: %i\n", mHitObjectCount);
+    printf("Time: %li\n", GameClock::Clock().Time());
 	//read ahead
 	ReadNextObject();
 	mFirstObjectTime = mNextObjectTime;

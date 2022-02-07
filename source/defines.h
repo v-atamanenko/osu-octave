@@ -16,6 +16,15 @@ extern SDL_Renderer *renderer;
 
 #define mapXToScreen_noFloor(x) (uint32_t)((float)(x) / (640.f/((float)(SCREEN_WIDTH))))
 
+#define ScreenX(x) (int32_t)(x)
+#define ScreenY(y) (int32_t)(y)
+
+#define PlayfieldX(x) ((x)-64)
+#define PlayfieldY(y) ((y)-73)
+
+//PlayXOffset = 64;
+//PlayYOffset = 73;
+
 #ifdef VITA
 #define DATA_DIR "ux0:/data/osu/"
 #endif

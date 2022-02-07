@@ -14,7 +14,7 @@ typedef enum {
 class Mode
 {
 	public:
-		virtual ~Mode() = default;
+		virtual ~Mode();
 		
 		static Mode& CurrentMode() { return *sCurrentMode; }
 		friend void ChangeModeOnFrameEnd(ModeType mode);

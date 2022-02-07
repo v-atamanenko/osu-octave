@@ -13,7 +13,6 @@ class Welcome : public Mode
 {
 public:
     Welcome();
-    ~Welcome();
 
     void Update();
     void HandleInput();

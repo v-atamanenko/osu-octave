@@ -34,3 +34,7 @@ void ChangeModeOnDemand() {
 
     Mode::wantChangeMode = false;
 }
+
+Mode::~Mode() {
+    GraphicsManager::Graphics().UnloadTextures();
+}

@@ -1,6 +1,7 @@
 #include <cstring>
 #include <string>
 #include <cstdio>
+#include <map>
 
 #include <SDL.h>
 #include "SDL_image.h"
@@ -36,7 +37,7 @@ class GraphicsManager
         void DrawBeatmapBackground();
 
         void LoadTexturesForMode(ModeType mod);
-        void UnloadTexturesForMode(ModeType mod);
+        void UnloadTextures();
 
         void DrawFullScreenRectangle(SDL_Color c);
 
@@ -48,8 +49,9 @@ class GraphicsManager
 	
 	protected:
 		SDL_Texture* textures[NUMBER_OF_TEXTURES];
+        std::map<TextureType, SDL_Texture*> maptextures;
 
-        bool LoadTexture(int texid, const std::string& path);
+        bool LoadTexture(TextureType texid, const std::string& path);
 
         static int32_t ForceBounds(int32_t value);
 		static GraphicsManager sGraphicsManager;
