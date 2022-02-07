@@ -13,6 +13,7 @@ pText::pText(std::string text, FONT font, uint16_t x, uint16_t y, SDL_Color clr)
     this->Width = 1;
     this->Height = 1;
     this->Color = clr;
+    this->Origin = ORIGIN_TOPLEFT;
     UV = nullptr;
 }
 
