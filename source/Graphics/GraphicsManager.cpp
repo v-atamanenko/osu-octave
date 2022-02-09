@@ -34,6 +34,10 @@ bool GraphicsManager::LoadTexture(TextureType texid, const std::string& path) {
     return true;
 }
 
+void GraphicsManager::LoadBeatmapBackground(const std::string& path) {
+    LoadTexture(TX_CURRENT_BG, path);
+}
+
 void GraphicsManager::CreateTextureFromSurface(SDL_Surface* bg, TextureType texid) {
     if (!bg) {
         fprintf(stderr, "CreateTextureFromSurface called with empty argument.\n");

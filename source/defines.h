@@ -11,10 +11,10 @@ extern SDL_Renderer *renderer;
 
 //FIXME: The following three mapping functions are used to ease transfer from 640x490 to 960x544. Must be eliminated
 //in future.
-#define mapXToScreen(x) (int32_t)(floor((float)(x) / (640.f/((float)(SCREEN_WIDTH)))))
-#define mapYToScreen(x) (int32_t)(floor((float)(x) / (480.f/((float)(SCREEN_HEIGHT)))))
+#define osuPixelsXtoScreenX(x) (x)
+#define osuPixelsYtoScreenY(x) (x)
 
-#define mapXToScreen_noFloor(x) (uint32_t)((float)(x) / (640.f/((float)(SCREEN_WIDTH))))
+#define mapXToScreen_noFloor(x) (x)
 
 #define ScreenX(x) (int32_t)(x)
 #define ScreenY(y) (int32_t)(y)

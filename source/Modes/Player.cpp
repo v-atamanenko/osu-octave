@@ -5,10 +5,10 @@ Player::Player()
 {
     GraphicsManager::Graphics().LoadTexturesForMode(MODE_PLAYER);
 	//initialisation
-	mRuleset.Initialize();
+    BeatmapManager::Current().InitBG();
+    mRuleset.Initialize();
 
 	//load audio
-	BeatmapManager::Current().InitBG();
 	ChangeToSongDir();
 	AudioManager::Engine().MusicPlay(BeatmapManager::Current().AudioFilename());
 
@@ -37,8 +37,8 @@ void Player::Update()
 			}
 
             if (failed) {
-                mPlayState = PLAYSTATE_FAILED;
-                mRuleset.OnFailed();
+                //mPlayState = PLAYSTATE_FAILED;
+                //mRuleset.OnFailed();
             }
 
 			break;

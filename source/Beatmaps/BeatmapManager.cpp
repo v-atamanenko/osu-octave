@@ -51,7 +51,7 @@ void BeatmapManager::BuildCollection()
                     ext += length - 4;
 
 					//if we have on our hands a .ods file, add it to our collection
-					if (strcmp(ext, ".ods") == 0)
+					if (strcmp(ext, ".osu") == 0)
 					{
 						mBeatmaps.push_back(new Beatmap(subentry->d_name, entry->d_name));
 					}

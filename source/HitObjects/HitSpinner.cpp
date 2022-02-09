@@ -4,7 +4,7 @@
 #define TEXTURE_PACK(u, v) (((u) & 0xFFFF) | ((v) << 16))
 #endif
 
-HitSpinner::HitSpinner(int32_t time, int32_t endtime, HitObjectSound sound) : HitObject(mapXToScreen(256), mapYToScreen(192), time, HIT_SPINNER, sound)
+HitSpinner::HitSpinner(int32_t time, int32_t endtime, HitObjectSound sound) : HitObject(osuPixelsXtoScreenX(256), osuPixelsYtoScreenY(192), time, HIT_SPINNER, sound)
 {
 	mEndTime = endtime;
 	fSpinning = false;

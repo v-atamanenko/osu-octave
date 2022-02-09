@@ -93,7 +93,7 @@ bool Ruleset::Update()
     // score/combo output
 	
 	TextManager::Bottom().SetFont(FONT_SCORE);
-    TextManager::Bottom().PrintScore(mapXToScreen(635), 25, ORIGIN_TOPRIGHT, "  %08u", mCurrentScore.CurrentScore());
+    TextManager::Bottom().PrintScore(osuPixelsXtoScreenX(635), 25, ORIGIN_TOPRIGHT, "  %08u", mCurrentScore.CurrentScore());
 	TextManager::Bottom().PrintScore(25, 25, ORIGIN_BOTTOMLEFT, "%ix   ", mCurrentScore.CurrentCombo());
 
     if(mLifebar.GetCurrentHP() == 0.f && GameClock::Clock().Time() > BeatmapManager::Current().SkipTime())

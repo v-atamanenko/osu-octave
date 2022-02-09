@@ -6,7 +6,7 @@ Mix_Music *music;
 
 AudioManager::AudioManager()
 {
-    Mix_OpenAudio(22050, AUDIO_S16SYS, 4, 640);
+    Mix_OpenAudio(44100, AUDIO_S16SYS, 4, 640);
 
 	//sound init
 	ResetSamples();
@@ -144,11 +144,7 @@ int AudioManager::MusicPlay(std::string& filename)
     if (music != nullptr)
         MusicStop();
 
-    //FIXME: smh make SDL_Mixer understand that this is mp3 without specifying extension
-    char* fn;
-    SDL_asprintf(&fn, "%s%s", filename.c_str(), ".mp3");
-
-    music = Mix_LoadMUS(fn);
+    music = Mix_LoadMUS(filename.c_str());
     if(!music) {
         char temp[1024];
         getcwd(temp, sizeof(temp));
@@ -167,10 +163,12 @@ int AudioManager::MusicPlay(std::string& filename)
 
 int AudioManager::MusicSkipTo(uint32_t milliseconds)
 {
-	if (mChannel == -1)
+    if (mChannel == -1) {
+        fprintf(stderr, "Mix_SetMusicPosition failed: mChannel is -1\n");
 		return -1;
+    }
 
-    if (Mix_SetMusicPosition((double)(milliseconds / 1000)) == -1) {
+    if (Mix_SetMusicPosition((double)((double)milliseconds / (double)1000)) == -1) {
         fprintf(stderr, "Mix_SetMusicPosition failed: %s\n", Mix_GetError());
         mChannel = -1;
     }

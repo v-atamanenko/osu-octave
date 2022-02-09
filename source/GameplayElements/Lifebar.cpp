@@ -38,6 +38,11 @@ void Lifebar::Initialize()
 	{
 		mSprites[2]->Scale(time, time + 90, 1.5, 1);
 	}
+
+    printf("Lifebar initalize;\n");
+    printf("mFillTime %i\n", mFillTime);
+    printf("mFillRate %f;\n", mFillRate);
+    printf("mTimeLastUpdate %i;\n", mTimeLastUpdate);
 }
 
 void Lifebar::Update()
@@ -52,7 +57,7 @@ void Lifebar::Update()
 			mHpCurrent = 0;
 	}
 	//intro animation
-	else if (now > startTime - mFillTime && now < startTime)
+	else if ((now > (startTime - mFillTime)) && (now < startTime))
 	{
 		Set(mHpCurrent + mFillRate, false);
 	}
@@ -72,9 +77,7 @@ void Lifebar::Update()
 		mSprites[2]->Texture = TX_PLAY_SCOREBAR_KIDANGER2;
 
     delete mSprites[1]->UV;
-    mSprites[1]->UV = new SDL_Rect({0, 0, (uint32_t)(mHpDisplay), 60});
-    // mSprites[1]->Width = (uint32_t)mHpDisplay;
-    // We don't change width because GraphicsManager::Draw() is handling it when UV is set.
+    mSprites[1]->UV = new SDL_Rect({0, 0, (int)(mHpDisplay), 60});
 
 	mTimeLastUpdate = now;
 }

@@ -34,6 +34,7 @@ class GraphicsManager
 		void Draw(TextureType tex, int32_t x, int32_t y, uint32_t width, uint32_t height, DrawOrigin origin, FieldType fieldtype, SDL_Color color, uint32_t alpha, int32_t angle, float z = 0, const SDL_Rect* uv = nullptr);
 
         void CreateTextureFromSurface(SDL_Surface* bg, TextureType texid);
+        void LoadBeatmapBackground(const std::string& path);
         void DrawBeatmapBackground();
 
         void LoadTexturesForMode(ModeType mod);
@@ -44,7 +45,7 @@ class GraphicsManager
         static void Clear();
         static void Present();
 
-        static const uint32_t PlayXOffset = 64;
+        static const uint32_t PlayXOffset = ((SCREEN_WIDTH-640)/2);
 		static const uint32_t PlayYOffset = 73;
 	
 	protected:

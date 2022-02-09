@@ -31,10 +31,10 @@
 */
 
 typedef enum {
-	SND_NORMAL = 1,
-	SND_WHISTLE = 2,
-	SND_FINISH = 4,
-	SND_CLAP = 8,
+	SND_NORMAL = 0,
+	SND_WHISTLE = 1,
+	SND_FINISH = 2,
+	SND_CLAP = 3,
     SND_BONUS = 32 // Spinner only
 } HitObjectSound;
 

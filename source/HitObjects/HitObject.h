@@ -16,14 +16,14 @@
 
 typedef struct {
 	int32_t x, y;
-	int32_t angle;
+	int32_t angle = 0;
 } HitObjectPoint;
 
 typedef enum {
-	HIT_NORMAL = 1,
-	HIT_SLIDER = 2,
-	HIT_COMBO = 4,
-	HIT_SPINNER = 8
+	HIT_NORMAL = 0,
+	HIT_SLIDER = 1,
+	HIT_SPINNER = 3,
+    HIT_COMBO = 7,
 } HitObjectType;
 
 typedef void (*HitHandler)(ScoreType score, bool forceNoCombo, bool forceNoAnimation, HitObjectPoint point);

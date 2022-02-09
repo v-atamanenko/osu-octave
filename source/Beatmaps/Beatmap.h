@@ -16,6 +16,7 @@
 #include "HitObjects/HitSpinner.h"
 
 #include "Graphics/SpriteManager.h"
+#include "osu!parser.h"
 
 #ifndef __BEATMAP_H__
 #define __BEATMAP_H__
@@ -51,7 +52,7 @@ class Beatmap
 		std::string& BeatmapChecksum();
 	
 	protected:
-		FileReader* mReader;
+        osuParser::OsuParser* mReader;
 		
 		uint32_t mHitObjectCount, mHitObjectRead;
         int32_t mFirstObjectTime, mLastObjectEndTime;
@@ -59,7 +60,9 @@ class Beatmap
 		void ReadNextObject();
         int32_t mNextObjectTime;
         int32_t mNextObjectX, mNextObjectY;
+        HitObjectSound mNextObjectSound;
 		HitObjectType mNextObjectType;
+        bool mNextObjectIsNewCombo;
 
         int32_t mSkipTime;
 		bool mForceNewCombo;
@@ -72,6 +75,7 @@ class Beatmap
 		std::string mCreator;
 		std::string mVersion;
 		std::string mAudioFilename;
+        std::string mBackgroundFilename;
 		uint8_t odsver;
 		
 		std::string mBaseDir;

@@ -22,14 +22,9 @@ if (BUILDTARGET STREQUAL "vita")
     set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d PARENTAL_LEVEL=1 -d ATTRIBUTE2=12")
 endif()
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++14 -Wno-narrowing")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++17 -Wno-narrowing")
 # DEBUG:
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 -fsanitize=address")
-
-include_directories(source)
-include_directories(fonts)
-include_directories(data)
-include_directories(build)
 
 add_executable(${PROJECT_NAME}
         ${PROJECT_SOURCE_DIR}/source/System/SDLInitializer.cpp # Important to be on top!
@@ -67,7 +62,25 @@ add_executable(${PROJECT_NAME}
         ${PROJECT_SOURCE_DIR}/source/Helpers/FileReader.cpp
         ${PROJECT_SOURCE_DIR}/source/Helpers/InputHelper.cpp
         ${PROJECT_SOURCE_DIR}/source/Helpers/AudioManager.cpp
+        ${PROJECT_SOURCE_DIR}/source/Helpers/OsuSliderCurves.cpp
+
+        ${PROJECT_SOURCE_DIR}/osu-parser/src/OsuParser.cpp
+        ${PROJECT_SOURCE_DIR}/osu-parser/src/OsUtils.cpp
+
+        ${PROJECT_SOURCE_DIR}/cpp-spline/spline/src/main/cpp/Bezier.cpp
+        ${PROJECT_SOURCE_DIR}/cpp-spline/spline/src/main/cpp/BSpline.cpp
+        ${PROJECT_SOURCE_DIR}/cpp-spline/spline/src/main/cpp/CatmullRom.cpp
+        ${PROJECT_SOURCE_DIR}/cpp-spline/spline/src/main/cpp/Linear.cpp
+        ${PROJECT_SOURCE_DIR}/cpp-spline/spline/src/main/cpp/Perfect.cpp
+        ${PROJECT_SOURCE_DIR}/cpp-spline/spline/src/main/cpp/Curve.cpp
+        ${PROJECT_SOURCE_DIR}/cpp-spline/spline/src/main/cpp/Vector.cpp
+
         ${PROJECT_SOURCE_DIR}/source/main.cpp)
+
+include_directories(
+        ${PROJECT_SOURCE_DIR}/cpp-spline/spline/src/main/cpp/
+        ${PROJECT_SOURCE_DIR}/source
+        ${PROJECT_SOURCE_DIR}/osu-parser/include)
 
 if (BUILDTARGET STREQUAL "vita")
     add_definitions(-DVITA)

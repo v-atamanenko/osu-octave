@@ -1,6 +1,9 @@
 #include "Beatmap.h"
 
-
+#include <fstream>
+#include "osu!parser.h"
+#include "Helpers/OsuSliderCurves.h"
+#include <cmath>
 
 Beatmap::Beatmap(const char* filename, const char* basedir)
 {
@@ -11,28 +14,24 @@ Beatmap::Beatmap(const char* filename, const char* basedir)
 	mReader = nullptr;
 
 	mChecksumString = "";
-	
-	FileReader r(filename);
-	
-	if (r.Ready())
-	{
-		//check header before processing
-		char id[4] = { r.ReadInt8(), r.ReadInt8(), r.ReadInt8(), 0 };
-		if (strcmp(id, "ODS") == 0)
-		{
-			odsver = r.ReadInt8();
-			
-			mTitle = r.ReadString();
-			mArtist = r.ReadString();
-			mCreator = r.ReadString();
-			mVersion = r.ReadString();
-			mAudioFilename = r.ReadString();
-				
-			fLoadable = true;
-		} else {
-		}
-	}
-	
+
+    std::ifstream file("jack.osu");
+    if (!file) {
+        fprintf(stderr, "Couldn't read .osu file %s", filename);
+    }
+
+    osuParser::OsuParser p(&file);
+    p.Parse();
+
+    odsver = 1; // TODO: Remove odsver?
+
+    mTitle = p.title;
+    mArtist = p.artist;
+    mCreator = p.creator;
+    mVersion = p.version;
+    mAudioFilename = p.audioFilename;
+
+    fLoadable = true;
 	fReady = false;
 }
 
@@ -40,56 +39,58 @@ void Beatmap::Initialize()
 {
 	if (!fReady)
 	{
-		if (!fLoadable)
-		{
-			printf("\x1b[0;0Hcannot load this file");
-			//return;
+		if (!fLoadable) {
+            fprintf(stderr, "Cannot load .osu file %s", mFilename.c_str());
 		}
 		
 		chdir(mBaseDir.c_str());
-		mReader = new FileReader(mFilename);
-		
-		//skip header
-		mReader->Skip(3);
-		
-		odsver = mReader->ReadInt8();
-		
-		mTitle = mReader->ReadString();
-		mArtist = mReader->ReadString();
-		mCreator = mReader->ReadString();
-		mVersion = mReader->ReadString();
-		mAudioFilename = mReader->ReadString();
+        std::ifstream file(mFilename);
+        if (!file) {
+            fprintf(stderr, "Couldn't read .osu file %s", mFilename.c_str());
+        }
 
-		DifficultyManager::DifficultyHpDrain = mReader->ReadInt8();
-		DifficultyManager::DifficultyCircleSize = mReader->ReadInt8();
-		DifficultyManager::DifficultyOverall = mReader->ReadInt8();
-		DifficultyManager::SliderMultiplier = mReader->ReadFloat();
-		DifficultyManager::SliderTickRate = mReader->ReadFloat();
-		DifficultyManager::DifficultyHpDrainRate = mReader->ReadFloat();
-		DifficultyManager::DifficultyPeppyStars = mReader->ReadInt8();
-		DifficultyManager::DifficultyEyupStars = mReader->ReadFloat();
+		mReader = new osuParser::OsuParser(&file);
+        mReader->Parse();
 
-		uint32_t tpointcount = mReader->ReadVarInt();
-		for (uint32_t j=0; j<tpointcount; ++j)
-		{
-			int32_t time = mReader->ReadInt32();
-			float beattime = mReader->ReadFloat();
-			uint8_t samplesetid = mReader->ReadInt8();
-			
-			BeatmapElements::Element().AddTimingPoint(time, beattime, samplesetid);
-		}
+        odsver = 1; // TODO: Remove odsver?
 
-		uint32_t breakcount = mReader->ReadVarInt();
+        mTitle = mReader->title;
+        mArtist = mReader->artist;
+        mCreator = mReader->creator;
+        mVersion = mReader->version;
+        mAudioFilename = mReader->audioFilename;
 
-		for (uint32_t j=0; j<breakcount; ++j)
-		{
-			int32_t starttime = mReader->ReadInt32();
-			int32_t endtime = mReader->ReadInt32();
-			
-			BeatmapElements::Element().AddBreakPoint(starttime, endtime);
-		}
+        DifficultyManager::DifficultyHpDrain = mReader->hpDrainRate;
+        DifficultyManager::DifficultyCircleSize = mReader->circleSize;
+        DifficultyManager::DifficultyOverall = mReader->overallDifficulty;
+		DifficultyManager::SliderMultiplier = mReader->sliderMultiplier;
+		DifficultyManager::SliderTickRate = mReader->sliderTickRate;
 
-		printf("\x1b[2J");
+        DifficultyManager::DifficultyHpDrainRate = 1.f / (110.f + (float)DifficultyManager::GetMissHpDrain());
+
+        DifficultyManager::DifficultyPeppyStars = 0; // TODO: Learn how to count peppy stars
+		DifficultyManager::DifficultyEyupStars = 0; // TODO: Learn how to count eyup stars
+
+        for (osuParser::TimingPoint tp : mReader->timingPoints) {
+            int64_t time = tp.offset;
+            double beattime = tp.adjustedMsPerBeat;
+            uint8_t samplesetid = tp.sampleSet;
+
+            BeatmapElements::Element().AddTimingPoint(time, beattime, samplesetid);
+        }
+
+        for (osuParser::Event e : mReader->events) {
+            if (e.type == osuParser::eBackground) {
+                mBackgroundFilename = e.file;
+            }
+
+            if (e.type == osuParser::eBreak) {
+                int32_t starttime = e.begin;
+                int32_t endtime = e.end;
+
+                BeatmapElements::Element().AddBreakPoint(starttime, endtime);
+            }
+        }
 	}
 }
 
@@ -107,41 +108,10 @@ Beatmap::~Beatmap()
 }
 
 void Beatmap::InitBG() {
-	if (odsver > 1) {
-        size_t framebuf_size = 256 * 192 * sizeof(uint16_t);
-        auto* pixels = static_cast<uint16_t *>(malloc(framebuf_size));
+	//TODO: Here load bg from mBackgroundFilename
+    GraphicsManager::Graphics().LoadBeatmapBackground(mBaseDir+"/"+mBackgroundFilename);
 
-        for (int i = 0; i < 256*192; i++) {
-			*(uint16_t *) (pixels + i) = mReader->ReadInt16();
-        }
-
-        int bpp = 16;
-        Uint32 Rmask, Gmask, Bmask, Amask;
-
-        SDL_PixelFormatEnumToMasks(SDL_PIXELFORMAT_ABGR1555, &bpp, &Rmask, &Gmask, &Bmask, &Amask);
-
-        SDL_Surface* surface =
-                    SDL_CreateRGBSurfaceFrom(
-                            pixels,
-                            256,
-                            192,
-                            2*8,  // in bits, so bytes per pixel * 8
-                            2*256, // 2 bytes per pixel * pixels per row
-                            Rmask,
-                            Gmask,
-                            Bmask,
-                            Amask
-                    );
-
-        if (surface == nullptr) {
-            fprintf(stderr, "\nFailed to create surface for beatmap bg: %s\n", SDL_GetError());
-        }
-
-        GraphicsManager::Graphics().CreateTextureFromSurface(surface, TX_CURRENT_BG);
-        free(pixels);
-	}
-
-	mHitObjectCount = mReader->ReadVarInt();
+	mHitObjectCount = mReader->hitObjects.size();
 	mHitObjectRead = 0;
 	mLastObjectEndTime = 0;
 	mForceNewCombo = true;
@@ -154,6 +124,9 @@ void Beatmap::InitBG() {
     //the time to skip to is the first object - 8 beats
     mSkipTime = MathHelper::Max(0, (int32_t)mNextObjectTime - (BeatmapElements::Element().GetTimingPoint(mNextObjectTime).BeatTime*8));
 
+    printf("Time NO: %i\n", mNextObjectTime);
+    printf("Time ST: %i\n", mSkipTime);
+    printf("Time BT: %f\n", BeatmapElements::Element().GetTimingPoint(mNextObjectTime).BeatTime);
 	//strangely calling this in ctor of BeatmapElements causes game to not load :/
 	BeatmapElements::Element().ResetColours(true);
 
@@ -179,15 +152,15 @@ void Beatmap::Buffer(std::list<HitObject*>& hitObjectList)
 		HitObjectType type = mNextObjectType;
 		int32_t x = mNextObjectX;
 		int32_t y = mNextObjectY;
-		HitObjectSound sound = (HitObjectSound)mReader->ReadInt8();
+		HitObjectSound sound = mNextObjectSound;
 		
 		if (mForceNewCombo)
 		{
-			type = (HitObjectType)(type|HIT_COMBO);
+            mNextObjectIsNewCombo = true;
 			mForceNewCombo = false;
 		}
 		
-		switch (type & ~HIT_COMBO) //ignore HIT_COMBO
+		switch (type) //ignore HIT_COMBO
 		{
 			case HIT_NORMAL:
 			{
@@ -197,51 +170,79 @@ void Beatmap::Buffer(std::list<HitObject*>& hitObjectList)
 			
 			case HIT_SLIDER:
 			{
-				uint32_t repeats = mReader->ReadInt16();
-                uint32_t lengthtime = mReader->ReadInt32();
+                osuParser::HitObject ho = mReader->hitObjects.at(mHitObjectRead);
 
-                uint32_t pointcount = mReader->ReadVarInt();
-				std::vector<HitObjectPoint*> points;
-				points.reserve(pointcount);
-				
-				for (uint32_t i=0; i<pointcount; ++i)
-				{
-					HitObjectPoint* tPoint = new HitObjectPoint();
-					tPoint->x = mapXToScreen((int16_t)mReader->ReadInt16()); //s32 x
-					tPoint->y = mapYToScreen((int16_t)mReader->ReadInt16()); //s32 y
-					tPoint->angle = mReader->ReadInt32(); //s32 angle
-					
-					points.push_back(tPoint);
-				}
-				
-				uint32_t tickcount = mReader->ReadVarInt();
-				std::vector<HitObjectPoint*> ticks;
-				ticks.reserve(tickcount);
-				
-				for (uint32_t i=0; i<tickcount; ++i)
-				{
-					HitObjectPoint* tPoint = new HitObjectPoint();
-                    tPoint->x = mapXToScreen((int16_t)mReader->ReadInt16()); //s32 x
-                    tPoint->y = mapYToScreen((int16_t)mReader->ReadInt16()); //s32 y
+				uint32_t repeats = ho.slider.nRepeats;
+                uint32_t lengthtime = ho.slider.durationPerRepeat;
 
-					ticks.push_back(tPoint);
-				}
+                std::vector<HitObjectPoint*> points;
+
+                char curveType;
+                switch (ho.slider.type) {
+                    case osuParser::sLinear: {
+                        curveType = 'L';
+                        break;
+                    }
+                    case osuParser::sPerfect: {
+                        curveType = 'P';
+                        break;
+                    }
+                    case osuParser::sBezier: {
+                        curveType = 'B';
+                        break;
+                    }
+                    case osuParser::sCatmull: {
+                        curveType = 'C';
+                        break;
+                    }
+                }
+
+                std::vector<Vector2> pts;
+                /*printf("Pushing points:\n");*/
+                for (osuParser::CurvePoint cp : ho.slider.curvePoints) {
+                    /*printf("x: %i, y: %i;\n", cp.x, cp.y);*/
+                    pts.emplace_back(cp.x, cp.y);
+                }
+                OsuSliderCurve *m_curve = OsuSliderCurve::createCurve(curveType, pts, ho.slider.length);
+
+                std::vector<Vector2> screenPoints = m_curve->getPoints();
+
+                /*
+                printf("Got points:\n");
+                printf("x: %f, y: %f;\n", screenPoints.at(0).x, screenPoints.at(0).y);
+                printf("x: %f, y: %f;\n", screenPoints.at((int)floor(screenPoints.size()/2)).x, screenPoints.at((int)floor(screenPoints.size()/2)).y);
+                printf("x: %f, y: %f;\n", screenPoints.at(screenPoints.size()-1).x, screenPoints.at(screenPoints.size()-1).y);
+                */
+
+                for (auto & screenPoint : screenPoints) {
+                    auto* tPoint = new HitObjectPoint();
+                    tPoint->x = osuPixelsXtoScreenX(screenPoint.x);
+                    tPoint->y = osuPixelsYtoScreenY(screenPoint.y);
+                    points.push_back(tPoint);
+                }
+
+                std::vector<HitObjectPoint*> ticks;
+                //FIXME: Add ticks
+
+                if (points.empty()) {
+                    fprintf(stderr, "[ERROR]: Zero points in slider. Skipping.\n");
+                    ticks.clear();
+                    ++mHitObjectRead;
+                    continue;
+                }
 				
 				object = new HitSlider(x, y, mNextObjectTime, lengthtime, points, ticks, repeats, type, sound);
-				
-				//free allocated memory
-				for (uint32_t i=0; i<pointcount; ++i)
-					delete points[i];
-				
-				for (uint32_t i=0; i<tickcount; ++i)
-					delete ticks[i];
-				
+
+                points.clear();
+                ticks.clear();
+
 				break;
 			}
 			
 			case HIT_SPINNER:
 			{
-				int32_t endtime = mReader->ReadInt32();
+                osuParser::HitObject ho = mReader->hitObjects.at(mHitObjectRead);
+				int64_t endtime = ho.spinner.end;
 				object = new HitSpinner(mNextObjectTime, endtime, sound);
 				mForceNewCombo = true;
 				break;
@@ -258,7 +259,7 @@ void Beatmap::Buffer(std::list<HitObject*>& hitObjectList)
 		if (mHitObjectRead < mHitObjectCount)
 		{
 			ReadNextObject();
-			object->SetPostCreateOptions((mNextObjectType & HIT_COMBO) | mForceNewCombo, mNextObjectX, mNextObjectY);
+			object->SetPostCreateOptions(mNextObjectIsNewCombo || mForceNewCombo, mNextObjectX, mNextObjectY);
 		}
 		else
 		{
@@ -269,10 +270,14 @@ void Beatmap::Buffer(std::list<HitObject*>& hitObjectList)
 
 void Beatmap::ReadNextObject()
 {
-	mNextObjectTime = mReader->ReadInt32();
-	mNextObjectType = (HitObjectType)mReader->ReadInt8();
-    mNextObjectX = mapXToScreen((int16_t)mReader->ReadInt16()); //s32 x
-    mNextObjectY = mapYToScreen((int16_t)mReader->ReadInt16()); //s32 y
+    osuParser::HitObject ho = mReader->hitObjects.at(mHitObjectRead);
+	mNextObjectTime = ho.time;
+    mNextObjectType = (HitObjectType)ho.type;
+
+    mNextObjectIsNewCombo = ho.isNewCombo;
+    mNextObjectX = osuPixelsXtoScreenX(ho.x); //s32 x
+    mNextObjectY = osuPixelsYtoScreenY(ho.y); //s32 y
+    mNextObjectSound = (HitObjectSound)ho.soundMask;
 }
 
 /*
