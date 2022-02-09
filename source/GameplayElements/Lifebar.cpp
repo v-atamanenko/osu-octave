@@ -25,7 +25,7 @@ Lifebar::Lifebar()
 //can only be called after beatmap has been loaded
 void Lifebar::Initialize()
 {
-	mHpLossPerMs = DifficultyManager::DifficultyHpDrainRate * 2; //units are hp/ms based off a 200 point scale
+	mHpLossPerMs = DifficultyManager::GetHpDrainRate() * 2; //units are hp/ms based off a 200 point scale
 	mHpCurrent = 0;
 	mHpDisplay = 0;
 

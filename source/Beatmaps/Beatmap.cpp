@@ -1,29 +1,22 @@
 #include "Beatmap.h"
 
-#include <fstream>
-#include "osu!parser.h"
-#include "Helpers/OsuSliderCurves.h"
-#include <cmath>
-
 Beatmap::Beatmap(const char* filename, const char* basedir)
 {
 	fLoadable = false;
 	
 	mFilename = filename;
 	mBaseDir = basedir;
-	mReader = nullptr;
+    mParser = nullptr;
 
 	mChecksumString = "";
 
-    std::ifstream file("jack.osu");
+    std::ifstream file(mFilename);
     if (!file) {
-        fprintf(stderr, "Couldn't read .osu file %s", filename);
+        fprintf(stderr, "Couldn't read .osu file %s", mFilename.c_str());
     }
 
     osuParser::OsuParser p(&file);
     p.Parse();
-
-    odsver = 1; // TODO: Remove odsver?
 
     mTitle = p.title;
     mArtist = p.artist;
@@ -49,29 +42,25 @@ void Beatmap::Initialize()
             fprintf(stderr, "Couldn't read .osu file %s", mFilename.c_str());
         }
 
-		mReader = new osuParser::OsuParser(&file);
-        mReader->Parse();
+        mParser = new osuParser::OsuParser(&file);
+        mParser->Parse();
 
-        odsver = 1; // TODO: Remove odsver?
+        mTitle = mParser->title;
+        mArtist = mParser->artist;
+        mCreator = mParser->creator;
+        mVersion = mParser->version;
+        mAudioFilename = mParser->audioFilename;
 
-        mTitle = mReader->title;
-        mArtist = mReader->artist;
-        mCreator = mReader->creator;
-        mVersion = mReader->version;
-        mAudioFilename = mReader->audioFilename;
-
-        DifficultyManager::DifficultyHpDrain = mReader->hpDrainRate;
-        DifficultyManager::DifficultyCircleSize = mReader->circleSize;
-        DifficultyManager::DifficultyOverall = mReader->overallDifficulty;
-		DifficultyManager::SliderMultiplier = mReader->sliderMultiplier;
-		DifficultyManager::SliderTickRate = mReader->sliderTickRate;
-
-        DifficultyManager::DifficultyHpDrainRate = 1.f / (110.f + (float)DifficultyManager::GetMissHpDrain());
+        DifficultyManager::DifficultyHpDrain = (uint8_t)mParser->hpDrainRate;
+        DifficultyManager::DifficultyCircleSize = (uint8_t)mParser->circleSize;
+        DifficultyManager::DifficultyOverall = (uint8_t)mParser->overallDifficulty;
+		DifficultyManager::SliderMultiplier = (uint8_t)mParser->sliderMultiplier;
+		DifficultyManager::SliderTickRate = (uint8_t)mParser->sliderTickRate;
 
         DifficultyManager::DifficultyPeppyStars = 0; // TODO: Learn how to count peppy stars
 		DifficultyManager::DifficultyEyupStars = 0; // TODO: Learn how to count eyup stars
 
-        for (osuParser::TimingPoint tp : mReader->timingPoints) {
+        for (osuParser::TimingPoint tp : mParser->timingPoints) {
             int64_t time = tp.offset;
             double beattime = tp.adjustedMsPerBeat;
             uint8_t samplesetid = tp.sampleSet;
@@ -79,7 +68,7 @@ void Beatmap::Initialize()
             BeatmapElements::Element().AddTimingPoint(time, beattime, samplesetid);
         }
 
-        for (osuParser::Event e : mReader->events) {
+        for (osuParser::Event e : mParser->events) {
             if (e.type == osuParser::eBackground) {
                 mBackgroundFilename = e.file;
             }
@@ -98,20 +87,20 @@ void Beatmap::CleanUp()
 {
 	//set object back to uninitialised state
 	fReady = false;
-	delete mReader;
-	mReader = nullptr;
+	delete mParser;
+    mParser = nullptr;
 }
 
 Beatmap::~Beatmap()
 {
-	delete mReader;
+	delete mParser;
 }
 
 void Beatmap::InitBG() {
 	//TODO: Here load bg from mBackgroundFilename
     GraphicsManager::Graphics().LoadBeatmapBackground(mBaseDir+"/"+mBackgroundFilename);
 
-	mHitObjectCount = mReader->hitObjects.size();
+	mHitObjectCount = mParser->hitObjects.size();
 	mHitObjectRead = 0;
 	mLastObjectEndTime = 0;
 	mForceNewCombo = true;
@@ -170,7 +159,7 @@ void Beatmap::Buffer(std::list<HitObject*>& hitObjectList)
 			
 			case HIT_SLIDER:
 			{
-                osuParser::HitObject ho = mReader->hitObjects.at(mHitObjectRead);
+                osuParser::HitObject ho = mParser->hitObjects.at(mHitObjectRead);
 
 				uint32_t repeats = ho.slider.nRepeats;
                 uint32_t lengthtime = ho.slider.durationPerRepeat;
@@ -241,7 +230,7 @@ void Beatmap::Buffer(std::list<HitObject*>& hitObjectList)
 			
 			case HIT_SPINNER:
 			{
-                osuParser::HitObject ho = mReader->hitObjects.at(mHitObjectRead);
+                osuParser::HitObject ho = mParser->hitObjects.at(mHitObjectRead);
 				int64_t endtime = ho.spinner.end;
 				object = new HitSpinner(mNextObjectTime, endtime, sound);
 				mForceNewCombo = true;
@@ -270,7 +259,7 @@ void Beatmap::Buffer(std::list<HitObject*>& hitObjectList)
 
 void Beatmap::ReadNextObject()
 {
-    osuParser::HitObject ho = mReader->hitObjects.at(mHitObjectRead);
+    osuParser::HitObject ho = mParser->hitObjects.at(mHitObjectRead);
 	mNextObjectTime = ho.time;
     mNextObjectType = (HitObjectType)ho.type;
 

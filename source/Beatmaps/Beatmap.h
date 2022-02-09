@@ -3,6 +3,8 @@
 #include <list>
 #include <vector>
 #include <string>
+#include <fstream>
+#include <cmath>
 
 #include "BeatmapElements.h"
 
@@ -16,7 +18,8 @@
 #include "HitObjects/HitSpinner.h"
 
 #include "Graphics/SpriteManager.h"
-#include "osu!parser.h"
+#include "Parser/OsuParser.h"
+#include "Helpers/OsuSliderCurves.h"
 
 #ifndef __BEATMAP_H__
 #define __BEATMAP_H__
@@ -52,7 +55,7 @@ class Beatmap
 		std::string& BeatmapChecksum();
 	
 	protected:
-        osuParser::OsuParser* mReader;
+        osuParser::OsuParser* mParser;
 		
 		uint32_t mHitObjectCount, mHitObjectRead;
         int32_t mFirstObjectTime, mLastObjectEndTime;
@@ -76,7 +79,6 @@ class Beatmap
 		std::string mVersion;
 		std::string mAudioFilename;
         std::string mBackgroundFilename;
-		uint8_t odsver;
 		
 		std::string mBaseDir;
 	private:

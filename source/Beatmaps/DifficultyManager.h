@@ -1,5 +1,5 @@
-#ifndef __DIFFICULTYMANAGER_H__
-#define __DIFFICULTYMANAGER_H__
+#ifndef _H__DIFFICULTYMANAGER_H_
+#define _H__DIFFICULTYMANAGER_H_
 
 class DifficultyManager
 {
@@ -9,20 +9,21 @@ class DifficultyManager
 		static uint8_t DifficultyOverall;
 		static float SliderMultiplier;
 		static float SliderTickRate;
-		static float DifficultyHpDrainRate;
+
 		static uint8_t DifficultyPeppyStars;
 		static float DifficultyEyupStars;
-		
+
 		//inline
-		static uint32_t GetCircleSize()		{ return circleSize[DifficultyCircleSize]; } //possibly *1.2
-		static uint32_t GetPreemptTime()		{ return preemptTime[DifficultyOverall]; }
-		static uint32_t GetHitWindow300()	{ return hitWindow300[DifficultyOverall]; }
-		static uint32_t GetHitWindow100()	{ return hitWindow100[DifficultyOverall]; }
-		static uint32_t GetHitWindow50()		{ return hitWindow50[DifficultyOverall]; }
-		static uint32_t GetHitWindow()		{ return hitWindow50[DifficultyOverall] << 1; }
-		static uint32_t GetSpinnerTime()		{ return spinnerTime[DifficultyOverall]; }
-		static int32_t GetMissHpDrain()		{ return missHpDrain[DifficultyHpDrain]; }
-	
+		static uint32_t GetCircleSize()   { return circleSize[DifficultyCircleSize]; } //possibly *1.2
+		static uint32_t GetPreemptTime()  { return preemptTime[DifficultyOverall]; }
+		static uint32_t GetHitWindow300() { return hitWindow300[DifficultyOverall]; }
+		static uint32_t GetHitWindow100() { return hitWindow100[DifficultyOverall]; }
+		static uint32_t GetHitWindow50()  { return hitWindow50[DifficultyOverall]; }
+		static uint32_t GetHitWindow()    { return hitWindow50[DifficultyOverall] << 1; }
+		static uint32_t GetSpinnerTime()  { return spinnerTime[DifficultyOverall]; }
+		static int32_t  GetMissHpDrain()  { return missHpDrain[DifficultyHpDrain]; }
+		static float    GetHpDrainRate()  { return 1.f / (110.f + (float)missHpDrain[DifficultyHpDrain]); }
+
 	protected:
 		static uint32_t preemptTime[];
 		static uint32_t circleSize[];
@@ -33,5 +34,4 @@ class DifficultyManager
 		static int32_t missHpDrain[];
 };
 
-#endif
-
+#endif // _H__DIFFICULTYMANAGER_H_
