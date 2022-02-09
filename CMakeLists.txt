@@ -64,23 +64,14 @@ add_executable(${PROJECT_NAME}
         ${PROJECT_SOURCE_DIR}/source/Helpers/AudioManager.cpp
         ${PROJECT_SOURCE_DIR}/source/Helpers/OsuSliderCurves.cpp
 
-        ${PROJECT_SOURCE_DIR}/osu-parser/src/OsuParser.cpp
-        ${PROJECT_SOURCE_DIR}/osu-parser/src/OsUtils.cpp
-
-        ${PROJECT_SOURCE_DIR}/cpp-spline/spline/src/main/cpp/Bezier.cpp
-        ${PROJECT_SOURCE_DIR}/cpp-spline/spline/src/main/cpp/BSpline.cpp
-        ${PROJECT_SOURCE_DIR}/cpp-spline/spline/src/main/cpp/CatmullRom.cpp
-        ${PROJECT_SOURCE_DIR}/cpp-spline/spline/src/main/cpp/Linear.cpp
-        ${PROJECT_SOURCE_DIR}/cpp-spline/spline/src/main/cpp/Perfect.cpp
-        ${PROJECT_SOURCE_DIR}/cpp-spline/spline/src/main/cpp/Curve.cpp
-        ${PROJECT_SOURCE_DIR}/cpp-spline/spline/src/main/cpp/Vector.cpp
+        ${PROJECT_SOURCE_DIR}/source/Parser/OsuParser.cpp
+        ${PROJECT_SOURCE_DIR}/source/Parser/OsUtils.cpp
 
         ${PROJECT_SOURCE_DIR}/source/main.cpp)
 
 include_directories(
-        ${PROJECT_SOURCE_DIR}/cpp-spline/spline/src/main/cpp/
         ${PROJECT_SOURCE_DIR}/source
-        ${PROJECT_SOURCE_DIR}/osu-parser/include)
+)
 
 if (BUILDTARGET STREQUAL "vita")
     add_definitions(-DVITA)

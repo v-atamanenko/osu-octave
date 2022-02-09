@@ -64,7 +64,8 @@ void Beatmap::Initialize()
             int64_t time = tp.offset;
             double beattime = tp.adjustedMsPerBeat;
             uint8_t samplesetid = tp.sampleSet;
-
+            if (samplesetid < 1 || samplesetid > 2) // TODO: Lear what are samplesets 0 and 3
+                samplesetid = 1;
             BeatmapElements::Element().AddTimingPoint(time, beattime, samplesetid);
         }
 

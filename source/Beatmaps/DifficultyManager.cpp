@@ -16,7 +16,6 @@ uint8_t DifficultyManager::DifficultyCircleSize = 5;
 uint8_t DifficultyManager::DifficultyOverall = 5;
 float DifficultyManager::SliderMultiplier = 1.0;
 float DifficultyManager::SliderTickRate = 1.0;
-float DifficultyManager::DifficultyHpDrainRate = 1.0;
 uint8_t DifficultyManager::DifficultyPeppyStars = 3;
 float DifficultyManager::DifficultyEyupStars = 3.0;
 
