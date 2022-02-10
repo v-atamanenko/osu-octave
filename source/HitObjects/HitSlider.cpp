@@ -173,7 +173,7 @@ HitSlider::HitSlider(int32_t x, int32_t y, int32_t time, uint32_t lengthtime, st
 			tFadeInEnd = fadeInEnd;
 		}
 		
-		spr = new pSprite(TX_PLAY_SLIDERREVERSE, p->x, p->y, ballSize, ballSize, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({31,31,31}), 0);
+		spr = new pSprite(TX_PLAY_SLIDERREVERSE, p->x, p->y, ballSize, ballSize, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({31,31,31}), 0, -1.f);
 		spr->Show(tAnimStart, tFadeInEnd);
 		//todo: slider repeat explosion?
 		spr->Hide(time+(lengthtime*i));

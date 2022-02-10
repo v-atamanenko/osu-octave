@@ -34,6 +34,7 @@ class GraphicsManager
 		void Draw(TextureType tex, int32_t x, int32_t y, uint32_t width, uint32_t height, DrawOrigin origin, FieldType fieldtype, SDL_Color color, uint32_t alpha, int32_t angle, float z = 0, const SDL_Rect* uv = nullptr);
 
         void CreateTextureFromSurface(SDL_Surface* bg, TextureType texid);
+        void LoadBeatmapPicTexture(TextureType texid, const std::string& path);
         void LoadBeatmapBackground(const std::string& path);
         void DrawBeatmapBackground();
 
@@ -49,10 +50,10 @@ class GraphicsManager
 		static const uint32_t PlayYOffset = 73;
 	
 	protected:
-		SDL_Texture* textures[NUMBER_OF_TEXTURES];
-        std::map<TextureType, SDL_Texture*> maptextures;
+		std::map<TextureType, SDL_Texture*> maptextures;
 
         bool LoadTexture(TextureType texid, const std::string& path);
+        void CreateRectangularTexture(TextureType texid, uint32_t width, uint32_t height, SDL_Color c);
 
         static int32_t ForceBounds(int32_t value);
 		static GraphicsManager sGraphicsManager;

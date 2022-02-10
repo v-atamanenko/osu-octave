@@ -22,11 +22,14 @@ class SpriteManager
 		
 		void Add(pDrawable* spr);
 		void Add(const std::vector<pDrawable*>& spr);
+        void Remove(int32_t id);
+        void RemoveLast();
 		
 		std::vector<pDrawable*>& Sprites() { return mSprites; }
 	
 	protected:
 		std::vector<pDrawable*> mSprites;
+        std::vector<pDrawable*> mSpritesSorted;
 };
 
 #endif

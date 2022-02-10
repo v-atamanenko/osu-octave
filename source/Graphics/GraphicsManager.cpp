@@ -34,6 +34,10 @@ bool GraphicsManager::LoadTexture(TextureType texid, const std::string& path) {
     return true;
 }
 
+void GraphicsManager::LoadBeatmapPicTexture(TextureType texid, const std::string& path) {
+    LoadTexture(texid, path);
+}
+
 void GraphicsManager::LoadBeatmapBackground(const std::string& path) {
     LoadTexture(TX_CURRENT_BG, path);
 }
@@ -144,6 +148,12 @@ void GraphicsManager::LoadTexturesForMode(ModeType mod) {
             LoadTexture(TX_BUTTON_BIG, "data/ui/button-big.png");
             LoadTexture(TX_BUTTON_MED, "data/ui/button-med.png");
             LoadTexture(TX_BUTTON_SM, "data/ui/button-sm.png");
+            LoadTexture(TX_BUTTON_SM_ACTIVE, "data/ui/button-sm-active.png");
+            LoadTexture(TX_BUTTON_ARROW, "data/ui/button-arrow.png");
+            LoadTexture(TX_BUTTON_XS, "data/ui/button-xs.png");
+
+            CreateRectangularTexture(TX_BEATMAP_ENTRY_BG, 609, 80, SDL_Color({199, 190, 235, 127}));
+
             break;
         case MODE_WELCOME:
             LoadTexture(TX_WELCOME_BG, "data/ui/welcome.png");
@@ -156,8 +166,7 @@ void GraphicsManager::UnloadTextures() {
     maptextures.clear();
 }
 
-void GraphicsManager::Draw(TextureType tex, int32_t x, int32_t y, uint32_t width, uint32_t height, DrawOrigin origin, FieldType fieldtype, SDL_Color color, uint32_t alpha, int32_t angle, float z, const SDL_Rect* uv)
-{
+void GraphicsManager::Draw(TextureType tex, int32_t x, int32_t y, uint32_t width, uint32_t height, DrawOrigin origin, FieldType fieldtype, SDL_Color color, uint32_t alpha, int32_t angle, float z, const SDL_Rect* uv) {
     int32_t x1, y1, x2, y2;
 
     // We use "UV Coordinates" as a source rect for render copy, thus being able to draw textures partly.
@@ -231,4 +240,23 @@ void GraphicsManager::DrawFullScreenRectangle(SDL_Color c) {
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_Rect r = {0,0,SCREEN_WIDTH,SCREEN_HEIGHT};
     SDL_RenderFillRect(renderer, &r);
+}
+
+void GraphicsManager::CreateRectangularTexture(TextureType texid, uint32_t width, uint32_t height, SDL_Color c) {
+    SDL_Texture* tex;
+
+    uint32_t pf = SDL_GetWindowPixelFormat(window);
+    tex = SDL_CreateTexture(renderer, pf, SDL_TEXTUREACCESS_TARGET, width, height);
+    SDL_SetTextureBlendMode(tex, SDL_BLENDMODE_BLEND);
+
+    SDL_SetRenderTarget( renderer, tex );
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
+    SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, c.a);
+    SDL_RenderClear(renderer);
+    SDL_SetRenderTarget( renderer, nullptr );
+
+    if (maptextures[texid] != nullptr) {
+        SDL_DestroyTexture(maptextures[texid]);
+    }
+    maptextures[texid] = tex;
 }

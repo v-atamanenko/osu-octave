@@ -41,6 +41,7 @@ class Beatmap
 		bool GameOver() { return mHitObjectRead == mHitObjectCount && GameClock::Clock().Time() >= mLastObjectEndTime + 3000; }
 		
 		std::string& Filename() { return mFilename; }
+        std::string& BackgroundFilename() { return mBackgroundFilename; }
 		std::string& Title() { return mTitle; }
 		std::string& Artist() { return mArtist; }
 		std::string& Creator() { return mCreator; }

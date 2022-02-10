@@ -24,64 +24,64 @@ Beatmap::Beatmap(const char* filename, const char* basedir)
     mVersion = p.version;
     mAudioFilename = p.audioFilename;
 
+    for (const osuParser::Event& e : p.events) {
+        if (e.type == osuParser::eBackground) {
+            mBackgroundFilename = e.file;
+        }
+    }
+
     fLoadable = true;
 	fReady = false;
 }
 
 void Beatmap::Initialize()
 {
-	if (!fReady)
-	{
-		if (!fLoadable) {
-            fprintf(stderr, "Cannot load .osu file %s", mFilename.c_str());
-		}
-		
-		chdir(mBaseDir.c_str());
-        std::ifstream file(mFilename);
-        if (!file) {
-            fprintf(stderr, "Couldn't read .osu file %s", mFilename.c_str());
+    if (fReady) {
+        return;
+    }
+
+    if (!fLoadable) {
+        fprintf(stderr, "Cannot load .osu file %s", mFilename.c_str());
+    }
+
+    chdir(mBaseDir.c_str());
+    std::ifstream file(mFilename);
+    if (!file) {
+        fprintf(stderr, "Couldn't read .osu file %s", mFilename.c_str());
+    }
+
+    mParser = new osuParser::OsuParser(&file);
+    mParser->Parse();
+
+    mTitle = mParser->title;
+    mArtist = mParser->artist;
+    mCreator = mParser->creator;
+    mVersion = mParser->version;
+    mAudioFilename = mParser->audioFilename;
+
+    DifficultyManager::DifficultyHpDrain = (uint8_t)mParser->hpDrainRate;
+    DifficultyManager::DifficultyCircleSize = (uint8_t)mParser->circleSize;
+    DifficultyManager::DifficultyOverall = (uint8_t)mParser->overallDifficulty;
+    DifficultyManager::SliderMultiplier = (uint8_t)mParser->sliderMultiplier;
+    DifficultyManager::SliderTickRate = (uint8_t)mParser->sliderTickRate;
+
+    DifficultyManager::DifficultyPeppyStars = 0; // TODO: Learn how to count peppy stars
+    DifficultyManager::DifficultyEyupStars = 0; // TODO: Learn how to count eyup stars
+
+    for (osuParser::TimingPoint tp : mParser->timingPoints) {
+        int64_t time = tp.offset;
+        double beattime = tp.adjustedMsPerBeat;
+        uint8_t samplesetid = tp.sampleSet;
+        if (samplesetid < 1 || samplesetid > 2) // TODO: Lear what are samplesets 0 and 3
+            samplesetid = 1;
+        BeatmapElements::Element().AddTimingPoint(time, beattime, samplesetid);
+    }
+
+    for (const osuParser::Event& e : mParser->events) {
+        if (e.type == osuParser::eBreak) {
+            BeatmapElements::Element().AddBreakPoint(e.begin, e.end);
         }
-
-        mParser = new osuParser::OsuParser(&file);
-        mParser->Parse();
-
-        mTitle = mParser->title;
-        mArtist = mParser->artist;
-        mCreator = mParser->creator;
-        mVersion = mParser->version;
-        mAudioFilename = mParser->audioFilename;
-
-        DifficultyManager::DifficultyHpDrain = (uint8_t)mParser->hpDrainRate;
-        DifficultyManager::DifficultyCircleSize = (uint8_t)mParser->circleSize;
-        DifficultyManager::DifficultyOverall = (uint8_t)mParser->overallDifficulty;
-		DifficultyManager::SliderMultiplier = (uint8_t)mParser->sliderMultiplier;
-		DifficultyManager::SliderTickRate = (uint8_t)mParser->sliderTickRate;
-
-        DifficultyManager::DifficultyPeppyStars = 0; // TODO: Learn how to count peppy stars
-		DifficultyManager::DifficultyEyupStars = 0; // TODO: Learn how to count eyup stars
-
-        for (osuParser::TimingPoint tp : mParser->timingPoints) {
-            int64_t time = tp.offset;
-            double beattime = tp.adjustedMsPerBeat;
-            uint8_t samplesetid = tp.sampleSet;
-            if (samplesetid < 1 || samplesetid > 2) // TODO: Lear what are samplesets 0 and 3
-                samplesetid = 1;
-            BeatmapElements::Element().AddTimingPoint(time, beattime, samplesetid);
-        }
-
-        for (osuParser::Event e : mParser->events) {
-            if (e.type == osuParser::eBackground) {
-                mBackgroundFilename = e.file;
-            }
-
-            if (e.type == osuParser::eBreak) {
-                int32_t starttime = e.begin;
-                int32_t endtime = e.end;
-
-                BeatmapElements::Element().AddBreakPoint(starttime, endtime);
-            }
-        }
-	}
+    }
 }
 
 void Beatmap::CleanUp()
@@ -98,26 +98,21 @@ Beatmap::~Beatmap()
 }
 
 void Beatmap::InitBG() {
-	//TODO: Here load bg from mBackgroundFilename
-    GraphicsManager::Graphics().LoadBeatmapBackground(mBaseDir+"/"+mBackgroundFilename);
+	GraphicsManager::Graphics().LoadBeatmapBackground(mBaseDir+"/"+mBackgroundFilename);
 
 	mHitObjectCount = mParser->hitObjects.size();
 	mHitObjectRead = 0;
 	mLastObjectEndTime = 0;
 	mForceNewCombo = true;
-    printf("mHitObjectCount: %i\n", mHitObjectCount);
-    printf("Time: %li\n", GameClock::Clock().Time());
-	//read ahead
+
+    //read ahead
 	ReadNextObject();
 	mFirstObjectTime = mNextObjectTime;
 
     //the time to skip to is the first object - 8 beats
-    mSkipTime = MathHelper::Max(0, (int32_t)mNextObjectTime - (BeatmapElements::Element().GetTimingPoint(mNextObjectTime).BeatTime*8));
+    mSkipTime = MathHelper::Max(0, mNextObjectTime - (int32_t)(BeatmapElements::Element().GetTimingPoint(mNextObjectTime).BeatTime*8));
 
-    printf("Time NO: %i\n", mNextObjectTime);
-    printf("Time ST: %i\n", mSkipTime);
-    printf("Time BT: %f\n", BeatmapElements::Element().GetTimingPoint(mNextObjectTime).BeatTime);
-	//strangely calling this in ctor of BeatmapElements causes game to not load :/
+    //strangely calling this in ctor of BeatmapElements causes game to not load :/
 	BeatmapElements::Element().ResetColours(true);
 
 	//now we can play this map

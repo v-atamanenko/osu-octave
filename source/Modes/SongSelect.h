@@ -16,11 +16,25 @@ class SongSelect : public Mode
 		
 		void Update();
 		void HandleInput();
+
+        static void PageNext() { if (mCurrentPage < (mCountPages - 1)) { mCurrentPage++; shouldHandlePageUpdate = true; } };
+        static void PagePrev() { if (mCurrentPage > 0) { mCurrentPage--; shouldHandlePageUpdate = true; } };
 	
 	protected:
+        void UpdateSonglist();
 		SpriteManager mSpriteManager;
-		
-		static const int32_t kSongListXOffset = 37;
+
+        int32_t mSongListSize;
+        static int32_t mCurrentPage;
+        static int32_t mCountPages;
+        static bool shouldHandlePageUpdate;
+        int32_t mEntriesPerPage = 4;
+        int32_t mEntiesDisplayed = 0;
+
+        int32_t mBeatmapSpritesStartIndex = 0;
+        int32_t mSpritesPerBeatmapEntry = 5;
+
+    static const int32_t kSongListXOffset = 37;
 		static const int32_t kSongListYOffset = 80;
 		static const int32_t kSongListSpacing = 203;
 		

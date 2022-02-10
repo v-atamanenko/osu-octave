@@ -8,18 +8,18 @@ SpriteManager::~SpriteManager() {
 		delete mSprite;
 	}
     mSprites.clear();
+    mSpritesSorted.clear();
 }
 
 void SpriteManager::SortZ() {
-    std::sort(mSprites.begin(), mSprites.end(), [](const pDrawable* first, const pDrawable* second) {
+    mSpritesSorted = mSprites;
+    std::sort(mSpritesSorted.begin(), mSpritesSorted.end(), [](const pDrawable* first, const pDrawable* second) {
         return first->Z > second->Z;
     });
 }
 
 void SpriteManager::Draw() {
-	SortZ();
-
-	for (auto it = mSprites.begin(); it != mSprites.end();) {
+    for (auto it = mSprites.begin(); it != mSprites.end();) {
         pDrawable *spr = *it;
 
         //if for some reason sprite is nonexistent then mark for deletion
@@ -37,7 +37,15 @@ void SpriteManager::Draw() {
             continue;
         }
 
-        //no need to draw things you can't see
+        ++it;
+    }
+
+	SortZ();
+
+	for (auto it = mSpritesSorted.begin(); it != mSpritesSorted.end();) {
+        pDrawable *spr = *it;
+
+       //no need to draw things you can't see
         if (spr->Width == 0 || spr->Height == 0 || spr->Alpha == 0) {
             ++it;
             continue;
@@ -60,6 +68,18 @@ void SpriteManager::Add(const std::vector<pDrawable*>& spr) {
 	}
 }
 
+void SpriteManager::Remove(int32_t id) {
+    if (mSprites.size() > id) {
+        mSprites.erase(mSprites.begin() + id);
+    } else {
+        fprintf(stderr, "[WARNING]: SpriteManager was asked to remove out-of-bounds sprite.");
+    }
+}
+
+void SpriteManager::RemoveLast() {
+    mSprites.pop_back();
+}
+
 void SpriteManager::HandleTouchInput() {
     if (!InputHelper::KeyDown(SDL_BUTTON_LEFT, IH_KEY_MOUSE))
 		return;
@@ -67,7 +87,7 @@ void SpriteManager::HandleTouchInput() {
 
     SortZ();
     int i = 0;
-    for (auto current : mSprites) {
+    for (auto current : mSpritesSorted) {
         if (current == nullptr) {
             fprintf(stderr, "Null %i\n", i);
             i++;
