@@ -76,7 +76,7 @@ void HitSpinner::Update()
 	if (mChannel == -1 && GameClock::Clock().Time() >= mTime)
 		mChannel = AudioManager::Engine().PlaySpinnerSound(SND_NORMAL);
 	
-	if (mChannel != -1)
+	//if (mChannel != -1)
         //TODO: changing freq
 		//AudioManager::Engine().SetChannelFreq(mChannel, MathHelper::Min((uint32_t)(10000 + (ratio * 30000)), 65535));
 	

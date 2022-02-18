@@ -85,9 +85,9 @@ void AudioManager::ResetSamples()
     mSampleSoft.spinnerbonus.chunk = Mix_LoadWAV(mSampleSoft.spinnerbonus.filename);
 }
 
-int AudioManager::PlaySample(SampleSetInfo info, bool loop)
+int AudioManager::PlaySample(SampleSetInfo info, bool loop, int channel)
 {
-   return Mix_PlayChannel(-1, info.chunk, loop ? -1 : 0);
+   return Mix_PlayChannel(channel, info.chunk, loop ? -1 : 0);
 }
 
 //FIXME: Implement SetChannelFreq
@@ -131,10 +131,12 @@ int AudioManager::PlaySpinnerSound(HitObjectSound sound)
 {
     SampleSet* current = mSampleSets[BeatmapElements::Element().GetTimingPoint().SampleSetId];
 
-    if (sound & SND_BONUS)
-        return PlaySample(current->spinnerbonus, true);
-    else
+    if (sound & SND_BONUS) {
+        // channel=5 is a hacky solution for spinner bonus sound being played forever otherwise.
+        return PlaySample(current->spinnerbonus, true, 5);
+    } else {
         return PlaySample(current->spinnerspin, true);
+    }
 }
 
 void AudioManager::PlaySliderTick()

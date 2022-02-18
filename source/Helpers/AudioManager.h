@@ -63,7 +63,7 @@ class AudioManager
 	public:
 		static AudioManager& Engine() { return sEngine; }
 		
-		int PlaySample(SampleSetInfo info, bool loop = false);
+		int PlaySample(SampleSetInfo info, bool loop = false, int channel = -1);
         //FIXME: void SetChannelFreq(int channel, uint16_t freq);
 		void StopChannel(int channel);
 		
