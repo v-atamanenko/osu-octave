@@ -30,12 +30,8 @@ class Player : public Mode
 		void HandleInput();
 	
 	protected:
-		void ChangeToSongDir();
-		
 		RulesetOsu mRuleset;
-		
 		PlayState mPlayState;
 };
 
 #endif
-

@@ -79,7 +79,7 @@ void PreviewBuffer::Pics_FillBuffer(int last_page, int new_page, int per_page) {
 
         for (int i = 0; i < BeatmapManager::SongCount(); ++i) {
             Beatmap* map = BeatmapManager::Beatmaps()[i];
-            SDL_Surface* tex = LoadSquare(map->BaseDir()+"/"+map->BackgroundFilename());
+            SDL_Surface* tex = LoadSquare(map->BackgroundFilename());
 
             {
                 std::unique_lock lock_pbs(mut_pbs);
@@ -131,7 +131,7 @@ void PreviewBuffer::Pics_FillBuffer(int last_page, int new_page, int per_page) {
 
                 int texid = pbs.LastLoadedTexId + 1;
                 Beatmap *map = BeatmapManager::Beatmaps()[texid];
-                SDL_Surface *tex = LoadSquare(map->BaseDir() + "/" + map->BackgroundFilename());
+                SDL_Surface *tex = LoadSquare(map->BackgroundFilename());
 
                 buf[texid] = tex;
                 pbs.LastLoadedTexId++;
@@ -159,7 +159,7 @@ void PreviewBuffer::Pics_FillBuffer(int last_page, int new_page, int per_page) {
 
                 int texid = pbs.FirstLoadedTexId - 1;
                 Beatmap *map = BeatmapManager::Beatmaps()[texid];
-                SDL_Surface *tex = LoadSquare(map->BaseDir() + "/" + map->BackgroundFilename());
+                SDL_Surface *tex = LoadSquare(map->BackgroundFilename());
 
                 buf[texid] = tex;
                 pbs.FirstLoadedTexId--;

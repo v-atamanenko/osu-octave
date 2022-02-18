@@ -28,7 +28,7 @@ Beatmap::Beatmap(const char* filename, const char* basedir)
 
     for (const osuParser::Event& e : p.events) {
         if (e.type == osuParser::eBackground) {
-            mBackgroundFilename = e.file;
+            mBackgroundFilename = mBaseDir + "/" + e.file;
         }
     }
 
@@ -67,7 +67,6 @@ void Beatmap::Initialize()
     mVersion = mParser->version;
     mAudioFilename = mBaseDir + "/" + mParser->audioFilename;
 
-    printf("\n\nAYE\n\n");
     AudioManager::Engine().MusicLoad(mAudioFilename);
 
     DifficultyManager::DifficultyHpDrain = (uint8_t)mParser->hpDrainRate;
@@ -109,7 +108,7 @@ Beatmap::~Beatmap()
 }
 
 void Beatmap::InitBG() {
-	GraphicsManager::Graphics().LoadBeatmapBackground(mBaseDir+"/"+mBackgroundFilename);
+	GraphicsManager::Graphics().LoadBeatmapBackground(mBackgroundFilename);
 
 	mHitObjectCount = mParser->hitObjects.size();
 	mHitObjectRead = 0;

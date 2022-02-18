@@ -80,10 +80,3 @@ void Player::HandleInput()
 		return;
 	}
 }
-
-void Player::ChangeToSongDir()
-{
-	//ChangeToOsuDir();
-	//chdir(BeatmapManager::Current().BaseDir().c_str());
-}
-

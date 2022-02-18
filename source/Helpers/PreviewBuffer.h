@@ -9,7 +9,7 @@
 #include <atomic>
 
 #ifdef DESKTOP
-#define PICTURE_CACHE_MAX_SIZE_BYTES (65 * 1024 * 1024) // 512 MB
+#define PICTURE_CACHE_MAX_SIZE_BYTES (512 * 1024 * 1024) // 512 MB
 #endif
 
 #ifdef VITA

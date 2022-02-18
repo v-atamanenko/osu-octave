@@ -66,7 +66,7 @@ protected:
 		static GraphicsManager sGraphicsManager;
 	
 	private:
-		GraphicsManager();
+		GraphicsManager() = default;
 		~GraphicsManager() = default;
 };
 

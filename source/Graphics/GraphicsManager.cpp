@@ -363,7 +363,3 @@ void GraphicsManager::CreateRectangularTexture(TextureType texid, uint32_t width
     }
     maptextures[texid] = tex;
 }
-
-GraphicsManager::GraphicsManager() {
-    //LoadTexture(TX_BEATMAP_ENTRY_PREVIEW, "data/ui/preview.png");
-}

@@ -8,14 +8,12 @@ void BeatmapManager::Load(uint32_t index)
 	if (mBeatmapCurrent != nullptr)
 		mBeatmapCurrent->CleanUp();
 	
-	//Mode::ChangeToOsuDir();
 	mBeatmapCurrent = mBeatmaps[index];
 	mBeatmapCurrent->Initialize();
 }
 
 void BeatmapManager::BuildCollection()
 {
-	//Mode::ChangeToOsuDir();
 	char* maps_path;
     SDL_asprintf(&maps_path, "%s%s", DATA_DIR, MAPS_DIR);
 
@@ -62,7 +60,6 @@ void BeatmapManager::BuildCollection()
 					}
 
                     free(map_path);
-                    //free(ext);
 				}
 				else
 				{
