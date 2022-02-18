@@ -9,13 +9,13 @@ Lifebar::Lifebar()
 {
 	pSprite* spr;
 	
-	spr = new pSprite(TX_PLAY_SCOREBAR, 0, 0, 960, 60, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color({31, 31, 31}), 255);
+	spr = new pSprite(TX_PLAY_SCOREBAR, 0, 0, 960, 60, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color({0, 0, 0}), 255);
 	mSprites.push_back(spr);
 	
-	spr = new pSprite(TX_PLAY_SCOREBAR_BAR, 0, 0, 960, 60, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color({31, 31, 31}), 255, -0.01f);
+	spr = new pSprite(TX_PLAY_SCOREBAR_BAR, 0, 0, 960, 60, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color({0, 0, 0}), 255, -0.01f);
 	mSprites.push_back(spr);
 	
-	spr = new pSprite(TX_PLAY_SCOREBAR_KI, 640, 28, 36, 36, ORIGIN_CENTER, FIELD_SCREEN, SDL_Color({31, 31, 31}), 255, -0.02f);
+	spr = new pSprite(TX_PLAY_SCOREBAR_KI, 640, 28, 36, 36, ORIGIN_CENTER, FIELD_SCREEN, SDL_Color({0, 0, 0}), 255, -0.02f);
 	mSprites.push_back(spr);
 
     delete mSprites[1]->UV;

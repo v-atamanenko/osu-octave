@@ -89,13 +89,13 @@ HitSlider::HitSlider(int32_t x, int32_t y, int32_t time, uint32_t lengthtime, st
 	uint32_t fps = 60;
 	
 	//slider ball
-	spr = new pAnimation(TX_PLAY_SLIDERB0, 10, fps, x, y, ballSize, ballSize, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({31,31,31}), 0);
+	spr = new pAnimation(TX_PLAY_SLIDERB0, 10, fps, x, y, ballSize, ballSize, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({0,0,0}), 0);
 	spr->Show(time);
 	MapSliderPath(spr, points, time, lengthtime, repeats);
 	spr->Kill(mEndTime);
 	mSprites.push_back(spr);
 	
-	spr = new pSprite(TX_PLAY_SLIDERFOLLOW, x, y, ballSize, ballSize, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({31,31,31}), 0);
+	spr = new pSprite(TX_PLAY_SLIDERFOLLOW, x, y, ballSize, ballSize, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({0,0,0}), 0);
 	spr->Scale(time, time+50, 1, 2);
 	spr->Scale(mEndTime, mEndTime+50, 2, 1.5);
 	MapSliderPath(spr, points, time, lengthtime, repeats);
@@ -121,7 +121,7 @@ HitSlider::HitSlider(int32_t x, int32_t y, int32_t time, uint32_t lengthtime, st
 	spr->Kill(mEndTime);
 	mSprites.push_back(spr);
 	
-	spr = new pSprite(TX_PLAY_CIRCLEOVERLAY, x, y, circleSize, circleSize, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({31,31,31}), 0);
+	spr = new pSprite(TX_PLAY_CIRCLEOVERLAY, x, y, circleSize, circleSize, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({0,0,0}), 0);
 	spr->Show(fadeInStart, fadeInEnd);
 	spr->Kill(mEndTime+1000);
 	mSprites.push_back(spr);
@@ -132,7 +132,7 @@ HitSlider::HitSlider(int32_t x, int32_t y, int32_t time, uint32_t lengthtime, st
 	mSprites.push_back(spr);
 	
 	//slider end
-	spr = new pSprite(TX_PLAY_CIRCLEOVERLAY, points[pointCount-1]->x, points[pointCount-1]->y, circleSize, circleSize, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({31,31,31}), 0);
+	spr = new pSprite(TX_PLAY_CIRCLEOVERLAY, points[pointCount-1]->x, points[pointCount-1]->y, circleSize, circleSize, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({0,0,0}), 0);
 	spr->Show(fadeInStart, fadeInEnd);
 	spr->Kill(mEndTime+1000);
 	mSprites.push_back(spr);
@@ -143,11 +143,11 @@ HitSlider::HitSlider(int32_t x, int32_t y, int32_t time, uint32_t lengthtime, st
 	mSprites.push_back(spr);
 	
 	//slider30 sprites
-	spr = new pSprite(TX_PLAY_SLIDER30, points[0]->x, points[0]->y, osuPixelsYtoScreenY(40), osuPixelsYtoScreenY(40), ORIGIN_CENTER, FIELD_PLAY, SDL_Color({31, 31, 31}), 0);
+	spr = new pSprite(TX_PLAY_SLIDER30, points[0]->x, points[0]->y, osuPixelsYtoScreenY(40), osuPixelsYtoScreenY(40), ORIGIN_CENTER, FIELD_PLAY, SDL_Color({0, 0, 0}), 0);
 	spr->Kill(mEndTime+1000);
 	mSprites.push_back(spr);
 	
-	spr = new pSprite(TX_PLAY_SLIDER30, points[pointCount-1]->x, points[pointCount-1]->y, osuPixelsYtoScreenY(40), osuPixelsYtoScreenY(40), ORIGIN_CENTER, FIELD_PLAY, SDL_Color({31, 31, 31}), 0);
+	spr = new pSprite(TX_PLAY_SLIDER30, points[pointCount-1]->x, points[pointCount-1]->y, osuPixelsYtoScreenY(40), osuPixelsYtoScreenY(40), ORIGIN_CENTER, FIELD_PLAY, SDL_Color({0, 0, 0}), 0);
 	spr->Kill(mEndTime+1000);
 	mSprites.push_back(spr);
 	
@@ -173,7 +173,7 @@ HitSlider::HitSlider(int32_t x, int32_t y, int32_t time, uint32_t lengthtime, st
 			tFadeInEnd = fadeInEnd;
 		}
 		
-		spr = new pSprite(TX_PLAY_SLIDERREVERSE, p->x, p->y, ballSize, ballSize, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({31,31,31}), 0, -1.f);
+		spr = new pSprite(TX_PLAY_SLIDERREVERSE, p->x, p->y, ballSize, ballSize, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({0,0,0}), 0, -1.f);
 		spr->Show(tAnimStart, tFadeInEnd);
 		//todo: slider repeat explosion?
 		spr->Hide(time+(lengthtime*i));
@@ -194,7 +194,7 @@ HitSlider::HitSlider(int32_t x, int32_t y, int32_t time, uint32_t lengthtime, st
 	//slider ticks & score sprites
 	for (uint32_t i=0; i<tickCount; ++i)
 	{
-		spr = new pSprite(TX_PLAY_SLIDERTICK, ticks[i]->x, ticks[i]->y, tickSize, tickSize, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({31,31,31}), 0);
+		spr = new pSprite(TX_PLAY_SLIDERTICK, ticks[i]->x, ticks[i]->y, tickSize, tickSize, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({0,0,0}), 0);
 		spr->Show(fadeInStart, fadeInEnd);
 		spr->Hide(mEndTime, mEndTime+120);
 		spr->Kill(mEndTime+120);
@@ -203,7 +203,7 @@ HitSlider::HitSlider(int32_t x, int32_t y, int32_t time, uint32_t lengthtime, st
 		//add to list for tracking ticks
 		mTicks[i].Tick = spr;
 		
-		spr = new pSprite(TX_PLAY_SLIDER10, ticks[i]->x, ticks[i]->y, osuPixelsYtoScreenY(40), osuPixelsYtoScreenY(40), ORIGIN_CENTER, FIELD_PLAY, SDL_Color({31, 31, 31}), 0);
+		spr = new pSprite(TX_PLAY_SLIDER10, ticks[i]->x, ticks[i]->y, osuPixelsYtoScreenY(40), osuPixelsYtoScreenY(40), ORIGIN_CENTER, FIELD_PLAY, SDL_Color({0, 0, 0}), 0);
 		spr->Kill(mEndTime+1000);
 		mSprites.push_back(spr);
 		

@@ -74,9 +74,9 @@ void BeatmapElements::ResetColours(bool fill)
 	
 	if (fill)
 	{
-		mColours.push_back(SDL_Color({31, 18, 0}));
-		mColours.push_back(SDL_Color({1, 30, 1}));
-		mColours.push_back(SDL_Color({1, 1, 30}));
-		mColours.push_back(SDL_Color({30, 1, 1}));
+		mColours.push_back(SDL_Color({229, 198, 255}));
+		mColours.push_back(SDL_Color({176, 225, 255}));
+		mColours.push_back(SDL_Color({254, 218, 244}));
+		mColours.push_back(SDL_Color({223, 255, 250}));
 	}
 }
