@@ -28,11 +28,13 @@ extern SDL_Renderer *renderer;
 #ifdef VITA
 #define DATA_DIR "ux0:/data/osu/"
 #define MAPS_DIR "maps/"
+#define SETS_FIL "settings.json"
 #endif
 
 #ifdef DESKTOP
 #define DATA_DIR "./"
 #define MAPS_DIR "maps/"
+#define SETS_FIL "settings.json"
 #endif
 
 #endif

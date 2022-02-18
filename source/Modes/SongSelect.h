@@ -6,7 +6,7 @@
 #include "Graphics/SpriteManager.h"
 #include "System/TextManager.h"
 #include "Helpers/PreviewBuffer.h"
-
+#include "System/Settings.h"
 
 #ifndef __SONGSELECT_H__
 #define __SONGSELECT_H__
@@ -24,6 +24,7 @@ class SongSelect : public Mode
                 PreviewBuffer::GetInstance().Update(mCurrentPage, (mCurrentPage+1), mEntriesPerPage);
                 mCurrentPage++;
                 shouldHandlePageUpdate = true;
+                Settings::set_int("page", mCurrentPage);
             }
         };
         static void PagePrev() {
@@ -31,6 +32,7 @@ class SongSelect : public Mode
                 PreviewBuffer::GetInstance().Update(mCurrentPage, (mCurrentPage-1), mEntriesPerPage);
                 mCurrentPage--;
                 shouldHandlePageUpdate = true;
+                Settings::set_int("page", mCurrentPage);
             }
         };
         static void ExpandEntry(int index) {
@@ -56,7 +58,7 @@ class SongSelect : public Mode
         static bool shouldHandlePageUpdate;
         static bool shouldHandleEntryExpand;
         static const int32_t mEntriesPerPage = 4;
-        int32_t mEntiesDisplayed = 0;
+        int32_t mEntriesDisplayed = 0;
 
         int32_t mSpritesPerBeatmapEntry = 7;
         int32_t mSpritesPerExpandedBeatmapEntry = 13;

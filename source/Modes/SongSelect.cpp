@@ -1,5 +1,6 @@
 #include "SongSelect.h"
 
+
 #include "Graphics/pText.h"
 
 int32_t SongSelect::mCurrentPage = 0;
@@ -172,7 +173,7 @@ SongSelect::SongSelect()
 
     //mBeatmapSpritesStartIndex = mSpriteManager.Sprites().size() + 1;
     mSongListSize = BeatmapManager::SongCount();
-    mCurrentPage = 0;
+    mCurrentPage = Settings::get_int("page");
     mCountPages  = ceil(((float)mSongListSize/(float)mEntriesPerPage));
 
     UpdateSonglist();
@@ -180,14 +181,14 @@ SongSelect::SongSelect()
 
 void SongSelect::UpdateSonglist()
 {
-    int spritesToRemoveCount = mSpritesPerBeatmapEntry * mEntiesDisplayed;
+    int spritesToRemoveCount = mSpritesPerBeatmapEntry * mEntriesDisplayed;
     if (mEntryExpanded) spritesToRemoveCount += (mSpritesPerExpandedBeatmapEntry - mSpritesPerBeatmapEntry);
     if (spritesToRemoveCount != 0) spritesToRemoveCount++; // to account for current_page_label
     for (int i = 0; i < spritesToRemoveCount; ++i) {
         mSpriteManager.RemoveLast();
     }
     mEntryExpanded = false;
-    mEntiesDisplayed = 0;
+    mEntriesDisplayed = 0;
 
     if (shouldHandleEntryExpand && mExpandEntryIndex == -1) {
         shouldHandleEntryExpand = false;
@@ -370,7 +371,7 @@ void SongSelect::UpdateSonglist()
             mSpriteManager.Add(stars);
         }
 
-        mEntiesDisplayed++;
+        mEntriesDisplayed++;
     }
 
     pText* current_page_label = new pText(std::to_string(mCurrentPage+1)+"/"+std::to_string(mCountPages), FONT_PIXEL, 811, 498, SDL_Color({67,19,115}));

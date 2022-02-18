@@ -34,7 +34,9 @@ void PreviewBuffer::Update(int last_page, int new_page, int per_page) {
 void PreviewBuffer::Pics_ClearBuffer() {
     printf("Clearing buffer...\n");
     for (auto const& x : buf) {
-        SDL_FreeSurface(x.second);
+        if (preview_default != x.second) {
+            SDL_FreeSurface(x.second);
+        }
     }
     buf.clear();
 
