@@ -5,6 +5,8 @@
 GraphicsManager GraphicsManager::sGraphicsManager;
 
 bool GraphicsManager::LoadTexture(TextureType texid, const std::string& path) {
+    std::unique_lock lock_pbs(mut_maptextures);
+
     if (maptextures[texid] != nullptr)
         SDL_DestroyTexture(maptextures[texid]);
 
@@ -34,8 +36,72 @@ bool GraphicsManager::LoadTexture(TextureType texid, const std::string& path) {
     return true;
 }
 
-void GraphicsManager::LoadBeatmapPicTexture(TextureType texid, const std::string& path) {
-    LoadTexture(texid, path);
+SDL_Texture* GraphicsManager::LoadSquareTexture(const std::string& path) {
+    SDL_Texture* newTexture = nullptr;
+
+    SDL_Surface* loadedSurface = IMG_Load( path.c_str() );
+    if (loadedSurface == nullptr) {
+        fprintf(stderr, "Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
+        return newTexture;
+    }
+
+    if (renderer == nullptr) {
+        fprintf(stderr, "Unable to create texture! Renderer is null.\n");
+        SDL_FreeSurface(loadedSurface);
+        return newTexture;
+    }
+
+    SDL_Rect srcrect;
+    srcrect.h = srcrect.w = loadedSurface->h;
+    srcrect.y = 0;
+    srcrect.x = floor(((float)loadedSurface->w / 2.f) - ((float)loadedSurface->h / 2.f));
+
+    SDL_Rect dstrect;
+    dstrect.h = dstrect.w = srcrect.h;
+    dstrect.y = dstrect.x = 0;
+
+    uint32_t pf = SDL_GetWindowPixelFormat(window);
+
+    SDL_Surface* cropped = SDL_CreateRGBSurfaceWithFormat(0, dstrect.w, dstrect.h, 8, pf);
+
+    SDL_BlitSurface(loadedSurface,&srcrect,cropped,&dstrect);
+    SDL_FreeSurface(loadedSurface);
+
+    newTexture = SDL_CreateTextureFromSurface( renderer, cropped );
+    if (newTexture == nullptr) {
+        fprintf(stderr,  "Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
+    }
+
+    SDL_FreeSurface(cropped);
+    return newTexture;
+}
+
+void GraphicsManager::LoadBeatmapPicTexture(TextureType texid, SDL_Surface *tex) {
+    std::unique_lock lock_pbs(mut_maptextures);
+    if (mapsurfaces.count(texid) > 0) {
+        if (mapsurfaces.at(texid) == tex) {
+            // Texture's already using this surface.
+            return;
+        }
+    }
+
+    mapsurfaces[texid] = tex;
+    if (maptextures.count(texid) > 0) {
+        if (maptextures[texid] != nullptr) {
+            SDL_DestroyTexture(maptextures[texid]);
+        }
+    }
+    SDL_Texture * newTexture = SDL_CreateTextureFromSurface( renderer, tex );
+    if (newTexture == nullptr) {
+        fprintf(stderr,  "Unable to create texture from surface! SDL Error: %s\n", SDL_GetError());
+    }
+    maptextures[texid] = newTexture;
+}
+
+SDL_Texture * GraphicsManager::GetTexture(TextureType texid) {
+    std::shared_lock lock_pbs(mut_maptextures);
+    SDL_Texture * x =maptextures[texid];
+    return x;
 }
 
 void GraphicsManager::LoadBeatmapBackground(const std::string& path) {
@@ -78,6 +144,8 @@ void GraphicsManager::CreateTextureFromSurface(SDL_Surface* bg, TextureType texi
 }
 
 void GraphicsManager::DrawBeatmapBackground() {
+    std::shared_lock lock_pbs(mut_maptextures);
+
     if (maptextures[TX_CURRENT_BG] != nullptr) {
         if (SDL_RenderCopy(renderer, maptextures[TX_CURRENT_BG], nullptr, nullptr) < 0) {
             fprintf(stderr, "DrawBeatmapBackground failed with: %s\n", SDL_GetError());
@@ -149,10 +217,23 @@ void GraphicsManager::LoadTexturesForMode(ModeType mod) {
             LoadTexture(TX_BUTTON_MED, "data/ui/button-med.png");
             LoadTexture(TX_BUTTON_SM, "data/ui/button-sm.png");
             LoadTexture(TX_BUTTON_SM_ACTIVE, "data/ui/button-sm-active.png");
-            LoadTexture(TX_BUTTON_ARROW, "data/ui/button-arrow.png");
             LoadTexture(TX_BUTTON_XS, "data/ui/button-xs.png");
+            LoadTexture(TX_BUTTON_ARROW, "data/ui/button-arrow.png");
+            LoadTexture(TX_BUTTON_PLAY, "data/ui/button-play.png");
+
+            LoadTexture(TX_RANKING_UNK_SM, "data/textures/ranking-unk-sm.png");
+            LoadTexture(TX_RANKING_A_SM, "data/textures/ranking-a-sm.png");
+            LoadTexture(TX_RANKING_B_SM, "data/textures/ranking-b-sm.png");
+            LoadTexture(TX_RANKING_C_SM, "data/textures/ranking-c-sm.png");
+            LoadTexture(TX_RANKING_D_SM, "data/textures/ranking-d-sm.png");
+            LoadTexture(TX_RANKING_S_SM, "data/textures/ranking-s-sm.png");
+            LoadTexture(TX_RANKING_SS_SM, "data/textures/ranking-ss-sm.png");
+
+            LoadTexture(TX_STARS, "data/ui/stars.png");
+            LoadTexture(TX_STARS_FILL, "data/ui/stars-fill.png");
 
             CreateRectangularTexture(TX_BEATMAP_ENTRY_BG, 609, 80, SDL_Color({199, 190, 235, 127}));
+            CreateRectangularTexture(TX_BEATMAP_ENTRY_EXPANDED_BG, 609, 174, SDL_Color({199, 190, 235, 127}));
 
             break;
         case MODE_WELCOME:
@@ -163,10 +244,30 @@ void GraphicsManager::LoadTexturesForMode(ModeType mod) {
 }
 
 void GraphicsManager::UnloadTextures() {
-    maptextures.clear();
+    std::unique_lock lock_pbs(mut_maptextures);
+
+    auto it = maptextures.begin();
+    // Iterate through the map
+    while (it != maptextures.end())
+    {
+        // Check if value of this entry matches with given value
+        if (it->first == TX_BEATMAP_ENTRY_PREVIEW ||
+            it->first == TX_BEATMAP_ENTRY_PIC_0 ||
+            it->first == TX_BEATMAP_ENTRY_PIC_1 ||
+            it->first == TX_BEATMAP_ENTRY_PIC_2 ||
+            it->first == TX_BEATMAP_ENTRY_PIC_3) {
+            it++;
+        }
+        else
+        {
+            SDL_DestroyTexture(it->second);
+            it = maptextures.erase(it);
+        }
+    }
 }
 
 void GraphicsManager::Draw(TextureType tex, int32_t x, int32_t y, uint32_t width, uint32_t height, DrawOrigin origin, FieldType fieldtype, SDL_Color color, uint32_t alpha, int32_t angle, float z, const SDL_Rect* uv) {
+    std::unique_lock lock_pbs(mut_maptextures);
     int32_t x1, y1, x2, y2;
 
     // We use "UV Coordinates" as a source rect for render copy, thus being able to draw textures partly.
@@ -243,6 +344,8 @@ void GraphicsManager::DrawFullScreenRectangle(SDL_Color c) {
 }
 
 void GraphicsManager::CreateRectangularTexture(TextureType texid, uint32_t width, uint32_t height, SDL_Color c) {
+    std::unique_lock lock_pbs(mut_maptextures);
+
     SDL_Texture* tex;
 
     uint32_t pf = SDL_GetWindowPixelFormat(window);
@@ -259,4 +362,8 @@ void GraphicsManager::CreateRectangularTexture(TextureType texid, uint32_t width
         SDL_DestroyTexture(maptextures[texid]);
     }
     maptextures[texid] = tex;
+}
+
+GraphicsManager::GraphicsManager() {
+    //LoadTexture(TX_BEATMAP_ENTRY_PREVIEW, "data/ui/preview.png");
 }

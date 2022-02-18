@@ -40,6 +40,8 @@ add_executable(${PROJECT_NAME}
         ${PROJECT_SOURCE_DIR}/source/System/TextManager.cpp
         ${PROJECT_SOURCE_DIR}/source/System/GameBase.cpp
         ${PROJECT_SOURCE_DIR}/source/System/GameClock.cpp
+        ${PROJECT_SOURCE_DIR}/source/System/GameBase.cpp
+        ${PROJECT_SOURCE_DIR}/source/System/SDL_FontCache.c
         ${PROJECT_SOURCE_DIR}/source/GameplayElements/Lifebar.cpp
         ${PROJECT_SOURCE_DIR}/source/GameplayElements/Score.cpp
         ${PROJECT_SOURCE_DIR}/source/GameplayElements/HitObjectManager.cpp
@@ -63,6 +65,7 @@ add_executable(${PROJECT_NAME}
         ${PROJECT_SOURCE_DIR}/source/Helpers/InputHelper.cpp
         ${PROJECT_SOURCE_DIR}/source/Helpers/AudioManager.cpp
         ${PROJECT_SOURCE_DIR}/source/Helpers/OsuSliderCurves.cpp
+        ${PROJECT_SOURCE_DIR}/source/Helpers/PreviewBuffer.cpp
 
         ${PROJECT_SOURCE_DIR}/source/Parser/OsuParser.cpp
         ${PROJECT_SOURCE_DIR}/source/Parser/OsUtils.cpp

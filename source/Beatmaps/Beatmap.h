@@ -54,6 +54,8 @@ class Beatmap
         int32_t StartTime() { return mFirstObjectTime; }
 
 		std::string& BeatmapChecksum();
+
+        bool Validate() { return mValid; };
 	
 	protected:
         osuParser::OsuParser* mParser;
@@ -72,6 +74,7 @@ class Beatmap
 		bool mForceNewCombo;
 		
 		bool fReady, fLoadable;
+        bool mValid = true;
 		
 		std::string mFilename;
 		std::string mTitle;

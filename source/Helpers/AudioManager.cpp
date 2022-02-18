@@ -6,7 +6,13 @@ Mix_Music *music;
 
 AudioManager::AudioManager()
 {
-    Mix_OpenAudio(44100, AUDIO_S16SYS, 4, 640);
+#ifdef VITA
+    Mix_OpenAudio(44100, AUDIO_S16SYS, 2, 1024);
+#else
+    Mix_OpenAudio(44100, AUDIO_S32SYS, 2, 1024);
+#endif
+    int n = Mix_AllocateChannels(6);
+    printf("Allocated %i channels for SDL_Mixer\n", n);
 
 	//sound init
 	ResetSamples();
@@ -24,25 +30,25 @@ AudioManager::AudioManager()
 
 void AudioManager::ResetSamples()
 {
-    mSampleNormal.hitnormal.filename = "data/sounds/normal_hitnormal.wav";
+    mSampleNormal.hitnormal.filename = "data/sounds/normal-hitnormal.wav";
     mSampleNormal.hitnormal.chunk = Mix_LoadWAV(mSampleNormal.hitnormal.filename);
 
-    mSampleNormal.hitwhistle.filename = "data/sounds/normal_hitwhistle.wav";
+    mSampleNormal.hitwhistle.filename = "data/sounds/normal-hitwhistle.wav";
     mSampleNormal.hitwhistle.chunk = Mix_LoadWAV(mSampleNormal.hitwhistle.filename);
 
-    mSampleNormal.hitfinish.filename = "data/sounds/normal_hitfinish.wav";
+    mSampleNormal.hitfinish.filename = "data/sounds/normal-hitfinish.wav";
     mSampleNormal.hitfinish.chunk = Mix_LoadWAV(mSampleNormal.hitfinish.filename);
 
-    mSampleNormal.hitclap.filename = "data/sounds/normal_hitclap.wav";
+    mSampleNormal.hitclap.filename = "data/sounds/normal-hitclap.wav";
     mSampleNormal.hitclap.chunk = Mix_LoadWAV(mSampleNormal.hitclap.filename);
 
-    mSampleNormal.slidertick.filename = "data/sounds/normal_slidertick.wav";
+    mSampleNormal.slidertick.filename = "data/sounds/normal-slidertick.wav";
     mSampleNormal.slidertick.chunk = Mix_LoadWAV(mSampleNormal.slidertick.filename);
 
-    mSampleNormal.sliderslide.filename = "data/sounds/normal_sliderslide.wav";
+    mSampleNormal.sliderslide.filename = "data/sounds/normal-sliderslide.wav";
     mSampleNormal.sliderslide.chunk = Mix_LoadWAV(mSampleNormal.sliderslide.filename);
 
-    mSampleNormal.sliderwhistle.filename = "data/sounds/normal_sliderwhistle.wav";
+    mSampleNormal.sliderwhistle.filename = "data/sounds/normal-sliderwhistle.wav";
     mSampleNormal.sliderwhistle.chunk = Mix_LoadWAV(mSampleNormal.sliderwhistle.filename);
 
     mSampleNormal.spinnerspin.filename = "data/sounds/spinnerspin.wav";
@@ -51,26 +57,25 @@ void AudioManager::ResetSamples()
     mSampleNormal.spinnerbonus.filename = "data/sounds/spinnerbonus.wav";
     mSampleNormal.spinnerbonus.chunk = Mix_LoadWAV(mSampleNormal.spinnerbonus.filename);
 
-
-    mSampleSoft.hitnormal.filename = "data/sounds/soft_hitnormal.wav";
+    mSampleSoft.hitnormal.filename = "data/sounds/soft-hitnormal.wav";
     mSampleSoft.hitnormal.chunk = Mix_LoadWAV(mSampleSoft.hitnormal.filename);
 
-    mSampleSoft.hitwhistle.filename = "data/sounds/soft_hitwhistle.wav";
+    mSampleSoft.hitwhistle.filename = "data/sounds/soft-hitwhistle.wav";
     mSampleSoft.hitwhistle.chunk = Mix_LoadWAV(mSampleSoft.hitwhistle.filename);
 
-    mSampleSoft.hitfinish.filename = "data/sounds/soft_hitfinish.wav";
+    mSampleSoft.hitfinish.filename = "data/sounds/soft-hitfinish.wav";
     mSampleSoft.hitfinish.chunk = Mix_LoadWAV(mSampleSoft.hitfinish.filename);
 
-    mSampleSoft.hitclap.filename = "data/sounds/soft_hitclap.wav";
+    mSampleSoft.hitclap.filename = "data/sounds/soft-hitclap.wav";
     mSampleSoft.hitclap.chunk = Mix_LoadWAV(mSampleSoft.hitclap.filename);
 
-    mSampleSoft.slidertick.filename = "data/sounds/soft_slidertick.wav";
+    mSampleSoft.slidertick.filename = "data/sounds/soft-slidertick.wav";
     mSampleSoft.slidertick.chunk = Mix_LoadWAV(mSampleSoft.slidertick.filename);
 
-    mSampleSoft.sliderslide.filename = "data/sounds/soft_sliderslide.wav";
+    mSampleSoft.sliderslide.filename = "data/sounds/soft-sliderslide.wav";
     mSampleSoft.sliderslide.chunk = Mix_LoadWAV(mSampleSoft.sliderslide.filename);
 
-    mSampleSoft.sliderwhistle.filename = "data/sounds/soft_sliderwhistle.wav";
+    mSampleSoft.sliderwhistle.filename = "data/sounds/soft-sliderwhistle.wav";
     mSampleSoft.sliderwhistle.chunk = Mix_LoadWAV(mSampleSoft.sliderwhistle.filename);
 
     mSampleSoft.spinnerspin.filename = "data/sounds/spinnerspin.wav";
@@ -139,10 +144,10 @@ void AudioManager::PlaySliderTick()
 	PlaySample(current->slidertick);
 }
 
-int AudioManager::MusicPlay(std::string& filename)
-{
+int AudioManager::MusicLoad(std::string& filename) {
     if (music != nullptr)
         MusicStop();
+    mChannel = 0;
 
     music = Mix_LoadMUS(filename.c_str());
     if(!music) {
@@ -153,12 +158,17 @@ int AudioManager::MusicPlay(std::string& filename)
         fprintf(stderr, "filename: %s. cwd: %s.\n", filename.c_str(), temp);
 
         mChannel = -1;
-        return mChannel;
     }
 
-    mChannel = Mix_PlayMusic(music, -1);
-    fprintf(stderr, "Started music on channel %i\n", mChannel);
-	return mChannel;
+    return mChannel;
+}
+
+int AudioManager::MusicPlay() {
+    if (mChannel != -1) {
+        mChannel = Mix_PlayMusic(music, -1);
+        fprintf(stderr, "Started music on channel %i\n", mChannel);
+    }
+    return mChannel;
 }
 
 int AudioManager::MusicSkipTo(uint32_t milliseconds)
@@ -183,6 +193,7 @@ void AudioManager::MusicStop()
 
     Mix_HaltMusic();
     Mix_FreeMusic(music);
+    music = nullptr;
 	
 	mChannel = -1;
 }

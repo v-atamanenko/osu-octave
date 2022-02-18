@@ -27,6 +27,7 @@ class BeatmapManager
 		static std::vector<Beatmap*>& Beatmaps() { return mBeatmaps; }
 	
 	protected:
+        static void Add(const char* map_path, const char* map_subdir);
 		static Beatmap* mBeatmapCurrent;
 		
 		static std::vector<Beatmap*> mBeatmaps;

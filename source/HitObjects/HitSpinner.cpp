@@ -20,14 +20,14 @@ HitSpinner::HitSpinner(int32_t time, int32_t endtime, HitObjectSound sound) : Hi
 
 	pSprite* spr;
 	
-	spr = new pSprite(TX_PLAY_CIRCLEAPPROACH, PlayfieldX(479), PlayfieldY(302), 460, 460, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({10, 10, 31}), 0);
+	spr = new pSprite(TX_PLAY_CIRCLEAPPROACH, 479, 302, 460, 460, ORIGIN_CENTER, FIELD_SCREEN, SDL_Color({10, 10, 31}), 0);
 	spr->Show(time-300, time);
 	spr->Hide(endtime, endtime+300);
 	spr->Scale(time-300, endtime, 1, 0);
 	spr->Kill(endtime+300);
 	mSprites.push_back(spr);
 	
-	spr = new pSprite(TX_PLAY_SPINNER, PlayfieldX(479), PlayfieldY(302), 440, 440, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({31, 31, 31}), 0, 0.03f);
+	spr = new pSprite(TX_PLAY_SPINNER, 479, 302, 440, 440, ORIGIN_CENTER, FIELD_SCREEN, SDL_Color({31, 31, 31}), 0, 0.03f);
 	spr->Show(time-300, time);
 	spr->Hide(endtime, endtime+300);
 	spr->Kill(endtime+300);

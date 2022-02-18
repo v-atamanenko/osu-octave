@@ -22,13 +22,11 @@ class Mode
 		
 		virtual void Update() = 0;
 		virtual void HandleInput() = 0;
-		
-		static void ChangeToOsuDir();
 
         static bool wantChangeMode;
         static ModeType wantChangeModeTo;
 	protected:
-		Mode() { ChangeToOsuDir(); wantChangeMode = false; } //reset directory for new mode
+		Mode() {  wantChangeMode = false; }
 	
 	private:
 		static Mode* sCurrentMode;

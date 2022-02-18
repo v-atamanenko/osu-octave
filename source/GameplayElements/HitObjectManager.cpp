@@ -49,13 +49,19 @@ void HitObjectManager::HandleInput()
 	
 	// now we are left with the next hitobject that can react to user interaction
 	
-	if (InputHelper::KeyDown(SDL_BUTTON_LEFT, IH_KEY_MOUSE))
+	if ((InputHelper::KeyDown(SDL_BUTTON_LEFT, IH_KEY_MOUSE) ||
+         InputHelper::KeyDown(SDLK_z, IH_KEY_KEYBOARD) ||
+         InputHelper::KeyDown(SDLK_x, IH_KEY_KEYBOARD)))
 		hitObject->OnTouchDown(touch);
 	
-	if (InputHelper::KeyHeld(SDL_BUTTON_LEFT, IH_KEY_MOUSE))
+	if ((InputHelper::KeyHeld(SDL_BUTTON_LEFT, IH_KEY_MOUSE) ||
+         InputHelper::KeyHeld(SDLK_z, IH_KEY_KEYBOARD) ||
+         InputHelper::KeyHeld(SDLK_x, IH_KEY_KEYBOARD)))
 		hitObject->OnTouch(touch);
 	
-	if (InputHelper::KeyUp(SDL_BUTTON_LEFT, IH_KEY_MOUSE))
+	if ((InputHelper::KeyUp(SDL_BUTTON_LEFT, IH_KEY_MOUSE) ||
+         InputHelper::KeyUp(SDLK_z, IH_KEY_KEYBOARD) ||
+         InputHelper::KeyUp(SDLK_x, IH_KEY_KEYBOARD)))
 		hitObject->OnTouchUp(touch);
 	
 	hitObject->Update();

@@ -37,43 +37,43 @@ void Ruleset::UpdateGameOver()
 {
     GraphicsManager::Graphics().DrawFullScreenRectangle({0,0,0,100});
 
-    TextManager::Bottom().SetFont(FONT_SCORE);
+    TextManager::SetFont(FONT_SCORE);
 
-    TextManager::Bottom().PrintScore(450,75, ORIGIN_TOPLEFT, "Grade: %s", mCurrentScore.GetGrade());
+    TextManager::Print(450, 75, "Grade: %s", mCurrentScore.GetGrade());
 
-    TextManager::Bottom().PrintScore(0,0, ORIGIN_TOPLEFT, "Score: %i", mCurrentScore.CurrentScore());
+    TextManager::Print(0, 0, "Score: %i", mCurrentScore.CurrentScore());
 
-    TextManager::Bottom().PrintScore(25, 25, ORIGIN_TOPLEFT, "300: %ix", mCurrentScore.Count300());
-    TextManager::Bottom().PrintScore(225, 25, ORIGIN_TOPLEFT, "Geki: %ix", mCurrentScore.CountGeki());
-    TextManager::Bottom().PrintScore(25, 75, ORIGIN_TOPLEFT, "100: %ix", mCurrentScore.Count100());
-    TextManager::Bottom().PrintScore(225, 75, ORIGIN_TOPLEFT, "Katu: %ix", mCurrentScore.CountKatu());
-    TextManager::Bottom().PrintScore(25, 125, ORIGIN_TOPLEFT, "50: %ix", mCurrentScore.Count50());
-    TextManager::Bottom().PrintScore(225, 125, ORIGIN_TOPLEFT, "Miss: %ix", mCurrentScore.CountMiss());
+    TextManager::Print(25, 25, "300: %ix", mCurrentScore.Count300());
+    TextManager::Print(225, 25, "Geki: %ix", mCurrentScore.CountGeki());
+    TextManager::Print(25, 75, "100: %ix", mCurrentScore.Count100());
+    TextManager::Print(225, 75, "Katu: %ix", mCurrentScore.CountKatu());
+    TextManager::Print(25, 125, "50: %ix", mCurrentScore.Count50());
+    TextManager::Print(225, 125, "Miss: %ix", mCurrentScore.CountMiss());
 
-    TextManager::Bottom().PrintScore(25,175, ORIGIN_TOPLEFT, "Combo: %ix", mCurrentScore.CurrentCombo());
-    TextManager::Bottom().PrintScore(225,175, ORIGIN_TOPLEFT, "Accuracy: %.2f%%", mCurrentScore.CountAccuracy());
+    TextManager::Print(25, 175, "Combo: %ix", mCurrentScore.CurrentCombo());
+    TextManager::Print(225, 175, "Accuracy: %.2f%%", mCurrentScore.CountAccuracy());
 }
 
 void Ruleset::UpdateFailed()
 {
     GraphicsManager::Graphics().DrawFullScreenRectangle({0,0,0,100});
 
-    TextManager::Bottom().SetFont(FONT_SCORE);
+    TextManager::SetFont(FONT_SCORE);
 
-    TextManager::Bottom().PrintScore(0,0, ORIGIN_CENTER, "WASTED%s", nullptr);
-    TextManager::Bottom().PrintScore(450,75, ORIGIN_TOPLEFT, "Grade: %s", mCurrentScore.GetGrade());
+    TextManager::PrintLocate(480, 272, ORIGIN_CENTER, "WASTED%s", nullptr);
+    TextManager::Print(450, 75, "Grade: %s", mCurrentScore.GetGrade());
 
-    TextManager::Bottom().PrintScore(0,0, ORIGIN_TOPLEFT, "Score: %i", mCurrentScore.CurrentScore());
+    TextManager::Print(0, 0, "Score: %i", mCurrentScore.CurrentScore());
 
-    TextManager::Bottom().PrintScore(25, 25, ORIGIN_TOPLEFT, "300: %ix", mCurrentScore.Count300());
-    TextManager::Bottom().PrintScore(225, 25, ORIGIN_TOPLEFT, "Geki: %ix", mCurrentScore.CountGeki());
-    TextManager::Bottom().PrintScore(25, 75, ORIGIN_TOPLEFT, "100: %ix", mCurrentScore.Count100());
-    TextManager::Bottom().PrintScore(225, 75, ORIGIN_TOPLEFT, "Katu: %ix", mCurrentScore.CountKatu());
-    TextManager::Bottom().PrintScore(25, 125, ORIGIN_TOPLEFT, "50: %ix", mCurrentScore.Count50());
-    TextManager::Bottom().PrintScore(225, 125, ORIGIN_TOPLEFT, "Miss: %ix", mCurrentScore.CountMiss());
+    TextManager::Print(25, 25, "300: %ix", mCurrentScore.Count300());
+    TextManager::Print(225, 25, "Geki: %ix", mCurrentScore.CountGeki());
+    TextManager::Print(25, 75, "100: %ix", mCurrentScore.Count100());
+    TextManager::Print(225, 75, "Katu: %ix", mCurrentScore.CountKatu());
+    TextManager::Print(25, 125, "50: %ix", mCurrentScore.Count50());
+    TextManager::Print(225, 125, "Miss: %ix", mCurrentScore.CountMiss());
 
-    TextManager::Bottom().PrintScore(25,175, ORIGIN_TOPLEFT, "Combo: %ix", mCurrentScore.CurrentCombo());
-    TextManager::Bottom().PrintScore(225,175, ORIGIN_TOPLEFT, "Accuracy: %.2f%%", mCurrentScore.CountAccuracy());
+    TextManager::Print(25, 175, "Combo: %ix", mCurrentScore.CurrentCombo());
+    TextManager::Print(225, 175, "Accuracy: %.2f%%", mCurrentScore.CountAccuracy());
 }
 
 bool Ruleset::Update()
@@ -91,10 +91,10 @@ bool Ruleset::Update()
 	mSpriteManager.Draw();
 
     // score/combo output
-	
-	TextManager::Bottom().SetFont(FONT_SCORE);
-    TextManager::Bottom().PrintScore(osuPixelsXtoScreenX(635), 25, ORIGIN_TOPRIGHT, "  %08u", mCurrentScore.CurrentScore());
-	TextManager::Bottom().PrintScore(25, 25, ORIGIN_BOTTOMLEFT, "%ix   ", mCurrentScore.CurrentCombo());
+
+    TextManager::SetFont(FONT_SCORE);
+    TextManager::PrintLocate(940, 10, ORIGIN_TOPRIGHT, "  %08u", mCurrentScore.CurrentScore());
+    TextManager::PrintLocate(20, 534, ORIGIN_BOTTOMLEFT, "%ix   ", mCurrentScore.CurrentCombo());
 
     if(mLifebar.GetCurrentHP() == 0.f && GameClock::Clock().Time() > BeatmapManager::Current().SkipTime())
         return false; // Premature game over, HP is 0

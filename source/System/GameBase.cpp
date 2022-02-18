@@ -1,28 +1,25 @@
 #include "GameBase.h"
 #include "TextManager.h"
+#include "../Helpers/PreviewBuffer.h"
 
-GameBase::GameBase()
-{
+GameBase::GameBase() {
 	BeatmapManager::BuildCollection();
-	//ChangeModeOnFrameEnd(MODE_PLAYER);
+    PreviewBuffer::GetInstance().Init();
+
     ChangeModeOnFrameEnd(MODE_WELCOME);
     ChangeModeOnDemand();
 }
 
-int GameBase::Update()
-{
+int GameBase::Update() {
     if (InputHelper::PollSDL() == -1) return -1;
 	Mode::CurrentMode().HandleInput();
 
     GraphicsManager::Graphics().Clear();
-    TextManager::Top().Clear();
 
     Mode::CurrentMode().Update();
-    TextManager::Top().drawTex();
 
     GraphicsManager::Graphics().Present();
     ChangeModeOnDemand();
 
     return 0;
 }
-

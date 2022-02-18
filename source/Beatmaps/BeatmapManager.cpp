@@ -1,6 +1,6 @@
 #include "BeatmapManager.h"
 
-Beatmap* BeatmapManager::mBeatmapCurrent = NULL;
+Beatmap* BeatmapManager::mBeatmapCurrent = nullptr;
 std::vector<Beatmap*> BeatmapManager::mBeatmaps;
 
 void BeatmapManager::Load(uint32_t index)
@@ -8,16 +8,18 @@ void BeatmapManager::Load(uint32_t index)
 	if (mBeatmapCurrent != nullptr)
 		mBeatmapCurrent->CleanUp();
 	
-	Mode::ChangeToOsuDir();
+	//Mode::ChangeToOsuDir();
 	mBeatmapCurrent = mBeatmaps[index];
 	mBeatmapCurrent->Initialize();
 }
 
 void BeatmapManager::BuildCollection()
 {
-	Mode::ChangeToOsuDir();
-	
-	DIR* dir = opendir(".");
+	//Mode::ChangeToOsuDir();
+	char* maps_path;
+    SDL_asprintf(&maps_path, "%s%s", DATA_DIR, MAPS_DIR);
+
+    DIR* dir = opendir(maps_path);
 	struct dirent* entry;
 	
 	while ((entry = readdir(dir)) != nullptr)
@@ -26,9 +28,10 @@ void BeatmapManager::BuildCollection()
 		//if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
 		if (entry->d_name[0] == '.')
 			continue;
-		
-		chdir(entry->d_name);
-		DIR* subdir = opendir(".");
+
+        char* map_subdir;
+        SDL_asprintf(&map_subdir, "%s%s%s", DATA_DIR, MAPS_DIR, entry->d_name);
+		DIR* subdir = opendir(map_subdir);
 		
 		//if this is a folder, find all the .ods files inside
 		if (subdir != nullptr)
@@ -42,6 +45,8 @@ void BeatmapManager::BuildCollection()
 				if (filetest == nullptr)
 				{
 					char* ext = subentry->d_name;
+                    char* map_path;
+                    SDL_asprintf(&map_path, "%s/%s", map_subdir, subentry->d_name);
 					
 					size_t length = strlen(ext);
 					if (length < 4)
@@ -53,21 +58,33 @@ void BeatmapManager::BuildCollection()
 					//if we have on our hands a .ods file, add it to our collection
 					if (strcmp(ext, ".osu") == 0)
 					{
-						mBeatmaps.push_back(new Beatmap(subentry->d_name, entry->d_name));
+						mBeatmaps.push_back(new Beatmap(map_path, map_subdir));
 					}
+
+                    free(map_path);
+                    //free(ext);
 				}
 				else
 				{
 					closedir(filetest);
 				}
 			}
+
+            closedir(subdir);
 		}
-		
-		closedir(subdir);
-		chdir("..");
+
+        free(map_subdir);
 	}
 	
 	closedir(dir);
+    free(maps_path);
+}
+
+void BeatmapManager::Add(const char* map_path, const char* map_subdir) {
+    auto* btmp = new Beatmap(map_path, map_subdir);
+    if (btmp->Validate()) {
+        mBeatmaps.push_back(btmp);
+    }
 }
 
 uint32_t BeatmapManager::MapCount()

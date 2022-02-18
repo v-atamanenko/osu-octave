@@ -2,50 +2,61 @@
 #include "SDL_ttf.h"
 #include "defines.h"
 
-TextManager TextManager::sTM;
+FC_Font* TextManager::mFonts[NUMBER_OF_FONTS];
+FontName TextManager::currentFont;
 
-TextManager::TextManager()
+template <class ... Args>
+void valist_FC_Draw(FC_Font* font, FC_Target* dest, float x, float y, const char* formatted_text, Args ... args)
 {
+    FC_Draw(font, dest, x, y, formatted_text, args...);
 }
 
-void TextManager::initTex()
-{
-    int w_w, w_h;
-    uint32_t pf;
+void TextManager::Init() {
+    AddFont(FONT_CONSOLE_BIG, "fonts/Roboto-Regular.ttf", 16);
+    AddFont(FONT_CONSOLE_BIG_BOLD, "fonts/Roboto-Medium.ttf", 16);
+    AddFont(FONT_CONSOLE, "fonts/Roboto-Regular.ttf", 14);
+    AddFont(FONT_CONSOLE_BOLD, "fonts/Roboto-Medium.ttf", 14);
+	AddFont(FONT_SCORE, "fonts/PressStart2P-Regular.ttf", 36, SDL_Color({250, 245, 239, 255}));
 
-    SDL_GetWindowSize(window, &w_w, &w_h);
-    pf = SDL_GetWindowPixelFormat(window);
-    sTM.mConsole = SDL_CreateTexture(renderer, pf, SDL_TEXTUREACCESS_TARGET, w_w, w_h);
-    SDL_SetTextureBlendMode(sTM.mConsole, SDL_BLENDMODE_BLEND);
-    sTM.Clear();
+    AddFont(FONT_PIXEL, "fonts/PressStart2P-Regular.ttf", 20, SDL_Color({67, 19, 115, 255}));
+    AddFont(FONT_PIXEL_ACTIVE, "fonts/PressStart2P-Regular.ttf", 20, SDL_Color({250, 245, 239, 255}));
+
+    currentFont = FONT_CONSOLE;
 }
 
-void TextManager::drawTex()
-{
-    if (sTM.mConsole == nullptr) {
-        sTM.initTex();
-    }
-
-    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-    SDL_RenderCopy(renderer, sTM.mConsole, nullptr, nullptr);
+void TextManager::AddFont(FontName font, const std::string& path, int ptsize, SDL_Color c) {
+    mFonts[font] = FC_CreateFont();
+    FC_LoadFont(mFonts[font], renderer, path.c_str(), ptsize, c, TTF_STYLE_NORMAL);
 }
 
-void TextManager::updateTex(const char *text, SDL_Color color, int x, int y, DrawOrigin origin)
-{
-    SDL_Surface* surfaceMessage = TTF_RenderText_Solid(sTM.mFonts[sTM.currentFont], text, color);
+void TextManager::SetFont(FontName font) {
+    currentFont = font;
+}
 
-    if (surfaceMessage == nullptr) {
-        fprintf(stderr, "Failed to create surfaceMessage: %s\n", SDL_GetError());
+void TextManager::Print(float x, float y, const char *fmt, ...) {
+    va_list args;
+    va_start(args, fmt);
+    PrintLocate(x, y, ORIGIN_TOPLEFT, fmt, args);
+    va_end(args);
+}
+
+void TextManager::PrintLocate(float x, float y, DrawOrigin origin, const char *fmt, ...) {
+    if (mFonts[currentFont] == nullptr) {
+        return;
     }
 
-    SDL_Texture* Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
-    if (Message == nullptr) {
-        fprintf(stderr, "Failed to create Message texture: %s\n", SDL_GetError());
-    }
+    unsigned int fc_buffer_size = 1024;
+    char fc_buffer[fc_buffer_size];
 
-    int texW = 0;
-    int texH = 0;
-    SDL_QueryTexture(Message, NULL, NULL, &texW, &texH);
+    int w,h;
+    va_list args;
+
+    va_start(args, fmt);
+    vsnprintf(fc_buffer, fc_buffer_size, fmt, args);
+    va_end(args);
+
+    w = FC_GetWidth(mFonts[currentFont], fc_buffer);
+    h = FC_GetHeight(mFonts[currentFont], fc_buffer);
 
     switch (origin)
     {
@@ -53,95 +64,18 @@ void TextManager::updateTex(const char *text, SDL_Color color, int x, int y, Dra
             break; // do nothing
 
         case ORIGIN_CENTER:
-            x = (int) floor((float)(((float)SCREEN_WIDTH / 2) - ((float)texW / 2)))+x;
-            y = (int) floor((float)(((float)SCREEN_HEIGHT / 2) - ((float)texH / 2)))+y;
+            x -= (float)w/2;
+            y -= (float)h/2;
             break;
 
         case ORIGIN_BOTTOMLEFT:
-            y = SCREEN_HEIGHT - texH - y;
+            y -= (float)h;
             break;
 
         case ORIGIN_TOPRIGHT:
-            x -= texW;
+            x -= (float)w;
             break;
     }
 
-    SDL_Rect Message_rect = {x,y,texW,texH};
-
-    if (sTM.mConsole == nullptr) {
-        sTM.initTex();
-    }
-
-    SDL_SetRenderTarget( renderer, sTM.mConsole );
-    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
-    SDL_RenderCopy(renderer, Message, nullptr, &Message_rect);
-    SDL_SetRenderTarget( renderer, nullptr );
-
-    // Don't forget to free your surface and texture
-    SDL_DestroyTexture(Message);
-    SDL_FreeSurface(surfaceMessage);
+    valist_FC_Draw(mFonts[currentFont], renderer, x, y, fc_buffer);
 }
-
-void TextManager::Init()
-{
-	//TODO: Use different fonts or remove rendundant font types
-	AddFont(FONT_CONSOLE, "fonts/verdana.ttf");
-	AddFont(FONT_SCORE, "fonts/verdana.ttf", 32);
-	//AddFont(FONT_NUMBERING, "fonts/verdana.ttf");
-	//AddFont(FONT_VERDANA, "fonts/verdana.ttf");
-
-    AddFont(FONT_PIXEL, "fonts/PressStart2P-Regular.ttf", 14);
-
-
-    sTM.currentFont = FONT_VERDANA;
-}
-
-void TextManager::AddFont(FONT font, std::string path, int ptsize)
-{
-    sTM.mFonts[font] = TTF_OpenFont(path.c_str(), ptsize);
-}
-
-void TextManager::SetFont(FONT font)
-{
-    currentFont = font;
-}
-
-void TextManager::Clear()
-{
-    SDL_SetRenderTarget( renderer, mConsole );
-    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
-    SDL_RenderFillRect(renderer, NULL);
-    SDL_SetRenderTarget( renderer, nullptr );
-}
-
-void TextManager::PrintLocate(int x, int y, DrawOrigin origin, SDL_Color clr, const char* txt)
-{
-    updateTex(txt, clr, x, y, origin);
-}
-
-
-void TextManager::PrintScore(int x, int y, DrawOrigin origin, const char* format, uint32_t score)
-{
-    char* message;
-    SDL_asprintf(&message, format, score);
-    updateTex(message, SDL_Color({255, 255, 255, 255}), x, y, origin);
-    free(message);
-}
-
-void TextManager::PrintScore(int x, int y, DrawOrigin origin, const char* format, float score)
-{
-    char* message;
-    SDL_asprintf(&message, format, score);
-    updateTex(message, SDL_Color({255, 255, 255, 255}), x, y, origin);
-    free(message);
-}
-
-void TextManager::PrintScore(int x, int y, DrawOrigin origin, const char* format, char * score)
-{
-    char* message;
-    SDL_asprintf(&message, format, score);
-    updateTex(message, SDL_Color({255, 255, 255, 255}), x, y, origin);
-    free(message);
-}
-

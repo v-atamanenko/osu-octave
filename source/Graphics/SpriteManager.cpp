@@ -81,7 +81,9 @@ void SpriteManager::RemoveLast() {
 }
 
 void SpriteManager::HandleTouchInput() {
-    if (!InputHelper::KeyDown(SDL_BUTTON_LEFT, IH_KEY_MOUSE))
+    if (!(InputHelper::KeyDown(SDL_BUTTON_LEFT, IH_KEY_MOUSE) ||
+            InputHelper::KeyDown(SDLK_z, IH_KEY_KEYBOARD) ||
+            InputHelper::KeyDown(SDLK_x, IH_KEY_KEYBOARD)))
 		return;
 	touchPosition touchPos = InputHelper::TouchRead();
 

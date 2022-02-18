@@ -91,8 +91,8 @@ void Score::CalculateGrade() {
     }
 
     uint32_t total_count = mCount300 + mCount100 + mCount50 + mCountMiss + mCountGeki + mCountKatu;
-    float p300 = ((float)mCount300 / (float)total_count)*100;
-    float p50 = ((float)mCount50 / (float)total_count)*100;
+    float p300 = (((float)mCount300+(float)mCountGeki) / (float)total_count) * 100;
+    float p50 = ((float)mCount50 / (float)total_count) * 100;
     if (p300 > 90.f && p50 < 1.f && mCountMiss == 0) {
         strncpy(mGrade, "S", GRADE_LEN);
         return;

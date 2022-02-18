@@ -5,6 +5,8 @@
 #include "Beatmaps/BeatmapManager.h"
 #include "Graphics/SpriteManager.h"
 #include "System/TextManager.h"
+#include "Helpers/PreviewBuffer.h"
+
 
 #ifndef __SONGSELECT_H__
 #define __SONGSELECT_H__
@@ -17,39 +19,47 @@ class SongSelect : public Mode
 		void Update();
 		void HandleInput();
 
-        static void PageNext() { if (mCurrentPage < (mCountPages - 1)) { mCurrentPage++; shouldHandlePageUpdate = true; } };
-        static void PagePrev() { if (mCurrentPage > 0) { mCurrentPage--; shouldHandlePageUpdate = true; } };
+        static void PageNext() {
+            if (mCurrentPage < (mCountPages - 1)) {
+                PreviewBuffer::GetInstance().Update(mCurrentPage, (mCurrentPage+1), mEntriesPerPage);
+                mCurrentPage++;
+                shouldHandlePageUpdate = true;
+            }
+        };
+        static void PagePrev() {
+            if (mCurrentPage > 0) {
+                PreviewBuffer::GetInstance().Update(mCurrentPage, (mCurrentPage-1), mEntriesPerPage);
+                mCurrentPage--;
+                shouldHandlePageUpdate = true;
+            }
+        };
+        static void ExpandEntry(int index) {
+            shouldHandlePageUpdate = shouldHandleEntryExpand = true;
+            if (mExpandEntryIndex == index) {
+                mExpandEntryIndex = -1; // Second tap on expanded entry should close it.
+            } else {
+                mExpandEntryIndex = index;
+            }
+        };
 	
 	protected:
         void UpdateSonglist();
+        void reloadPreviews() const;
+
 		SpriteManager mSpriteManager;
 
         int32_t mSongListSize;
+        bool mEntryExpanded = false;
         static int32_t mCurrentPage;
         static int32_t mCountPages;
+        static int32_t mExpandEntryIndex;
         static bool shouldHandlePageUpdate;
-        int32_t mEntriesPerPage = 4;
+        static bool shouldHandleEntryExpand;
+        static const int32_t mEntriesPerPage = 4;
         int32_t mEntiesDisplayed = 0;
 
-        int32_t mBeatmapSpritesStartIndex = 0;
-        int32_t mSpritesPerBeatmapEntry = 5;
-
-    static const int32_t kSongListXOffset = 37;
-		static const int32_t kSongListYOffset = 80;
-		static const int32_t kSongListSpacing = 203;
-		
-		int32_t mCurrentX;
-        int32_t mDeltaX;
-        int32_t mIndex;
-
-        uint32_t mColTarget;
-        uint32_t mColCurrent;
-        uint32_t mColMax;
-        uint32_t mColSpill;
-		
-		void MoveSongList(int32_t x);
-		void MoveSongListLeft();
-		void MoveSongListRight();
+        int32_t mSpritesPerBeatmapEntry = 7;
+        int32_t mSpritesPerExpandedBeatmapEntry = 13;
 };
 
 #endif

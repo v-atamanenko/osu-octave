@@ -2,7 +2,7 @@
 
 #include <utility>
 
-pText::pText(std::string text, FONT font, uint16_t x, uint16_t y, SDL_Color clr) {
+pText::pText(std::string text, FontName font, uint16_t x, uint16_t y, SDL_Color clr) {
     this->X = x;
     this->Y = y;
     this->Text = std::move(text);
@@ -18,10 +18,10 @@ pText::pText(std::string text, FONT font, uint16_t x, uint16_t y, SDL_Color clr)
 }
 
 void pText::Draw() {
-    TextManager::Bottom().SetFont(this->Font);
+    TextManager::SetFont(this->Font);
 
-	TextManager::Bottom().PrintLocate(
-		this->X, this->Y, this->Origin,
-        this->Color, this->Text.c_str()
+    TextManager::PrintLocate(
+            (float)this->X, (float)this->Y, this->Origin,
+            "%s", this->Text.c_str()
 	);
 }

@@ -13,6 +13,8 @@ Beatmap::Beatmap(const char* filename, const char* basedir)
     std::ifstream file(mFilename);
     if (!file) {
         fprintf(stderr, "Couldn't read .osu file %s", mFilename.c_str());
+        mValid = false;
+        return;
     }
 
     osuParser::OsuParser p(&file);
@@ -22,12 +24,16 @@ Beatmap::Beatmap(const char* filename, const char* basedir)
     mArtist = p.artist;
     mCreator = p.creator;
     mVersion = p.version;
-    mAudioFilename = p.audioFilename;
+    mAudioFilename = mBaseDir + "/" + p.audioFilename;
 
     for (const osuParser::Event& e : p.events) {
         if (e.type == osuParser::eBackground) {
             mBackgroundFilename = e.file;
         }
+    }
+
+    if (p.mode != osuParser::gmStandard) {
+        mValid = false;
     }
 
     fLoadable = true;
@@ -42,12 +48,14 @@ void Beatmap::Initialize()
 
     if (!fLoadable) {
         fprintf(stderr, "Cannot load .osu file %s", mFilename.c_str());
+        return;
     }
 
-    chdir(mBaseDir.c_str());
+    //chdir(mBaseDir.c_str());
     std::ifstream file(mFilename);
     if (!file) {
         fprintf(stderr, "Couldn't read .osu file %s", mFilename.c_str());
+        return;
     }
 
     mParser = new osuParser::OsuParser(&file);
@@ -57,7 +65,10 @@ void Beatmap::Initialize()
     mArtist = mParser->artist;
     mCreator = mParser->creator;
     mVersion = mParser->version;
-    mAudioFilename = mParser->audioFilename;
+    mAudioFilename = mBaseDir + "/" + mParser->audioFilename;
+
+    printf("\n\nAYE\n\n");
+    AudioManager::Engine().MusicLoad(mAudioFilename);
 
     DifficultyManager::DifficultyHpDrain = (uint8_t)mParser->hpDrainRate;
     DifficultyManager::DifficultyCircleSize = (uint8_t)mParser->circleSize;
@@ -201,8 +212,8 @@ void Beatmap::Buffer(std::list<HitObject*>& hitObjectList)
 
                 for (auto & screenPoint : screenPoints) {
                     auto* tPoint = new HitObjectPoint();
-                    tPoint->x = osuPixelsXtoScreenX(screenPoint.x);
-                    tPoint->y = osuPixelsYtoScreenY(screenPoint.y);
+                    tPoint->x = osuPixelsXtoScreenX(round(screenPoint.x));
+                    tPoint->y = osuPixelsYtoScreenY(round(screenPoint.y));
                     points.push_back(tPoint);
                 }
 

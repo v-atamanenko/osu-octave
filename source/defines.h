@@ -27,10 +27,12 @@ extern SDL_Renderer *renderer;
 
 #ifdef VITA
 #define DATA_DIR "ux0:/data/osu/"
+#define MAPS_DIR "maps/"
 #endif
 
 #ifdef DESKTOP
-#define DATA_DIR "/Users/v/Repos/osu-ds/cmake-build-debug"
+#define DATA_DIR "./"
+#define MAPS_DIR "maps/"
 #endif
 
 #endif

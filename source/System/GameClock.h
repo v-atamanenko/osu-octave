@@ -13,11 +13,9 @@ class GameClock
 		static GameClock& Clock() { return sClock; }
 	
 	protected:
+        long mStartedAt;
+        long mLastUpdateAt;
 		long mTime;
-		long mFraction;
-		
-		static const int kTimeInterval = 16;
-		static const int kFractionInterval = 666666667;
 		
 		static GameClock sClock;
 	

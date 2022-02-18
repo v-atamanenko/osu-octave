@@ -14,7 +14,7 @@
 #ifndef __HITOBJECT_H__
 #define __HITOBJECT_H__
 
-typedef struct {
+typedef struct HitObjectPoint {
 	int32_t x, y;
 	int32_t angle = 0;
 } HitObjectPoint;

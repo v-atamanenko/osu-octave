@@ -4,15 +4,14 @@
 Player::Player()
 {
     GraphicsManager::Graphics().LoadTexturesForMode(MODE_PLAYER);
-	//initialisation
     BeatmapManager::Current().InitBG();
+
+    AudioManager::Engine().MusicPlay();
+
+    // Resetting clock again after MusicPlay() to compensate IO delay.
+    GameClock::Clock().Reset();
     mRuleset.Initialize();
 
-	//load audio
-	ChangeToSongDir();
-	AudioManager::Engine().MusicPlay(BeatmapManager::Current().AudioFilename());
-
-	//set player to process gameplay
 	mPlayState = PLAYSTATE_PLAY;
 }
 
@@ -84,7 +83,7 @@ void Player::HandleInput()
 
 void Player::ChangeToSongDir()
 {
-	ChangeToOsuDir();
-	chdir(BeatmapManager::Current().BaseDir().c_str());
+	//ChangeToOsuDir();
+	//chdir(BeatmapManager::Current().BaseDir().c_str());
 }
 

@@ -2,6 +2,7 @@
 #include <string>
 #include <cstdio>
 #include <map>
+#include <shared_mutex>
 
 #include <SDL.h>
 #include "SDL_image.h"
@@ -34,12 +35,14 @@ class GraphicsManager
 		void Draw(TextureType tex, int32_t x, int32_t y, uint32_t width, uint32_t height, DrawOrigin origin, FieldType fieldtype, SDL_Color color, uint32_t alpha, int32_t angle, float z = 0, const SDL_Rect* uv = nullptr);
 
         void CreateTextureFromSurface(SDL_Surface* bg, TextureType texid);
-        void LoadBeatmapPicTexture(TextureType texid, const std::string& path);
+        void LoadBeatmapPicTexture(TextureType texid, SDL_Surface *tex);
         void LoadBeatmapBackground(const std::string& path);
         void DrawBeatmapBackground();
 
+        static SDL_Texture* LoadSquareTexture(const std::string& path);
         void LoadTexturesForMode(ModeType mod);
         void UnloadTextures();
+        SDL_Texture * GetTexture(TextureType texid);
 
         void DrawFullScreenRectangle(SDL_Color c);
 
@@ -48,18 +51,22 @@ class GraphicsManager
 
         static const uint32_t PlayXOffset = ((SCREEN_WIDTH-640)/2);
 		static const uint32_t PlayYOffset = 73;
-	
-	protected:
-		std::map<TextureType, SDL_Texture*> maptextures;
 
-        bool LoadTexture(TextureType texid, const std::string& path);
-        void CreateRectangularTexture(TextureType texid, uint32_t width, uint32_t height, SDL_Color c);
+    bool LoadTexture(TextureType texid, const std::string& path);
+
+protected:
+        std::map<TextureType, SDL_Surface*> mapsurfaces;
+		std::map<TextureType, SDL_Texture*> maptextures;
+        std::shared_mutex mut_maptextures;
+
+    void CreateRectangularTexture(TextureType texid, uint32_t width, uint32_t height, SDL_Color c);
+
 
         static int32_t ForceBounds(int32_t value);
 		static GraphicsManager sGraphicsManager;
 	
 	private:
-		GraphicsManager() = default;
+		GraphicsManager();
 		~GraphicsManager() = default;
 };
 

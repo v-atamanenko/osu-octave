@@ -75,7 +75,8 @@ class AudioManager
         int PlaySpinnerSound(HitObjectSound sound);
 		
 		//music
-		int MusicPlay(std::string& filename);
+        int MusicLoad(std::string& filename);
+		int MusicPlay();
 		int MusicSkipTo(uint32_t milliseconds);
 		void MusicStop();
 	

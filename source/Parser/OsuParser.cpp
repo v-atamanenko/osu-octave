@@ -443,8 +443,12 @@ TimingPoint OsuParser::_ParseFieldAsTimingPoint(const string& field)
     tp.sampleSet = (SampleSet)stoi(args[3]);
     tp.sampleIndex = (uint8_t)stoi(args[4]);
     tp.volume = (uint8_t)stoi(args[5]);
-    tp.isInheritable = (bool)stoi(args[6]);
-    tp.isKiaiMode = (bool)stoi(args[7]);
+    if (args.size() > 6) {
+        tp.isInheritable = (bool)stoi(args[6]);
+        if (args.size() > 7) {
+            tp.isKiaiMode = (bool) stoi(args[7]);
+        }
+    }
 
     return tp;
 }
@@ -613,9 +617,11 @@ void OsuParser::_ExtractExtras(const string& s, HitObject& o)
     o.extra.customIndex = (uint8_t)stoi(params[2]);
     o.extra.volume = (uint8_t)stoi(params[3]);
 
-    if (params.size() == 5)
+    if (params.size() == 5 && mode != gmMania)
     {
         o.extra.volume = (uint8_t)stoi(params[4]);
+        //TODO: Find out what happens here. "&& mode != gmMania" this might have helped
+        //Failed on string "0:0:0:50:LR_Drum J Long Med Finish.wav"
     }
 
     o.adjustedExtra = o.extra;

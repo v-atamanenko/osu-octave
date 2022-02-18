@@ -2,62 +2,44 @@
 #include <cstdarg>
 #include <vector>
 #include "SDL_ttf.h"
+#include "SDL_FontCache.h"
 
 #include "Graphics/GraphicsManager.h"
-
-//#include "hoo06_bmf.h"
-//#include "gomics_bmf.h"
-//#include "370_bmf.h"
-//#include "ver08_bmf.h"
 
 #ifndef __TEXTMANAGER_H__
 #define __TEXTMANAGER_H__
 
-#define NUMBER_OF_FONTS 5
+#define NUMBER_OF_FONTS 9
 
 typedef enum {
 	FONT_CONSOLE,
 	FONT_SCORE,
 	FONT_NUMBERING,
 	FONT_VERDANA,
-    FONT_PIXEL
-} FONT;
+    FONT_PIXEL,
+    FONT_PIXEL_ACTIVE,
+    FONT_CONSOLE_BIG,
+    FONT_CONSOLE_BIG_BOLD,
+    FONT_CONSOLE_BOLD
+} FontName;
 
 class TextManager
 {
 	public:
-        //TODO: No top/bottom anymore
-		static TextManager& Top() { return sTM; }
-		static TextManager& Bottom() { return sTM; }
-		
-		static void Init();
+        static void Init();
+        static void SetFont(FontName font);
 
-    void SetFont(FONT font);
-
-        void drawTex();
-
-    void Clear();
-		
-		void PrintLocate(int x, int y, DrawOrigin origin, SDL_Color clr, const char* txt);
-        void PrintScore(int x, int y, DrawOrigin origin, const char* format, uint32_t score);
-        void PrintScore(int x, int y, DrawOrigin origin, const char* format, float score);
-        void PrintScore(int x, int y, DrawOrigin origin, const char* format, char * score);
+        static void Print(float x, float y, const char *fmt, ...);
+        static void PrintLocate(float x, float y, DrawOrigin origin, const char *fmt, ...);
 	
 	protected:
-		//gfxPrintConsole* mConsole;
-        TTF_Font* mFonts[NUMBER_OF_FONTS];
-        FONT currentFont;
-        SDL_Texture* mConsole;
+		static FC_Font* mFonts[NUMBER_OF_FONTS];
+        static FontName currentFont;
 
-		static TextManager sTM;
+		static void AddFont(FontName font, const std::string& path, int ptsize=18, SDL_Color c={0, 0, 0, 255});
 
-		static void AddFont(FONT font, std::string path, int ptsize=18);
-        static void updateTex(const char *text, SDL_Color color, int x, int y, DrawOrigin origin=ORIGIN_TOPLEFT);
-        static void initTex();
 	private:
-		TextManager();
-
+		TextManager() = default;
 };
 
 #endif
-
