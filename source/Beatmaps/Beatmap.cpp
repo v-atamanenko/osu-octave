@@ -30,6 +30,9 @@ Beatmap::Beatmap(const char* filename, const char* basedir)
         if (e.type == osuParser::eBackground) {
             mBackgroundFilename = mBaseDir + "/" + e.file;
         }
+        if (e.type == osuParser::eBreak) {
+            mBreakPoints.push_back({e.begin, e.end});
+        }
     }
 
     if (p.mode != osuParser::gmStandard) {

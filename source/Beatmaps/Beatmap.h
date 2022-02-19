@@ -47,6 +47,7 @@ class Beatmap
 		std::string& Creator() { return mCreator; }
 		std::string& Version() { return mVersion; }
 		std::string& AudioFilename() { return mAudioFilename; }
+        std::vector<BreakPoint>& Breakpoints() { return mBreakPoints; }
 		
 		std::string& BaseDir() { return mBaseDir; }
 		
@@ -85,6 +86,7 @@ class Beatmap
         std::string mBackgroundFilename;
 		
 		std::string mBaseDir;
+        std::vector<BreakPoint> mBreakPoints;
 	private:
 		std::string mChecksumString;
 		std::string mBeatmapChecksum;

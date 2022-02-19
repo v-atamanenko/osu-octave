@@ -44,6 +44,7 @@ add_executable(${PROJECT_NAME}
         ${PROJECT_SOURCE_DIR}/source/GameplayElements/Lifebar.cpp
         ${PROJECT_SOURCE_DIR}/source/GameplayElements/Score.cpp
         ${PROJECT_SOURCE_DIR}/source/GameplayElements/HitObjectManager.cpp
+        ${PROJECT_SOURCE_DIR}/source/GameplayElements/DarkenOverlay.cpp
         ${PROJECT_SOURCE_DIR}/source/Rulesets/RulesetOsu.cpp
         ${PROJECT_SOURCE_DIR}/source/Rulesets/Ruleset.cpp
         ${PROJECT_SOURCE_DIR}/source/Graphics/pText.cpp

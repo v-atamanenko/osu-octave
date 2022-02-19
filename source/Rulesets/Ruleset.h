@@ -5,6 +5,7 @@
 #include "Graphics/SpriteManager.h"
 #include "GameplayElements/Lifebar.h"
 #include "GameplayElements/HitObjectManager.h"
+#include "GameplayElements/DarkenOverlay.h"
 #include "System/TextManager.h"
 
 #ifndef __RULESET_H__
@@ -31,6 +32,7 @@ class Ruleset
 		HitObjectManager mHitObjectManager;
 		SpriteManager mSpriteManager;
 		Lifebar mLifebar;
+        DarkenOverlay mDarkenOverlay;
 		
 		virtual void OnSkip() = 0;
 

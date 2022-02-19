@@ -2,11 +2,13 @@
 
 Ruleset::Ruleset()
 {
+    mDarkenOverlay.AddToSpriteManager(mSpriteManager);
 	mLifebar.AddToSpriteManager(mSpriteManager);
 }
 
 void Ruleset::Initialize()
 {
+    mDarkenOverlay.Initialize();
 	mLifebar.Initialize();
 }
 

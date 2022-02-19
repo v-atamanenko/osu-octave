@@ -210,6 +210,7 @@ void GraphicsManager::LoadTexturesForMode(ModeType mod) {
             LoadTexture(TX_PLAY_SCOREBAR_KIDANGER2, "data/textures/scorebar_kidanger2.png");
 
             LoadTexture(TX_PLAY_SCOREBAR, "data/textures/scorebar.png");
+            CreateRectangularTexture(TX_PLAY_DARKEN_OVERLAY, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_Color({0, 0, 0, 150}));
             break;
         case MODE_SONGSELECT:
             LoadTexture(TX_SONGSELECT_BG, "data/ui/song-selector.png");
