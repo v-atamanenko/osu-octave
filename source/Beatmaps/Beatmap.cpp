@@ -20,6 +20,12 @@ Beatmap::Beatmap(const char* filename, const char* basedir)
     osuParser::OsuParser p(&file);
     p.Parse();
 
+    if (p.mode != osuParser::gmStandard) {
+        // Not an osu! map
+        mValid = false;
+        return;
+    }
+
     mTitle = p.title;
     mArtist = p.artist;
     mCreator = p.creator;

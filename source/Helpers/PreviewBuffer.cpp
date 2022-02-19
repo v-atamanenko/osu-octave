@@ -87,6 +87,12 @@ void PreviewBuffer::Pics_FillBuffer(int last_page, int new_page, int per_page) {
                 std::unique_lock lock_pbs(mut_pbs);
                 std::unique_lock lock_buf(mut_buf);
 
+                if (tex == nullptr) {
+                    buf[i] = preview_default;
+                    pbs.LastLoadedTexId = i;
+                    continue;
+                }
+
                 pbs.UsedUpBytes += (tex->w * tex->h * 4);
                 if (pbs.UsedUpBytes >= PICTURE_CACHE_MAX_SIZE_BYTES) {
                     printf("Reached PICTURE_CACHE_MAX_SIZE_BYTES at index %i\n", i);
