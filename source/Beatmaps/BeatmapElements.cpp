@@ -69,14 +69,30 @@ void BeatmapElements::AddBreakPoint(int32_t start, int32_t end)
 
 void BeatmapElements::ResetColours(bool fill)
 {
-	mColours.clear();
 	mCurrentColour = 0;
-	
-	if (fill)
-	{
-		mColours.push_back(SDL_Color({229, 198, 255}));
-		mColours.push_back(SDL_Color({176, 225, 255}));
-		mColours.push_back(SDL_Color({254, 218, 244}));
-		mColours.push_back(SDL_Color({223, 255, 250}));
-	}
+
+    if (!fill) {
+        mColours.clear();
+    }
+
+    if (mColours.empty() && fill) {
+        mColours.push_back(SDL_Color({229, 198, 255}));
+        mColours.push_back(SDL_Color({176, 225, 255}));
+        mColours.push_back(SDL_Color({254, 218, 244}));
+        mColours.push_back(SDL_Color({223, 255, 250}));
+    }
+}
+
+// Somehow SDL color modulations doesn't like 0/255 values.
+inline SDL_Color AdjustColor(SDL_Color c) {
+    SDL_Color y;
+    y.r = std::min(254, c.r + 1);
+    y.g = std::min(254, c.g + 1);
+    y.b = std::min(254, c.b + 1);
+    return y;
+}
+
+void BeatmapElements::AddColor(SDL_Color c)
+{
+    mColours.push_back(AdjustColor(c));
 }

@@ -103,6 +103,11 @@ void Beatmap::Initialize()
             BeatmapElements::Element().AddBreakPoint(e.begin, e.end);
         }
     }
+
+    BeatmapElements::Element().ResetColours(false);
+    for (const osuParser::RGBAColor& c : mParser->colors) {
+        BeatmapElements::Element().AddColor({c.r, c.g, c.b});
+    }
 }
 
 void Beatmap::CleanUp()
@@ -133,8 +138,7 @@ void Beatmap::InitBG() {
     //the time to skip to is the first object - 8 beats
     mSkipTime = MathHelper::Max(0, mNextObjectTime - (int32_t)(BeatmapElements::Element().GetTimingPoint(mNextObjectTime).BeatTime*8));
 
-    //strangely calling this in ctor of BeatmapElements causes game to not load :/
-	BeatmapElements::Element().ResetColours(true);
+    BeatmapElements::Element().ResetColours(true);
 
 	//now we can play this map
 	fReady = true;

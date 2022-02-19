@@ -32,6 +32,7 @@ class BeatmapElements
 		
 		void AddTimingPoint(int32_t time, float beattime, uint8_t samplesetid);
 		void AddBreakPoint(int32_t start, int32_t end);
+        void AddColor(SDL_Color c);
 		void ResetColours(bool fill);
 	
 	protected:
