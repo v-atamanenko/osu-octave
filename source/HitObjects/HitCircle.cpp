@@ -1,6 +1,6 @@
 #include "HitCircle.h"
 
-HitCircle::HitCircle(int32_t x, int32_t y, int32_t time, HitObjectType type, HitObjectSound sound) : HitObject(x, y, time, type, sound)
+HitCircle::HitCircle(int32_t x, int32_t y, int32_t time, HitObjectType type, HitObjectSound sound, bool combo) : HitObject(x, y, time, type, sound, combo)
 {
 	uint32_t size = DifficultyManager::GetCircleSize();
 	

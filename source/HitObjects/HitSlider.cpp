@@ -1,7 +1,7 @@
 #include "HitSlider.h"
 
-HitSlider::HitSlider(int32_t x, int32_t y, int32_t time, uint32_t lengthtime, std::vector<HitObjectPoint*>& points, std::vector<HitObjectPoint*>& ticks, uint32_t repeats, HitObjectType type, HitObjectSound sound)
-	: HitObject(x, y, time, type, sound)
+HitSlider::HitSlider(int32_t x, int32_t y, int32_t time, uint32_t lengthtime, std::vector<HitObjectPoint*>& points, std::vector<HitObjectPoint*>& ticks, uint32_t repeats, HitObjectType type, HitObjectSound sound, bool combo)
+	: HitObject(x, y, time, type, sound, combo)
 {
 	fTouching = false;
 	fStarted = false;

@@ -7,7 +7,7 @@
 class HitCircle : public HitObject
 {
 	public:
-		HitCircle(int32_t x, int32_t y, int32_t time, HitObjectType type, HitObjectSound sound);
+		HitCircle(int32_t x, int32_t y, int32_t time, HitObjectType type, HitObjectSound sound, bool combo);
 		
 		bool InBounds(int32_t x, int32_t y);
 		

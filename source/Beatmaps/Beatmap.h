@@ -70,11 +70,11 @@ class Beatmap
         int32_t mNextObjectX, mNextObjectY;
         HitObjectSound mNextObjectSound;
 		HitObjectType mNextObjectType;
-        bool mNextObjectIsNewCombo;
+        bool mForceNewCombo;
 
         int32_t mAudioLeadIn;
         int32_t mSkipTime;
-		bool mForceNewCombo;
+		bool mNextObjectCombo;
 		
 		bool fReady, fLoadable;
         bool mValid = true;

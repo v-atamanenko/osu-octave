@@ -6,7 +6,7 @@ float HitObject::sSliderDeltaZ = 0;
 int32_t HitObject::sLastSliderTime = 0;
 ICallback* HitObject::mScoreCallback = NULL;
 
-HitObject::HitObject(int32_t x, int32_t y, int32_t time, HitObjectType type, HitObjectSound sound)
+HitObject::HitObject(int32_t x, int32_t y, int32_t time, HitObjectType type, HitObjectSound sound, bool combo)
 {
 	mX = x;
 	mY = y;
@@ -19,8 +19,11 @@ HitObject::HitObject(int32_t x, int32_t y, int32_t time, HitObjectType type, Hit
 	
 	mComboEnd = false;
 	
-	if ((type & HIT_COMBO) > 0)
+	if (combo) {
+		printf("HITCOMBO 1\n");
 		mColour = BeatmapElements::Element().GetNextColour();
+	}
+
 }
 
 HitObject::~HitObject()

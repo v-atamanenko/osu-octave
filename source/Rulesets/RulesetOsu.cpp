@@ -14,6 +14,8 @@ void RulesetOsu::IncreaseScore(ScoreType score, bool forceNoCombo, bool forceNoA
 	
 	TextureType tex;
 	float hpIncrease;
+
+    printf("comboEnd: %i\n",comboEnd);
 	
 	switch (score)
 	{

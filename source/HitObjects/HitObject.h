@@ -51,7 +51,7 @@ class HitObject : public SpriteContainer
 		static void SetScoreCallback(ICallback* scoreCallback);
 	
 	protected:
-		HitObject(int32_t x, int32_t y, int32_t time, HitObjectType type, HitObjectSound sound);
+		HitObject(int32_t x, int32_t y, int32_t time, HitObjectType type, HitObjectSound sound, bool combo);
 		
 		int32_t mX, mY;
 		int32_t mTime, mEndTime;

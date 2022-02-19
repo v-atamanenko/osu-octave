@@ -129,7 +129,6 @@ void Beatmap::InitBG() {
 	mHitObjectCount = mParser->hitObjects.size();
 	mHitObjectRead = 0;
 	mLastObjectEndTime = 0;
-	mForceNewCombo = true;
 
     //read ahead
 	ReadNextObject();
@@ -163,18 +162,13 @@ void Beatmap::Buffer(std::list<HitObject*>& hitObjectList)
 		int32_t x = mNextObjectX;
 		int32_t y = mNextObjectY;
 		HitObjectSound sound = mNextObjectSound;
-		
-		if (mForceNewCombo)
-		{
-            mNextObjectIsNewCombo = true;
-			mForceNewCombo = false;
-		}
+        mForceNewCombo = false;
 		
 		switch (type) //ignore HIT_COMBO
 		{
 			case HIT_NORMAL:
 			{
-				object = new HitCircle(x, y, mNextObjectTime, type, sound);
+				object = new HitCircle(x, y, mNextObjectTime, type, sound, mNextObjectCombo);
 				break;
 			}
 			
@@ -241,7 +235,7 @@ void Beatmap::Buffer(std::list<HitObject*>& hitObjectList)
                     continue;
                 }
 				
-				object = new HitSlider(x, y, mNextObjectTime, lengthtime, points, ticks, repeats, type, sound);
+				object = new HitSlider(x, y, mNextObjectTime, lengthtime, points, ticks, repeats, type, sound, mNextObjectCombo);
 
                 points.clear();
                 ticks.clear();
@@ -253,8 +247,8 @@ void Beatmap::Buffer(std::list<HitObject*>& hitObjectList)
 			{
                 osuParser::HitObject ho = mParser->hitObjects.at(mHitObjectRead);
 				int64_t endtime = ho.spinner.end;
-				object = new HitSpinner(mNextObjectTime, endtime, sound);
-				mForceNewCombo = true;
+				object = new HitSpinner(mNextObjectTime, endtime, sound, mNextObjectCombo);
+                mForceNewCombo = true;
 				break;
 			}
 		}
@@ -269,7 +263,7 @@ void Beatmap::Buffer(std::list<HitObject*>& hitObjectList)
 		if (mHitObjectRead < mHitObjectCount)
 		{
 			ReadNextObject();
-			object->SetPostCreateOptions(mNextObjectIsNewCombo || mForceNewCombo, mNextObjectX, mNextObjectY);
+			object->SetPostCreateOptions(mForceNewCombo || mNextObjectCombo, mNextObjectX, mNextObjectY);
 		}
 		else
 		{
@@ -283,8 +277,12 @@ void Beatmap::ReadNextObject()
     osuParser::HitObject ho = mParser->hitObjects.at(mHitObjectRead);
 	mNextObjectTime = ho.time;
     mNextObjectType = (HitObjectType)ho.type;
+    printf("mNextObjectType: %i\n", mNextObjectType);
 
-    mNextObjectIsNewCombo = ho.isNewCombo;
+    mNextObjectCombo = ho.isNewCombo;
+    if (mHitObjectRead == 0) {
+        mNextObjectCombo = true;
+    }
     mNextObjectX = osuPixelsXtoScreenX(ho.x); //s32 x
     mNextObjectY = osuPixelsYtoScreenY(ho.y); //s32 y
     mNextObjectSound = (HitObjectSound)ho.soundMask;
