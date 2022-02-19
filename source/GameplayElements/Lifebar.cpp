@@ -30,7 +30,7 @@ void Lifebar::Initialize()
 	mHpDisplay = 0;
 
 	mTimeLastUpdate = GameClock::Clock().Time();
-	mFillTime = MathHelper::Min(10000, BeatmapManager::Current().StartTime());
+	mFillTime = MathHelper::Min(10000, (BeatmapManager::Current().StartTime() - BeatmapManager::Current().AudioLeadIn()));
 	mFillRate = MAXHP/((mFillTime-700)/(float)1000*60);
 
 	for (uint32_t time = BeatmapManager::Current().StartTime() - mFillTime;

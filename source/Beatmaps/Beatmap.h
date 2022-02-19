@@ -50,7 +50,8 @@ class Beatmap
         std::vector<BreakPoint>& Breakpoints() { return mBreakPoints; }
 		
 		std::string& BaseDir() { return mBaseDir; }
-		
+
+        int32_t AudioLeadIn() { return (mAudioLeadIn * -1); }
 		int32_t SkipTime() { return mSkipTime; }
         int32_t StartTime() { return mFirstObjectTime; }
 
@@ -71,6 +72,7 @@ class Beatmap
 		HitObjectType mNextObjectType;
         bool mNextObjectIsNewCombo;
 
+        int32_t mAudioLeadIn;
         int32_t mSkipTime;
 		bool mForceNewCombo;
 		

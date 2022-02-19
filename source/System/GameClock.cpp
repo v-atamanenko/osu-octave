@@ -26,4 +26,6 @@ void GameClock::Reset() {
 	SkipTo(0);
 }
 
-
+void GameClock::Reset(int32_t to) {
+    SkipTo(to);
+}

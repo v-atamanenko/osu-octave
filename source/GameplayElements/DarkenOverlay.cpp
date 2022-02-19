@@ -11,13 +11,7 @@ DarkenOverlay::DarkenOverlay()
 //can only be called after beatmap has been loaded
 void DarkenOverlay::Initialize()
 {
-    mHpLossPerMs = DifficultyManager::GetHpDrainRate() * 2; //units are hp/ms based off a 200 point scale
-    mHpCurrent = 0;
-    mHpDisplay = 0;
-
-    mTimeLastUpdate = GameClock::Clock().Time();
-    mFillTime = MathHelper::Min(10000, BeatmapManager::Current().StartTime());
-    mFillRate = MAXHP/((mFillTime-700)/(float)1000*60);
+    mFillTime = MathHelper::Min(10000, BeatmapManager::Current().StartTime() - BeatmapManager::Current().AudioLeadIn());
 
     int start = BeatmapManager::Current().StartTime() - mFillTime;
     int end = MathHelper::Max(BeatmapManager::Current().StartTime(), 701) - 700;
@@ -28,13 +22,5 @@ void DarkenOverlay::Initialize()
         int quarter =  MathHelper::Min(floor(((float)bp.EndTime-(float)bp.StartTime) / 4.f), 700);
         mSprites[0]->Hide(bp.StartTime,bp.StartTime+quarter);
         mSprites[0]->Show(bp.EndTime-quarter,bp.EndTime);
-    }
-}
-
-void DarkenOverlay::ClearTransforms()
-{
-    for (auto & mSprite : mSprites)
-    {
-        mSprite->ClearTransforms();
     }
 }

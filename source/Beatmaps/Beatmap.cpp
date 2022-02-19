@@ -31,6 +31,7 @@ Beatmap::Beatmap(const char* filename, const char* basedir)
     mCreator = p.creator;
     mVersion = p.version;
     mAudioFilename = mBaseDir + "/" + p.audioFilename;
+    mAudioLeadIn = p.audioLeadIn;
 
     for (const osuParser::Event& e : p.events) {
         if (e.type == osuParser::eBackground) {
@@ -75,6 +76,7 @@ void Beatmap::Initialize()
     mCreator = mParser->creator;
     mVersion = mParser->version;
     mAudioFilename = mBaseDir + "/" + mParser->audioFilename;
+    mAudioLeadIn = mParser->audioLeadIn;
 
     AudioManager::Engine().MusicLoad(mAudioFilename);
 
