@@ -277,7 +277,6 @@ void Beatmap::ReadNextObject()
     osuParser::HitObject ho = mParser->hitObjects.at(mHitObjectRead);
 	mNextObjectTime = ho.time;
     mNextObjectType = (HitObjectType)ho.type;
-    printf("mNextObjectType: %i\n", mNextObjectType);
 
     mNextObjectCombo = ho.isNewCombo;
     if (mHitObjectRead == 0) {

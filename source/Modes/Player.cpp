@@ -22,12 +22,6 @@ Player::~Player()
 
 void Player::Update()
 {
-    if (!mMusicStarted && GameClock::Clock().Time() >= 0) {
-        mMusicStarted = true;
-        AudioManager::Engine().MusicPlay();
-        GameClock::Clock().Reset();
-    }
-
     GraphicsManager::Graphics().DrawBeatmapBackground();
 
     switch (mPlayState) {

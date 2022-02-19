@@ -20,7 +20,6 @@ HitObject::HitObject(int32_t x, int32_t y, int32_t time, HitObjectType type, Hit
 	mComboEnd = false;
 	
 	if (combo) {
-		printf("HITCOMBO 1\n");
 		mColour = BeatmapElements::Element().GetNextColour();
 	}
 

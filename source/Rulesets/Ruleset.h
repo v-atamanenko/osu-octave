@@ -33,6 +33,7 @@ class Ruleset
 		SpriteManager mSpriteManager;
 		Lifebar mLifebar;
         DarkenOverlay mDarkenOverlay;
+        bool mMusicStarted = false;
 		
 		virtual void OnSkip() = 0;
 

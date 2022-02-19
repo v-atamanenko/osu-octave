@@ -17,6 +17,10 @@ void Ruleset::Skip()
     fprintf(stderr, "SkipTime: %i\n",BeatmapManager::Current().SkipTime());
 	if (GameClock::Clock().Time() < BeatmapManager::Current().SkipTime())
 	{
+        if (!mMusicStarted) {
+            mMusicStarted = true;
+            AudioManager::Engine().MusicPlay();
+        }
 		AudioManager::Engine().MusicSkipTo(BeatmapManager::Current().SkipTime());
 		GameClock::Clock().SkipTo(BeatmapManager::Current().SkipTime());
 		
@@ -80,6 +84,12 @@ void Ruleset::UpdateFailed()
 
 bool Ruleset::Update()
 {
+    if (!mMusicStarted && GameClock::Clock().Time() >= 0) {
+        mMusicStarted = true;
+        AudioManager::Engine().MusicPlay();
+        GameClock::Clock().Reset();
+    }
+
 	std::list<HitObject*> hitObjectList;
 	BeatmapManager::Current().Buffer(hitObjectList);
 	
