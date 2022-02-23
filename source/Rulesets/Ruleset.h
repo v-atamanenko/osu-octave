@@ -26,6 +26,9 @@ class Ruleset
 		virtual bool Update();
         virtual void UpdateGameOver();
         virtual void UpdateFailed();
+
+        virtual void StopMusic();
+        virtual void StartMusic();
 	
 	protected:
 		Score mCurrentScore;

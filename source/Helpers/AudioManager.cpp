@@ -147,8 +147,11 @@ void AudioManager::PlaySliderTick()
 }
 
 int AudioManager::MusicLoad(std::string& filename) {
-    if (music != nullptr)
+    if (music != nullptr) {
         MusicStop();
+        Mix_FreeMusic(music);
+    }
+
     mChannel = 0;
 
     music = Mix_LoadMUS(filename.c_str());
@@ -166,7 +169,7 @@ int AudioManager::MusicLoad(std::string& filename) {
 }
 
 int AudioManager::MusicPlay() {
-    if (mChannel != -1) {
+    if (music != nullptr) {
         mChannel = Mix_PlayMusic(music, -1);
         fprintf(stderr, "Started music on channel %i\n", mChannel);
     }
@@ -194,9 +197,6 @@ void AudioManager::MusicStop()
 		return;
 
     Mix_HaltMusic();
-    Mix_FreeMusic(music);
-    music = nullptr;
-	
-	mChannel = -1;
+    mChannel = -1;
 }
 

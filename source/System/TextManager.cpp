@@ -5,12 +5,6 @@
 FC_Font* TextManager::mFonts[NUMBER_OF_FONTS];
 FontName TextManager::currentFont;
 
-template <class ... Args>
-void valist_FC_Draw(FC_Font* font, FC_Target* dest, float x, float y, const char* formatted_text, Args ... args)
-{
-    FC_Draw(font, dest, x, y, formatted_text, args...);
-}
-
 void TextManager::Init() {
     AddFont(FONT_CONSOLE_BIG, "fonts/Roboto-Regular.ttf", 16);
     AddFont(FONT_CONSOLE_BIG_BOLD, "fonts/Roboto-Medium.ttf", 16);
@@ -20,6 +14,8 @@ void TextManager::Init() {
 
     AddFont(FONT_PIXEL, "fonts/PressStart2P-Regular.ttf", 20, SDL_Color({67, 19, 115, 255}));
     AddFont(FONT_PIXEL_ACTIVE, "fonts/PressStart2P-Regular.ttf", 20, SDL_Color({250, 245, 239, 255}));
+
+    AddFont(FONT_NUMBERING, "fonts/Abel-Regular.ttf", 60, SDL_Color({67, 19, 155, 255}));
 
     currentFont = FONT_CONSOLE;
 }
@@ -34,10 +30,16 @@ void TextManager::SetFont(FontName font) {
 }
 
 void TextManager::Print(float x, float y, const char *fmt, ...) {
+    unsigned int fc_buffer_size = 1024;
+    char fc_buffer[fc_buffer_size];
+
     va_list args;
+
     va_start(args, fmt);
-    PrintLocate(x, y, ORIGIN_TOPLEFT, fmt, args);
+    vsnprintf(fc_buffer, fc_buffer_size, fmt, args);
     va_end(args);
+
+    PrintLocate(x, y, ORIGIN_TOPLEFT, "%s", fc_buffer);
 }
 
 void TextManager::PrintLocate(float x, float y, DrawOrigin origin, const char *fmt, ...) {
@@ -76,6 +78,6 @@ void TextManager::PrintLocate(float x, float y, DrawOrigin origin, const char *f
             x -= (float)w;
             break;
     }
-
-    valist_FC_Draw(mFonts[currentFont], renderer, x, y, fc_buffer);
+    FC_Draw(mFonts[currentFont], renderer, x, y, "%s", fc_buffer);
+    //valist_FC_Draw(mFonts[currentFont], renderer, x, y, fc_buffer);
 }

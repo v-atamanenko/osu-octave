@@ -63,8 +63,8 @@ void Lifebar::Update()
 	}
 	
 	int dhp = mHpCurrent - mHpDisplay;
-	if (MathHelper::Abs(dhp) > MAXCHANGE)
-		dhp = MathHelper::Sgn(dhp) * MAXCHANGE;
+	//if (MathHelper::Abs(dhp) > MAXCHANGE)
+	//	dhp = MathHelper::Sgn(dhp) * MAXCHANGE;
 	mHpDisplay += dhp;
 	
 	//mHpDisplay represents the required width of the sprite
@@ -80,6 +80,8 @@ void Lifebar::Update()
     mSprites[1]->UV = new SDL_Rect({0, 0, (int)(mHpDisplay), 60});
 
 	mTimeLastUpdate = now;
+    printf("mHpCurrent %f\n", mHpCurrent);
+    printf("mHpDisplay %f\n", mHpDisplay);
 }
 
 void Lifebar::Set(float value, bool limit)
@@ -117,3 +119,11 @@ void Lifebar::ClearTransforms()
 	}
 }
 
+
+void Lifebar::Kill()
+{
+    int mt = GameClock::Clock().Time();
+    for (auto &spr : mSprites) {
+        spr->Kill(mt);
+    }
+}

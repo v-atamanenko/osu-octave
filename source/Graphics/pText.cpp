@@ -5,6 +5,7 @@
 pText::pText(std::string text, FontName font, uint16_t x, uint16_t y, SDL_Color clr) {
     this->X = x;
     this->Y = y;
+    this->Z = -0.02f;
     this->Text = std::move(text);
     this->Font = font;
     this->Clickable = false;

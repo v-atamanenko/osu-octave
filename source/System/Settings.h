@@ -19,10 +19,12 @@ class Settings
         static std::string get_str(const std::string& key) { return settings[key].get<std::string>(); }
         static int get_int(const std::string& key) { return settings[key].get<int>(); }
         static float get_float(const std::string& key) { return settings[key].get<float>(); }
+        static bool get_bool(const std::string& key) { return settings[key].get<bool>(); }
 
         static void set_str(const std::string& key, const std::string& value) { settings[key] = value; }
         static void set_int(const std::string& key, const int value) { settings[key] = value; }
         static void set_float(const std::string& key, const float value) { settings[key] = value; }
+        static void set_bool(const std::string& key, const bool value) { settings[key] = value; }
 
         static void save() {
             char path[PATH_MAX];
@@ -34,7 +36,8 @@ class Settings
 
         static void load() {
             settings = {
-                {"page", 0}
+                {"page", 0},
+                {"noFail", true}
             };
 
             char path[PATH_MAX];

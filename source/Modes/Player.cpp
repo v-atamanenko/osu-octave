@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "System/Settings.h"
 //#include "menuBG.h"
 
 Player::Player()
@@ -11,13 +12,16 @@ Player::Player()
     mRuleset.Initialize();
 
     mPlayState = PLAYSTATE_PLAY;
+
+    mNoFail = Settings::get_bool("noFail");
 }
 
 Player::~Player()
 {
     //delete mBaseDir;
     //GraphicsManager::Graphics().UnloadTextures();
-    AudioManager::Engine().MusicStop();
+    //AudioManager::Engine().MusicStop();
+    mRuleset.StopMusic();
 }
 
 void Player::Update()
@@ -33,9 +37,9 @@ void Player::Update()
                 mRuleset.OnGameOver();
             }
 
-            if (failed) {
-                //mPlayState = PLAYSTATE_FAILED;
-                //mRuleset.OnFailed();
+            if (failed && !mNoFail) {
+                mPlayState = PLAYSTATE_FAILED;
+                mRuleset.OnFailed();
             }
 
             break;

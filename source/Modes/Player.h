@@ -32,6 +32,7 @@ class Player : public Mode
 	protected:
 		RulesetOsu mRuleset;
 		PlayState mPlayState;
+        bool mNoFail = false;
 };
 
 #endif

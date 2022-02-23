@@ -210,6 +210,18 @@ void GraphicsManager::LoadTexturesForMode(ModeType mod) {
             LoadTexture(TX_PLAY_SCOREBAR_KIDANGER2, "data/textures/scorebar_kidanger2.png");
 
             LoadTexture(TX_PLAY_SCOREBAR, "data/textures/scorebar.png");
+
+            LoadTexture(TX_RANKING_A_LG, "data/textures/ranking-a-lg.png");
+            LoadTexture(TX_RANKING_B_LG, "data/textures/ranking-b-lg.png");
+            LoadTexture(TX_RANKING_C_LG, "data/textures/ranking-c-lg.png");
+            LoadTexture(TX_RANKING_D_LG, "data/textures/ranking-d-lg.png");
+            LoadTexture(TX_RANKING_S_LG, "data/textures/ranking-s-lg.png");
+            LoadTexture(TX_RANKING_SS_LG, "data/textures/ranking-ss-lg.png");
+            LoadTexture(TX_RANKING_F_LG, "data/textures/ranking-f-lg.png");
+            LoadTexture(TX_BUTTON_BIG, "data/ui/button-big.png");
+
+            LoadTexture(TX_GAMEOVER_BG, "data/ui/gameover-bg.png");
+
             CreateRectangularTexture(TX_PLAY_DARKEN_OVERLAY, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_Color({0, 0, 0, 150}));
             break;
         case MODE_SONGSELECT:
