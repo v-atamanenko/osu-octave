@@ -15,12 +15,14 @@ HitCircle::HitCircle(int32_t x, int32_t y, int32_t time, HitObjectType type, Hit
 	spr->Show(fadeInStart, fadeInEnd);
 	spr->Hide(time, mEndTime);
 	spr->Kill(mEndTime+1000);
+    spr->Z = (float)time;
 	mSprites.push_back(spr);
 	
 	spr = new pSprite(TX_PLAY_CIRCLE, x, y, size, size, ORIGIN_CENTER, FIELD_PLAY, mColour, 0);
 	spr->Show(fadeInStart, fadeInEnd);
 	spr->Hide(time, mEndTime);
 	spr->Kill(mEndTime+1000);
+    spr->Z = (float)time - 0.5f;
 	mSprites.push_back(spr);
 	
 	spr = new pSprite(TX_PLAY_CIRCLEAPPROACH, x, y, size, size, ORIGIN_CENTER, FIELD_PLAY, mColour, 0);
@@ -28,6 +30,7 @@ HitCircle::HitCircle(int32_t x, int32_t y, int32_t time, HitObjectType type, Hit
 	spr->Hide(time, mEndTime);
 	spr->Scale(fadeInStart, time, 4, 1);
 	spr->Kill(mEndTime+1000);
+    spr->Z = (float)time;
 	mSprites.push_back(spr);
 	
 	mScoreSpriteId = 1;

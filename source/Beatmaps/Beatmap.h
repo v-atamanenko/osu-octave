@@ -54,6 +54,7 @@ class Beatmap
         int32_t AudioLeadIn() { return (mAudioLeadIn * -1); }
 		int32_t SkipTime() { return mSkipTime; }
         int32_t StartTime() { return mFirstObjectTime; }
+        int32_t EndTime() { return mLastObjectEndTime; }
 
 		std::string& BeatmapChecksum();
 

@@ -38,11 +38,6 @@ void Lifebar::Initialize()
 	{
 		mSprites[2]->Scale(time, time + 90, 1.5, 1);
 	}
-
-    printf("Lifebar initalize;\n");
-    printf("mFillTime %i\n", mFillTime);
-    printf("mFillRate %f;\n", mFillRate);
-    printf("mTimeLastUpdate %i;\n", mTimeLastUpdate);
 }
 
 void Lifebar::Update()
@@ -80,8 +75,6 @@ void Lifebar::Update()
     mSprites[1]->UV = new SDL_Rect({0, 0, (int)(mHpDisplay), 60});
 
 	mTimeLastUpdate = now;
-    printf("mHpCurrent %f\n", mHpCurrent);
-    printf("mHpDisplay %f\n", mHpDisplay);
 }
 
 void Lifebar::Set(float value, bool limit)

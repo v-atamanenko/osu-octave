@@ -119,36 +119,43 @@ HitSlider::HitSlider(int32_t x, int32_t y, int32_t time, uint32_t lengthtime, st
 	spr->Hide(time, time+100);
 	spr->Scale(fadeInStart, time, 4, 1);
 	spr->Kill(mEndTime);
+    spr->Z = (float)time-0.6f;
 	mSprites.push_back(spr);
 	
 	spr = new pSprite(TX_PLAY_CIRCLEOVERLAY, x, y, circleSize, circleSize, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({0,0,0}), 0);
 	spr->Show(fadeInStart, fadeInEnd);
 	spr->Kill(mEndTime+1000);
+    spr->Z = (float)time - 0.51f;
 	mSprites.push_back(spr);
 	
 	spr = new pSprite(TX_PLAY_CIRCLE, x, y, circleSize, circleSize, ORIGIN_CENTER, FIELD_PLAY, mColour, 0);
 	spr->Show(fadeInStart, fadeInEnd);
 	spr->Kill(mEndTime+1000);
+    spr->Z = (float)time - 0.5f;
 	mSprites.push_back(spr);
 	
 	//slider end
 	spr = new pSprite(TX_PLAY_CIRCLEOVERLAY, points[pointCount-1]->x, points[pointCount-1]->y, circleSize, circleSize, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({0,0,0}), 0);
 	spr->Show(fadeInStart, fadeInEnd);
 	spr->Kill(mEndTime+1000);
+    spr->Z = (float)time - 0.45f;
 	mSprites.push_back(spr);
 	
 	spr = new pSprite(TX_PLAY_CIRCLE, points[pointCount-1]->x, points[pointCount-1]->y, circleSize, circleSize, ORIGIN_CENTER, FIELD_PLAY, mColour, 0);
 	spr->Show(fadeInStart, fadeInEnd);
 	spr->Kill(mEndTime+1000);
+    spr->Z = (float)time - 0.4f;
 	mSprites.push_back(spr);
 	
 	//slider30 sprites
 	spr = new pSprite(TX_PLAY_SLIDER30, points[0]->x, points[0]->y, osuPixelsYtoScreenY(40), osuPixelsYtoScreenY(40), ORIGIN_CENTER, FIELD_PLAY, SDL_Color({0, 0, 0}), 0);
 	spr->Kill(mEndTime+1000);
+    spr->Z = (float)time-0.7f;
 	mSprites.push_back(spr);
 	
 	spr = new pSprite(TX_PLAY_SLIDER30, points[pointCount-1]->x, points[pointCount-1]->y, osuPixelsYtoScreenY(40), osuPixelsYtoScreenY(40), ORIGIN_CENTER, FIELD_PLAY, SDL_Color({0, 0, 0}), 0);
 	spr->Kill(mEndTime+1000);
+    spr->Z = (float)time-0.7f;
 	mSprites.push_back(spr);
 	
 	//slider repeats
@@ -173,8 +180,9 @@ HitSlider::HitSlider(int32_t x, int32_t y, int32_t time, uint32_t lengthtime, st
 			tFadeInEnd = fadeInEnd;
 		}
 		
-		spr = new pSprite(TX_PLAY_SLIDERREVERSE, p->x, p->y, ballSize, ballSize, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({0,0,0}), 0, -1.f);
+		spr = new pSprite(TX_PLAY_SLIDERREVERSE, p->x, p->y, ballSize, ballSize, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({0,0,0}), 0);
 		spr->Show(tAnimStart, tFadeInEnd);
+        spr->Z = (float)time-0.8f;
 		//todo: slider repeat explosion?
 		spr->Hide(time+(lengthtime*i));
 		
@@ -218,6 +226,7 @@ HitSlider::HitSlider(int32_t x, int32_t y, int32_t time, uint32_t lengthtime, st
 		spr->Show(fadeInStart+30, fadeInEnd);
 		spr->Hide(mEndTime-30, mEndTime+70);
 		spr->Kill(mEndTime+70);
+        spr->Z = (float)time+0.1f;
 		mSprites.push_back(spr);
 	}
 }

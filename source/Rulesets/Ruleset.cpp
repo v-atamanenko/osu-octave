@@ -214,7 +214,6 @@ bool Ruleset::Update()
     TextManager::PrintLocate(20, 534, ORIGIN_BOTTOMLEFT, "%ix   ", mCurrentScore.CurrentCombo());
 
     if(mLifebar.GetCurrentHP() == 0.f && GameClock::Clock().Time() > BeatmapManager::Current().SkipTime()) {
-        printf("000000 <=============\n");
         return false; // Premature game over, HP is 0
     }
     return true;

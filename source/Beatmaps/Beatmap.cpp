@@ -128,7 +128,7 @@ void Beatmap::InitBG() {
 
 	mHitObjectCount = mParser->hitObjects.size();
 	mHitObjectRead = 0;
-	mLastObjectEndTime = 0;
+	mLastObjectEndTime = mParser->hitObjects.at(mHitObjectCount-1).time;
 
     //read ahead
 	ReadNextObject();
