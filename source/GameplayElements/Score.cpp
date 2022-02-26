@@ -46,7 +46,7 @@ void Score::Add(ScoreType score, bool forceNoCombo, bool gekiKatu)
 	}
 	else
 	{
-		mScore += score + MathHelper::Max(0, mCombo-1) * (score/25) * DifficultyManager::DifficultyPeppyStars;
+		mScore += score + MathHelper::Max(0, (int32_t)mCombo-1) * (score/25) * DifficultyManager::DifficultyPeppyStars;
 
 		if (!forceNoCombo) {
 			++mCombo;

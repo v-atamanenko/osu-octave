@@ -64,10 +64,10 @@ HitSpinner::~HitSpinner()
 
 void HitSpinner::Update()
 {
-	float ratio = (mTotalSpins + MathHelper::Frc(mTotalRotation)) / mRequiredSpins;
+	float ratio = ((float)mTotalSpins + MathHelper::Frc(mTotalRotation)) / (float)mRequiredSpins;
 	
 	//set spinner bars
-	uint32_t height = MathHelper::Max(0, MathHelper::Min(SCREEN_HEIGHT, floor(ratio*(float)(SCREEN_HEIGHT))) - MathHelper::Random(0, ScreenY(20)));
+	uint32_t height = MathHelper::Max(0, MathHelper::Min(SCREEN_HEIGHT, (int32_t)floor(ratio*(float)(SCREEN_HEIGHT))) - (int32_t)MathHelper::Random(0, ScreenY(20)));
 
     delete mSprites[2]->UV;
     mSprites[2]->UV = new SDL_Rect({0, SCREEN_HEIGHT-height, SCREEN_WIDTH, height});
@@ -98,14 +98,14 @@ void HitSpinner::OnTouch(const touchPosition& touch)
 {
 	if (GameClock::Clock().Time() >= mTime && GameClock::Clock().Time() <= mEndTime)
 	{
-		if (MathHelper::Abs(touch.px - (SCREEN_WIDTH / 2)) < 10 && MathHelper::Abs(touch.py - (SCREEN_HEIGHT/2)) < 10)
+		if (MathHelper::Abs((int32_t)touch.px - (SCREEN_WIDTH / 2)) < 10 && MathHelper::Abs((int32_t)touch.py - (SCREEN_HEIGHT/2)) < 10)
 		{
 			fSpinning = false;
 			return;
 		}
 		
 		//work out the new angle
-		int32_t newAngle = GetAngle(touch.px, touch.py);
+		int32_t newAngle = GetAngle((int32_t)touch.px, (int32_t)touch.py);
 		
 		if (!fSpinning)
 		{

@@ -53,7 +53,7 @@ class pDrawable
 		void* Tag;
 		
 		DrawOrigin Origin;
-		FieldType Field;
+		FieldType Field = FIELD_PLAY;
 		TextureType Texture;
 
 		void(*OnClick)(pDrawable* self, uint16_t x, uint16_t y);

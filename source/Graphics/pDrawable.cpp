@@ -45,8 +45,8 @@ bool pDrawable::InBounds(int32_t x, int32_t y)
 {
 	if (Field == FIELD_PLAY)
 	{
-		x -= GraphicsManager::PlayXOffset;
-		y -= GraphicsManager::PlayYOffset;
+		x -= (int32_t)GraphicsManager::PlayXOffset;
+		y -= (int32_t)GraphicsManager::PlayYOffset;
 	}
 
 	//uint32_t s_w = Width;
@@ -59,14 +59,14 @@ bool pDrawable::InBounds(int32_t x, int32_t y)
 	{
 		case ORIGIN_TOPLEFT:
 		{
-			return x >= X && x <= X+Width
-				&& y >= Y && y <= Y+Height;
+			return x >= X && x <= X+(int32_t)Width
+				&& y >= Y && y <= Y+(int32_t)Height;
 		}
 		
 		case ORIGIN_CENTER:
 		{
-			int32_t halfWidth = Width>>1;
-			int32_t halfHeight = Height>>1;
+			int32_t halfWidth = (int32_t)Width>>1;
+			int32_t halfHeight = (int32_t)Height>>1;
 			
 			return x >= X-halfWidth && x <= X+halfWidth
 				&& y >= Y-halfHeight && y <= Y+halfHeight;
@@ -74,8 +74,8 @@ bool pDrawable::InBounds(int32_t x, int32_t y)
 		
 		case ORIGIN_BOTTOMLEFT:
 		{
-			return x >= X && x <= X+Width
-				&& y >= Y-Height && y <= Y;
+			return x >= X && x <= X+(int32_t)Width
+				&& y >= Y-(int32_t)Height && y <= Y;
 		}
 		
 		default:

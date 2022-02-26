@@ -95,6 +95,7 @@ namespace osuParser
 		ssNormal = 1,
 		ssSoft = 2,
 		ssDrum = 3,
+        ssMaxAllowedValue = ssDrum
 	};
 
 	// Valid events for beatmap [Events] section

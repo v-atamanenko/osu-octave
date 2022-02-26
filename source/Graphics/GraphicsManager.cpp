@@ -290,40 +290,40 @@ void GraphicsManager::Draw(TextureType tex, int32_t x, int32_t y, uint32_t width
     }
 
     if (fieldtype == FIELD_PLAY) {
-        x += PlayXOffset;
-        y += PlayYOffset;
+        x += (int32_t)PlayXOffset;
+        y += (int32_t)PlayYOffset;
     }
 
     switch (origin) {
         case ORIGIN_TOPLEFT:
             x1 = ForceBounds(x);
             y1 = ForceBounds(y);
-            x2 = ForceBounds(x + width);
-            y2 = ForceBounds(y + height);
+            x2 = ForceBounds(x + (int32_t)width);
+            y2 = ForceBounds(y + (int32_t)height);
             break;
 
         case ORIGIN_CENTER:
             width /= 2;
             height /= 2;
 
-            x1 = ForceBounds(x - width);
-            x2 = ForceBounds(x + width);
-            y1 = ForceBounds(y - height);
-            y2 = ForceBounds(y + height);
+            x1 = ForceBounds(x - (int32_t)width);
+            x2 = ForceBounds(x + (int32_t)width);
+            y1 = ForceBounds(y - (int32_t)height);
+            y2 = ForceBounds(y + (int32_t)height);
             break;
 
         case ORIGIN_BOTTOMLEFT:
             x1 = ForceBounds(x);
-            x2 = ForceBounds(x + width);
-            y1 = ForceBounds((SCREEN_HEIGHT) - y - height);
+            x2 = ForceBounds(x + (int32_t)width);
+            y1 = ForceBounds((SCREEN_HEIGHT) - y - (int32_t)height);
             y2 = ForceBounds((SCREEN_HEIGHT) - y);
             break;
 
         case ORIGIN_TOPRIGHT:
-            x1 = ForceBounds(x - width);
+            x1 = ForceBounds(x - (int32_t)width);
             x2 = ForceBounds(x);
             y1 = ForceBounds(y);
-            y2 = ForceBounds(y + height);
+            y2 = ForceBounds(y + (int32_t)height);
     }
 
 

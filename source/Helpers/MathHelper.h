@@ -18,10 +18,8 @@ public:
     static float	Frc(float value) { return value - (int)value; }
     static double CosineInterpolate(double y1, double y2, double mu);
 
-    static uint16_t Random(uint16_t min, uint16_t max);
-
-protected:
-    static uint16_t mSeed;
+    static uint32_t Random(uint32_t min, uint32_t max);
+    static uint64_t mSeed;
 };
 
 // std::lerp implementation by (c) Edward Smith-Rowland

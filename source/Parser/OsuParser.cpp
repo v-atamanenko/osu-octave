@@ -612,7 +612,13 @@ void OsuParser::_ExtractExtras(const string& s, HitObject& o)
         return;
     }
 
-    o.extra.sampleSet = (SampleSet)stoi(params[0]);
+    int extra_ss_tmp = stoi(params[0]);
+    if (extra_ss_tmp < 0 || extra_ss_tmp > ssMaxAllowedValue) {
+        o.extra.sampleSet = ssAuto;
+    } else {
+        o.extra.sampleSet = (SampleSet)extra_ss_tmp;
+    }
+
     o.extra.additionSet = (SampleSet)stoi(params[1]);
     o.extra.customIndex = (uint8_t)stoi(params[2]);
     o.extra.volume = (uint8_t)stoi(params[3]);
