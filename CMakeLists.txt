@@ -61,7 +61,6 @@ add_executable(${PROJECT_NAME}
         ${PROJECT_SOURCE_DIR}/source/HitObjects/HitObject.cpp
         ${PROJECT_SOURCE_DIR}/source/Helpers/MD5.cpp
         ${PROJECT_SOURCE_DIR}/source/Helpers/MathHelper.cpp
-        ${PROJECT_SOURCE_DIR}/source/Helpers/FileReader.cpp
         ${PROJECT_SOURCE_DIR}/source/Helpers/InputHelper.cpp
         ${PROJECT_SOURCE_DIR}/source/Helpers/AudioManager.cpp
         ${PROJECT_SOURCE_DIR}/source/Helpers/OsuSliderCurves.cpp

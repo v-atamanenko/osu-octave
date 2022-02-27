@@ -8,7 +8,7 @@ Beatmap::Beatmap(const char* filename, const char* basedir)
 	mBaseDir = basedir;
     mParser = nullptr;
 
-	mChecksumString = "";
+	//mChecksumString = "";
 
     std::ifstream file(mFilename);
     if (!file) {
@@ -45,6 +45,8 @@ Beatmap::Beatmap(const char* filename, const char* basedir)
     if (p.mode != osuParser::gmStandard) {
         mValid = false;
     }
+
+    mBeatmapChecksum = md5(p.title + p.artist + p.version + std::to_string(p.beatmapID));
 
     fLoadable = true;
 	fReady = false;
@@ -145,11 +147,9 @@ void Beatmap::InitBG() {
 
 void Beatmap::Buffer(std::list<HitObject*>& hitObjectList)
 {
-	if (!fReady)
-	{
-		printf("\x1b[0;std::listt ready to buffer");
-		return;
-	}
+    // The method must never be called if the beatmap failed to initialize.
+    assert(fReady);
+    assert(mParser != nullptr);
 
     //we buffer objects to 10 seconds ahead
 	while (mHitObjectRead < mHitObjectCount && mNextObjectTime < GameClock::Clock().Time() + 3000)
@@ -272,8 +272,7 @@ void Beatmap::Buffer(std::list<HitObject*>& hitObjectList)
 	}
 }
 
-void Beatmap::ReadNextObject()
-{
+void Beatmap::ReadNextObject() {
     osuParser::HitObject ho = mParser->hitObjects.at(mHitObjectRead);
 	mNextObjectTime = ho.time;
     mNextObjectType = (HitObjectType)ho.type;
@@ -287,9 +286,7 @@ void Beatmap::ReadNextObject()
     mNextObjectSound = (HitObjectSound)ho.soundMask;
 }
 
-/*
 std::string& Beatmap::BeatmapChecksum() {
-	std::string checksum = "";
-	//TODO: figure out some way to uniquely identify every beatmap without it being too intensive
-	return nullptr;
-}*/
+    assert(!mBeatmapChecksum.empty());
+    return mBeatmapChecksum;
+}

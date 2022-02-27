@@ -15,7 +15,7 @@ void BeatmapManager::Load(uint32_t index)
 void BeatmapManager::BuildCollection()
 {
 	char* maps_path;
-    SDL_asprintf(&maps_path, "%s%s", DATA_DIR, MAPS_DIR);
+    SDL_asprintf(&maps_path, "%s%s", DEF_DataDirectory, DEF_BeatmapsSubdirectory);
 
     DIR* dir = opendir(maps_path);
 	struct dirent* entry;
@@ -28,7 +28,7 @@ void BeatmapManager::BuildCollection()
 			continue;
 
         char* map_subdir;
-        SDL_asprintf(&map_subdir, "%s%s%s", DATA_DIR, MAPS_DIR, entry->d_name);
+        SDL_asprintf(&map_subdir, "%s%s%s", DEF_DataDirectory, DEF_BeatmapsSubdirectory, entry->d_name);
 		DIR* subdir = opendir(map_subdir);
 		
 		//if this is a folder, find all the .ods files inside

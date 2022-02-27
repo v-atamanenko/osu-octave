@@ -28,7 +28,7 @@ class Settings
 
         static void save() {
             char path[PATH_MAX];
-            snprintf(path, PATH_MAX, "%s%s", DATA_DIR, SETS_FIL);
+            snprintf(path, PATH_MAX, "%s%s", DEF_DataDirectory, DEF_SettingsFilename);
 
             std::ofstream o(path);
             o << std::setw(4) << settings << std::endl;
@@ -41,7 +41,7 @@ class Settings
             };
 
             char path[PATH_MAX];
-            snprintf(path, PATH_MAX, "%s%s", DATA_DIR, SETS_FIL);
+            snprintf(path, PATH_MAX, "%s%s", DEF_DataDirectory, DEF_SettingsFilename);
 
             std::ifstream i(path);
             json j = json::parse(i, nullptr, false);

@@ -6,7 +6,8 @@
 #include "Graphics/SpriteManager.h"
 #include "System/TextManager.h"
 #include "Helpers/PreviewBuffer.h"
-#include "System/Settings.h"
+#include "DataStorage/Settings.h"
+#include "DataStorage/Scores.h"
 
 #ifndef __SONGSELECT_H__
 #define __SONGSELECT_H__
@@ -50,7 +51,7 @@ class SongSelect : public Mode
 
 		SpriteManager mSpriteManager;
 
-        int32_t mSongListSize;
+        uint32_t mSongListSize;
         bool mEntryExpanded = false;
         static int32_t mCurrentPage;
         static int32_t mCountPages;

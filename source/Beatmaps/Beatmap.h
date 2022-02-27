@@ -9,8 +9,8 @@
 #include "BeatmapElements.h"
 
 #include "System/GameClock.h"
-#include "Helpers/FileReader.h"
 #include "Helpers/MathHelper.h"
+#include "Helpers/MD5.h"
 
 #include "HitObjects/HitObject.h"
 #include "HitObjects/HitCircle.h"
@@ -91,7 +91,6 @@ class Beatmap
 		std::string mBaseDir;
         std::vector<BreakPoint> mBreakPoints;
 	private:
-		std::string mChecksumString;
 		std::string mBeatmapChecksum;
 };
 

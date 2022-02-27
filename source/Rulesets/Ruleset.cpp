@@ -1,5 +1,6 @@
 #include "Ruleset.h"
 #include "Graphics/pText.h"
+#include "DataStorage/Scores.h"
 
 void OnBtnRetryClick(pDrawable* self, uint16_t x, uint16_t y) {
     ChangeModeOnFrameEnd(MODE_PLAYER);
@@ -115,6 +116,15 @@ void Ruleset::OnGameOver()
     mSpriteManager.Add(scoreScreenSprites);
 
     mLifebar.Kill();
+
+    Highscore h;
+    h.accuracy = mCurrentScore.CountAccuracy();
+    h.combo = mCurrentScore.CurrentCombo();
+    h.score = mCurrentScore.CurrentScore();
+    h.checksum = BeatmapManager::Current().BeatmapChecksum();
+    strcpy(h.grade, mCurrentScore.GetGrade());
+    Scores::set_highscore(h);
+    Scores::save();
 }
 
 void Ruleset::OnFailed()

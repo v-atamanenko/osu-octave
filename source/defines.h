@@ -25,16 +25,22 @@ extern SDL_Renderer *renderer;
 //PlayXOffset = 64;
 //PlayYOffset = 73;
 
+/*
+ * NOTE! In DEF_*Directory/DEF_*Subdirectory defines, trailing slash is mandatory!
+ */
+
 #ifdef VITA
-#define DATA_DIR "ux0:/data/osu/"
-#define MAPS_DIR "maps/"
-#define SETS_FIL "settings.json"
+#define DEF_DataDirectory "ux0:/data/osu/"
+#define DEF_BeatmapsSubdirectory "maps/"
+#define DEF_SettingsFilename "settings.json"
+#define DEF_HighscoresFilename "settings.json"
 #endif
 
 #ifdef DESKTOP
-#define DATA_DIR "./"
-#define MAPS_DIR "maps/"
-#define SETS_FIL "settings.json"
+#define DEF_DataDirectory "./"
+#define DEF_BeatmapsSubdirectory "maps/"
+#define DEF_SettingsFilename "settings.json"
+#define DEF_HighscoresFilename "highscores.json"
 #endif
 
 #endif
