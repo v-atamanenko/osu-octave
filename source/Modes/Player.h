@@ -16,6 +16,7 @@
 
 typedef enum {
 	PLAYSTATE_PLAY,
+    PLAYSTATE_PAUSE,
 	PLAYSTATE_GAMEOVER,
     PLAYSTATE_FAILED
 } PlayState;

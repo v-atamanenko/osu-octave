@@ -2,6 +2,7 @@
 #include <algorithm>
 
 std::vector<SDL_Event> InputHelper::sdlEvents;
+std::vector<SDL_Event> InputHelper::simulatedKeyDowns;
 std::vector<int> InputHelper::heldControllerKeys;
 std::vector<int> InputHelper::heldKeyboardKeys;
 std::vector<int> InputHelper::heldMouseButtons;
@@ -54,6 +55,7 @@ int InputHelper::PollSDL()
         }
     }
 
+    SimulateKeyUp();
     return 0;
 }
 
@@ -123,6 +125,47 @@ bool InputHelper::KeyUp(int key, int type)
         }
     }
     return false;
+}
+
+void InputHelper::SimulateKeyDown(int key, int type) {
+    SDL_Event e;
+    if ( type == IH_KEY_CONTROLLER ) {
+        e.type = SDL_CONTROLLERBUTTONDOWN;
+        e.cbutton.button = (SDL_GameControllerButton) key;
+    }
+    if ( type == IH_KEY_KEYBOARD ) {
+        e.type = SDL_KEYDOWN;
+        e.key.keysym.sym = (SDL_KeyCode) key;
+    }
+    if ( type == IH_KEY_MOUSE ) {
+        e.type = SDL_MOUSEBUTTONDOWN;
+        SDL_MouseButtonEvent mbe;
+        mbe.button = key;
+        e.button = mbe;
+    }
+    simulatedKeyDowns.push_back(e);
+    SDL_PushEvent(&e);
+}
+
+void InputHelper::SimulateKeyUp() {
+    for (auto it = simulatedKeyDowns.begin(); it != simulatedKeyDowns.end();) {
+        SDL_Event e = *it;
+        SDL_Event ep;
+        ep = e;
+
+        if (e.type == SDL_CONTROLLERBUTTONDOWN) {
+            ep.type = SDL_CONTROLLERBUTTONUP;
+        }
+        if (e.type == SDL_KEYDOWN) {
+            ep.type = SDL_KEYUP;
+        }
+        if (e.type == SDL_MOUSEBUTTONDOWN) {
+            ep.type = SDL_MOUSEBUTTONDOWN;
+        }
+
+        SDL_PushEvent(&ep);
+        it = simulatedKeyDowns.erase(it);
+    }
 }
 
 touchPosition& InputHelper::TouchRead()

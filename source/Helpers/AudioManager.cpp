@@ -90,7 +90,7 @@ int AudioManager::PlaySample(SampleSetInfo info, bool loop, int channel)
    return Mix_PlayChannel(channel, info.chunk, loop ? -1 : 0);
 }
 
-//FIXME: Implement SetChannelFreq
+//TODO: Implement SetChannelFreq
 //void AudioManager::SetChannelFreq(int channel, u16 freq)
 //{
 //	soundSetFreq(channel, freq);
@@ -200,3 +200,16 @@ void AudioManager::MusicStop()
     mChannel = -1;
 }
 
+void AudioManager::MusicPause() const
+{
+    if (mChannel == -1)
+        return;
+    Mix_PauseMusic();
+}
+
+void AudioManager::MusicResume() const
+{
+    if (mChannel == -1)
+        return;
+    Mix_ResumeMusic();
+}

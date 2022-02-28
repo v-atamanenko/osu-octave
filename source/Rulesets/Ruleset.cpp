@@ -2,6 +2,10 @@
 #include "Graphics/pText.h"
 #include "DataStorage/Scores.h"
 
+void OnBtnResumeClick(pDrawable* self, uint16_t x, uint16_t y) {
+    InputHelper::SimulateKeyDown(SDLK_ESCAPE, IH_KEY_KEYBOARD);
+}
+
 void OnBtnRetryClick(pDrawable* self, uint16_t x, uint16_t y) {
     ChangeModeOnFrameEnd(MODE_PLAYER);
 }
@@ -25,18 +29,15 @@ void Ruleset::Initialize()
 
 void Ruleset::Skip()
 {
-    fprintf(stderr, "SkipTime: %i\n",BeatmapManager::Current().SkipTime());
-	if (GameClock::Clock().Time() < BeatmapManager::Current().SkipTime())
+    if (GameClock::Clock().Time() < BeatmapManager::Current().SkipTime())
 	{
         if (!mMusicStarted) {
-            fprintf(stderr, "1mMusicStarted: %i", mMusicStarted);
             StartMusic();
         }
-        fprintf(stderr, "2mMusicStarted: %i", mMusicStarted);
-		AudioManager::Engine().MusicSkipTo(BeatmapManager::Current().SkipTime());
+
+        AudioManager::Engine().MusicSkipTo(BeatmapManager::Current().SkipTime());
 		GameClock::Clock().SkipTo(BeatmapManager::Current().SkipTime());
-		
-		// template hook
+
 		OnSkip();
 	}
 }
@@ -185,6 +186,55 @@ void Ruleset::OnFailed()
     mSpriteManager.Add(scoreScreenSprites);
 
     mLifebar.Kill();
+}
+
+void Ruleset::OnPause() {
+    AudioManager::Engine().MusicPause();
+    GameClock::Clock().Pause();
+
+    auto* spr = new pSprite(TX_PAUSE_BG, 299, 168, 361, 275, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, 0);
+    pauseMenuSprites.push_back(spr);
+
+    auto* btn_resume = new pSprite(TX_BUTTON_BIG, 341, 210, 277, 55, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
+    btn_resume->OnClick = OnBtnResumeClick;
+    btn_resume->Clickable = true;
+    pauseMenuSprites.push_back(btn_resume);
+    auto* btn_resume_label = new pText("Resume", FONT_PIXEL, 479, 237, SDL_Color({67,19,115}));
+    btn_resume_label->Origin = ORIGIN_CENTER;
+    pauseMenuSprites.push_back(btn_resume_label);
+
+    auto* btn_retry = new pSprite(TX_BUTTON_BIG, 341, 278, 277, 55, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
+    btn_retry->OnClick = OnBtnRetryClick;
+    btn_retry->Clickable = true;
+    pauseMenuSprites.push_back(btn_retry);
+    pText* btn_retry_label = new pText("Retry", FONT_PIXEL, 479, 305, SDL_Color({67,19,115}));
+    btn_retry_label->Origin = ORIGIN_CENTER;
+    pauseMenuSprites.push_back(btn_retry_label);
+
+    pSprite* btn_back = new pSprite(TX_BUTTON_BIG, 341, 346, 277, 55, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
+    btn_back->OnClick = OnBtnBackClick;
+    btn_back->Clickable = true;
+    pauseMenuSprites.push_back(btn_back);
+    pText* btn_back_label = new pText("Back", FONT_PIXEL, 479, 373, SDL_Color({67,19,115}));
+    btn_back_label->Origin = ORIGIN_CENTER;
+    pauseMenuSprites.push_back(btn_back_label);
+
+    mSpriteManager.Add(pauseMenuSprites);
+}
+
+void Ruleset::OnPauseEnd() {
+    for (pDrawable* s : pauseMenuSprites) {
+        s->Kill(GameClock::Clock().Time());
+    }
+    pauseMenuSprites.clear();
+
+    AudioManager::Engine().MusicResume();
+    GameClock::Clock().Resume();
+}
+
+void Ruleset::UpdatePause() {
+    GraphicsManager::Graphics().DrawFullScreenRectangle({0,0,0,100});
+    mSpriteManager.Draw();
 }
 
 void Ruleset::UpdateGameOver()

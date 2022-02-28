@@ -19,11 +19,14 @@ class InputHelper
 		static bool KeyDown(int key, int type);
 		static bool KeyHeld(int key, int type);
 		static bool KeyUp(int key, int type);
+        static void SimulateKeyDown(int key, int type);
+        static void SimulateKeyUp();
 		static touchPosition& TouchRead();
         static int PollSDL();
 	
 	protected:
         static std::vector<SDL_Event> sdlEvents;
+        static std::vector<SDL_Event> simulatedKeyDowns;
         static std::vector<int> heldControllerKeys;
         static std::vector<int> heldKeyboardKeys;
         static std::vector<int> heldMouseButtons;

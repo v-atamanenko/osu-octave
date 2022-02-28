@@ -79,6 +79,9 @@ class AudioManager
 		int MusicPlay();
 		int MusicSkipTo(uint32_t milliseconds);
 		void MusicStop();
+
+        void MusicPause() const;
+        void MusicResume() const;
 	
 	protected:
 		static AudioManager sEngine;

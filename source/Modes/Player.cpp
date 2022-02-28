@@ -45,6 +45,11 @@ void Player::Update()
             break;
         }
 
+        case PLAYSTATE_PAUSE: {
+            mRuleset.UpdatePause();
+            break;
+        }
+
         case PLAYSTATE_GAMEOVER: {
             mRuleset.UpdateGameOver();
             break;
@@ -68,9 +73,7 @@ void Player::HandleInput()
 
     //handle play mode input
     if (InputHelper::KeyDown(SDLK_SPACE, IH_KEY_KEYBOARD) ||
-        InputHelper::KeyDown(SDLK_ESCAPE, IH_KEY_KEYBOARD) ||
-        InputHelper::KeyDown(SDL_CONTROLLER_BUTTON_A, IH_KEY_CONTROLLER)
-            )
+        InputHelper::KeyDown(SDL_CONTROLLER_BUTTON_A, IH_KEY_CONTROLLER))
     {
         mRuleset.Skip();
     }
@@ -78,7 +81,12 @@ void Player::HandleInput()
     if (InputHelper::KeyDown(SDLK_ESCAPE, IH_KEY_KEYBOARD) ||
         InputHelper::KeyDown(SDL_CONTROLLER_BUTTON_START, IH_KEY_CONTROLLER))
     {
-        ChangeModeOnFrameEnd(MODE_SONGSELECT);
-        return;
+        if (mPlayState == PLAYSTATE_PLAY) {
+            mRuleset.OnPause();
+            mPlayState = PLAYSTATE_PAUSE;
+        } else if (mPlayState == PLAYSTATE_PAUSE) {
+            mRuleset.OnPauseEnd();
+            mPlayState = PLAYSTATE_PLAY;
+        }
     }
 }

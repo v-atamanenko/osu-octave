@@ -24,7 +24,12 @@ HitSlider::HitSlider(int32_t x, int32_t y, int32_t time, uint32_t lengthtime, st
 	uint32_t beatTime = BeatmapElements::Element().GetTimingPoint(time).BeatTime;
 	
 	//populate tick times excluding first hit
-	mTickTime = beatTime / DifficultyManager::SliderTickRate;
+    if (DifficultyManager::SliderTickRate > 0) {
+        mTickTime = beatTime / DifficultyManager::SliderTickRate;
+    } else {
+        mTickTime = 0;
+    }
+
 	uint32_t specialTickTime = lengthtime - mTickCount*mTickTime;
 	
 	//easy if we don't have any ticks, just keep adding lengthtime

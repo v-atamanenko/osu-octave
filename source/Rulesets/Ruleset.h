@@ -23,9 +23,12 @@ class Ruleset
         virtual void HandleInput();
 		virtual void OnGameOver();
         virtual void OnFailed();
+        virtual void OnPause();
+        virtual void OnPauseEnd();
 		virtual bool Update();
         virtual void UpdateGameOver();
         virtual void UpdateFailed();
+        virtual void UpdatePause();
 
         virtual void StopMusic();
         virtual void StartMusic();
@@ -37,6 +40,8 @@ class Ruleset
 		Lifebar mLifebar;
         DarkenOverlay mDarkenOverlay;
         bool mMusicStarted = false;
+
+        std::vector<pDrawable *> pauseMenuSprites;
 		
 		virtual void OnSkip() = 0;
 

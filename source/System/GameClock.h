@@ -12,6 +12,8 @@ class GameClock
 		void SkipTo(int time);
 		void Reset();
         void Reset(int32_t to);
+        void Pause();
+        void Resume();
 		
 		static GameClock& Clock() { return sClock; }
 	
@@ -19,6 +21,7 @@ class GameClock
         long mStartedAt;
         long mLastUpdateAt;
 		long mTime;
+        bool mPaused = false;
 		
 		static GameClock sClock;
 	

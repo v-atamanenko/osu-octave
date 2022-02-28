@@ -49,6 +49,7 @@ typedef enum {
     TX_RANKING_F_LG,
 
     TX_GAMEOVER_BG,
+    TX_PAUSE_BG,
 	
 	TX_WHITE,
 

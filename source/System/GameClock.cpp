@@ -13,7 +13,8 @@ long GameClock::Time() const {
 }
 
 void GameClock::Update() {
-	mTime += (SDL_GetTicks() - mLastUpdateAt);
+    if (!mPaused)
+        mTime += (SDL_GetTicks() - mLastUpdateAt);
     mLastUpdateAt = SDL_GetTicks();
 }
 
@@ -24,8 +25,19 @@ void GameClock::SkipTo(int time) {
 
 void GameClock::Reset() {
 	SkipTo(0);
+    mPaused = false;
 }
 
 void GameClock::Reset(int32_t to) {
     SkipTo(to);
+    mPaused = false;
 }
+
+void GameClock::Pause() {
+    mPaused = true;
+}
+
+void GameClock::Resume() {
+    mPaused = false;
+}
+

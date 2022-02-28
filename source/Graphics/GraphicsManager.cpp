@@ -221,6 +221,7 @@ void GraphicsManager::LoadTexturesForMode(ModeType mod) {
             LoadTexture(TX_BUTTON_BIG, "data/ui/button-big.png");
 
             LoadTexture(TX_GAMEOVER_BG, "data/ui/gameover-bg.png");
+            LoadTexture(TX_PAUSE_BG, "data/ui/pause-bg.png");
 
             CreateRectangularTexture(TX_PLAY_DARKEN_OVERLAY, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_Color({0, 0, 0, 150}));
             break;
