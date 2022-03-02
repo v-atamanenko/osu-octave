@@ -12,14 +12,12 @@ bool SongSelect::shouldHandleEntryExpand = false;
 //bool SongSelect::mEntryExpanded = false;
 
 void OnBetmapEntryPlayClick(pDrawable* self, uint16_t x, uint16_t y) {
-	int index = (int)(size_t) self->Tag;
-
-	BeatmapManager::Load(index);
+    BeatmapManager::Load(self->Tag);
     ChangeModeOnFrameEnd(MODE_PLAYER);
 }
 
 void OnBetmapEntryExpandClick(pDrawable* self, uint16_t x, uint16_t y) {
-    int index = (int)(size_t) self->Tag;
+    int index = self->TagInt;
 
     SongSelect::ExpandEntry(index);
 }
@@ -262,9 +260,9 @@ void SongSelect::UpdateSonglist()
             extra_y_offset += 94;
         }
 
-        Beatmap* map = BeatmapManager::Beatmaps()[i+beatmap_list_offset];
+        BeatmapEntry map = BeatmapManager::Beatmaps()[i+beatmap_list_offset];
         Highscore score;
-        Scores::get_highscore(map->BeatmapChecksum(), score);
+        Scores::get_highscore(map.Checksum, score);
         TextureType score_tex;
 
         if (strcmp(score.grade, "UN") == 0) {
@@ -291,7 +289,7 @@ void SongSelect::UpdateSonglist()
             //bg->OnClick = OnBetmapEntryPlayClick;
             bg->OnClick = OnBetmapEntryExpandClick;
             bg->Clickable = true;
-            bg->Tag = (void *) (size_t) (i + beatmap_list_offset);
+            bg->TagInt = i+beatmap_list_offset;
 
             mSpriteManager.Add(bg);
         } else {
@@ -299,7 +297,7 @@ void SongSelect::UpdateSonglist()
 
             bg->OnClick = OnBetmapEntryExpandClick;
             bg->Clickable = true;
-            bg->Tag = (void *) (size_t) (i + beatmap_list_offset);
+            bg->TagInt = i+beatmap_list_offset;
 
             mSpriteManager.Add(bg);
         }
@@ -309,29 +307,29 @@ void SongSelect::UpdateSonglist()
 
             play->OnClick = OnBetmapEntryPlayClick;
             play->Clickable = true;
-            play->Tag = (void *) (size_t) (i + beatmap_list_offset);
+            play->Tag = map.Checksum;
 
             mSpriteManager.Add(play);
         }
 
         if (isExpanded) {
             auto* pic = new pSprite(texid, 360, 118 + (i * 94) + extra_y_offset, 120, 120, ORIGIN_TOPLEFT, FIELD_SCREEN,
-                                       SDL_Color(), 255, -0.04f);
+                                    SDL_Color(), 255, -0.04f);
             mSpriteManager.Add(pic);
         } else {
             auto* pic = new pSprite(texid, 400, 91 + (i * 94) + extra_y_offset, 80, 80, ORIGIN_TOPLEFT, FIELD_SCREEN,
-                                       SDL_Color(), 255, -0.04f);
+                                    SDL_Color(), 255, -0.04f);
             mSpriteManager.Add(pic);
         }
 
         if (isExpanded) {
-            auto* mapTitle = new pText(map->Title(), FONT_CONSOLE_BIG_BOLD, 494, 117 + (i * 94) + extra_y_offset);
+            auto* mapTitle = new pText(map.Title, FONT_CONSOLE_BIG_BOLD, 494, 117 + (i * 94) + extra_y_offset);
             mapTitle->Z = -0.05f;
 
-            auto* mapArtist = new pText(map->Artist(), FONT_CONSOLE, 494, 137 + (i * 94) + extra_y_offset);
+            auto* mapArtist = new pText(map.Artist, FONT_CONSOLE, 494, 137 + (i * 94) + extra_y_offset);
             mapArtist->Z = -0.05f;
 
-            auto* mapVersion = new pText(map->Version(), FONT_CONSOLE, 494, 154 + (i * 94) + extra_y_offset);
+            auto* mapVersion = new pText(map.Version, FONT_CONSOLE, 494, 154 + (i * 94) + extra_y_offset);
             mapVersion->Z = -0.05f;
 
             //TODO: Replace this with actual highscore data
@@ -360,13 +358,13 @@ void SongSelect::UpdateSonglist()
             mSpriteManager.Add(highscoreAccuracyTitle);
             mSpriteManager.Add(highscoreAccuracy);
         } else {
-            auto* mapTitle = new pText(map->Title(), FONT_CONSOLE_BIG_BOLD, 494, 106 + (i * 94) + extra_y_offset);
+            auto* mapTitle = new pText(map.Title, FONT_CONSOLE_BIG_BOLD, 494, 106 + (i * 94) + extra_y_offset);
             mapTitle->Z = -0.05f;
 
-            auto* mapArtist = new pText(map->Artist(), FONT_CONSOLE, 494, 126 + (i * 94) + extra_y_offset);
+            auto* mapArtist = new pText(map.Artist, FONT_CONSOLE, 494, 126 + (i * 94) + extra_y_offset);
             mapArtist->Z = -0.05f;
 
-            auto* mapVersion = new pText(map->Version(), FONT_CONSOLE, 494, 143 + (i * 94) + extra_y_offset);
+            auto* mapVersion = new pText(map.Version, FONT_CONSOLE, 494, 143 + (i * 94) + extra_y_offset);
             mapVersion->Z = -0.05f;
 
             mSpriteManager.Add(mapTitle);
@@ -376,21 +374,21 @@ void SongSelect::UpdateSonglist()
 
         if (isExpanded) {
             auto* ranking = new pSprite(score_tex, 869, 122 + (i * 94) + extra_y_offset, 40, 23,
-                                           ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.04f);
+                                        ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.04f);
             mSpriteManager.Add(ranking);
 
             //TODO: Replace this with actual star rating
             auto* stars = new pSprite(TX_STARS, 712, 161 + (i * 94) + extra_y_offset, 196, 16, ORIGIN_TOPLEFT,
-                                         FIELD_SCREEN, SDL_Color(), 255, -0.04f);
+                                      FIELD_SCREEN, SDL_Color(), 255, -0.04f);
             mSpriteManager.Add(stars);
         } else {
             auto* ranking = new pSprite(score_tex, 869, 104 + (i * 94) + extra_y_offset, 40, 23,
-                                           ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.04f);
+                                        ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.04f);
             mSpriteManager.Add(ranking);
 
             //TODO: Replace this with actual star rating
             auto* stars = new pSprite(TX_STARS, 712, 141 + (i * 94) + extra_y_offset, 196, 16, ORIGIN_TOPLEFT,
-                                         FIELD_SCREEN, SDL_Color(), 255, -0.04f);
+                                      FIELD_SCREEN, SDL_Color(), 255, -0.04f);
             mSpriteManager.Add(stars);
         }
 
@@ -454,5 +452,5 @@ void SongSelect::Update()
 
     reloadPreviews();
 
-	mSpriteManager.Draw();
+    mSpriteManager.Draw();
 }

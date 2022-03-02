@@ -34,6 +34,8 @@ extern SDL_Renderer *renderer;
 #define DEF_BeatmapsSubdirectory "maps/"
 #define DEF_SettingsFilename "settings.json"
 #define DEF_HighscoresFilename "settings.json"
+#define DEF_BeatmapsIndexFilename "beatmaps.json"
+#define DEF_BeatmapsStateFilename "beatmaps_state.json"
 #endif
 
 #ifdef DESKTOP
@@ -41,6 +43,8 @@ extern SDL_Renderer *renderer;
 #define DEF_BeatmapsSubdirectory "maps/"
 #define DEF_SettingsFilename "settings.json"
 #define DEF_HighscoresFilename "highscores.json"
+#define DEF_BeatmapsIndexFilename "beatmaps.json"
+#define DEF_BeatmapsStateFilename "beatmaps_state.json"
 #endif
 
 #endif

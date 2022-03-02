@@ -16,10 +16,38 @@ using json = nlohmann::json;
 class Settings
 {
     public:
-        static std::string get_str(const std::string& key) { return settings[key].get<std::string>(); }
-        static int get_int(const std::string& key) { return settings[key].get<int>(); }
-        static float get_float(const std::string& key) { return settings[key].get<float>(); }
-        static bool get_bool(const std::string& key) { return settings[key].get<bool>(); }
+        static std::string get_str(const std::string& key) {
+            if (settings[key].is_null()) {
+                fprintf(stderr, "Setting %s is null. Resetting settings.\n", key.c_str());
+                clear();
+                return get_str(key);
+            }
+            return settings[key].get<std::string>();
+        }
+        static int get_int(const std::string& key) {
+            if (settings[key].is_null()) {
+                fprintf(stderr, "Setting %s is null. Resetting settings.\n", key.c_str());
+                clear();
+                return get_int(key);
+            }
+            return settings[key].get<int>();
+        }
+        static float get_float(const std::string& key) {
+            if (settings[key].is_null()) {
+                fprintf(stderr, "Setting %s is null. Resetting settings.\n", key.c_str());
+                clear();
+                return get_float(key);
+            }
+            return settings[key].get<float>();
+        }
+        static bool get_bool(const std::string& key) {
+            if (settings[key].is_null()) {
+                fprintf(stderr, "Setting %s is null. Resetting settings.\n", key.c_str());
+                clear();
+                return get_bool(key);
+            }
+            return settings[key].get<bool>();
+        }
 
         static void set_str(const std::string& key, const std::string& value) { settings[key] = value; }
         static void set_int(const std::string& key, const int value) { settings[key] = value; }
@@ -34,11 +62,15 @@ class Settings
             o << std::setw(4) << settings << std::endl;
         }
 
-        static void load() {
+        static void clear() {
             settings = {
-                {"page", 0},
-                {"noFail", true}
+                    {"page", 0},
+                    {"noFail", true}
             };
+        }
+
+        static void load() {
+            clear();
 
             char path[PATH_MAX];
             snprintf(path, PATH_MAX, "%s%s", DEF_DataDirectory, DEF_SettingsFilename);

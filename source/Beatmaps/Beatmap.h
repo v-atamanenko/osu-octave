@@ -21,6 +21,8 @@
 #include "Parser/OsuParser.h"
 #include "Helpers/OsuSliderCurves.h"
 
+#include "DataStorage/Betmaps.h"
+
 #ifndef __BEATMAP_H__
 #define __BEATMAP_H__
 
@@ -29,7 +31,7 @@
 class Beatmap
 {
 	public:
-		Beatmap(const char* filename, const char* basedir);
+		Beatmap(const std::string &filename, const std::string &basedir);
 		virtual ~Beatmap();
 		
 		void Initialize();
@@ -59,6 +61,7 @@ class Beatmap
 		std::string& BeatmapChecksum();
 
         bool Validate() { return mValid; };
+        static bool LoadEntryData(const std::string &filename, const std::string &basedir, BeatmapEntry& bm);
 	
 	protected:
         osuParser::OsuParser* mParser;

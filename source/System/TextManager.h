@@ -27,6 +27,7 @@ class TextManager
 {
 	public:
         static void Init();
+        static void InitDeferred();
         static void SetFont(FontName font);
 
         static void Print(float x, float y, const char *fmt, ...);

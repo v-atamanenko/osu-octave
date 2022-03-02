@@ -6,13 +6,17 @@ FC_Font* TextManager::mFonts[NUMBER_OF_FONTS];
 FontName TextManager::currentFont;
 
 void TextManager::Init() {
+    AddFont(FONT_PIXEL, "fonts/PressStart2P-Regular.ttf", 20, SDL_Color({67, 19, 115, 255}));
+    currentFont = FONT_PIXEL;
+}
+
+void TextManager::InitDeferred() {
     AddFont(FONT_CONSOLE_BIG, "fonts/Roboto-Regular.ttf", 16);
     AddFont(FONT_CONSOLE_BIG_BOLD, "fonts/Roboto-Medium.ttf", 16);
     AddFont(FONT_CONSOLE, "fonts/Roboto-Regular.ttf", 14);
     AddFont(FONT_CONSOLE_BOLD, "fonts/Roboto-Medium.ttf", 14);
-	AddFont(FONT_SCORE, "fonts/PressStart2P-Regular.ttf", 36, SDL_Color({250, 245, 239, 255}));
+    AddFont(FONT_SCORE, "fonts/PressStart2P-Regular.ttf", 36, SDL_Color({250, 245, 239, 255}));
 
-    AddFont(FONT_PIXEL, "fonts/PressStart2P-Regular.ttf", 20, SDL_Color({67, 19, 115, 255}));
     AddFont(FONT_PIXEL_ACTIVE, "fonts/PressStart2P-Regular.ttf", 20, SDL_Color({250, 245, 239, 255}));
 
     AddFont(FONT_NUMBERING, "fonts/Abel-Regular.ttf", 60, SDL_Color({67, 19, 155, 255}));

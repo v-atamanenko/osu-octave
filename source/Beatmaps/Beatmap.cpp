@@ -1,6 +1,39 @@
 #include "Beatmap.h"
 
-Beatmap::Beatmap(const char* filename, const char* basedir)
+bool Beatmap::LoadEntryData(const std::string &filename, const std::string &basedir, BeatmapEntry& bm) {
+    std::ifstream file(basedir  + "/" + filename);
+    if (!file) {
+        fprintf(stderr, "Couldn't read .osu file %s\n", filename.c_str());
+        return false;
+    }
+
+    osuParser::OsuParser p(&file);
+    p.Parse();
+
+    if (p.mode != osuParser::gmStandard) {
+        // Not an osu! map
+        return false;
+    }
+
+    bm.Filename = filename;
+    bm.BaseDir = basedir;
+    bm.Title = p.title;
+    bm.Artist = p.artist;
+    bm.Creator = p.creator;
+    bm.Version = p.version;
+    bm.AudioFilename = basedir + "/" + p.audioFilename;
+
+    for (const osuParser::Event& e : p.events) {
+        if (e.type == osuParser::eBackground) {
+            bm.BackgroundFilename = basedir + "/" + e.file;
+        }
+    }
+
+    bm.Checksum = md5(p.title + p.artist + p.version + std::to_string(p.beatmapID));
+    return true;
+}
+
+Beatmap::Beatmap(const std::string &filename, const std::string &basedir)
 {
 	fLoadable = false;
 	
@@ -10,9 +43,10 @@ Beatmap::Beatmap(const char* filename, const char* basedir)
 
 	//mChecksumString = "";
 
-    std::ifstream file(mFilename);
+    std::ifstream file(mBaseDir  + "/" + mFilename);
     if (!file) {
         fprintf(stderr, "Couldn't read .osu file %s", mFilename.c_str());
+        fLoadable = false;
         mValid = false;
         return;
     }
@@ -42,10 +76,6 @@ Beatmap::Beatmap(const char* filename, const char* basedir)
         }
     }
 
-    if (p.mode != osuParser::gmStandard) {
-        mValid = false;
-    }
-
     mBeatmapChecksum = md5(p.title + p.artist + p.version + std::to_string(p.beatmapID));
 
     fLoadable = true;
@@ -58,15 +88,10 @@ void Beatmap::Initialize()
         return;
     }
 
-    if (!fLoadable) {
-        fprintf(stderr, "Cannot load .osu file %s", mFilename.c_str());
-        return;
-    }
-
-    //chdir(mBaseDir.c_str());
-    std::ifstream file(mFilename);
+    std::ifstream file(mBaseDir + "/" + mFilename);
     if (!file) {
         fprintf(stderr, "Couldn't read .osu file %s", mFilename.c_str());
+        mValid = false;
         return;
     }
 
@@ -126,6 +151,8 @@ Beatmap::~Beatmap()
 }
 
 void Beatmap::InitBG() {
+    assert(mValid);
+
 	GraphicsManager::Graphics().LoadBeatmapBackground(mBackgroundFilename);
 
 	mHitObjectCount = mParser->hitObjects.size();

@@ -3,10 +3,7 @@
 #include "../Helpers/PreviewBuffer.h"
 
 GameBase::GameBase() {
-	BeatmapManager::BuildCollection();
-    PreviewBuffer::GetInstance().Init();
-
-    ChangeModeOnFrameEnd(MODE_WELCOME);
+	ChangeModeOnFrameEnd(MODE_WELCOME);
     ChangeModeOnDemand();
 }
 

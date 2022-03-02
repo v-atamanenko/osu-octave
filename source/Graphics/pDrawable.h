@@ -50,7 +50,8 @@ class pDrawable
 		float Z;
 		SDL_Rect* UV;
 
-		void* Tag;
+		std::string Tag;
+        int TagInt;
 		
 		DrawOrigin Origin;
 		FieldType Field = FIELD_PLAY;

@@ -5,6 +5,7 @@
 #include "System/TextManager.h"
 #include "DataStorage/Settings.h"
 #include "DataStorage/Scores.h"
+#include "DataStorage/Betmaps.h"
 
 #ifdef VITA
 unsigned int _newlib_heap_size_user = 200 * 1024 * 1024;
@@ -12,12 +13,12 @@ unsigned int _newlib_heap_size_user = 200 * 1024 * 1024;
 
 json Settings::settings;
 json Scores::scores;
+json Beatmaps::beatmaps;
+json Beatmaps::state;
 
 int main() {
     SDLInitializer::initSDL();
     TextManager::Init();
-    Settings::load();
-    Scores::load();
 
 	GameBase osu;
     while(osu.Update() != -1) {
@@ -26,6 +27,5 @@ int main() {
 
     SDL_Quit();
     Settings::save();
-    //Scores::save();
 	return 0;
 }
