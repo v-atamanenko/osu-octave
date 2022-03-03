@@ -192,31 +192,34 @@ void Ruleset::OnPause() {
     AudioManager::Engine().MusicPause();
     GameClock::Clock().Pause();
 
-    auto* spr = new pSprite(TX_PAUSE_BG, 299, 168, 361, 275, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, 0);
+    auto* spr = new pSprite(TX_PAUSE_BG, 299, 168, 361, 275, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -1000000.f);
     pauseMenuSprites.push_back(spr);
 
-    auto* btn_resume = new pSprite(TX_BUTTON_BIG, 341, 210, 277, 55, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
+    auto* btn_resume = new pSprite(TX_BUTTON_BIG, 341, 210, 277, 55, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -1000001.f);
     btn_resume->OnClick = OnBtnResumeClick;
     btn_resume->Clickable = true;
     pauseMenuSprites.push_back(btn_resume);
     auto* btn_resume_label = new pText("Resume", FONT_PIXEL, 479, 237, SDL_Color({67,19,115}));
     btn_resume_label->Origin = ORIGIN_CENTER;
+    btn_resume_label->Z = -1000002.f;
     pauseMenuSprites.push_back(btn_resume_label);
 
-    auto* btn_retry = new pSprite(TX_BUTTON_BIG, 341, 278, 277, 55, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
+    auto* btn_retry = new pSprite(TX_BUTTON_BIG, 341, 278, 277, 55, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -1000001.f);
     btn_retry->OnClick = OnBtnRetryClick;
     btn_retry->Clickable = true;
     pauseMenuSprites.push_back(btn_retry);
     pText* btn_retry_label = new pText("Retry", FONT_PIXEL, 479, 305, SDL_Color({67,19,115}));
     btn_retry_label->Origin = ORIGIN_CENTER;
+    btn_retry_label->Z = -1000002.f;
     pauseMenuSprites.push_back(btn_retry_label);
 
-    pSprite* btn_back = new pSprite(TX_BUTTON_BIG, 341, 346, 277, 55, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
+    pSprite* btn_back = new pSprite(TX_BUTTON_BIG, 341, 346, 277, 55, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -1000001.f);
     btn_back->OnClick = OnBtnBackClick;
     btn_back->Clickable = true;
     pauseMenuSprites.push_back(btn_back);
     pText* btn_back_label = new pText("Back", FONT_PIXEL, 479, 373, SDL_Color({67,19,115}));
     btn_back_label->Origin = ORIGIN_CENTER;
+    btn_back_label->Z = -1000002.f;
     pauseMenuSprites.push_back(btn_back_label);
 
     mSpriteManager.Add(pauseMenuSprites);

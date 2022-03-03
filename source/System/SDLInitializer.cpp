@@ -22,7 +22,7 @@ SDLInitializer::SDLInitializer() {
     }
 
     // Nearest-neighbor scaling
-    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
+    //SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
     SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
 
     window = SDL_CreateWindow("nano-dOsu",

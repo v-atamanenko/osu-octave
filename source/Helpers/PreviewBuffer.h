@@ -27,7 +27,8 @@ class PreviewBuffer
 {
     public:
         void Init();
-        void Update(int last_page, int new_page, int per_page); //calls should be synced with vblank
+        void Update(int last_page, int new_page, int per_page);
+        void Pics_ResetBuffer();
         SDL_Surface* GetTexture(int beatmap_id);
 
         static PreviewBuffer& GetInstance() { return sPreviewBuffer; }

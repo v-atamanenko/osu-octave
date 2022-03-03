@@ -32,6 +32,14 @@ class Settings
             }
             return settings[key].get<int>();
         }
+        static BeatmapFilter get_beatmapfilter(const std::string& key) {
+            if (settings[key].is_null()) {
+                fprintf(stderr, "Setting %s is null. Resetting settings.\n", key.c_str());
+                clear();
+                return get_beatmapfilter(key);
+            }
+            return settings[key].get<BeatmapFilter>();
+        }
         static float get_float(const std::string& key) {
             if (settings[key].is_null()) {
                 fprintf(stderr, "Setting %s is null. Resetting settings.\n", key.c_str());
@@ -51,6 +59,7 @@ class Settings
 
         static void set_str(const std::string& key, const std::string& value) { settings[key] = value; }
         static void set_int(const std::string& key, const int value) { settings[key] = value; }
+        static void set_beatmapfilter(const std::string& key, const BeatmapFilter value) { settings[key] = value; }
         static void set_float(const std::string& key, const float value) { settings[key] = value; }
         static void set_bool(const std::string& key, const bool value) { settings[key] = value; }
 
@@ -65,7 +74,8 @@ class Settings
         static void clear() {
             settings = {
                     {"page", 0},
-                    {"noFail", true}
+                    {"noFail", true},
+                    {"activeFilter", FILTER_NONE}
             };
         }
 

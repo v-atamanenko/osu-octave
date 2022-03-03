@@ -1,7 +1,8 @@
 #include "BeatmapManager.h"
 
 Beatmap* BeatmapManager::mBeatmapCurrent = nullptr;
-std::vector<BeatmapEntry> BeatmapManager::mBeatmaps;
+std::vector<BeatmapEntry> BeatmapManager::mBeatmapsAll;
+std::vector<BeatmapEntry> BeatmapManager::mBeatmapsFiltered;
 
 void BeatmapManager::Load(std::string &checksum)
 {
@@ -28,7 +29,31 @@ void BeatmapManager::Load(std::string &checksum)
 }
 
 void BeatmapManager::BuildMap() {
-    Beatmaps::get_map(mBeatmaps);
+    Beatmaps::get_map(mBeatmapsAll);
+    mBeatmapsFiltered = mBeatmapsAll;
+}
+
+void BeatmapManager::Filter(BeatmapFilter f) {
+    switch (f) {
+        case FILTER_NONE:
+            mBeatmapsFiltered = mBeatmapsAll;
+            break;
+        case FILTER_ALPHA_A_E:
+            mBeatmapsFiltered = Beatmaps::filter_character_range(mBeatmapsAll, 'A', 'E');
+            break;
+        case FILTER_ALPHA_F_J:
+            mBeatmapsFiltered = Beatmaps::filter_character_range(mBeatmapsAll, 'F', 'J');
+            break;
+        case FILTER_ALPHA_K_O:
+            mBeatmapsFiltered = Beatmaps::filter_character_range(mBeatmapsAll, 'K', 'O');
+            break;
+        case FILTER_ALPHA_P_T:
+            mBeatmapsFiltered = Beatmaps::filter_character_range(mBeatmapsAll, 'P', 'T');
+            break;
+        case FILTER_ALPHA_U_Z:
+            mBeatmapsFiltered = Beatmaps::filter_character_range(mBeatmapsAll, 'U', 'Z');
+            break;
+    }
 }
 
 bool BeatmapManager::CheckIndex() {
@@ -163,11 +188,11 @@ void BeatmapManager::Add(const char* map_filename, const char* map_subdir) {
 
 uint32_t BeatmapManager::MapCount()
 {
-	return mBeatmaps.size();
+	return BeatmapManager::Beatmaps().size();
 }
 
 uint32_t BeatmapManager::SongCount()
 {
 	//TODO: algorithm plz
-	return mBeatmaps.size();
+	return BeatmapManager::Beatmaps().size();
 }

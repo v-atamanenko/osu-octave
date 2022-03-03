@@ -45,6 +45,10 @@ inline void from_json(const json& j, BeatmapEntry& h) {
     j.at("checksum").get_to(h.Checksum);
 }
 
+inline bool sortBeatmapsA_Z(const BeatmapEntry &a, const BeatmapEntry &b) {
+    return a.Title < b.Title;
+}
+
 class Beatmaps
 {
 public:
@@ -65,6 +69,7 @@ public:
         for (json::iterator it = beatmaps.begin(); it != beatmaps.end(); ++it) {
             v.emplace_back(it.value());
         }
+        sort(v);
     }
 
     static bool is_path_in_state(const char* filename, const char* basedir) {
@@ -85,6 +90,20 @@ public:
     static void clear() {
         beatmaps = {};
         state = {{"paths", json::array()}};
+    }
+
+    static void sort(std::vector<BeatmapEntry> &v) {
+        std::sort(v.begin(), v.end(), sortBeatmapsA_Z);
+    }
+
+    static std::vector<BeatmapEntry> filter_character_range(const std::vector<BeatmapEntry> &v, char start, char end) {
+        std::vector<BeatmapEntry> out;
+        printf("Initial size: %lu\n", v.size());
+        for (auto&& elem : v)
+            if (elem.Title.at(0) >= start && elem.Title.at(0) <= end)
+                out.push_back(elem);
+        printf("Out size: %lu\n", out.size());
+        return out;
     }
 
     static void save() {

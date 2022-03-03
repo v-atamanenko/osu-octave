@@ -1,15 +1,25 @@
 #include "SongSelect.h"
 
-
-#include "Graphics/pText.h"
-
 int32_t SongSelect::mCurrentPage = 0;
 int32_t SongSelect::mCountPages  = 0;
+uint32_t SongSelect::mSongListSize  = 0;
 bool SongSelect::shouldHandlePageUpdate = false;
 
 int32_t SongSelect::mExpandEntryIndex = -1;
 bool SongSelect::shouldHandleEntryExpand = false;
-//bool SongSelect::mEntryExpanded = false;
+
+pSprite* SongSelect::btn_sort_all = nullptr;
+pText* SongSelect::btn_sort_all_label = nullptr;
+pSprite* SongSelect::btn_sort_a_e = nullptr;
+pText* SongSelect::btn_sort_a_e_label = nullptr;
+pSprite* SongSelect::btn_sort_f_j = nullptr;
+pText* SongSelect::btn_sort_f_j_label = nullptr;
+pSprite* SongSelect::btn_sort_k_o = nullptr;
+pText* SongSelect::btn_sort_k_o_label = nullptr;
+pSprite* SongSelect::btn_sort_p_t = nullptr;
+pText* SongSelect::btn_sort_p_t_label = nullptr;
+pSprite* SongSelect::btn_sort_u_z = nullptr;
+pText* SongSelect::btn_sort_u_z_label = nullptr;
 
 void OnBetmapEntryPlayClick(pDrawable* self, uint16_t x, uint16_t y) {
     BeatmapManager::Load(self->Tag);
@@ -41,27 +51,27 @@ void OnBtnArrowRightClick(pDrawable* self, uint16_t x, uint16_t y) {
 }
 
 void OnBtnSortAllClick(pDrawable* self, uint16_t x, uint16_t y) {
-    // X
+    SongSelect::ApplyFilter(FILTER_NONE);
 }
 
 void OnBtnSortAEClick(pDrawable* self, uint16_t x, uint16_t y) {
-    // X
+    SongSelect::ApplyFilter(FILTER_ALPHA_A_E);
 }
 
 void OnBtnSortFJClick(pDrawable* self, uint16_t x, uint16_t y) {
-    // X
+    SongSelect::ApplyFilter(FILTER_ALPHA_F_J);
 }
 
 void OnBtnSortKOClick(pDrawable* self, uint16_t x, uint16_t y) {
-    // X
+    SongSelect::ApplyFilter(FILTER_ALPHA_K_O);
 }
 
 void OnBtnSortPTClick(pDrawable* self, uint16_t x, uint16_t y) {
-    // X
+    SongSelect::ApplyFilter(FILTER_ALPHA_P_T);
 }
 
 void OnBtnSortUZClick(pDrawable* self, uint16_t x, uint16_t y) {
-    // X
+    SongSelect::ApplyFilter(FILTER_ALPHA_U_Z);
 }
 
 SongSelect::SongSelect()
@@ -115,66 +125,121 @@ SongSelect::SongSelect()
     btn_arrow_right->Clickable = true;
     mSpriteManager.Add(btn_arrow_right);
 
-    auto* btn_sort_all = new pSprite(TX_BUTTON_SM_ACTIVE, 400, 25, 78, 40, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
+    btn_sort_all = new pSprite(TX_BUTTON_SM_ACTIVE, 400, 25, 78, 40, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
     btn_sort_all->OnClick = OnBtnSortAllClick;
     btn_sort_all->Clickable = true;
     mSpriteManager.Add(btn_sort_all);
-    auto* btn_sort_all_label = new pText("ALL", FONT_PIXEL_ACTIVE, 439, 45, SDL_Color({255,255,255}));
+    btn_sort_all_label = new pText("ALL", FONT_PIXEL_ACTIVE, 439, 45, SDL_Color({255,255,255}));
     btn_sort_all_label->Z = -0.02f;
     btn_sort_all_label->Origin = ORIGIN_CENTER;
     mSpriteManager.Add(btn_sort_all_label);
 
-    auto* btn_sort_a_e = new pSprite(TX_BUTTON_XS, 536, 25, 67, 40, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
+    btn_sort_a_e = new pSprite(TX_BUTTON_XS, 536, 25, 67, 40, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
     btn_sort_a_e->OnClick = OnBtnSortAEClick;
     btn_sort_a_e->Clickable = true;
     mSpriteManager.Add(btn_sort_a_e);
-    auto* btn_sort_a_e_label = new pText("A-E", FONT_PIXEL, 569, 45, SDL_Color({67,19,115}));
+    btn_sort_a_e_label = new pText("A-E", FONT_PIXEL, 569, 45, SDL_Color({67,19,115}));
     btn_sort_a_e_label->Z = -0.02f;
     btn_sort_a_e_label->Origin = ORIGIN_CENTER;
     mSpriteManager.Add(btn_sort_a_e_label);
 
-    auto* btn_sort_f_j = new pSprite(TX_BUTTON_XS, 615, 25, 67, 40, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
+    btn_sort_f_j = new pSprite(TX_BUTTON_XS, 615, 25, 67, 40, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
     btn_sort_f_j->OnClick = OnBtnSortFJClick;
     btn_sort_f_j->Clickable = true;
     mSpriteManager.Add(btn_sort_f_j);
-    auto* btn_sort_f_j_label = new pText("F-J", FONT_PIXEL, 648, 45, SDL_Color({67,19,115}));
+    btn_sort_f_j_label = new pText("F-J", FONT_PIXEL, 648, 45, SDL_Color({67,19,115}));
     btn_sort_f_j_label->Z = -0.02f;
     btn_sort_f_j_label->Origin = ORIGIN_CENTER;
     mSpriteManager.Add(btn_sort_f_j_label);
 
-    auto* btn_sort_k_o = new pSprite(TX_BUTTON_XS, 694, 25, 67, 40, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
+    btn_sort_k_o = new pSprite(TX_BUTTON_XS, 694, 25, 67, 40, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
     btn_sort_k_o->OnClick = OnBtnSortKOClick;
     btn_sort_k_o->Clickable = true;
     mSpriteManager.Add(btn_sort_k_o);
-    auto* btn_sort_k_o_label = new pText("K-O", FONT_PIXEL, 727, 45, SDL_Color({67,19,115}));
+    btn_sort_k_o_label = new pText("K-O", FONT_PIXEL, 727, 45, SDL_Color({67,19,115}));
     btn_sort_k_o_label->Z = -0.02f;
     btn_sort_k_o_label->Origin = ORIGIN_CENTER;
     mSpriteManager.Add(btn_sort_k_o_label);
 
-    auto* btn_sort_p_t = new pSprite(TX_BUTTON_XS, 772, 25, 67, 40, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
+    btn_sort_p_t = new pSprite(TX_BUTTON_XS, 772, 25, 67, 40, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
     btn_sort_p_t->OnClick = OnBtnSortPTClick;
     btn_sort_p_t->Clickable = true;
     mSpriteManager.Add(btn_sort_p_t);
-    auto* btn_sort_p_t_label = new pText("P-T", FONT_PIXEL, 806, 45, SDL_Color({67,19,115}));
+    btn_sort_p_t_label = new pText("P-T", FONT_PIXEL, 806, 45, SDL_Color({67,19,115}));
     btn_sort_p_t_label->Z = -0.02f;
     btn_sort_p_t_label->Origin = ORIGIN_CENTER;
     mSpriteManager.Add(btn_sort_p_t_label);
 
-    auto* btn_sort_u_z = new pSprite(TX_BUTTON_XS, 852, 25, 67, 40, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
+    btn_sort_u_z = new pSprite(TX_BUTTON_XS, 852, 25, 67, 40, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
     btn_sort_u_z->OnClick = OnBtnSortUZClick;
     btn_sort_u_z->Clickable = true;
     mSpriteManager.Add(btn_sort_u_z);
-    auto* btn_sort_u_z_label = new pText("U-Z", FONT_PIXEL, 885, 45, SDL_Color({67,19,115}));
+    btn_sort_u_z_label = new pText("U-Z", FONT_PIXEL, 885, 45, SDL_Color({67,19,115}));
     btn_sort_u_z_label->Z = -0.02f;
     btn_sort_u_z_label->Origin = ORIGIN_CENTER;
     mSpriteManager.Add(btn_sort_u_z_label);
 
-    //mBeatmapSpritesStartIndex = mSpriteManager.Sprites().size() + 1;
+    ApplyFilter(Settings::get_beatmapfilter("activeFilter"), false);
+
     mSongListSize = BeatmapManager::SongCount();
     mCurrentPage = Settings::get_int("page");
     mCountPages  = ceil(((float)mSongListSize/(float)mEntriesPerPage));
 
     UpdateSonglist();
+}
+
+void SongSelect::ApplyFilter(BeatmapFilter f, bool resetPage) {
+    BeatmapManager::Filter(f);
+    if (resetPage) {
+        mCurrentPage = 0;
+        Settings::set_int("page", mCurrentPage);
+    }
+    PreviewBuffer::GetInstance().Pics_ResetBuffer();
+    PreviewBuffer::GetInstance().Update(-1, 0, mEntriesPerPage);
+    shouldHandlePageUpdate = true;
+    mSongListSize = BeatmapManager::SongCount();
+    mCountPages  = ceil(((float)mSongListSize/(float)mEntriesPerPage));
+    Settings::set_beatmapfilter("activeFilter", f);
+
+    btn_sort_all->Texture = TX_BUTTON_SM;
+    btn_sort_all_label->Font = FONT_PIXEL;
+    btn_sort_a_e->Texture = TX_BUTTON_SM;
+    btn_sort_a_e_label->Font = FONT_PIXEL;
+    btn_sort_f_j->Texture = TX_BUTTON_SM;
+    btn_sort_f_j_label->Font = FONT_PIXEL;
+    btn_sort_k_o->Texture = TX_BUTTON_SM;
+    btn_sort_k_o_label->Font = FONT_PIXEL;
+    btn_sort_p_t->Texture = TX_BUTTON_SM;
+    btn_sort_p_t_label->Font = FONT_PIXEL;
+    btn_sort_u_z->Texture = TX_BUTTON_SM;
+    btn_sort_u_z_label->Font = FONT_PIXEL;
+
+    switch (f) {
+        case FILTER_NONE:
+            btn_sort_all->Texture = TX_BUTTON_SM_ACTIVE;
+            btn_sort_all_label->Font = FONT_PIXEL_ACTIVE;
+            break;
+        case FILTER_ALPHA_A_E:
+            btn_sort_a_e->Texture = TX_BUTTON_SM_ACTIVE;
+            btn_sort_a_e_label->Font = FONT_PIXEL_ACTIVE;
+            break;
+        case FILTER_ALPHA_F_J:
+            btn_sort_f_j->Texture = TX_BUTTON_SM_ACTIVE;
+            btn_sort_f_j_label->Font = FONT_PIXEL_ACTIVE;
+            break;
+        case FILTER_ALPHA_K_O:
+            btn_sort_k_o->Texture = TX_BUTTON_SM_ACTIVE;
+            btn_sort_k_o_label->Font = FONT_PIXEL_ACTIVE;
+            break;
+        case FILTER_ALPHA_P_T:
+            btn_sort_p_t->Texture = TX_BUTTON_SM_ACTIVE;
+            btn_sort_p_t_label->Font = FONT_PIXEL_ACTIVE;
+            break;
+        case FILTER_ALPHA_U_Z:
+            btn_sort_u_z->Texture = TX_BUTTON_SM_ACTIVE;
+            btn_sort_u_z_label->Font = FONT_PIXEL_ACTIVE;
+            break;
+    }
 }
 
 void SongSelect::UpdateSonglist()

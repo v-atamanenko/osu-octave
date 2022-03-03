@@ -24,7 +24,7 @@ endif()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++17 -Wno-narrowing -Wno-psabi")
 # DEBUG:
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 -fsanitize=address,undefined,integer")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 -fsanitize=address,undefined,integer")
 
 add_executable(${PROJECT_NAME}
         ${PROJECT_SOURCE_DIR}/source/System/SDLInitializer.cpp # Important to be on top!

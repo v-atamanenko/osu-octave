@@ -43,6 +43,29 @@ void PreviewBuffer::Pics_ClearBuffer() {
     SDL_FreeSurface(preview_default);
 }
 
+void PreviewBuffer::Pics_ResetBuffer() {
+    while ( processingNow.load(std::memory_order_seq_cst) ){
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    }
+
+    processingNow.store(true, std::memory_order_seq_cst);
+    std::unique_lock lock_pbs(mut_pbs);
+    std::unique_lock lock_buf(mut_buf);
+
+    for (auto const& x : buf) {
+        if (preview_default != x.second) {
+            SDL_FreeSurface(x.second);
+        }
+    }
+    buf.clear();
+
+    for (int i = 0; i < BeatmapManager::SongCount(); ++i) {
+        buf[i] = preview_default;
+    }
+    pbs.UsedUpBytes = 0;
+    processingNow.store(false, std::memory_order_seq_cst);
+}
+
 SDL_Surface* PreviewBuffer::LoadSquare(const std::string& path) {
     SDL_Surface* loadedSurface = IMG_Load( path.c_str() );
     if (loadedSurface == nullptr) {
