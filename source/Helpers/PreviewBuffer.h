@@ -7,6 +7,7 @@
 #include <thread>
 #include <utility>
 #include <atomic>
+#include "Beatmaps/BeatmapManager.h"
 
 #ifdef DESKTOP
 #define PICTURE_CACHE_MAX_SIZE_BYTES (512 * 1024 * 1024) // 512 MB
@@ -31,6 +32,7 @@ class PreviewBuffer
         void Pics_ResetBuffer();
         SDL_Surface* GetTexture(int beatmap_id);
 
+        BeatmapFilter lastAppliedFilter = FILTER_NONE;
         static PreviewBuffer& GetInstance() { return sPreviewBuffer; }
 
     protected:

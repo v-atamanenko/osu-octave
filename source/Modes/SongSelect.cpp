@@ -194,8 +194,13 @@ void SongSelect::ApplyFilter(BeatmapFilter f, bool resetPage) {
         mCurrentPage = 0;
         Settings::set_int("page", mCurrentPage);
     }
-    PreviewBuffer::GetInstance().Pics_ResetBuffer();
-    PreviewBuffer::GetInstance().Update(-1, 0, mEntriesPerPage);
+
+    if (PreviewBuffer::GetInstance().lastAppliedFilter != f) {
+        PreviewBuffer::GetInstance().Pics_ResetBuffer();
+        PreviewBuffer::GetInstance().Update(-1, 0, mEntriesPerPage);
+        PreviewBuffer::GetInstance().lastAppliedFilter = f;
+    }
+
     shouldHandlePageUpdate = true;
     mSongListSize = BeatmapManager::SongCount();
     mCountPages  = ceil(((float)mSongListSize/(float)mEntriesPerPage));

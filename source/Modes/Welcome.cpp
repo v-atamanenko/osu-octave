@@ -64,8 +64,10 @@ void Welcome::Update() {
 
     if (mStage == STAGE_START_PREVIEWBUFFER) {
         Welcome::Redraw();
+        BeatmapManager::Filter(Settings::get_beatmapfilter("activeFilter"));
         BeatmapManager::BuildMap();
         PreviewBuffer::GetInstance().Init();
+        PreviewBuffer::GetInstance().lastAppliedFilter = Settings::get_beatmapfilter("activeFilter");
         mStatus->Text = "loading fonts...";
         mStage = STAGE_LOAD_FONTS;
         return;
