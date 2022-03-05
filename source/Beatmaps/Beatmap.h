@@ -90,6 +90,7 @@ class Beatmap
 		std::string mVersion;
 		std::string mAudioFilename;
         std::string mBackgroundFilename;
+        std::string mBackgroundFilepath;
 		
 		std::string mBaseDir;
         std::vector<BreakPoint> mBreakPoints;

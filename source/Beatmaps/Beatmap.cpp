@@ -25,7 +25,8 @@ bool Beatmap::LoadEntryData(const std::string &filename, const std::string &base
 
     for (const osuParser::Event& e : p.events) {
         if (e.type == osuParser::eBackground) {
-            bm.BackgroundFilename = basedir + "/" + e.file;
+            bm.BackgroundFilename = e.file;
+            bm.BackgroundFilepath = basedir + "/" + e.file;
         }
     }
 
@@ -69,7 +70,8 @@ Beatmap::Beatmap(const std::string &filename, const std::string &basedir)
 
     for (const osuParser::Event& e : p.events) {
         if (e.type == osuParser::eBackground) {
-            mBackgroundFilename = mBaseDir + "/" + e.file;
+            mBackgroundFilepath = mBaseDir + "/" + e.file;
+            mBackgroundFilename = e.file;
         }
         if (e.type == osuParser::eBreak) {
             mBreakPoints.push_back({e.begin, e.end});
@@ -153,7 +155,7 @@ Beatmap::~Beatmap()
 void Beatmap::InitBG() {
     assert(mValid);
 
-	GraphicsManager::Graphics().LoadBeatmapBackground(mBackgroundFilename);
+	GraphicsManager::Graphics().LoadBeatmapBackground(mBackgroundFilepath);
 
 	mHitObjectCount = mParser->hitObjects.size();
 	mHitObjectRead = 0;

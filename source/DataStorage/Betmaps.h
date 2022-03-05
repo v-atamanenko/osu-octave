@@ -18,6 +18,7 @@ using json = nlohmann::json;
 typedef struct BeatmapEntry {
     std::string Filename;
     std::string BackgroundFilename;
+    std::string BackgroundFilepath;
     std::string Title;
     std::string Artist;
     std::string Creator;
@@ -28,7 +29,7 @@ typedef struct BeatmapEntry {
 } BeatmapEntry;
 
 inline void to_json(json& j, const BeatmapEntry h) {
-    j = json{{"filename", h.Filename}, {"bg", h.BackgroundFilename}, {"title", h.Title},
+    j = json{{"filename", h.Filename}, {"bg", h.BackgroundFilename}, {"bg_path", h.BackgroundFilepath}, {"title", h.Title},
              {"artist", h.Artist}, {"creator", h.Creator}, {"version", h.Version},
              {"audiofilename", h.AudioFilename}, {"basedir", h.BaseDir}, {"checksum", h.Checksum}};
 }
@@ -36,6 +37,7 @@ inline void to_json(json& j, const BeatmapEntry h) {
 inline void from_json(const json& j, BeatmapEntry& h) {
     j.at("filename").get_to(h.Filename);
     j.at("bg").get_to(h.BackgroundFilename);
+    j.at("bg_path").get_to(h.BackgroundFilepath);
     j.at("title").get_to(h.Title);
     j.at("artist").get_to(h.Artist);
     j.at("creator").get_to(h.Creator);

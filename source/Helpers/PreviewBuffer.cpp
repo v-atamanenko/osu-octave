@@ -70,23 +70,9 @@ SDL_Surface* PreviewBuffer::LoadSquare(const std::string& path) {
     SDL_Surface* loadedSurface = IMG_Load( path.c_str() );
     if (loadedSurface == nullptr) {
         fprintf(stderr, "Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
-        return loadedSurface;
     }
 
-    SDL_Rect srcrect;
-    srcrect.h = srcrect.w = loadedSurface->h;
-    srcrect.y = 0;
-    srcrect.x = floor(((float)loadedSurface->w / 2.f) - ((float)loadedSurface->h / 2.f));
-
-    SDL_Rect dstrect;
-    dstrect.h = dstrect.w = srcrect.h;
-    dstrect.y = dstrect.x = 0;
-
-    SDL_Surface* cropped = SDL_CreateRGBSurfaceWithFormat(0, dstrect.w, dstrect.h, 8, window_pixelformat);
-
-    SDL_BlitSurface(loadedSurface,&srcrect,cropped,&dstrect);
-    SDL_FreeSurface(loadedSurface);
-    return cropped;
+    return loadedSurface;
 }
 
 void PreviewBuffer::Pics_FillBuffer(int last_page, int new_page, int per_page) {
@@ -104,7 +90,7 @@ void PreviewBuffer::Pics_FillBuffer(int last_page, int new_page, int per_page) {
 
         for (int i = 0; i < BeatmapManager::SongCount(); ++i) {
             BeatmapEntry map = BeatmapManager::Beatmaps()[i];
-            SDL_Surface* tex = LoadSquare(map.BackgroundFilename);
+            SDL_Surface* tex = LoadSquare(map.BackgroundFilepath);
 
             {
                 std::unique_lock lock_pbs(mut_pbs);
@@ -162,7 +148,7 @@ void PreviewBuffer::Pics_FillBuffer(int last_page, int new_page, int per_page) {
 
                 int texid = pbs.LastLoadedTexId + 1;
                 BeatmapEntry map = BeatmapManager::Beatmaps()[texid];
-                SDL_Surface *tex = LoadSquare(map.BackgroundFilename);
+                SDL_Surface *tex = LoadSquare(map.BackgroundFilepath);
 
                 buf[texid] = tex;
                 pbs.LastLoadedTexId++;
@@ -190,7 +176,7 @@ void PreviewBuffer::Pics_FillBuffer(int last_page, int new_page, int per_page) {
 
                 int texid = pbs.FirstLoadedTexId - 1;
                 BeatmapEntry map = BeatmapManager::Beatmaps()[texid];
-                SDL_Surface *tex = LoadSquare(map.BackgroundFilename);
+                SDL_Surface *tex = LoadSquare(map.BackgroundFilepath);
 
                 buf[texid] = tex;
                 pbs.FirstLoadedTexId--;
@@ -201,4 +187,34 @@ void PreviewBuffer::Pics_FillBuffer(int last_page, int new_page, int per_page) {
     processingNow.store(false, std::memory_order_seq_cst);
 }
 
+std::string PreviewBuffer::GeneratePreview(const std::string &map_subdir, const std::string &BackgroundFilename, const std::string &Checksum) {
+    std::string source_image_path = map_subdir + "/" + BackgroundFilename;
+    std::string target_image_filename = Checksum + ".png";
+    std::string target_image_path = map_subdir + "/" + target_image_filename;
 
+    SDL_Surface* loadedSurface = IMG_Load(source_image_path.c_str());
+    if (loadedSurface == nullptr) {
+        fprintf(stderr, "Unable to load image %s! SDL_image Error: %s\n", source_image_path.c_str(), IMG_GetError());
+        return BackgroundFilename;
+    }
+
+    if (!GraphicsManager::CropSurfaceToSquare(loadedSurface)) {
+        fprintf(stderr, "Unable to crop image %s! SDL_image Error: %s\n", source_image_path.c_str(), IMG_GetError());
+        SDL_FreeSurface(loadedSurface);
+        return BackgroundFilename;
+    }
+
+    if (!GraphicsManager::ScaleSurface(loadedSurface, 120)) {
+        fprintf(stderr, "Unable to scale image %s! SDL_image Error: %s\n", source_image_path.c_str(), IMG_GetError());
+        SDL_FreeSurface(loadedSurface);
+        return BackgroundFilename;
+    }
+
+    if (IMG_SavePNG(loadedSurface, target_image_path.c_str()) < 0) {
+        fprintf(stderr, "Unable to save png to %s! SDL_image Error: %s\n", target_image_path.c_str(), IMG_GetError());
+        SDL_FreeSurface(loadedSurface);
+        return BackgroundFilename;
+    }
+
+    return target_image_filename;
+}

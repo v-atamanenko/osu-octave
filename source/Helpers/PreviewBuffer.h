@@ -14,7 +14,7 @@
 #endif
 
 #ifdef VITA
-#define PICTURE_CACHE_MAX_SIZE_BYTES (82 * 1024 * 1024) // 82 MB
+#define PICTURE_CACHE_MAX_SIZE_BYTES (16 * 1024 * 1024) // 16 MB
 #endif
 
 typedef struct PreviewBufferState {
@@ -33,6 +33,7 @@ class PreviewBuffer
         SDL_Surface* GetTexture(int beatmap_id);
 
         BeatmapFilter lastAppliedFilter = FILTER_NONE;
+        static std::string GeneratePreview(const std::string& map_subdir, const std::string& BackgroundFilename, const std::string& Checksum);
         static PreviewBuffer& GetInstance() { return sPreviewBuffer; }
 
     protected:

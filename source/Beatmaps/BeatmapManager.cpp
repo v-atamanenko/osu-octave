@@ -1,4 +1,5 @@
 #include "BeatmapManager.h"
+#include "Helpers/PreviewBuffer.h"
 
 Beatmap* BeatmapManager::mBeatmapCurrent = nullptr;
 std::vector<BeatmapEntry> BeatmapManager::mBeatmapsAll;
@@ -158,7 +159,6 @@ void BeatmapManager::BuildCollection() {
 					//if we have on our hands a .osu file, add it to our collection
 					if (strcmp(ext+(length-4), ".osu") == 0) {
                         Add(map_filename, map_subdir);
-                        Beatmaps::add_path_to_state(map_filename, map_subdir);
 					}
 
                     free(ext);
@@ -179,9 +179,12 @@ void BeatmapManager::BuildCollection() {
 }
 
 void BeatmapManager::Add(const char* map_filename, const char* map_subdir) {
+    Beatmaps::add_path_to_state(map_filename, map_subdir);
     BeatmapEntry bme;
 
     if (Beatmap::LoadEntryData(map_filename, map_subdir, bme)) {
+        bme.BackgroundFilename = PreviewBuffer::GeneratePreview(map_subdir, bme.BackgroundFilename, bme.Checksum);
+        bme.BackgroundFilepath =  std::string(map_subdir) + "/" + bme.BackgroundFilename;
         Beatmaps::set_beatmap(bme);
     }
 }

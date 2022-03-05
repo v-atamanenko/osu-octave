@@ -385,3 +385,106 @@ void GraphicsManager::CreateRectangularTexture(TextureType texid, uint32_t width
     }
     maptextures[texid] = tex;
 }
+
+bool GraphicsManager::ScaleSurface(SDL_Surface*& pSurface, const int limit) {
+    bool res = true;
+    int width = pSurface->w;
+    int height = pSurface->h;
+
+    SDL_Rect sourceDimensions;
+    sourceDimensions.x = 0;
+    sourceDimensions.y = 0;
+    sourceDimensions.w = width;
+    sourceDimensions.h = height;
+
+    float scale = (float)limit / (float)width;
+    float scaleH = (float)limit / (float)height;
+
+    if (scaleH < scale) {
+        scale = scaleH;
+    }
+
+    SDL_Rect targetDimensions;
+    targetDimensions.x = 0;
+    targetDimensions.y = 0;
+    targetDimensions.w = (int)((float)width * scale);
+    targetDimensions.h = (int)((float)height * scale);
+
+    // create a 32 bits per pixel surface to Blit the image to first, before BlitScaled
+    // https://stackoverflow.com/questions/33850453/sdl2-blit-scaled-from-a-palettized-8bpp-surface-gives-error-blit-combination/33944312
+    SDL_Surface *p32BPPSurface = SDL_CreateRGBSurface(
+            pSurface->flags,
+            sourceDimensions.w,
+            sourceDimensions.h,
+            32,
+            pSurface->format->Rmask,
+            pSurface->format->Gmask,
+            pSurface->format->Bmask,
+            pSurface->format->Amask);
+
+    if (SDL_BlitSurface(pSurface, NULL, p32BPPSurface, NULL) < 0) {
+        fprintf(stderr, "Error did not blit surface: %s\n", SDL_GetError());
+        res = false;
+    }
+    else {
+        // create another 32 bits per pixel surface are the desired scale
+        SDL_Surface *pScaleSurface = SDL_CreateRGBSurface(
+                p32BPPSurface->flags,
+                targetDimensions.w,
+                targetDimensions.h,
+                p32BPPSurface->format->BitsPerPixel,
+                p32BPPSurface->format->Rmask,
+                p32BPPSurface->format->Gmask,
+                p32BPPSurface->format->Bmask,
+                p32BPPSurface->format->Amask);
+
+        // 32 bit per pixel surfaces (loaded from the original file) won't scale down with BlitScaled, suggestion to first fill the surface
+        // 8 and 24 bit depth pngs did not require this
+        // https://stackoverflow.com/questions/20587999/sdl-blitscaled-doesnt-work
+        SDL_FillRect(pScaleSurface, &targetDimensions, SDL_MapRGBA(pScaleSurface->format, 255, 0, 0, 255));
+
+        if (SDL_BlitScaled(p32BPPSurface, NULL, pScaleSurface, NULL) < 0) {
+            fprintf(stderr, "Error did not scale surface: %s\n", SDL_GetError());
+
+            SDL_FreeSurface(pScaleSurface);
+            pScaleSurface = NULL;
+            res = false;
+        }
+        else {
+            SDL_FreeSurface(pSurface);
+
+            pSurface = pScaleSurface;
+            width = pSurface->w;
+            height = pSurface->h;
+        }
+    }
+
+    SDL_FreeSurface(p32BPPSurface);
+    p32BPPSurface = NULL;
+    return res;
+}
+
+bool GraphicsManager::CropSurfaceToSquare(SDL_Surface*& loadedSurface) {
+    SDL_Rect srcrect;
+    srcrect.h = srcrect.w = loadedSurface->h;
+    srcrect.y = 0;
+    srcrect.x = floor(((float)loadedSurface->w / 2.f) - ((float)loadedSurface->h / 2.f));
+
+    SDL_Rect dstrect;
+    dstrect.h = dstrect.w = srcrect.h;
+    dstrect.y = dstrect.x = 0;
+
+    SDL_Surface* cropped = SDL_CreateRGBSurface(0, dstrect.w, dstrect.h, 32, rmask, gmask, bmask, amask);
+    if (cropped == nullptr) {
+        return false;
+    }
+
+    if (SDL_BlitSurface(loadedSurface,&srcrect,cropped,&dstrect) < 0) {
+        SDL_FreeSurface(cropped);
+        return false;
+    }
+    SDL_FreeSurface(loadedSurface);
+    loadedSurface = cropped;
+    cropped = nullptr;
+    return true;
+}

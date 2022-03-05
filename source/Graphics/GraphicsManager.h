@@ -15,6 +15,18 @@
 #ifndef __GRAPHICSMANAGER_H__
 #define __GRAPHICSMANAGER_H__
 
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+#define rmask 0xff000000
+#define gmask 0x00ff0000
+#define bmask 0x0000ff00
+#define amask 0x000000ff
+#else
+#define rmask 0x000000ff
+#define gmask 0x0000ff00
+#define bmask 0x00ff0000
+#define amask 0xff000000
+#endif
+
 typedef enum {
 	ORIGIN_CENTER,
 	ORIGIN_TOPLEFT,
@@ -48,6 +60,9 @@ class GraphicsManager
 
         static void Clear();
         static void Present();
+
+        static bool ScaleSurface(SDL_Surface*& pSurface, int limit);
+        static bool CropSurfaceToSquare(SDL_Surface*& loadedSurface);
 
         static const uint32_t PlayXOffset = ((SCREEN_WIDTH-640)/2);
 		static const uint32_t PlayYOffset = 73;
