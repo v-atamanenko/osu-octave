@@ -19,11 +19,12 @@ extern SDL_Renderer *renderer;
 #define ScreenX(x) (int32_t)(x)
 #define ScreenY(y) (int32_t)(y)
 
-#define PlayfieldX(x) ((x)-64)
-#define PlayfieldY(y) ((y)-73)
 
-//PlayXOffset = 64;
-//PlayYOffset = 73;
+#define PLAYFIELD_X_OFFSET ((SCREEN_WIDTH-640)/2)
+#define PLAYFIELD_Y_OFFSET 64
+
+#define SCREEN_X_TO_PLAYFIELD_X(x) ((x)-PLAYFIELD_X_OFFSET)
+#define SCREEN_Y_TO_PLAYFIELD_Y(y) ((y)-PLAYFIELD_Y_OFFSET)
 
 /*
  * NOTE! In DEF_*Directory/DEF_*Subdirectory defines, trailing slash is mandatory!

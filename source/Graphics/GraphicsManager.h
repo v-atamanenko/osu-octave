@@ -64,8 +64,8 @@ class GraphicsManager
         static bool ScaleSurface(SDL_Surface*& pSurface, int limit);
         static bool CropSurfaceToSquare(SDL_Surface*& loadedSurface);
 
-        static const uint32_t PlayXOffset = ((SCREEN_WIDTH-640)/2);
-		static const uint32_t PlayYOffset = 73;
+        static const uint32_t PlayXOffset = PLAYFIELD_X_OFFSET;
+		static const uint32_t PlayYOffset = PLAYFIELD_Y_OFFSET;
 
     bool LoadTexture(TextureType texid, const std::string& path);
 

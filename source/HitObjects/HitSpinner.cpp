@@ -20,14 +20,16 @@ HitSpinner::HitSpinner(int32_t time, int32_t endtime, HitObjectSound sound, bool
 
 	pSprite* spr;
 	
-	spr = new pSprite(TX_PLAY_CIRCLEAPPROACH, 479, 302, 460, 460, ORIGIN_CENTER, FIELD_SCREEN, SDL_Color({0, 0, 0}), 0);
+	spr = new pSprite(TX_PLAY_CIRCLEAPPROACH, 480, 302, 460, 460, ORIGIN_CENTER, FIELD_SCREEN, SDL_Color({0, 0, 0}), 0);
 	spr->Show(time-300, time);
 	spr->Hide(endtime, endtime+300);
 	spr->Scale(time-300, endtime, 1, 0);
 	spr->Kill(endtime+300);
 	mSprites.push_back(spr);
-	
-	spr = new pSprite(TX_PLAY_SPINNER, 479, 302, 440, 440, ORIGIN_CENTER, FIELD_SCREEN, SDL_Color({0, 0, 0}), 0, 0.03f);
+
+    // Using FIELD_PLAY and SCREEN_X_TO_PLAYFIELD_X/SCREEN_Y_TO_PLAYFIELD_Y here, because mSprites[1] is used as a point
+    // for score sprite on spinner hit. And for displaying that sprite, FIELD_PLAY is used always.
+	spr = new pSprite(TX_PLAY_SPINNER, SCREEN_X_TO_PLAYFIELD_X(480), SCREEN_Y_TO_PLAYFIELD_Y(302), 440, 440, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({0, 0, 0}), 0, 0.03f);
 	spr->Show(time-300, time);
 	spr->Hide(endtime, endtime+300);
 	spr->Kill(endtime+300);

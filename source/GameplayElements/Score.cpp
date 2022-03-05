@@ -59,17 +59,17 @@ void Score::Add(ScoreType score, bool forceNoCombo, bool gekiKatu)
 		//Increase the respective count
 		switch(score) {
 			case ScoreType::SCORE_100:
-				if(gekiKatu)
-					this->mCountKatu++;
-				else
-					this->mCount100++;
-				break;
+				if(gekiKatu) {
+                    this->mCountKatu++;
+                }else {
+                    this->mCount100++;
+                }break;
 			case ScoreType::SCORE_300:
-				if(gekiKatu)
-					this->mCountGeki++;
-				else
-					this->mCount300++;
-				break;
+				if(gekiKatu) {
+                    this->mCountGeki++;
+                }else {
+                    this->mCount300++;
+                }break;
 			case ScoreType::SCORE_50:
 				this->mCount50++;
 				break;

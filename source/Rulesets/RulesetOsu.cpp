@@ -18,6 +18,7 @@ void RulesetOsu::IncreaseScore(ScoreType score, bool forceNoCombo, bool forceNoA
 	switch (score)
 	{
 		case SCORE_300:
+            mSpecialScore = (mSpecialScore > 1 ? 1 : mSpecialScore);
 			if (comboEnd)
 			{
 				tex = (TextureType)(TX_PLAY_HIT300 + mSpecialScore);
