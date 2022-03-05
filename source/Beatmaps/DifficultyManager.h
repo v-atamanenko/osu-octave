@@ -14,7 +14,7 @@ class DifficultyManager
 		static float DifficultyEyupStars;
 
 		//inline
-		static uint32_t GetCircleSize()   { return circleSize[DifficultyCircleSize]; } //possibly *1.2
+		static uint32_t GetCircleSize()   { return circleSize[DifficultyCircleSize] * 1.2; } //possibly *1.2
 		static uint32_t GetPreemptTime()  { return preemptTime[DifficultyOverall]; }
 		static uint32_t GetHitWindow300() { return hitWindow300[DifficultyOverall]; }
 		static uint32_t GetHitWindow100() { return hitWindow100[DifficultyOverall]; }
