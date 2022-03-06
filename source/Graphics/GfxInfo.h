@@ -58,7 +58,6 @@ typedef enum {
 
     // UI TEXTURES:
     TX_WELCOME_BG,
-    TX_TAP_TO_START,
     TX_SONGSELECT_BG,
     TX_BUTTON_BIG,
     TX_BUTTON_MED,

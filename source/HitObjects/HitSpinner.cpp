@@ -4,7 +4,7 @@
 #define TEXTURE_PACK(u, v) (((u) & 0xFFFF) | ((v) << 16))
 #endif
 
-HitSpinner::HitSpinner(int32_t time, int32_t endtime, HitObjectSound sound, bool combo) : HitObject(osuPixelsXtoScreenX(256), osuPixelsYtoScreenY(192), time, HIT_SPINNER, sound, combo)
+HitSpinner::HitSpinner(int32_t time, int32_t endtime, HitObjectSound sound, bool combo) : HitObject(256, 192, time, HIT_SPINNER, sound, combo)
 {
 	mEndTime = endtime;
 	fSpinning = false;
@@ -69,7 +69,7 @@ void HitSpinner::Update()
 	float ratio = ((float)mTotalSpins + MathHelper::Frc(mTotalRotation)) / (float)mRequiredSpins;
 	
 	//set spinner bars
-	uint32_t height = MathHelper::Max(0, MathHelper::Min(SCREEN_HEIGHT, (int32_t)floor(ratio*(float)(SCREEN_HEIGHT))) - (int32_t)MathHelper::Random(0, ScreenY(20)));
+	uint32_t height = MathHelper::Max(0, MathHelper::Min(SCREEN_HEIGHT, (int32_t)floor(ratio*(float)(SCREEN_HEIGHT))) - (int32_t)MathHelper::Random(0, 20));
 
     delete mSprites[2]->UV;
     mSprites[2]->UV = new SDL_Rect({0, SCREEN_HEIGHT-height, SCREEN_WIDTH, height});

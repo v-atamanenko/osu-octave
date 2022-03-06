@@ -1,4 +1,5 @@
 #include "GraphicsManager.h"
+#include "DataStorage/Settings.h"
 #include <string>
 #include <algorithm>
 
@@ -163,96 +164,96 @@ void GraphicsManager::Present() {
 }
 
 void GraphicsManager::LoadTexturesForMode(ModeType mod) {
+    std::string skin_path = std::string(DEF_DataDirectory) + std::string(DEF_SkinsSubdirectory) + Settings::get_str("skin") + "/";
+
     switch (mod) {
         case MODE_PLAYER:
-            LoadTexture(TX_PLAY_CIRCLE, "data/textures/circle.png");
-            LoadTexture(TX_PLAY_CIRCLEOVERLAY, "data/textures/circleoverlay.png");
-            LoadTexture(TX_PLAY_CIRCLEAPPROACH, "data/textures/circleapproach.png");
+            LoadTexture(TX_PLAY_CIRCLE, skin_path+"gameplay/circle.png");
+            LoadTexture(TX_PLAY_CIRCLEOVERLAY, skin_path+"gameplay/circleoverlay.png");
+            LoadTexture(TX_PLAY_CIRCLEAPPROACH, skin_path+"gameplay/circleapproach.png");
 
-            LoadTexture(TX_PLAY_DISC, "data/textures/disc.png");
-            LoadTexture(TX_PLAY_SLIDERTICK, "data/textures/slidertick.png");
-            LoadTexture(TX_PLAY_SLIDERREVERSE, "data/textures/sliderreverse.png");
+            LoadTexture(TX_PLAY_DISC, skin_path+"gameplay/disc.png");
+            LoadTexture(TX_PLAY_SLIDERTICK, skin_path+"gameplay/slidertick.png");
+            LoadTexture(TX_PLAY_SLIDERREVERSE, skin_path+"gameplay/sliderreverse.png");
 
-            LoadTexture(TX_WHITE, "data/textures/white.png");
+            LoadTexture(TX_WHITE, skin_path+"gameplay/white.png");
 
-            LoadTexture(TX_PLAY_SPINNER, "data/textures/spinner.png");
-            LoadTexture(TX_PLAY_SPINNERBARS, "data/textures/spinnerbars.png");
-            LoadTexture(TX_PLAY_SCOREBAR_BAR, "data/textures/scorebar_colour.png");
+            LoadTexture(TX_PLAY_SPINNER, skin_path+"gameplay/spinner.png");
+            LoadTexture(TX_PLAY_SPINNERBARS, skin_path+"gameplay/spinnerbars.png");
 
-            LoadTexture(TX_PLAY_SPINNERBG, "data/textures/spinnerbg.png");
+            LoadTexture(TX_PLAY_SPINNERBG, skin_path+"gameplay/spinnerbg.png");
 
-            LoadTexture(TX_PLAY_SLIDERB0, "data/textures/sliderb0.png");
-            LoadTexture(TX_PLAY_SLIDERB1, "data/textures/sliderb1.png");
-            LoadTexture(TX_PLAY_SLIDERB2, "data/textures/sliderb2.png");
-            LoadTexture(TX_PLAY_SLIDERB3, "data/textures/sliderb3.png");
-            LoadTexture(TX_PLAY_SLIDERB4, "data/textures/sliderb4.png");
-            LoadTexture(TX_PLAY_SLIDERB5, "data/textures/sliderb5.png");
-            LoadTexture(TX_PLAY_SLIDERB6, "data/textures/sliderb6.png");
-            LoadTexture(TX_PLAY_SLIDERB7, "data/textures/sliderb7.png");
-            LoadTexture(TX_PLAY_SLIDERB8, "data/textures/sliderb8.png");
-            LoadTexture(TX_PLAY_SLIDERB9, "data/textures/sliderb9.png");
-            LoadTexture(TX_PLAY_SLIDERFOLLOW, "data/textures/sliderfollow.png");
+            LoadTexture(TX_PLAY_SLIDERB0, skin_path+"gameplay/sliderb0.png");
+            LoadTexture(TX_PLAY_SLIDERB1, skin_path+"gameplay/sliderb1.png");
+            LoadTexture(TX_PLAY_SLIDERB2, skin_path+"gameplay/sliderb2.png");
+            LoadTexture(TX_PLAY_SLIDERB3, skin_path+"gameplay/sliderb3.png");
+            LoadTexture(TX_PLAY_SLIDERB4, skin_path+"gameplay/sliderb4.png");
+            LoadTexture(TX_PLAY_SLIDERB5, skin_path+"gameplay/sliderb5.png");
+            LoadTexture(TX_PLAY_SLIDERB6, skin_path+"gameplay/sliderb6.png");
+            LoadTexture(TX_PLAY_SLIDERB7, skin_path+"gameplay/sliderb7.png");
+            LoadTexture(TX_PLAY_SLIDERB8, skin_path+"gameplay/sliderb8.png");
+            LoadTexture(TX_PLAY_SLIDERB9, skin_path+"gameplay/sliderb9.png");
+            LoadTexture(TX_PLAY_SLIDERFOLLOW, skin_path+"gameplay/sliderfollow.png");
 
-            LoadTexture(TX_PLAY_HIT0, "data/textures/hit0.png");
-            LoadTexture(TX_PLAY_HIT300, "data/textures/hit300.png");
-            LoadTexture(TX_PLAY_HIT300K, "data/textures/hit300k.png");
-            LoadTexture(TX_PLAY_HIT300G, "data/textures/hit300g.png");
+            LoadTexture(TX_PLAY_HIT0, skin_path+"gameplay/hit0.png");
+            LoadTexture(TX_PLAY_HIT300, skin_path+"gameplay/hit300.png");
+            LoadTexture(TX_PLAY_HIT300K, skin_path+"gameplay/hit300k.png");
+            LoadTexture(TX_PLAY_HIT300G, skin_path+"gameplay/hit300g.png");
 
-            LoadTexture(TX_PLAY_HIT50, "data/textures/hit50.png");
-            LoadTexture(TX_PLAY_HIT100, "data/textures/hit100.png");
-            LoadTexture(TX_PLAY_HIT100K, "data/textures/hit100k.png");
+            LoadTexture(TX_PLAY_HIT50, skin_path+"gameplay/hit50.png");
+            LoadTexture(TX_PLAY_HIT100, skin_path+"gameplay/hit100.png");
+            LoadTexture(TX_PLAY_HIT100K, skin_path+"gameplay/hit100k.png");
 
-            LoadTexture(TX_PLAY_SLIDER30, "data/textures/slider30.png");
-            LoadTexture(TX_PLAY_SLIDER10, "data/textures/slider10.png");
+            LoadTexture(TX_PLAY_SLIDER30, skin_path+"gameplay/slider30.png");
+            LoadTexture(TX_PLAY_SLIDER10, skin_path+"gameplay/slider10.png");
 
-            LoadTexture(TX_PLAY_SCOREBAR_KI, "data/textures/scorebar_ki.png");
-            LoadTexture(TX_PLAY_SCOREBAR_KIDANGER, "data/textures/scorebar_kidanger.png");
-            LoadTexture(TX_PLAY_SCOREBAR_KIDANGER2, "data/textures/scorebar_kidanger2.png");
+            LoadTexture(TX_PLAY_SCOREBAR, skin_path+"ui/scorebar.png");
+            LoadTexture(TX_PLAY_SCOREBAR_BAR, skin_path+"ui/scorebar_colour.png");
+            LoadTexture(TX_PLAY_SCOREBAR_KI, skin_path+"ui/scorebar_ki.png");
+            LoadTexture(TX_PLAY_SCOREBAR_KIDANGER, skin_path+"ui/scorebar_kidanger.png");
+            LoadTexture(TX_PLAY_SCOREBAR_KIDANGER2, skin_path+"ui/scorebar_kidanger2.png");
 
-            LoadTexture(TX_PLAY_SCOREBAR, "data/textures/scorebar.png");
+            LoadTexture(TX_RANKING_A_LG, skin_path+"ui/ranking-a-lg.png");
+            LoadTexture(TX_RANKING_B_LG, skin_path+"ui/ranking-b-lg.png");
+            LoadTexture(TX_RANKING_C_LG, skin_path+"ui/ranking-c-lg.png");
+            LoadTexture(TX_RANKING_D_LG, skin_path+"ui/ranking-d-lg.png");
+            LoadTexture(TX_RANKING_S_LG, skin_path+"ui/ranking-s-lg.png");
+            LoadTexture(TX_RANKING_SS_LG, skin_path+"ui/ranking-ss-lg.png");
+            LoadTexture(TX_RANKING_F_LG, skin_path+"ui/ranking-f-lg.png");
+            LoadTexture(TX_BUTTON_BIG, skin_path+"ui/button-big.png");
 
-            LoadTexture(TX_RANKING_A_LG, "data/textures/ranking-a-lg.png");
-            LoadTexture(TX_RANKING_B_LG, "data/textures/ranking-b-lg.png");
-            LoadTexture(TX_RANKING_C_LG, "data/textures/ranking-c-lg.png");
-            LoadTexture(TX_RANKING_D_LG, "data/textures/ranking-d-lg.png");
-            LoadTexture(TX_RANKING_S_LG, "data/textures/ranking-s-lg.png");
-            LoadTexture(TX_RANKING_SS_LG, "data/textures/ranking-ss-lg.png");
-            LoadTexture(TX_RANKING_F_LG, "data/textures/ranking-f-lg.png");
-            LoadTexture(TX_BUTTON_BIG, "data/ui/button-big.png");
-
-            LoadTexture(TX_GAMEOVER_BG, "data/ui/gameover-bg.png");
-            LoadTexture(TX_PAUSE_BG, "data/ui/pause-bg.png");
+            LoadTexture(TX_GAMEOVER_BG, skin_path+"ui/gameover-bg.png");
+            LoadTexture(TX_PAUSE_BG, skin_path+"ui/pause-bg.png");
 
             CreateRectangularTexture(TX_PLAY_DARKEN_OVERLAY, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_Color({0, 0, 0, 150}));
             break;
         case MODE_SONGSELECT:
-            LoadTexture(TX_SONGSELECT_BG, "data/ui/song-selector.png");
-            LoadTexture(TX_BUTTON_BIG, "data/ui/button-big.png");
-            LoadTexture(TX_BUTTON_MED, "data/ui/button-med.png");
-            LoadTexture(TX_BUTTON_SM, "data/ui/button-sm.png");
-            LoadTexture(TX_BUTTON_SM_ACTIVE, "data/ui/button-sm-active.png");
-            LoadTexture(TX_BUTTON_XS, "data/ui/button-xs.png");
-            LoadTexture(TX_BUTTON_ARROW, "data/ui/button-arrow.png");
-            LoadTexture(TX_BUTTON_PLAY, "data/ui/button-play.png");
+            LoadTexture(TX_SONGSELECT_BG, skin_path+"ui/song-selector.png");
+            LoadTexture(TX_BUTTON_BIG, skin_path+"ui/button-big.png");
+            LoadTexture(TX_BUTTON_MED, skin_path+"ui/button-med.png");
+            LoadTexture(TX_BUTTON_SM, skin_path+"ui/button-sm.png");
+            LoadTexture(TX_BUTTON_SM_ACTIVE, skin_path+"ui/button-sm-active.png");
+            LoadTexture(TX_BUTTON_XS, skin_path+"ui/button-xs.png");
+            LoadTexture(TX_BUTTON_ARROW, skin_path+"ui/button-arrow.png");
+            LoadTexture(TX_BUTTON_PLAY, skin_path+"ui/button-play.png");
 
-            LoadTexture(TX_RANKING_UNK_SM, "data/textures/ranking-unk-sm.png");
-            LoadTexture(TX_RANKING_A_SM, "data/textures/ranking-a-sm.png");
-            LoadTexture(TX_RANKING_B_SM, "data/textures/ranking-b-sm.png");
-            LoadTexture(TX_RANKING_C_SM, "data/textures/ranking-c-sm.png");
-            LoadTexture(TX_RANKING_D_SM, "data/textures/ranking-d-sm.png");
-            LoadTexture(TX_RANKING_S_SM, "data/textures/ranking-s-sm.png");
-            LoadTexture(TX_RANKING_SS_SM, "data/textures/ranking-ss-sm.png");
+            LoadTexture(TX_RANKING_UNK_SM, skin_path+"ui/ranking-unk-sm.png");
+            LoadTexture(TX_RANKING_A_SM, skin_path+"ui/ranking-a-sm.png");
+            LoadTexture(TX_RANKING_B_SM, skin_path+"ui/ranking-b-sm.png");
+            LoadTexture(TX_RANKING_C_SM, skin_path+"ui/ranking-c-sm.png");
+            LoadTexture(TX_RANKING_D_SM, skin_path+"ui/ranking-d-sm.png");
+            LoadTexture(TX_RANKING_S_SM, skin_path+"ui/ranking-s-sm.png");
+            LoadTexture(TX_RANKING_SS_SM, skin_path+"ui/ranking-ss-sm.png");
 
-            LoadTexture(TX_STARS, "data/ui/stars.png");
-            LoadTexture(TX_STARS_FILL, "data/ui/stars-fill.png");
+            LoadTexture(TX_STARS, skin_path+"ui/stars.png");
+            LoadTexture(TX_STARS_FILL, skin_path+"ui/stars-fill.png");
 
             CreateRectangularTexture(TX_BEATMAP_ENTRY_BG, 609, 80, SDL_Color({199, 190, 235, 127}));
             CreateRectangularTexture(TX_BEATMAP_ENTRY_EXPANDED_BG, 609, 174, SDL_Color({199, 190, 235, 127}));
 
             break;
         case MODE_WELCOME:
-            LoadTexture(TX_WELCOME_BG, "data/ui/welcome.png");
-            LoadTexture(TX_TAP_TO_START, "data/ui/tap-to-start.png");
+            LoadTexture(TX_WELCOME_BG, skin_path+"ui/welcome.png");
             break;
     }
 }

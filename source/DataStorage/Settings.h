@@ -5,13 +5,10 @@
 #include <limits>
 
 #include "defines.h"
+#include "types.h"
 
 #include "Helpers/JSON.hpp"
 using json = nlohmann::json;
-
-#ifndef PATH_MAX
-#define PATH_MAX 1024
-#endif
 
 class Settings
 {
@@ -75,7 +72,8 @@ class Settings
             settings = {
                     {"page", 0},
                     {"noFail", true},
-                    {"activeFilter", FILTER_NONE}
+                    {"activeFilter", FILTER_NONE},
+                    {"skin", "default"}
             };
         }
 

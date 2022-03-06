@@ -1,6 +1,7 @@
 #include <SDL_timer.h>
 #include "PreviewBuffer.h"
 #include "Beatmaps/BeatmapManager.h"
+#include "DataStorage/Settings.h"
 
 PreviewBuffer PreviewBuffer::sPreviewBuffer;
 
@@ -9,7 +10,8 @@ PreviewBuffer::PreviewBuffer() {
 }
 
 void PreviewBuffer::Init() {
-    preview_default = IMG_Load( "data/ui/preview.png" );
+    std::string path = std::string(DEF_DataDirectory) + std::string(DEF_SkinsSubdirectory) + Settings::get_str("skin") + "/ui/preview.png";
+    preview_default = IMG_Load( path.c_str() );
     window_pixelformat = SDL_GetWindowPixelFormat(window);
 
     processingNow.store(true, std::memory_order_seq_cst);

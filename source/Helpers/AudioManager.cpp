@@ -1,4 +1,6 @@
 #include <unistd.h>
+#include "defines.h"
+#include "DataStorage/Settings.h"
 #include "AudioManager.h"
 
 AudioManager AudioManager::sEngine;
@@ -30,59 +32,60 @@ AudioManager::AudioManager()
 
 void AudioManager::ResetSamples()
 {
-    mSampleNormal.hitnormal.filename = "data/sounds/normal-hitnormal.wav";
-    mSampleNormal.hitnormal.chunk = Mix_LoadWAV(mSampleNormal.hitnormal.filename);
+    std::string path = std::string(DEF_DataDirectory) + std::string(DEF_SkinsSubdirectory) + Settings::get_str("skin") + "/sounds/";
+    mSampleNormal.hitnormal.filename = path + "normal-hitnormal.wav";
+    mSampleNormal.hitnormal.chunk = Mix_LoadWAV(mSampleNormal.hitnormal.filename.c_str());
 
-    mSampleNormal.hitwhistle.filename = "data/sounds/normal-hitwhistle.wav";
-    mSampleNormal.hitwhistle.chunk = Mix_LoadWAV(mSampleNormal.hitwhistle.filename);
+    mSampleNormal.hitwhistle.filename = path + "normal-hitwhistle.wav";
+    mSampleNormal.hitwhistle.chunk = Mix_LoadWAV(mSampleNormal.hitwhistle.filename.c_str());
 
-    mSampleNormal.hitfinish.filename = "data/sounds/normal-hitfinish.wav";
-    mSampleNormal.hitfinish.chunk = Mix_LoadWAV(mSampleNormal.hitfinish.filename);
+    mSampleNormal.hitfinish.filename = path + "normal-hitfinish.wav";
+    mSampleNormal.hitfinish.chunk = Mix_LoadWAV(mSampleNormal.hitfinish.filename.c_str());
 
-    mSampleNormal.hitclap.filename = "data/sounds/normal-hitclap.wav";
-    mSampleNormal.hitclap.chunk = Mix_LoadWAV(mSampleNormal.hitclap.filename);
+    mSampleNormal.hitclap.filename = path + "normal-hitclap.wav";
+    mSampleNormal.hitclap.chunk = Mix_LoadWAV(mSampleNormal.hitclap.filename.c_str());
 
-    mSampleNormal.slidertick.filename = "data/sounds/normal-slidertick.wav";
-    mSampleNormal.slidertick.chunk = Mix_LoadWAV(mSampleNormal.slidertick.filename);
+    mSampleNormal.slidertick.filename = path + "normal-slidertick.wav";
+    mSampleNormal.slidertick.chunk = Mix_LoadWAV(mSampleNormal.slidertick.filename.c_str());
 
-    mSampleNormal.sliderslide.filename = "data/sounds/normal-sliderslide.wav";
-    mSampleNormal.sliderslide.chunk = Mix_LoadWAV(mSampleNormal.sliderslide.filename);
+    mSampleNormal.sliderslide.filename = path + "normal-sliderslide.wav";
+    mSampleNormal.sliderslide.chunk = Mix_LoadWAV(mSampleNormal.sliderslide.filename.c_str());
 
-    mSampleNormal.sliderwhistle.filename = "data/sounds/normal-sliderwhistle.wav";
-    mSampleNormal.sliderwhistle.chunk = Mix_LoadWAV(mSampleNormal.sliderwhistle.filename);
+    mSampleNormal.sliderwhistle.filename = path + "normal-sliderwhistle.wav";
+    mSampleNormal.sliderwhistle.chunk = Mix_LoadWAV(mSampleNormal.sliderwhistle.filename.c_str());
 
-    mSampleNormal.spinnerspin.filename = "data/sounds/spinnerspin.wav";
-    mSampleNormal.spinnerspin.chunk = Mix_LoadWAV(mSampleNormal.spinnerspin.filename);
+    mSampleNormal.spinnerspin.filename = path + "spinnerspin.wav";
+    mSampleNormal.spinnerspin.chunk = Mix_LoadWAV(mSampleNormal.spinnerspin.filename.c_str());
 
-    mSampleNormal.spinnerbonus.filename = "data/sounds/spinnerbonus.wav";
-    mSampleNormal.spinnerbonus.chunk = Mix_LoadWAV(mSampleNormal.spinnerbonus.filename);
+    mSampleNormal.spinnerbonus.filename = path + "spinnerbonus.wav";
+    mSampleNormal.spinnerbonus.chunk = Mix_LoadWAV(mSampleNormal.spinnerbonus.filename.c_str());
 
-    mSampleSoft.hitnormal.filename = "data/sounds/soft-hitnormal.wav";
-    mSampleSoft.hitnormal.chunk = Mix_LoadWAV(mSampleSoft.hitnormal.filename);
+    mSampleSoft.hitnormal.filename = path + "soft-hitnormal.wav";
+    mSampleSoft.hitnormal.chunk = Mix_LoadWAV(mSampleSoft.hitnormal.filename.c_str());
 
-    mSampleSoft.hitwhistle.filename = "data/sounds/soft-hitwhistle.wav";
-    mSampleSoft.hitwhistle.chunk = Mix_LoadWAV(mSampleSoft.hitwhistle.filename);
+    mSampleSoft.hitwhistle.filename = path + "soft-hitwhistle.wav";
+    mSampleSoft.hitwhistle.chunk = Mix_LoadWAV(mSampleSoft.hitwhistle.filename.c_str());
 
-    mSampleSoft.hitfinish.filename = "data/sounds/soft-hitfinish.wav";
-    mSampleSoft.hitfinish.chunk = Mix_LoadWAV(mSampleSoft.hitfinish.filename);
+    mSampleSoft.hitfinish.filename = path + "soft-hitfinish.wav";
+    mSampleSoft.hitfinish.chunk = Mix_LoadWAV(mSampleSoft.hitfinish.filename.c_str());
 
-    mSampleSoft.hitclap.filename = "data/sounds/soft-hitclap.wav";
-    mSampleSoft.hitclap.chunk = Mix_LoadWAV(mSampleSoft.hitclap.filename);
+    mSampleSoft.hitclap.filename = path + "soft-hitclap.wav";
+    mSampleSoft.hitclap.chunk = Mix_LoadWAV(mSampleSoft.hitclap.filename.c_str());
 
-    mSampleSoft.slidertick.filename = "data/sounds/soft-slidertick.wav";
-    mSampleSoft.slidertick.chunk = Mix_LoadWAV(mSampleSoft.slidertick.filename);
+    mSampleSoft.slidertick.filename = path + "soft-slidertick.wav";
+    mSampleSoft.slidertick.chunk = Mix_LoadWAV(mSampleSoft.slidertick.filename.c_str());
 
-    mSampleSoft.sliderslide.filename = "data/sounds/soft-sliderslide.wav";
-    mSampleSoft.sliderslide.chunk = Mix_LoadWAV(mSampleSoft.sliderslide.filename);
+    mSampleSoft.sliderslide.filename = path + "soft-sliderslide.wav";
+    mSampleSoft.sliderslide.chunk = Mix_LoadWAV(mSampleSoft.sliderslide.filename.c_str());
 
-    mSampleSoft.sliderwhistle.filename = "data/sounds/soft-sliderwhistle.wav";
-    mSampleSoft.sliderwhistle.chunk = Mix_LoadWAV(mSampleSoft.sliderwhistle.filename);
+    mSampleSoft.sliderwhistle.filename = path + "soft-sliderwhistle.wav";
+    mSampleSoft.sliderwhistle.chunk = Mix_LoadWAV(mSampleSoft.sliderwhistle.filename.c_str());
 
-    mSampleSoft.spinnerspin.filename = "data/sounds/spinnerspin.wav";
-    mSampleSoft.spinnerspin.chunk = Mix_LoadWAV(mSampleSoft.spinnerspin.filename);
+    mSampleSoft.spinnerspin.filename = path + "spinnerspin.wav";
+    mSampleSoft.spinnerspin.chunk = Mix_LoadWAV(mSampleSoft.spinnerspin.filename.c_str());
 
-    mSampleSoft.spinnerbonus.filename = "data/sounds/spinnerbonus.wav";
-    mSampleSoft.spinnerbonus.chunk = Mix_LoadWAV(mSampleSoft.spinnerbonus.filename);
+    mSampleSoft.spinnerbonus.filename = path + "spinnerbonus.wav";
+    mSampleSoft.spinnerbonus.chunk = Mix_LoadWAV(mSampleSoft.spinnerbonus.filename.c_str());
 }
 
 int AudioManager::PlaySample(SampleSetInfo info, bool loop, int channel)

@@ -9,20 +9,10 @@
 #include "DifficultyManager.h"
 #include "Modes/Mode.h"
 #include "DataStorage/Betmaps.h"
+#include "types.h"
 
 #ifndef __BEATMAPMANAGER_H__
 #define __BEATMAPMANAGER_H__
-
-typedef std::vector<Beatmap*>::iterator beatmapIterator;
-
-typedef enum BeatmapFilter {
-    FILTER_NONE,
-    FILTER_ALPHA_A_E,
-    FILTER_ALPHA_F_J,
-    FILTER_ALPHA_K_O,
-    FILTER_ALPHA_P_T,
-    FILTER_ALPHA_U_Z
-} BeatmapFilter;
 
 class BeatmapManager
 {

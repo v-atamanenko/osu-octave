@@ -21,18 +21,18 @@ class Lifebar : public SpriteContainer
         void Kill();
 		
 		static const uint32_t MAXHP = 662; //matches with actual width of sprite
-		static const uint32_t MAXCHANGE = mapXToScreen_noFloor(10);
+		static const uint32_t MAXCHANGE = 10;
 		
 		//values for increase
-		static const uint32_t HP_300 = mapXToScreen_noFloor(12);
-		static const uint32_t HP_100 = mapXToScreen_noFloor(5);
-		static const uint32_t HP_50 = mapXToScreen_noFloor(1);
-		static const uint32_t HP_GEKI = mapXToScreen_noFloor(28);
-		static const uint32_t HP_KATSU = mapXToScreen_noFloor(20);
-		static const uint32_t HP_SLIDER_REPEAT = mapXToScreen_noFloor(8);
-		static const uint32_t HP_SLIDER_TICK = mapXToScreen_noFloor(6);
-		static const uint32_t HP_SPINNER_SPIN = mapXToScreen_noFloor(4);
-		static const uint32_t HP_SPINNER_BONUS = mapXToScreen_noFloor(5);
+		static const uint32_t HP_300 = 12;
+		static const uint32_t HP_100 = 5;
+		static const uint32_t HP_50 = 1;
+		static const uint32_t HP_GEKI = 28;
+		static const uint32_t HP_KATSU = 20;
+		static const uint32_t HP_SLIDER_REPEAT = 8;
+		static const uint32_t HP_SLIDER_TICK = 6;
+		static const uint32_t HP_SPINNER_SPIN = 4;
+		static const uint32_t HP_SPINNER_BONUS = 5;
 	
 	protected:
 		float mHpCurrent;

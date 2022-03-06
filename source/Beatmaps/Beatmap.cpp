@@ -249,8 +249,8 @@ void Beatmap::Buffer(std::list<HitObject*>& hitObjectList)
 
                 for (auto & screenPoint : screenPoints) {
                     auto* tPoint = new HitObjectPoint();
-                    tPoint->x = osuPixelsXtoScreenX(round(screenPoint.x));
-                    tPoint->y = osuPixelsYtoScreenY(round(screenPoint.y));
+                    tPoint->x = (int32_t)round(screenPoint.x);
+                    tPoint->y = (int32_t)round(screenPoint.y);
                     points.push_back(tPoint);
                 }
 
@@ -310,8 +310,8 @@ void Beatmap::ReadNextObject() {
     if (mHitObjectRead == 0) {
         mNextObjectCombo = true;
     }
-    mNextObjectX = osuPixelsXtoScreenX(ho.x); //s32 x
-    mNextObjectY = osuPixelsYtoScreenY(ho.y); //s32 y
+    mNextObjectX = ho.x;
+    mNextObjectY = ho.y;
     mNextObjectSound = (HitObjectSound)ho.soundMask;
 }
 

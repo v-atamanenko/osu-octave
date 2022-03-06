@@ -39,7 +39,7 @@ typedef enum {
 } HitObjectSound;
 
 typedef struct {
-	const char* filename;
+	std::string filename;
     Mix_Chunk * chunk;
 } SampleSetInfo;
 

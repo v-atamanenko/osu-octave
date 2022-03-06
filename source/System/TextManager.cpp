@@ -1,25 +1,28 @@
 #include "TextManager.h"
 #include "SDL_ttf.h"
 #include "defines.h"
+#include "DataStorage/Settings.h"
 
 FC_Font* TextManager::mFonts[NUMBER_OF_FONTS];
 FontName TextManager::currentFont;
 
 void TextManager::Init() {
-    AddFont(FONT_PIXEL, "fonts/PressStart2P-Regular.ttf", 20, SDL_Color({67, 19, 115, 255}));
+    std::string path = std::string(DEF_DataDirectory) + std::string(DEF_SkinsSubdirectory) + Settings::get_str("skin") + "/fonts/";
+    AddFont(FONT_PIXEL, path+"primary.ttf", 20, SDL_Color({67, 19, 115, 255}));
     currentFont = FONT_PIXEL;
 }
 
 void TextManager::InitDeferred() {
-    AddFont(FONT_CONSOLE_BIG, "fonts/Roboto-Regular.ttf", 16);
-    AddFont(FONT_CONSOLE_BIG_BOLD, "fonts/Roboto-Medium.ttf", 16);
-    AddFont(FONT_CONSOLE, "fonts/Roboto-Regular.ttf", 14);
-    AddFont(FONT_CONSOLE_BOLD, "fonts/Roboto-Medium.ttf", 14);
-    AddFont(FONT_SCORE, "fonts/PressStart2P-Regular.ttf", 36, SDL_Color({250, 245, 239, 255}));
+    std::string path = std::string(DEF_DataDirectory) + std::string(DEF_SkinsSubdirectory) + Settings::get_str("skin") + "/fonts/";
+    AddFont(FONT_CONSOLE_BIG, path+"sans.ttf", 16);
+    AddFont(FONT_CONSOLE_BIG_BOLD, path+"sans-bold.ttf", 16);
+    AddFont(FONT_CONSOLE, path+"sans.ttf", 14);
+    AddFont(FONT_CONSOLE_BOLD, path+"sans-bold.ttf", 14);
+    AddFont(FONT_SCORE, path+"primary.ttf", 36, SDL_Color({250, 245, 239, 255}));
 
-    AddFont(FONT_PIXEL_ACTIVE, "fonts/PressStart2P-Regular.ttf", 20, SDL_Color({250, 245, 239, 255}));
+    AddFont(FONT_PIXEL_ACTIVE, path+"primary.ttf", 20, SDL_Color({250, 245, 239, 255}));
 
-    AddFont(FONT_NUMBERING, "fonts/Abel-Regular.ttf", 60, SDL_Color({67, 19, 155, 255}));
+    AddFont(FONT_NUMBERING, path+"numbering.ttf", 60, SDL_Color({67, 19, 155, 255}));
 
     currentFont = FONT_CONSOLE;
 }
