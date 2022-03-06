@@ -20,25 +20,25 @@ class pDrawable
 		
 		virtual void Update();
 		bool InBounds(int32_t x, int32_t y);
-		void Kill(int32_t time);
+		void Kill(long time);
 		void ClearTransforms();
 		
-		void Transform(TransformType type, int32_t starttime, int32_t endtime, int32_t startvalue, int32_t endvalue);
-		void Scale(int32_t starttime, int32_t endtime, float start, float end);
-		void Move(int32_t starttime, int32_t endtime, int32_t startx, int32_t starty, int32_t endx, int32_t endy);
-		void Move(int32_t starttime, int32_t endtime, int32_t endx, int32_t endy);
+		void Transform(TransformType type, long starttime, long endtime, int32_t startvalue, int32_t endvalue);
+		void Scale(long starttime, long endtime, float start, float end);
+		void Move(long starttime, long endtime, int32_t startx, int32_t starty, int32_t endx, int32_t endy);
+		void Move(long starttime, long endtime, int32_t endx, int32_t endy);
 		void Move(int32_t x, int32_t y);
-		void Rotate(int32_t starttime, int32_t endtime, int32_t starta, int32_t enda);
+		void Rotate(long starttime, long endtime, int32_t starta, int32_t enda);
 		void Rotate(int32_t angle);
 		
 		void Show();
-		void Show(int32_t time);
-		void Show(int32_t starttime, int32_t endtime);
+		void Show(long time);
+		void Show(long starttime, long endtime);
 		void Hide();
-		void Hide(int32_t time);
-		void Hide(int32_t starttime, int32_t endtime);
+		void Hide(long time);
+		void Hide(long starttime, long endtime);
 
-		bool Alive() const { return mAlive; }
+		[[nodiscard]] bool Alive() const { return mAlive; }
 
 		virtual void Draw() = 0;
 		

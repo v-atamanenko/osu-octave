@@ -22,7 +22,6 @@ class RulesetOsu : public Ruleset, public ICallback
 	
 	protected:
 		int mSpecialScore;
-		float mScoreZ;
 };
 
 #endif

@@ -7,6 +7,7 @@ std::vector<int> InputHelper::heldControllerKeys;
 std::vector<int> InputHelper::heldKeyboardKeys;
 std::vector<int> InputHelper::heldMouseButtons;
 touchPosition InputHelper::mTouch;
+bool InputHelper::BlockKeydown = false;
 
 int InputHelper::PollSDL()
 {
@@ -26,12 +27,14 @@ int InputHelper::PollSDL()
                 break;
             case SDL_CONTROLLERBUTTONUP:
                 heldControllerKeys.erase(std::remove(heldControllerKeys.begin(), heldControllerKeys.end(), event.cbutton.button), heldControllerKeys.end());
+                BlockKeydown = false;
                 break;
             case SDL_KEYDOWN:
                 heldKeyboardKeys.push_back(event.key.keysym.sym);
                 break;
             case SDL_KEYUP:
                 heldKeyboardKeys.erase(std::remove(heldKeyboardKeys.begin(), heldKeyboardKeys.end(), event.key.keysym.sym), heldKeyboardKeys.end());
+                BlockKeydown = false;
                 break;
             case SDL_MOUSEBUTTONDOWN:
                 mbe = (SDL_MouseButtonEvent) event.button;
@@ -46,6 +49,7 @@ int InputHelper::PollSDL()
                 mTouch.py = mbe.y;
 
                 heldMouseButtons.erase(std::remove(heldMouseButtons.begin(), heldMouseButtons.end(), mbe.button), heldMouseButtons.end());
+                BlockKeydown = false;
                 break;
             case SDL_MOUSEMOTION:
                 mme = (SDL_MouseMotionEvent) event.motion;
@@ -173,3 +177,9 @@ touchPosition& InputHelper::TouchRead()
 	return mTouch;
 }
 
+void InputHelper::ClearInput() {
+    heldMouseButtons.clear();
+    heldKeyboardKeys.clear();
+    heldControllerKeys.clear();
+    sdlEvents.clear();
+}

@@ -23,7 +23,9 @@ class InputHelper
         static void SimulateKeyUp();
 		static touchPosition& TouchRead();
         static int PollSDL();
-	
+        static void ClearInput();
+        static bool BlockKeydown;
+
 	protected:
         static std::vector<SDL_Event> sdlEvents;
         static std::vector<SDL_Event> simulatedKeyDowns;

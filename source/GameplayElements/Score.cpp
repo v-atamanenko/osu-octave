@@ -17,64 +17,62 @@ Score::Score()
 	mBeatmapChecksum = "";
 }
 
-void Score::Add(ScoreType score, bool forceNoCombo, bool gekiKatu)
-{
-	if (score == SCORE_MISS)
-	{
+void Score::Add(ScoreType score, bool forceNoCombo, bool gekiKatu) {
+    // Special case: SCORE_MISS
+	if (score == SCORE_MISS) {
 		mCombo = 0;
-
 		this->mCountMiss++;
+        return;
 	}
-	else if (score == SCORE_SPIN_100 || score == SCORE_SPIN_1000)
-	{
-		if (score == SCORE_SPIN_100)
-			mScore += 100;
-		else
-			mScore += score;
+
+    // Special case: SCORE_SPIN_100 / SCORE_SPIN_1000
+	if (score == SCORE_SPIN_100 || score == SCORE_SPIN_1000) {
+		if (score == SCORE_SPIN_100) mScore += 100;
+		else mScore += score;
+        return;
 	}
-	else if (score == SCORE_TICK_30 || score == SCORE_TICK_10)
-	{
+
+    // Special case: SCORE_TICK_10 / SCORE_TICK_30
+	if (score == SCORE_TICK_30 || score == SCORE_TICK_10) {
 		mScore += score;
 
 		if (!forceNoCombo) {
 			++mCombo;
 
-			//Increase max combo if mCombo is greater than it
+			// Increase max combo if mCombo is greater than it
 			if(mCombo > mMaxCombo)
 				mMaxCombo = mCombo;
 		}
+        return;
 	}
-	else
-	{
-		mScore += score + MathHelper::Max(0, (int32_t)mCombo-1) * (score/25) * DifficultyManager::DifficultyPeppyStars;
 
-		if (!forceNoCombo) {
-			++mCombo;
+    // Common case: SCORE_50, SCORE_100, SCORE_300
+    mScore += score + MathHelper::Max(0, (int32_t)mCombo-1) * (score/25) * DifficultyManager::DifficultyPeppyStars;
 
-			//Increase max combo if mCombo is greater than it
-			if(mCombo > mMaxCombo)
-				mMaxCombo = mCombo;
-		}
+    if (!forceNoCombo) {
+        ++mCombo;
 
-		//Increase the respective count
-		switch(score) {
-			case ScoreType::SCORE_100:
-				if(gekiKatu) {
-                    this->mCountKatu++;
-                }else {
-                    this->mCount100++;
-                }break;
-			case ScoreType::SCORE_300:
-				if(gekiKatu) {
-                    this->mCountGeki++;
-                }else {
-                    this->mCount300++;
-                }break;
-			case ScoreType::SCORE_50:
-				this->mCount50++;
-				break;
-		}
-	}
+        // Increase max combo if mCombo is greater than it
+        if(mCombo > mMaxCombo)
+            mMaxCombo = mCombo;
+    }
+
+    //Increase the respective count
+    switch(score) {
+        case ScoreType::SCORE_50:
+            this->mCount50++;
+            break;
+        case ScoreType::SCORE_100:
+            if (gekiKatu) this->mCountKatu++;
+            else this->mCount100++;
+            break;
+        case ScoreType::SCORE_300:
+            if (gekiKatu) this->mCountGeki++;
+            else this->mCount300++;
+            break;
+        default:
+            fprintf(stderr, "[WARNING] Unexpected score type.\n");
+    }
 }
 
 float Score::CountAccuracy() const {

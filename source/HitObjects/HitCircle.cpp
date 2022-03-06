@@ -52,15 +52,16 @@ void HitCircle::OnTouchDown(const touchPosition& touch)
 
 void HitCircle::Hit()
 {
-	int32_t now = GameClock::Clock().Time();
+	long now = GameClock::Clock().Time();
 	uint32_t delta = MathHelper::Abs(mTime - now);
+    printf("HIT mTime %i\n", mTime);
 	
 	if (delta > DifficultyManager::GetHitWindow())
 	{
 		//too early, give the hitcircle a shake
 		for (auto spr : mSprites)
 		{
-				spr->Move(now, now+20, mX+5, mY);
+            spr->Move(now, now+20, mX+5, mY);
 			spr->Move(now+20, now+40, mX-5, mY);
 			spr->Move(now+40, now+60, mX+5, mY);
 			spr->Move(now+60, now+80, mX, mY);
