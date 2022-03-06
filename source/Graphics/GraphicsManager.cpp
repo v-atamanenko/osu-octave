@@ -256,7 +256,7 @@ void GraphicsManager::LoadTexturesForMode(ModeType mod) {
 
             CreateRectangularTexture(TX_BEATMAP_ENTRY_BG, 609, 80, SDL_Color({199, 190, 235, 127}));
             CreateRectangularTexture(TX_BEATMAP_ENTRY_EXPANDED_BG, 609, 174, SDL_Color({199, 190, 235, 127}));
-
+            CreateRectangularTexture(TX_SONGLESECT_LOADING_BG, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_Color({255, 255, 255, 229}));
             break;
         case MODE_WELCOME:
             LoadTexture(TX_WELCOME_BG, skin_path+"ui/welcome.png");

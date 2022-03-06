@@ -55,6 +55,7 @@ typedef enum {
 
     TX_CURRENT_BG,
     TX_PLAY_DARKEN_OVERLAY,
+    TX_SONGLESECT_LOADING_BG,
 
     // UI TEXTURES:
     TX_WELCOME_BG,

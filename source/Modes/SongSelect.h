@@ -17,7 +17,7 @@ class SongSelect : public Mode
 {
 	public:
 		SongSelect();
-		
+
 		void Update();
 		void HandleInput();
 
@@ -46,12 +46,16 @@ class SongSelect : public Mode
             }
         };
         static void ApplyFilter(BeatmapFilter f, bool resetpage=true);
+        static void Redraw();
+
+        static void LoadingScreenShow();
+        static void LoadingScreenHide();
 	
 	protected:
         void UpdateSonglist();
         void reloadPreviews() const;
 
-		SpriteManager mSpriteManager;
+		static SpriteManager* mSpriteManager;
 
         static uint32_t mSongListSize;
         bool mEntryExpanded = false;
@@ -78,6 +82,9 @@ class SongSelect : public Mode
         static pText* btn_sort_p_t_label;
         static pSprite* btn_sort_u_z;
         static pText* btn_sort_u_z_label;
+
+        static pSprite* loadingScreenBG;
+        static pText* loadingScreenLabel;
 };
 
 #endif

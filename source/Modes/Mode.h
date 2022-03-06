@@ -36,5 +36,3 @@ void ChangeModeOnFrameEnd(ModeType mode);
 void ChangeModeOnDemand();
 
 #endif
-
-

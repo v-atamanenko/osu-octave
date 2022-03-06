@@ -18,7 +18,7 @@ void SpriteManager::SortZ() {
     });
 }
 
-void SpriteManager::Draw() {
+void SpriteManager::Draw(bool ignoreInput) {
     for (auto it = mSprites.begin(); it != mSprites.end();) {
         pDrawable *spr = *it;
 
@@ -55,7 +55,9 @@ void SpriteManager::Draw() {
         ++it;
 	}
 
-	this->HandleTouchInput();
+    if (!ignoreInput) {
+        this->HandleTouchInput();
+    }
 }
 
 void SpriteManager::Add(pDrawable* spr) {

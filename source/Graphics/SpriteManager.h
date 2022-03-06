@@ -16,7 +16,7 @@ class SpriteManager
 		SpriteManager();
 		virtual ~SpriteManager();
 		
-		void Draw();
+		void Draw(bool ignoreInput = false);
 		void HandleTouchInput();
         void SortZ();
 		

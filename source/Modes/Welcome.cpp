@@ -24,9 +24,9 @@ Welcome::Welcome() {
 void Welcome::HandleInput() {}
 
 void Welcome::Redraw() {
-    GraphicsManager::Graphics().Clear();
-    mSpriteManager.Draw();
-    GraphicsManager::Graphics().Present();
+    GraphicsManager::Clear();
+    mSpriteManager.Draw(true);
+    GraphicsManager::Present();
 }
 
 void Welcome::Update() {

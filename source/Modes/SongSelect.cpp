@@ -20,10 +20,16 @@ pSprite* SongSelect::btn_sort_p_t = nullptr;
 pText* SongSelect::btn_sort_p_t_label = nullptr;
 pSprite* SongSelect::btn_sort_u_z = nullptr;
 pText* SongSelect::btn_sort_u_z_label = nullptr;
+pSprite* SongSelect::loadingScreenBG = nullptr;
+pText* SongSelect::loadingScreenLabel = nullptr;
+
+SpriteManager* SongSelect::mSpriteManager = nullptr;
 
 void OnBetmapEntryPlayClick(pDrawable* self, uint16_t x, uint16_t y) {
+    SongSelect::LoadingScreenShow();
     BeatmapManager::Load(self->Tag);
     ChangeModeOnFrameEnd(MODE_PLAYER);
+    SongSelect::LoadingScreenHide();
 }
 
 void OnBetmapEntryExpandClick(pDrawable* self, uint16_t x, uint16_t y) {
@@ -79,105 +85,116 @@ SongSelect::SongSelect()
     GraphicsManager::Graphics().LoadTexturesForMode(MODE_SONGSELECT);
     PreviewBuffer::GetInstance().Update(-1, 0, mEntriesPerPage);
 
+    delete mSpriteManager;
+    mSpriteManager = new SpriteManager();
+
     auto* bg = new pSprite(TX_SONGSELECT_BG, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255);
-    mSpriteManager.Add(bg);
+    mSpriteManager->Add(bg);
 
     auto* btn_about = new pSprite(TX_BUTTON_BIG, 37, 281, 277, 55, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
-    mSpriteManager.Add(btn_about);
+    mSpriteManager->Add(btn_about);
     auto* btn_about_label = new pText("About", FONT_PIXEL, 175, 308, SDL_Color({67,19,115}));
     btn_about_label->Z = -0.02f;
     btn_about_label->Origin = ORIGIN_CENTER;
-    mSpriteManager.Add(btn_about_label);
+    mSpriteManager->Add(btn_about_label);
 
     auto* btn_settings = new pSprite(TX_BUTTON_BIG, 37, 349, 277, 55, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
-    mSpriteManager.Add(btn_settings);
+    mSpriteManager->Add(btn_settings);
     auto* btn_settings_label = new pText("Settings", FONT_PIXEL, 175, 376, SDL_Color({67,19,115}));
     btn_settings_label->Z = -0.02f;
     btn_settings_label->Origin = ORIGIN_CENTER;
-    mSpriteManager.Add(btn_settings_label);
+    mSpriteManager->Add(btn_settings_label);
 
     auto* btn_quit = new pSprite(TX_BUTTON_BIG, 37, 418, 277, 55, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
     btn_quit->OnClick = OnBtnQuitClick;
     btn_quit->Clickable = true;
-    mSpriteManager.Add(btn_quit);
+    mSpriteManager->Add(btn_quit);
     auto* btn_quit_label = new pText("Quit", FONT_PIXEL, 175, 445, SDL_Color({67,19,115}));
     btn_quit_label->Z = -0.02f;
     btn_quit_label->Origin = ORIGIN_CENTER;
-    mSpriteManager.Add(btn_quit_label);
+    mSpriteManager->Add(btn_quit_label);
 
     auto* btn_random = new pSprite(TX_BUTTON_MED, 400, 478, 207, 40, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
     btn_random->OnClick = OnBtnRandomClick;
     btn_random->Clickable = true;
-    mSpriteManager.Add(btn_random);
+    mSpriteManager->Add(btn_random);
     auto* btn_random_label = new pText("Random", FONT_PIXEL, 503, 498, SDL_Color({67,19,115}));
     btn_random_label->Z = -0.02f;
     btn_random_label->Origin = ORIGIN_CENTER;
-    mSpriteManager.Add(btn_random_label);
+    mSpriteManager->Add(btn_random_label);
 
     auto* btn_arrow_left = new pSprite(TX_BUTTON_ARROW, (780-78), 478, 78, 40, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
     btn_arrow_left->Angle = 180;
     btn_arrow_left->OnClick = OnBtnArrowLeftClick;
     btn_arrow_left->Clickable = true;
-    mSpriteManager.Add(btn_arrow_left);
+    mSpriteManager->Add(btn_arrow_left);
 
     auto* btn_arrow_right = new pSprite(TX_BUTTON_ARROW, 841, 478, 78, 40, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
     btn_arrow_right->OnClick = OnBtnArrowRightClick;
     btn_arrow_right->Clickable = true;
-    mSpriteManager.Add(btn_arrow_right);
+    mSpriteManager->Add(btn_arrow_right);
 
     btn_sort_all = new pSprite(TX_BUTTON_SM_ACTIVE, 400, 25, 78, 40, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
     btn_sort_all->OnClick = OnBtnSortAllClick;
     btn_sort_all->Clickable = true;
-    mSpriteManager.Add(btn_sort_all);
+    mSpriteManager->Add(btn_sort_all);
     btn_sort_all_label = new pText("ALL", FONT_PIXEL_ACTIVE, 439, 45, SDL_Color({255,255,255}));
     btn_sort_all_label->Z = -0.02f;
     btn_sort_all_label->Origin = ORIGIN_CENTER;
-    mSpriteManager.Add(btn_sort_all_label);
+    mSpriteManager->Add(btn_sort_all_label);
 
     btn_sort_a_e = new pSprite(TX_BUTTON_XS, 536, 25, 67, 40, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
     btn_sort_a_e->OnClick = OnBtnSortAEClick;
     btn_sort_a_e->Clickable = true;
-    mSpriteManager.Add(btn_sort_a_e);
+    mSpriteManager->Add(btn_sort_a_e);
     btn_sort_a_e_label = new pText("A-E", FONT_PIXEL, 569, 45, SDL_Color({67,19,115}));
     btn_sort_a_e_label->Z = -0.02f;
     btn_sort_a_e_label->Origin = ORIGIN_CENTER;
-    mSpriteManager.Add(btn_sort_a_e_label);
+    mSpriteManager->Add(btn_sort_a_e_label);
 
     btn_sort_f_j = new pSprite(TX_BUTTON_XS, 615, 25, 67, 40, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
     btn_sort_f_j->OnClick = OnBtnSortFJClick;
     btn_sort_f_j->Clickable = true;
-    mSpriteManager.Add(btn_sort_f_j);
+    mSpriteManager->Add(btn_sort_f_j);
     btn_sort_f_j_label = new pText("F-J", FONT_PIXEL, 648, 45, SDL_Color({67,19,115}));
     btn_sort_f_j_label->Z = -0.02f;
     btn_sort_f_j_label->Origin = ORIGIN_CENTER;
-    mSpriteManager.Add(btn_sort_f_j_label);
+    mSpriteManager->Add(btn_sort_f_j_label);
 
     btn_sort_k_o = new pSprite(TX_BUTTON_XS, 694, 25, 67, 40, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
     btn_sort_k_o->OnClick = OnBtnSortKOClick;
     btn_sort_k_o->Clickable = true;
-    mSpriteManager.Add(btn_sort_k_o);
+    mSpriteManager->Add(btn_sort_k_o);
     btn_sort_k_o_label = new pText("K-O", FONT_PIXEL, 727, 45, SDL_Color({67,19,115}));
     btn_sort_k_o_label->Z = -0.02f;
     btn_sort_k_o_label->Origin = ORIGIN_CENTER;
-    mSpriteManager.Add(btn_sort_k_o_label);
+    mSpriteManager->Add(btn_sort_k_o_label);
 
     btn_sort_p_t = new pSprite(TX_BUTTON_XS, 772, 25, 67, 40, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
     btn_sort_p_t->OnClick = OnBtnSortPTClick;
     btn_sort_p_t->Clickable = true;
-    mSpriteManager.Add(btn_sort_p_t);
+    mSpriteManager->Add(btn_sort_p_t);
     btn_sort_p_t_label = new pText("P-T", FONT_PIXEL, 806, 45, SDL_Color({67,19,115}));
     btn_sort_p_t_label->Z = -0.02f;
     btn_sort_p_t_label->Origin = ORIGIN_CENTER;
-    mSpriteManager.Add(btn_sort_p_t_label);
+    mSpriteManager->Add(btn_sort_p_t_label);
 
     btn_sort_u_z = new pSprite(TX_BUTTON_XS, 852, 25, 67, 40, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
     btn_sort_u_z->OnClick = OnBtnSortUZClick;
     btn_sort_u_z->Clickable = true;
-    mSpriteManager.Add(btn_sort_u_z);
+    mSpriteManager->Add(btn_sort_u_z);
     btn_sort_u_z_label = new pText("U-Z", FONT_PIXEL, 885, 45, SDL_Color({67,19,115}));
     btn_sort_u_z_label->Z = -0.02f;
     btn_sort_u_z_label->Origin = ORIGIN_CENTER;
-    mSpriteManager.Add(btn_sort_u_z_label);
+    mSpriteManager->Add(btn_sort_u_z_label);
+
+    loadingScreenBG = new pSprite(TX_SONGLESECT_LOADING_BG, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 0, -100.f);
+    loadingScreenLabel = new pText("LOADING", FONT_NUMBERING, 480, 274, SDL_Color());
+    loadingScreenLabel->Origin = ORIGIN_CENTER;
+    loadingScreenLabel->Z = -150.f;
+    loadingScreenLabel->Alpha = 0;
+    mSpriteManager->Add(loadingScreenBG);
+    mSpriteManager->Add(loadingScreenLabel);
 
     ApplyFilter(Settings::get_beatmapfilter("activeFilter"), false);
 
@@ -253,7 +270,7 @@ void SongSelect::UpdateSonglist()
     if (mEntryExpanded) spritesToRemoveCount += (mSpritesPerExpandedBeatmapEntry - mSpritesPerBeatmapEntry);
     if (spritesToRemoveCount != 0) spritesToRemoveCount++; // to account for current_page_label
     for (int i = 0; i < spritesToRemoveCount; ++i) {
-        mSpriteManager.RemoveLast();
+        mSpriteManager->RemoveLast();
     }
     mEntryExpanded = false;
     mEntriesDisplayed = 0;
@@ -361,7 +378,7 @@ void SongSelect::UpdateSonglist()
             bg->Clickable = true;
             bg->TagInt = i+beatmap_list_offset;
 
-            mSpriteManager.Add(bg);
+            mSpriteManager->Add(bg);
         } else {
             auto* bg = new pSprite(TX_BEATMAP_ENTRY_BG, 351, 91 + (i * 94) + extra_y_offset, 609, 80, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.03f);
 
@@ -369,7 +386,7 @@ void SongSelect::UpdateSonglist()
             bg->Clickable = true;
             bg->TagInt = i+beatmap_list_offset;
 
-            mSpriteManager.Add(bg);
+            mSpriteManager->Add(bg);
         }
 
         if (isExpanded) {
@@ -379,17 +396,17 @@ void SongSelect::UpdateSonglist()
             play->Clickable = true;
             play->Tag = map.Checksum;
 
-            mSpriteManager.Add(play);
+            mSpriteManager->Add(play);
         }
 
         if (isExpanded) {
             auto* pic = new pSprite(texid, 360, 118 + (i * 94) + extra_y_offset, 120, 120, ORIGIN_TOPLEFT, FIELD_SCREEN,
                                     SDL_Color(), 255, -0.04f);
-            mSpriteManager.Add(pic);
+            mSpriteManager->Add(pic);
         } else {
             auto* pic = new pSprite(texid, 400, 91 + (i * 94) + extra_y_offset, 80, 80, ORIGIN_TOPLEFT, FIELD_SCREEN,
                                     SDL_Color(), 255, -0.04f);
-            mSpriteManager.Add(pic);
+            mSpriteManager->Add(pic);
         }
 
         if (isExpanded) {
@@ -419,14 +436,14 @@ void SongSelect::UpdateSonglist()
             auto* highscoreAccuracy = new pText(highscoreAccuracy_text, FONT_CONSOLE, 563, 222 + (i * 94) + extra_y_offset);
             highscoreAccuracy->Z = -0.06f;
 
-            mSpriteManager.Add(mapTitle);
-            mSpriteManager.Add(mapArtist);
-            mSpriteManager.Add(mapVersion);
-            mSpriteManager.Add(highscoreTitle);
-            mSpriteManager.Add(highscoreScoreTitle);
-            mSpriteManager.Add(highscoreScore);
-            mSpriteManager.Add(highscoreAccuracyTitle);
-            mSpriteManager.Add(highscoreAccuracy);
+            mSpriteManager->Add(mapTitle);
+            mSpriteManager->Add(mapArtist);
+            mSpriteManager->Add(mapVersion);
+            mSpriteManager->Add(highscoreTitle);
+            mSpriteManager->Add(highscoreScoreTitle);
+            mSpriteManager->Add(highscoreScore);
+            mSpriteManager->Add(highscoreAccuracyTitle);
+            mSpriteManager->Add(highscoreAccuracy);
         } else {
             auto* mapTitle = new pText(map.Title, FONT_CONSOLE_BIG_BOLD, 494, 106 + (i * 94) + extra_y_offset);
             mapTitle->Z = -0.05f;
@@ -437,29 +454,29 @@ void SongSelect::UpdateSonglist()
             auto* mapVersion = new pText(map.Version, FONT_CONSOLE, 494, 143 + (i * 94) + extra_y_offset);
             mapVersion->Z = -0.05f;
 
-            mSpriteManager.Add(mapTitle);
-            mSpriteManager.Add(mapArtist);
-            mSpriteManager.Add(mapVersion);
+            mSpriteManager->Add(mapTitle);
+            mSpriteManager->Add(mapArtist);
+            mSpriteManager->Add(mapVersion);
         }
 
         if (isExpanded) {
             auto* ranking = new pSprite(score_tex, 869, 122 + (i * 94) + extra_y_offset, 40, 23,
                                         ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.04f);
-            mSpriteManager.Add(ranking);
+            mSpriteManager->Add(ranking);
 
             //TODO: Replace this with actual star rating
             auto* stars = new pSprite(TX_STARS, 712, 161 + (i * 94) + extra_y_offset, 196, 16, ORIGIN_TOPLEFT,
                                       FIELD_SCREEN, SDL_Color(), 255, -0.04f);
-            mSpriteManager.Add(stars);
+            mSpriteManager->Add(stars);
         } else {
             auto* ranking = new pSprite(score_tex, 869, 104 + (i * 94) + extra_y_offset, 40, 23,
                                         ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.04f);
-            mSpriteManager.Add(ranking);
+            mSpriteManager->Add(ranking);
 
             //TODO: Replace this with actual star rating
             auto* stars = new pSprite(TX_STARS, 712, 141 + (i * 94) + extra_y_offset, 196, 16, ORIGIN_TOPLEFT,
                                       FIELD_SCREEN, SDL_Color(), 255, -0.04f);
-            mSpriteManager.Add(stars);
+            mSpriteManager->Add(stars);
         }
 
         mEntriesDisplayed++;
@@ -468,7 +485,7 @@ void SongSelect::UpdateSonglist()
     auto* current_page_label = new pText(std::to_string(mCurrentPage+1)+"/"+std::to_string(mCountPages), FONT_PIXEL, 811, 498, SDL_Color({67,19,115}));
     current_page_label->Z = -0.02f;
     current_page_label->Origin = ORIGIN_CENTER;
-    mSpriteManager.Add(current_page_label);
+    mSpriteManager->Add(current_page_label);
 
     if (shouldHandleEntryExpand) mEntryExpanded = true;
 }
@@ -522,5 +539,23 @@ void SongSelect::Update()
 
     reloadPreviews();
 
-    mSpriteManager.Draw();
+    mSpriteManager->Draw();
+}
+
+void SongSelect::LoadingScreenShow() {
+    loadingScreenBG->Alpha = 255;
+    loadingScreenLabel->Alpha = 255;
+    Redraw();
+}
+
+void SongSelect::LoadingScreenHide() {
+    loadingScreenBG->Alpha = 0;
+    loadingScreenLabel->Alpha = 0;
+    Redraw();
+}
+
+void SongSelect::Redraw() {
+    GraphicsManager::Clear();
+    mSpriteManager->Draw(true);
+    GraphicsManager::Present();
 }
