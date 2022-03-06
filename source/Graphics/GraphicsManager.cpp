@@ -37,46 +37,6 @@ bool GraphicsManager::LoadTexture(TextureType texid, const std::string& path) {
     return true;
 }
 
-SDL_Texture* GraphicsManager::LoadSquareTexture(const std::string& path) {
-    SDL_Texture* newTexture = nullptr;
-
-    SDL_Surface* loadedSurface = IMG_Load( path.c_str() );
-    if (loadedSurface == nullptr) {
-        fprintf(stderr, "Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
-        return newTexture;
-    }
-
-    if (renderer == nullptr) {
-        fprintf(stderr, "Unable to create texture! Renderer is null.\n");
-        SDL_FreeSurface(loadedSurface);
-        return newTexture;
-    }
-
-    SDL_Rect srcrect;
-    srcrect.h = srcrect.w = loadedSurface->h;
-    srcrect.y = 0;
-    srcrect.x = floor(((float)loadedSurface->w / 2.f) - ((float)loadedSurface->h / 2.f));
-
-    SDL_Rect dstrect;
-    dstrect.h = dstrect.w = srcrect.h;
-    dstrect.y = dstrect.x = 0;
-
-    uint32_t pf = SDL_GetWindowPixelFormat(window);
-
-    SDL_Surface* cropped = SDL_CreateRGBSurfaceWithFormat(0, dstrect.w, dstrect.h, 8, pf);
-
-    SDL_BlitSurface(loadedSurface,&srcrect,cropped,&dstrect);
-    SDL_FreeSurface(loadedSurface);
-
-    newTexture = SDL_CreateTextureFromSurface( renderer, cropped );
-    if (newTexture == nullptr) {
-        fprintf(stderr,  "Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
-    }
-
-    SDL_FreeSurface(cropped);
-    return newTexture;
-}
-
 void GraphicsManager::LoadBeatmapPicTexture(TextureType texid, SDL_Surface *tex) {
     std::unique_lock lock_pbs(mut_maptextures);
     if (mapsurfaces.count(texid) > 0) {
@@ -106,7 +66,53 @@ SDL_Texture * GraphicsManager::GetTexture(TextureType texid) {
 }
 
 void GraphicsManager::LoadBeatmapBackground(const std::string& path) {
-    LoadTexture(TX_CURRENT_BG, path);
+    if (maptextures[TX_CURRENT_BG] != nullptr)
+        SDL_DestroyTexture(maptextures[TX_CURRENT_BG]);
+
+    SDL_Surface* loadedSurface = IMG_Load( path.c_str() );
+    if (loadedSurface == nullptr) {
+        fprintf(stderr, "Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
+        return;
+    }
+
+    if (renderer == nullptr) {
+        fprintf(stderr, "Unable to create texture! Renderer is null.\n");
+        SDL_FreeSurface(loadedSurface);
+        return ;
+    }
+
+    SDL_Rect srcrect;
+    srcrect.w = (int)round((float)(loadedSurface->h) / ((float)SCREEN_HEIGHT/(float)SCREEN_WIDTH));
+
+    if (loadedSurface->w > loadedSurface->h && srcrect.w <= loadedSurface->w) {
+        srcrect.h = loadedSurface->h;
+        srcrect.x = floor(((float)loadedSurface->w - (float)srcrect.w) / 2.f);
+        srcrect.y = 0;
+    } else {
+        srcrect.w = loadedSurface->w;
+        srcrect.h = (int)round((float)(loadedSurface->w) / ((float)SCREEN_WIDTH/(float)SCREEN_HEIGHT));
+        srcrect.x = 0;
+        srcrect.y = floor(((float)loadedSurface->h - (float)srcrect.h) / 2.f);
+    }
+
+    SDL_Rect dstrect;
+    dstrect.h = srcrect.h;
+    dstrect.w = srcrect.w;
+    dstrect.y = dstrect.x = 0;
+
+    uint32_t pf = SDL_GetWindowPixelFormat(window);
+
+    SDL_Surface* cropped = SDL_CreateRGBSurfaceWithFormat(0, dstrect.w, dstrect.h, 8, pf);
+
+    SDL_BlitSurface(loadedSurface,&srcrect,cropped,&dstrect);
+    SDL_FreeSurface(loadedSurface);
+
+    maptextures[TX_CURRENT_BG] = SDL_CreateTextureFromSurface( renderer, cropped );
+    if (maptextures[TX_CURRENT_BG] == nullptr) {
+        fprintf(stderr,  "Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
+    }
+
+    SDL_FreeSurface(cropped);
 }
 
 void GraphicsManager::CreateTextureFromSurface(SDL_Surface* bg, TextureType texid) {
