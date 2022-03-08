@@ -10,6 +10,7 @@ void TapToStartHandler(pDrawable* self, uint16_t x, uint16_t y) {
 }
 
 Welcome::Welcome() {
+    Settings::load();
     GraphicsManager::Graphics().LoadTexturesForMode(MODE_WELCOME);
 
     mBG = new pSprite(TX_WELCOME_BG, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255);
@@ -33,8 +34,10 @@ void Welcome::Update() {
     mSpriteManager.Draw();
 
     if (mStage == STAGE_LOAD_SETTINGS) {
-        Settings::load();
+        Welcome::Redraw();
+
         Scores::load();
+        InputHelper::InitInput();
         mStatus->Text = "looking for changes in beatmaps...";
         mStage = STAGE_CHECK_INDEX;
         return;
@@ -42,6 +45,7 @@ void Welcome::Update() {
 
     if (mStage == STAGE_CHECK_INDEX) {
         Welcome::Redraw();
+
         Beatmaps::load();
         if (BeatmapManager::CheckIndex()) {
             mStatus->Text = "beatmap index up to date! loading previews...";
@@ -55,6 +59,7 @@ void Welcome::Update() {
 
     if (mStage == STAGE_LOAD_INDEX) {
         Welcome::Redraw();
+
         Beatmaps::clear();
         BeatmapManager::BuildCollection();
         mStatus->Text = "beatmap index rebuit! loading previews...";
@@ -64,6 +69,7 @@ void Welcome::Update() {
 
     if (mStage == STAGE_START_PREVIEWBUFFER) {
         Welcome::Redraw();
+
         BeatmapManager::Filter(Settings::get_beatmapfilter("activeFilter"));
         BeatmapManager::BuildMap();
         PreviewBuffer::GetInstance().Init();
@@ -75,6 +81,8 @@ void Welcome::Update() {
 
     if (mStage == STAGE_LOAD_FONTS) {
         Welcome::Redraw();
+
+        InputHelper::vitaUseBackTouch = false; // VITA: Disable back touch for menu.
         TextManager::InitDeferred();
         mBG->OnClick = TapToStartHandler;
         mBG->Clickable = true;

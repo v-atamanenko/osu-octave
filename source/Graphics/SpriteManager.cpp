@@ -83,21 +83,13 @@ void SpriteManager::RemoveLast() {
 }
 
 void SpriteManager::HandleTouchInput() {
-    if (!(InputHelper::KeyDown(SDL_BUTTON_LEFT, IH_KEY_MOUSE) ||
-            InputHelper::KeyDown(SDLK_z, IH_KEY_KEYBOARD) ||
-            InputHelper::KeyDown(SDLK_x, IH_KEY_KEYBOARD)))
+    if (!InputHelper::KeyDown(Control::IH_CONTROL_ACTION))
 		return;
 	touchPosition touchPos = InputHelper::TouchRead();
 
     SortZ();
-    int i = 0;
     for (auto current : mSpritesSorted) {
-        if (current == nullptr) {
-            fprintf(stderr, "Null %i\n", i);
-            i++;
-            continue;
-        }
-        if (current->InBounds(touchPos.px, touchPos.py) && current->Clickable) {
+        if (current->InBounds((int32_t)touchPos.px, (int32_t)touchPos.py) && current->Clickable) {
 			current->OnClick(current, touchPos.px, touchPos.py);
 		}
 	}

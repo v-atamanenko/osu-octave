@@ -41,6 +41,10 @@ class Ruleset
         DarkenOverlay mDarkenOverlay;
         bool mMusicStarted = false;
 
+        bool mCursor = false;
+        pSprite * mCursorSprite;
+        int mCursorSize;
+
         std::vector<pDrawable *> pauseMenuSprites;
 		
 		virtual void OnSkip() = 0;

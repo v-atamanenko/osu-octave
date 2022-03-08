@@ -174,6 +174,8 @@ void GraphicsManager::LoadTexturesForMode(ModeType mod) {
 
     switch (mod) {
         case MODE_PLAYER:
+            LoadTexture(TX_PLAY_CURSOR, skin_path+"ui/cursor.png");
+
             LoadTexture(TX_PLAY_CIRCLE, skin_path+"gameplay/circle.png");
             LoadTexture(TX_PLAY_CIRCLEOVERLAY, skin_path+"gameplay/circleoverlay.png");
             LoadTexture(TX_PLAY_CIRCLEAPPROACH, skin_path+"gameplay/circleapproach.png");

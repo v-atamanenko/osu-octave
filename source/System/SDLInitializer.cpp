@@ -7,10 +7,6 @@ SDL_Window *window = nullptr;
 SDL_Renderer *renderer = nullptr;
 
 SDLInitializer::SDLInitializer() {
-    // VITA: Disable Back Touchpad to prevent "misclicks"
-    SDL_setenv("VITA_DISABLE_TOUCH_BACK", "1", 1);
-
-    // Initializing SDL
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
         fprintf(stderr, "Video initialization failed: %s\n", SDL_GetError( ));
         SDL_Quit();
@@ -21,15 +17,18 @@ SDLInitializer::SDLInitializer() {
         SDL_GameControllerOpen(0);
     }
 
-    // Nearest-neighbor scaling
-    //SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
     SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
+
+#ifdef __vita__
+    // VITA: Touch events will not generate mouse events
+    SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, "0");
+#endif
 
     window = SDL_CreateWindow("nano-dOsu",
                               SDL_WINDOWPOS_UNDEFINED,
                               SDL_WINDOWPOS_UNDEFINED,
                               SCREEN_WIDTH, SCREEN_HEIGHT,
-                              0); //SDL_WINDOW_FULLSCREEN_DESKTOP // SDL_WINDOW_OPENGL
+                              SDL_WINDOW_RESIZABLE); //SDL_WINDOW_FULLSCREEN_DESKTOP // SDL_WINDOW_OPENGL
     if (window == nullptr) {
         fprintf(stderr, "Unable to create window: %s\n", SDL_GetError());
         SDL_Quit();
@@ -41,7 +40,7 @@ SDLInitializer::SDLInitializer() {
         SDL_Quit();
     }
 
-    //SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
+    SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
 
     int imgFlags = IMG_INIT_PNG;
     if (!(IMG_Init(imgFlags) & imgFlags)) {

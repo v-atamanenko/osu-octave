@@ -1,32 +1,30 @@
 #include <vector>
+#include <map>
 #include "SDL.h"
+#include "types.h"
+#include "DataStorage/Settings.h"
+#include <algorithm>
 
 #ifndef __INPUTHELPER_H__
 #define __INPUTHELPER_H__
 
-#define IH_KEY_MOUSE 0
-#define IH_KEY_CONTROLLER 1
-#define IH_KEY_KEYBOARD 2
-
-struct touchPosition {
-    uint32_t px;
-    uint32_t py;
-};
-
 class InputHelper
 {
 	public:
-		static bool KeyDown(int key, int type);
-		static bool KeyHeld(int key, int type);
-		static bool KeyUp(int key, int type);
-        static void SimulateKeyDown(int key, int type);
+		static bool KeyDown(Control c);
+		static bool KeyHeld(Control c);
+		static bool KeyUp(Control c);
+        static void SimulateKeyDown(Control c);
         static void SimulateKeyUp();
 		static touchPosition& TouchRead();
         static int PollSDL();
         static void ClearInput();
+        static void InitInput();
         static bool BlockKeydown;
+        static bool vitaUseBackTouch;
 
 	protected:
+        static std::map<Control, std::vector<RawKey>> mControls;
         static std::vector<SDL_Event> sdlEvents;
         static std::vector<SDL_Event> simulatedKeyDowns;
         static std::vector<int> heldControllerKeys;

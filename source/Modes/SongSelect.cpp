@@ -27,6 +27,7 @@ SpriteManager* SongSelect::mSpriteManager = nullptr;
 
 void OnBetmapEntryPlayClick(pDrawable* self, uint16_t x, uint16_t y) {
     SongSelect::LoadingScreenShow();
+    InputHelper::vitaUseBackTouch = Settings::get_bool("vitaUseBackTouch"); // VITA: Reset back touch usage flag
     BeatmapManager::Load(self->Tag);
     ChangeModeOnFrameEnd(MODE_PLAYER);
     SongSelect::LoadingScreenHide();
@@ -80,8 +81,9 @@ void OnBtnSortUZClick(pDrawable* self, uint16_t x, uint16_t y) {
     SongSelect::ApplyFilter(FILTER_ALPHA_U_Z);
 }
 
-SongSelect::SongSelect()
-{
+SongSelect::SongSelect() {
+    InputHelper::vitaUseBackTouch = false; // VITA: Disable back touch for menu.
+
     GraphicsManager::Graphics().LoadTexturesForMode(MODE_SONGSELECT);
     PreviewBuffer::GetInstance().Update(-1, 0, mEntriesPerPage);
 

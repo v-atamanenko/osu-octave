@@ -11,11 +11,11 @@ int GameBase::Update() {
     if (InputHelper::PollSDL() == -1) return -1;
 	Mode::CurrentMode().HandleInput();
 
-    GraphicsManager::Graphics().Clear();
+    GraphicsManager::Clear();
 
     Mode::CurrentMode().Update();
 
-    GraphicsManager::Graphics().Present();
+    GraphicsManager::Present();
     ChangeModeOnDemand();
 
     return 0;

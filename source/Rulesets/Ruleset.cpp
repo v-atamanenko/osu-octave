@@ -3,7 +3,7 @@
 #include "DataStorage/Scores.h"
 
 void OnBtnResumeClick(pDrawable* self, uint16_t x, uint16_t y) {
-    InputHelper::SimulateKeyDown(SDLK_ESCAPE, IH_KEY_KEYBOARD);
+    InputHelper::SimulateKeyDown(Control::IH_CONTROL_QUIT);
 }
 
 void OnBtnRetryClick(pDrawable* self, uint16_t x, uint16_t y) {
@@ -19,12 +19,22 @@ Ruleset::Ruleset()
 {
     mDarkenOverlay.AddToSpriteManager(mSpriteManager);
 	mLifebar.AddToSpriteManager(mSpriteManager);
+#ifdef __vita__
+    // The setting is always false unless running on the Vita.
+    mCursor = Settings::get_bool("vitaUseBackTouch");
+#endif
 }
 
 void Ruleset::Initialize()
 {
     mDarkenOverlay.Initialize();
 	mLifebar.Initialize();
+
+    if (mCursor) {
+        mCursorSize = (int)round((float)DifficultyManager::GetCircleSize() * 0.83f);
+        mCursorSprite = new pSprite(TX_PLAY_CURSOR, 100, 100, mCursorSize, mCursorSize, ORIGIN_CENTER, FIELD_SCREEN, SDL_Color(), 255, -1000090.f);
+        mSpriteManager.Add(mCursorSprite);
+    }
 }
 
 void Ruleset::Skip()
@@ -236,25 +246,67 @@ void Ruleset::OnPauseEnd() {
 }
 
 void Ruleset::UpdatePause() {
+    if (mCursor) {
+        mCursorSprite->X = (int32_t)InputHelper::TouchRead().px;
+        mCursorSprite->Y = (int32_t)InputHelper::TouchRead().py;
+    }
+
     GraphicsManager::Graphics().DrawFullScreenRectangle({0,0,0,100});
     mSpriteManager.Draw();
 }
 
 void Ruleset::UpdateGameOver()
 {
+    long now = GameClock::Clock().Time();
+    if (mCursor) {
+        mCursorSprite->X = (int32_t)InputHelper::TouchRead().px;
+        mCursorSprite->Y = (int32_t)InputHelper::TouchRead().py;
+        if (InputHelper::KeyDown(Control::IH_CONTROL_ACTION)) {
+            mCursorSprite->Scale(now, now+100, 1.f, 0.8f);
+        }
+        if (InputHelper::KeyUp(Control::IH_CONTROL_ACTION)) {
+            mCursorSprite->Scale(now, now+100, 0.8f, 1.f);
+        }
+    }
+
     GraphicsManager::Graphics().DrawFullScreenRectangle({0,0,0,100});
     mSpriteManager.Draw();
 }
 
 void Ruleset::UpdateFailed()
 {
+    long now = GameClock::Clock().Time();
+    if (mCursor) {
+        mCursorSprite->X = (int32_t)InputHelper::TouchRead().px;
+        mCursorSprite->Y = (int32_t)InputHelper::TouchRead().py;
+        if (InputHelper::KeyDown(Control::IH_CONTROL_ACTION)) {
+            mCursorSprite->Scale(now, now+100, 1.f, 0.8f);
+        }
+        if (InputHelper::KeyUp(Control::IH_CONTROL_ACTION)) {
+            mCursorSprite->Scale(now, now+100, 0.8f, 1.f);
+        }
+    }
+
     GraphicsManager::Graphics().DrawFullScreenRectangle({0,0,0,100});
     mSpriteManager.Draw();
 }
 
 bool Ruleset::Update()
 {
-    if (!mMusicStarted && GameClock::Clock().Time() >= 0) {
+    long now = GameClock::Clock().Time();
+
+    if (mCursor) {
+        mCursorSprite->X = (int32_t)InputHelper::TouchRead().px;
+        mCursorSprite->Y = (int32_t)InputHelper::TouchRead().py;
+        if (InputHelper::KeyDown(Control::IH_CONTROL_ACTION)) {
+            mCursorSprite->Scale(now, now+100, 1.f, 0.8f);
+        }
+        if (InputHelper::KeyUp(Control::IH_CONTROL_ACTION)) {
+            mCursorSprite->Scale(now, now+100, 0.8f, 1.f);
+        }
+    }
+
+    if (!mMusicStarted && now >= 0) {
         StartMusic();
     }
 
@@ -276,7 +328,7 @@ bool Ruleset::Update()
     TextManager::PrintLocate(940, 10, ORIGIN_TOPRIGHT, "  %08u", mCurrentScore.CurrentScore());
     TextManager::PrintLocate(20, 534, ORIGIN_BOTTOMLEFT, "%ix   ", mCurrentScore.CurrentCombo());
 
-    if(mLifebar.GetCurrentHP() == 0.f && GameClock::Clock().Time() > BeatmapManager::Current().SkipTime()) {
+    if(mLifebar.GetCurrentHP() == 0.f && now > BeatmapManager::Current().SkipTime()) {
         return false; // Premature game over, HP is 0
     }
     return true;

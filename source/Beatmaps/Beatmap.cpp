@@ -303,16 +303,12 @@ void Beatmap::Buffer(std::list<HitObject*>& hitObjectList)
 
 void Beatmap::ReadNextObject() {
     osuParser::HitObject ho = mParser->hitObjects.at(mHitObjectRead);
-	mNextObjectTime = ho.time;
+    mNextObjectCombo = ho.isNewCombo || (mHitObjectRead == 0);
+    mNextObjectSound = (HitObjectSound)ho.soundMask;
     mNextObjectType = (HitObjectType)ho.type;
-
-    mNextObjectCombo = ho.isNewCombo;
-    if (mHitObjectRead == 0) {
-        mNextObjectCombo = true;
-    }
+    mNextObjectTime = ho.time;
     mNextObjectX = ho.x;
     mNextObjectY = ho.y;
-    mNextObjectSound = (HitObjectSound)ho.soundMask;
 }
 
 std::string& Beatmap::BeatmapChecksum() {

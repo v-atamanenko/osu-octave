@@ -53,6 +53,31 @@ class Settings
             }
             return settings[key].get<bool>();
         }
+        static void get_controls(std::map<Control, std::vector<RawKey>>& controls, bool* vitaUseBackTouch) {
+            controls.clear();
+            if (!settings["controls"].is_array()) {
+                fprintf(stderr, "Setting 'controls' is null. Resetting settings.\n");
+                clear();
+                return get_controls(controls, vitaUseBackTouch);
+            }
+
+            *vitaUseBackTouch = get_bool("vitaUseBackTouch");
+
+            for (auto & it_1 : settings["controls"]) {
+                // Now it_1 is a single [Control, std::vector<RawKey>] pair
+                Control c = it_1[0].get<Control>();
+                std::vector<RawKey> ctrls;
+
+                for (auto & it_2 : it_1[1]) {
+                    // Now it_2 is a single [int, KeyType] (aka RawKey) pair
+                    int key = it_2[0].get<int>();
+                    KeyType type = it_2[1].get<KeyType>();
+                    ctrls.emplace_back(RawKey({key, type}));
+                }
+
+                controls.insert({c, ctrls});
+            }
+        }
 
         static void set_str(const std::string& key, const std::string& value) { settings[key] = value; }
         static void set_int(const std::string& key, const int value) { settings[key] = value; }
@@ -73,7 +98,13 @@ class Settings
                     {"page", 0},
                     {"noFail", true},
                     {"activeFilter", FILTER_NONE},
-                    {"skin", "default"}
+                    {"skin", "default"},
+                    {"vitaUseBackTouch", false},
+                    {"controls", {
+                        {IH_CONTROL_ACTION, {{SDL_BUTTON_LEFT, IH_KEY_MOUSE}, {SDLK_z, IH_KEY_KEYBOARD}, {SDLK_x, IH_KEY_KEYBOARD}, {SDL_CONTROLLER_BUTTON_LEFTSHOULDER, IH_KEY_CONTROLLER}, {SDL_CONTROLLER_BUTTON_RIGHTSHOULDER, IH_KEY_CONTROLLER}}},
+                        {IH_CONTROL_SKIP, {{SDLK_SPACE, IH_KEY_KEYBOARD}, {SDL_CONTROLLER_BUTTON_A, IH_KEY_CONTROLLER}}},
+                        {IH_CONTROL_QUIT, {{SDLK_ESCAPE, IH_KEY_KEYBOARD}, {SDL_CONTROLLER_BUTTON_START, IH_KEY_CONTROLLER}}}
+                    }}
             };
         }
 

@@ -72,14 +72,12 @@ void Player::HandleInput()
     mRuleset.HandleInput();
 
     //handle play mode input
-    if (InputHelper::KeyDown(SDLK_SPACE, IH_KEY_KEYBOARD) ||
-        InputHelper::KeyDown(SDL_CONTROLLER_BUTTON_A, IH_KEY_CONTROLLER))
+    if (InputHelper::KeyDown(Control::IH_CONTROL_SKIP))
     {
         mRuleset.Skip();
     }
 
-    if (InputHelper::KeyDown(SDLK_ESCAPE, IH_KEY_KEYBOARD) ||
-        InputHelper::KeyDown(SDL_CONTROLLER_BUTTON_START, IH_KEY_CONTROLLER))
+    if (InputHelper::KeyDown(Control::IH_CONTROL_QUIT))
     {
         if (mPlayState == PLAYSTATE_PLAY) {
             mRuleset.OnPause();

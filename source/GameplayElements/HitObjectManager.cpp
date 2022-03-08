@@ -48,21 +48,14 @@ void HitObjectManager::HandleInput()
 	
 	// now we are left with the next hitobject that can react to user interaction
 	
-	if ((InputHelper::KeyDown(SDL_BUTTON_LEFT, IH_KEY_MOUSE) ||
-         InputHelper::KeyDown(SDLK_z, IH_KEY_KEYBOARD) ||
-         InputHelper::KeyDown(SDLK_x, IH_KEY_KEYBOARD)) && ! InputHelper::BlockKeydown) {
-        printf("OnTouchDown %i;\n", hitObject->GetEndTime());
+	if (InputHelper::KeyDown(Control::IH_CONTROL_ACTION) && ! InputHelper::BlockKeydown) {
         hitObject->OnTouchDown(touch);
         InputHelper::BlockKeydown = true;
     }
-	if ((InputHelper::KeyHeld(SDL_BUTTON_LEFT, IH_KEY_MOUSE) ||
-         InputHelper::KeyHeld(SDLK_z, IH_KEY_KEYBOARD) ||
-         InputHelper::KeyHeld(SDLK_x, IH_KEY_KEYBOARD)))
+	if (InputHelper::KeyHeld(Control::IH_CONTROL_ACTION))
 		hitObject->OnTouch(touch);
 	
-	if ((InputHelper::KeyUp(SDL_BUTTON_LEFT, IH_KEY_MOUSE) ||
-         InputHelper::KeyUp(SDLK_z, IH_KEY_KEYBOARD) ||
-         InputHelper::KeyUp(SDLK_x, IH_KEY_KEYBOARD)))
+	if (InputHelper::KeyUp(Control::IH_CONTROL_ACTION))
 		hitObject->OnTouchUp(touch);
 	
 	hitObject->Update();

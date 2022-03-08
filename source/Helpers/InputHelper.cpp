@@ -1,5 +1,4 @@
 #include "InputHelper.h"
-#include <algorithm>
 
 std::vector<SDL_Event> InputHelper::sdlEvents;
 std::vector<SDL_Event> InputHelper::simulatedKeyDowns;
@@ -8,6 +7,9 @@ std::vector<int> InputHelper::heldKeyboardKeys;
 std::vector<int> InputHelper::heldMouseButtons;
 touchPosition InputHelper::mTouch;
 bool InputHelper::BlockKeydown = false;
+
+std::map<Control, std::vector<RawKey>> InputHelper::mControls;
+bool InputHelper::vitaUseBackTouch;
 
 int InputHelper::PollSDL()
 {
@@ -36,6 +38,7 @@ int InputHelper::PollSDL()
                 heldKeyboardKeys.erase(std::remove(heldKeyboardKeys.begin(), heldKeyboardKeys.end(), event.key.keysym.sym), heldKeyboardKeys.end());
                 BlockKeydown = false;
                 break;
+#ifndef __vita__ // VITA: Ignore mouse events, process touch events instead.
             case SDL_MOUSEBUTTONDOWN:
                 mbe = (SDL_MouseButtonEvent) event.button;
                 mTouch.px = mbe.x;
@@ -56,6 +59,43 @@ int InputHelper::PollSDL()
                 mTouch.px = mme.x;
                 mTouch.py = mme.y;
                 break;
+#endif
+            case SDL_FINGERMOTION:
+#ifdef __vita__
+                if ((event.tfinger.touchId == 0 && !vitaUseBackTouch) ||
+                    (event.tfinger.touchId == 1 && vitaUseBackTouch)) {
+#endif
+                    mTouch.px = (uint32_t) round(event.tfinger.x * (float) SCREEN_WIDTH);
+                    mTouch.py = (uint32_t) round(event.tfinger.y * (float) SCREEN_HEIGHT);
+#ifdef __vita__
+                }
+#endif
+                break;
+            case SDL_FINGERDOWN:
+            case SDL_FINGERUP:
+#ifdef __vita__
+                if ((event.tfinger.touchId == 0 && !vitaUseBackTouch) ||
+                    (event.tfinger.touchId == 1 && vitaUseBackTouch)) {
+#endif
+                mTouch.px = (uint32_t) round(event.tfinger.x * (float) SCREEN_WIDTH);
+                mTouch.py = (uint32_t) round(event.tfinger.y * (float) SCREEN_HEIGHT);
+#ifdef __vita__
+                }
+#endif
+#ifdef __vita__
+                // Handle touch down / touch up only if front touch is used.
+                if (event.tfinger.touchId == 0 && !vitaUseBackTouch) {
+#endif
+                    if (event.type == SDL_FINGERDOWN) {
+                        heldMouseButtons.push_back(SDL_BUTTON_LEFT);
+                    } else {
+                        heldMouseButtons.erase(std::remove(heldMouseButtons.begin(), heldMouseButtons.end(), SDL_BUTTON_LEFT), heldMouseButtons.end());
+                        BlockKeydown = false;
+                    }
+#ifdef __vita__
+                }
+#endif
+                break;
         }
     }
 
@@ -63,88 +103,120 @@ int InputHelper::PollSDL()
     return 0;
 }
 
-bool InputHelper::KeyDown(int key, int type)
+bool InputHelper::KeyDown(Control c)
 {
     for (SDL_Event e : sdlEvents) {
-        if ( e.type == SDL_CONTROLLERBUTTONDOWN &&
-             e.cbutton.button == (SDL_GameControllerButton) key &&
-             type == IH_KEY_CONTROLLER ) {
-            return true;
-        }
-        if ( e.type == SDL_KEYDOWN &&
-             e.key.keysym.sym == (SDL_KeyCode) key &&
-             type == IH_KEY_KEYBOARD ) {
-            return true;
-        }
-        if ( e.type == SDL_MOUSEBUTTONDOWN && type == IH_KEY_MOUSE ) {
-            SDL_MouseButtonEvent mbe = (SDL_MouseButtonEvent) e.button;
-            if (mbe.button == key) {
+        for (RawKey k : mControls[c]) {
+            if (e.type == SDL_CONTROLLERBUTTONDOWN &&
+                e.cbutton.button == (SDL_GameControllerButton) k.key &&
+                k.type == IH_KEY_CONTROLLER) {
                 return true;
+            }
+            if (e.type == SDL_KEYDOWN &&
+                e.key.keysym.sym == (SDL_KeyCode) k.key &&
+                k.type == IH_KEY_KEYBOARD) {
+                return true;
+            }
+            if (e.type == SDL_MOUSEBUTTONDOWN && k.type == IH_KEY_MOUSE) {
+#ifndef __vita__ // VITA: Ignore mouse events, process touch events instead.
+                auto mbe = (SDL_MouseButtonEvent) e.button;
+                if (mbe.button == k.key) {
+                    return true;
+                }
+#endif
+            }
+            if (e.type == SDL_FINGERDOWN && k.type == IH_KEY_MOUSE) {
+#ifdef __vita__
+                // Handle touch down / touch up only if front touch is used.
+                if (e.tfinger.touchId == 0 && !vitaUseBackTouch) {
+#endif
+                return true;
+#ifdef __vita__
+                }
+#endif
             }
         }
     }
 	return false;
 }
 
-bool InputHelper::KeyHeld(int key, int type)
+bool InputHelper::KeyHeld(Control c)
 {
-    switch (type) {
-        case IH_KEY_MOUSE:
-            if (std::find(heldMouseButtons.begin(), heldMouseButtons.end(), key) != heldMouseButtons.end()) {
-                return true;
-            }
-            break;
-        case IH_KEY_KEYBOARD:
-            if (std::find(heldKeyboardKeys.begin(), heldKeyboardKeys.end(), key) != heldKeyboardKeys.end()) {
-                return true;
-            }
-            break;
-        case IH_KEY_CONTROLLER:
-            if (std::find(heldControllerKeys.begin(), heldControllerKeys.end(), key) != heldControllerKeys.end()) {
-                return true;
-            }
-            break;
+    for (RawKey k : mControls[c]) {
+        switch (k.type) {
+            case IH_KEY_MOUSE:
+                if (std::find(heldMouseButtons.begin(), heldMouseButtons.end(), k.key) != heldMouseButtons.end()) {
+                    return true;
+                }
+                break;
+            case IH_KEY_KEYBOARD:
+                if (std::find(heldKeyboardKeys.begin(), heldKeyboardKeys.end(), k.key) != heldKeyboardKeys.end()) {
+                    return true;
+                }
+                break;
+            case IH_KEY_CONTROLLER:
+                if (std::find(heldControllerKeys.begin(), heldControllerKeys.end(), k.key) != heldControllerKeys.end()) {
+                    return true;
+                }
+                break;
+        }
     }
     return false;
 }
 
-bool InputHelper::KeyUp(int key, int type)
+bool InputHelper::KeyUp(Control c)
 {
     for (SDL_Event e : sdlEvents) {
-        if ( e.type == SDL_CONTROLLERBUTTONUP &&
-             e.cbutton.button == (SDL_GameControllerButton) key &&
-             type == IH_KEY_CONTROLLER ) {
-            return true;
-        }
-        if ( e.type == SDL_KEYUP &&
-             e.key.keysym.sym == (SDL_KeyCode) key &&
-             type == IH_KEY_KEYBOARD ) {
-            return true;
-        }
-        if ( e.type == SDL_MOUSEBUTTONUP && type == IH_KEY_MOUSE ) {
-            SDL_MouseButtonEvent mbe = (SDL_MouseButtonEvent) e.button;
-            if (mbe.button == key) {
+        for (RawKey k : mControls[c]) {
+            if (e.type == SDL_CONTROLLERBUTTONUP &&
+                e.cbutton.button == (SDL_GameControllerButton) k.key &&
+                k.type == IH_KEY_CONTROLLER) {
                 return true;
+            }
+            if (e.type == SDL_KEYUP &&
+                e.key.keysym.sym == (SDL_KeyCode) k.key &&
+                k.type == IH_KEY_KEYBOARD) {
+                return true;
+            }
+            if (e.type == SDL_MOUSEBUTTONUP && k.type == IH_KEY_MOUSE) {
+#ifndef __vita__ // VITA: Ignore mouse events, process touch events instead.
+                auto mbe = (SDL_MouseButtonEvent) e.button;
+                if (mbe.button == k.key) {
+                    return true;
+                }
+#endif
+            }
+            if (e.type == SDL_FINGERUP && k.type == IH_KEY_MOUSE) {
+#ifdef __vita__
+                // Handle touch down / touch up only if front touch is used.
+                if (e.tfinger.touchId == 0 && !vitaUseBackTouch) {
+#endif
+                return true;
+#ifdef __vita__
+                }
+#endif
             }
         }
     }
     return false;
 }
 
-void InputHelper::SimulateKeyDown(int key, int type) {
+void InputHelper::SimulateKeyDown(Control c) {
     SDL_Event e;
-    if ( type == IH_KEY_CONTROLLER ) {
+    RawKey k = mControls[c][0]; // Use whatever RawKey for Control
+
+    if ( k.type == IH_KEY_CONTROLLER ) {
         e.type = SDL_CONTROLLERBUTTONDOWN;
-        e.cbutton.button = (SDL_GameControllerButton) key;
+        e.cbutton.button = (SDL_GameControllerButton) k.key;
     }
-    if ( type == IH_KEY_KEYBOARD ) {
+    if ( k.type == IH_KEY_KEYBOARD ) {
         e.type = SDL_KEYDOWN;
-        e.key.keysym.sym = (SDL_KeyCode) key;
+        e.key.keysym.sym = (SDL_KeyCode) k.key;
     }
-    if ( type == IH_KEY_MOUSE ) {
+    if ( k.type == IH_KEY_MOUSE ) {
         e.type = SDL_MOUSEBUTTONDOWN;
         SDL_MouseButtonEvent mbe;
-        mbe.button = key;
+        mbe.button = k.key;
         e.button = mbe;
     }
     simulatedKeyDowns.push_back(e);
@@ -172,8 +244,7 @@ void InputHelper::SimulateKeyUp() {
     }
 }
 
-touchPosition& InputHelper::TouchRead()
-{
+touchPosition& InputHelper::TouchRead() {
 	return mTouch;
 }
 
@@ -182,4 +253,8 @@ void InputHelper::ClearInput() {
     heldKeyboardKeys.clear();
     heldControllerKeys.clear();
     sdlEvents.clear();
+}
+
+void InputHelper::InitInput() {
+    Settings::get_controls(mControls, &vitaUseBackTouch);
 }
