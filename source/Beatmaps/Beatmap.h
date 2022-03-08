@@ -74,6 +74,7 @@ class Beatmap
 		void ReadNextObject();
         int32_t mNextObjectTime;
         int32_t mNextObjectX, mNextObjectY;
+        int32_t mNextObjectNumberInCombo = 1;
         HitObjectSound mNextObjectSound;
 		HitObjectType mNextObjectType;
         bool mForceNewCombo;

@@ -197,7 +197,7 @@ void Beatmap::Buffer(std::list<HitObject*>& hitObjectList)
 		{
 			case HIT_NORMAL:
 			{
-				object = new HitCircle(x, y, mNextObjectTime, type, sound, mNextObjectCombo);
+				object = new HitCircle(x, y, mNextObjectTime, type, sound, mNextObjectCombo, mNextObjectNumberInCombo);
 				break;
 			}
 			
@@ -264,7 +264,7 @@ void Beatmap::Buffer(std::list<HitObject*>& hitObjectList)
                     continue;
                 }
 				
-				object = new HitSlider(x, y, mNextObjectTime, lengthtime, points, ticks, repeats, type, sound, mNextObjectCombo);
+				object = new HitSlider(x, y, mNextObjectTime, lengthtime, points, ticks, repeats, type, sound, mNextObjectCombo, mNextObjectNumberInCombo);
 
                 points.clear();
                 ticks.clear();
@@ -276,7 +276,7 @@ void Beatmap::Buffer(std::list<HitObject*>& hitObjectList)
 			{
                 osuParser::HitObject ho = mParser->hitObjects.at(mHitObjectRead);
 				int64_t endtime = ho.spinner.end;
-				object = new HitSpinner(mNextObjectTime, endtime, sound, mNextObjectCombo);
+				object = new HitSpinner(mNextObjectTime, endtime, sound, mNextObjectCombo, mNextObjectNumberInCombo);
                 mForceNewCombo = true;
 				break;
 			}
@@ -309,6 +309,10 @@ void Beatmap::ReadNextObject() {
     mNextObjectTime = ho.time;
     mNextObjectX = ho.x;
     mNextObjectY = ho.y;
+    mNextObjectNumberInCombo++;
+    if (mNextObjectCombo) {
+        mNextObjectNumberInCombo = 1;
+    }
 }
 
 std::string& Beatmap::BeatmapChecksum() {

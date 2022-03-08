@@ -4,7 +4,7 @@
 #define TEXTURE_PACK(u, v) (((u) & 0xFFFF) | ((v) << 16))
 #endif
 
-HitSpinner::HitSpinner(int32_t time, int32_t endtime, HitObjectSound sound, bool combo) : HitObject(256, 192, time, HIT_SPINNER, sound, combo)
+HitSpinner::HitSpinner(int32_t time, int32_t endtime, HitObjectSound sound, bool combo, int32_t number_in_combo) : HitObject(256, 192, time, HIT_SPINNER, sound, combo, number_in_combo)
 {
 	mEndTime = endtime;
 	fSpinning = false;

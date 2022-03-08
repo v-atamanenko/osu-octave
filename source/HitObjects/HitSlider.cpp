@@ -1,7 +1,7 @@
 #include "HitSlider.h"
 
-HitSlider::HitSlider(int32_t x, int32_t y, int32_t time, uint32_t lengthtime, std::vector<HitObjectPoint*>& points, std::vector<HitObjectPoint*>& ticks, uint32_t repeats, HitObjectType type, HitObjectSound sound, bool combo)
-	: HitObject(x, y, time, type, sound, combo)
+HitSlider::HitSlider(int32_t x, int32_t y, int32_t time, uint32_t lengthtime, std::vector<HitObjectPoint*>& points, std::vector<HitObjectPoint*>& ticks, uint32_t repeats, HitObjectType type, HitObjectSound sound, bool combo, int32_t number_in_combo)
+	: HitObject(x, y, time, type, sound, combo, number_in_combo)
 {
 	fTouching = false;
 	fStarted = false;
@@ -234,6 +234,28 @@ HitSlider::HitSlider(int32_t x, int32_t y, int32_t time, uint32_t lengthtime, st
         spr->Z = (float)time+0.1f;
 		mSprites.push_back(spr);
 	}
+
+    TextureType numbertex;
+    switch (mNextObjectNumberInCombo) {
+        case 1: numbertex = TX_PLAY_NUMBER_1; break;
+        case 2: numbertex = TX_PLAY_NUMBER_2; break;
+        case 3: numbertex = TX_PLAY_NUMBER_3; break;
+        case 4: numbertex = TX_PLAY_NUMBER_4; break;
+        case 5: numbertex = TX_PLAY_NUMBER_5; break;
+        case 6: numbertex = TX_PLAY_NUMBER_6; break;
+        case 7: numbertex = TX_PLAY_NUMBER_7; break;
+        case 8: numbertex = TX_PLAY_NUMBER_8; break;
+        case 9: numbertex = TX_PLAY_NUMBER_9; break;
+        default: numbertex = TX_PLAY_NUMBER_0; break;
+    }
+    int h = (int)round((float)circleSize*0.44f);
+    int w = (int)round((float)h*(35.f/52.f));
+    spr = new pSprite(numbertex, x, y, w, h, ORIGIN_CENTER, FIELD_PLAY, SDL_Color(), 0);
+    spr->Show(fadeInStart, fadeInEnd);
+    //spr->Hide(time, mEndTime);
+    spr->Kill(mEndTime+1000);
+    spr->Z = (float)time-0.6f;
+    mSprites.push_back(spr);
 }
 
 HitSlider::~HitSlider()
@@ -491,8 +513,11 @@ void HitSlider::Hit()
 		//fade hitcircles
 		for (uint32_t i=3; i<=6; ++i)
 		{
-			mSprites[i]->Transform(TR_FADE, mEndTime, mEndTime+100, 31, 0);
+			mSprites[i]->Transform(TR_FADE, mEndTime, mEndTime+100, 255, 0);
 		}
+
+        int comboNumberSpriteId = (int)mSprites.size()-1;
+        mSprites[comboNumberSpriteId]->Transform(TR_FADE, mEndTime, mEndTime+100, 255, 0);
 	}
 	else
 	{
@@ -512,11 +537,16 @@ void HitSlider::Hit()
 		//animate hitcircles
 		for (uint32_t i=3; i<=6; ++i)
 		{
-			mSprites[i]->Transform(TR_FADE, mEndTime, mEndTime+200, 31, 10);
-			mSprites[i]->Transform(TR_FADE, mEndTime+200, mEndTime+270, 10, 0);
-			mSprites[i]->Scale(mEndTime, mEndTime+150, 1, 1.7);
-			mSprites[i]->Scale(mEndTime+150, mEndTime+270, 1.7, 1.9);
+			mSprites[i]->Transform(TR_FADE, mEndTime, mEndTime+200, 150, 35);
+			mSprites[i]->Transform(TR_FADE, mEndTime+200, mEndTime+270, 35, 0);
+			mSprites[i]->Scale(mEndTime, mEndTime+150, 1, 1.3);
+			mSprites[i]->Scale(mEndTime+150, mEndTime+270, 1.3, 1.7);
 		}
+        int comboNumberSpriteId = (int)mSprites.size()-1;
+        mSprites[comboNumberSpriteId]->Transform(TR_FADE, mEndTime, mEndTime+200, 150, 35);
+        mSprites[comboNumberSpriteId]->Transform(TR_FADE, mEndTime+200, mEndTime+270, 35, 0);
+        mSprites[comboNumberSpriteId]->Scale(mEndTime, mEndTime+150, 1, 1.3);
+        mSprites[comboNumberSpriteId]->Scale(mEndTime+150, mEndTime+270, 1.3, 1.7);
 		
 		AudioManager::Engine().PlayHitSound(mSound);
 		

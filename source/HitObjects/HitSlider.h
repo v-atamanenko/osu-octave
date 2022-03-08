@@ -14,7 +14,7 @@ typedef struct {
 class HitSlider : public HitObject
 {
 	public:
-		HitSlider(int32_t x, int32_t y, int32_t time, uint32_t lengthtime, std::vector<HitObjectPoint*>& points, std::vector<HitObjectPoint*>& ticks, uint32_t repeats, HitObjectType type, HitObjectSound sound, bool combo);
+		HitSlider(int32_t x, int32_t y, int32_t time, uint32_t lengthtime, std::vector<HitObjectPoint*>& points, std::vector<HitObjectPoint*>& ticks, uint32_t repeats, HitObjectType type, HitObjectSound sound, bool combo, int32_t number_in_combo);
 		~HitSlider();
 		
 		bool InBounds(int32_t x, int32_t y);

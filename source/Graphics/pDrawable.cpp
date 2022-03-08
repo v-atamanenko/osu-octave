@@ -49,10 +49,10 @@ bool pDrawable::InBounds(int32_t x, int32_t y)
 		y -= (int32_t)GraphicsManager::PlayYOffset;
 	}
 
-	uint32_t s_w = Width;
-	uint32_t s_h = Height;
-	uint32_t s_x = X;
-	uint32_t s_y = Y;
+	auto s_w = (int32_t)Width;
+	auto s_h = (int32_t)Height;
+	int32_t s_x = X;
+	int32_t s_y = Y;
 
     if (ExtendedClickableArea) {
         // We use this flag for small-height buttons that are hard to tap with big fingers

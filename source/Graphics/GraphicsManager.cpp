@@ -203,6 +203,17 @@ void GraphicsManager::LoadTexturesForMode(ModeType mod) {
             LoadTexture(TX_PLAY_SLIDERB9, skin_path+"gameplay/sliderb9.png");
             LoadTexture(TX_PLAY_SLIDERFOLLOW, skin_path+"gameplay/sliderfollow.png");
 
+            LoadTexture(TX_PLAY_NUMBER_0, skin_path+"gameplay/default-0.png");
+            LoadTexture(TX_PLAY_NUMBER_1, skin_path+"gameplay/default-1.png");
+            LoadTexture(TX_PLAY_NUMBER_2, skin_path+"gameplay/default-2.png");
+            LoadTexture(TX_PLAY_NUMBER_3, skin_path+"gameplay/default-3.png");
+            LoadTexture(TX_PLAY_NUMBER_4, skin_path+"gameplay/default-4.png");
+            LoadTexture(TX_PLAY_NUMBER_5, skin_path+"gameplay/default-5.png");
+            LoadTexture(TX_PLAY_NUMBER_6, skin_path+"gameplay/default-6.png");
+            LoadTexture(TX_PLAY_NUMBER_7, skin_path+"gameplay/default-7.png");
+            LoadTexture(TX_PLAY_NUMBER_8, skin_path+"gameplay/default-8.png");
+            LoadTexture(TX_PLAY_NUMBER_9, skin_path+"gameplay/default-9.png");
+
             LoadTexture(TX_PLAY_HIT0, skin_path+"gameplay/hit0.png");
             LoadTexture(TX_PLAY_HIT300, skin_path+"gameplay/hit300.png");
             LoadTexture(TX_PLAY_HIT300K, skin_path+"gameplay/hit300k.png");

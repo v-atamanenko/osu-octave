@@ -6,7 +6,7 @@ float HitObject::sSliderDeltaZ = 0;
 int32_t HitObject::sLastSliderTime = 0;
 ICallback* HitObject::mScoreCallback = NULL;
 
-HitObject::HitObject(int32_t x, int32_t y, int32_t time, HitObjectType type, HitObjectSound sound, bool combo)
+HitObject::HitObject(int32_t x, int32_t y, int32_t time, HitObjectType type, HitObjectSound sound, bool combo, int32_t number_in_combo)
 {
 	mX = x;
 	mY = y;
@@ -14,7 +14,9 @@ HitObject::HitObject(int32_t x, int32_t y, int32_t time, HitObjectType type, Hit
 	mType = type;
 	mHit = false;
 	mSound = sound;
-	
+
+    mNextObjectNumberInCombo = number_in_combo;
+    printf("n %i\n", number_in_combo);
 	mScoreSpriteId = 0;
 	
 	mComboEnd = false;

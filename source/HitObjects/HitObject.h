@@ -51,17 +51,18 @@ class HitObject : public SpriteContainer
 		static void SetScoreCallback(ICallback* scoreCallback);
 	
 	protected:
-		HitObject(int32_t x, int32_t y, int32_t time, HitObjectType type, HitObjectSound sound, bool combo);
-		
+		HitObject(int32_t x, int32_t y, int32_t time, HitObjectType type, HitObjectSound sound, bool combo, int32_t number_in_combo);
+
 		int32_t mX, mY;
 		int32_t mTime, mEndTime;
 		HitObjectType mType;
 		HitObjectSound mSound;
 		static SDL_Color mColour;
-		
+
 		bool mHit;
 		bool mComboEnd;
-		
+        int32_t mNextObjectNumberInCombo;
+
 		uint32_t mScoreSpriteId;
 		
 		void IncreaseScore(ScoreType score, bool forceNoCombo = false, bool forceNoAnimation = false);

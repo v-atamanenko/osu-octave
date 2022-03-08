@@ -1,6 +1,6 @@
 #include "HitCircle.h"
 
-HitCircle::HitCircle(int32_t x, int32_t y, int32_t time, HitObjectType type, HitObjectSound sound, bool combo) : HitObject(x, y, time, type, sound, combo)
+HitCircle::HitCircle(int32_t x, int32_t y, int32_t time, HitObjectType type, HitObjectSound sound, bool combo, int32_t number_in_combo) : HitObject(x, y, time, type, sound, combo, number_in_combo)
 {
 	uint32_t size = DifficultyManager::GetCircleSize();
 	
@@ -32,6 +32,28 @@ HitCircle::HitCircle(int32_t x, int32_t y, int32_t time, HitObjectType type, Hit
 	spr->Kill(mEndTime+1000);
     spr->Z = (float)time;
 	mSprites.push_back(spr);
+
+    TextureType numbertex;
+    switch (mNextObjectNumberInCombo) {
+        case 1: numbertex = TX_PLAY_NUMBER_1; break;
+        case 2: numbertex = TX_PLAY_NUMBER_2; break;
+        case 3: numbertex = TX_PLAY_NUMBER_3; break;
+        case 4: numbertex = TX_PLAY_NUMBER_4; break;
+        case 5: numbertex = TX_PLAY_NUMBER_5; break;
+        case 6: numbertex = TX_PLAY_NUMBER_6; break;
+        case 7: numbertex = TX_PLAY_NUMBER_7; break;
+        case 8: numbertex = TX_PLAY_NUMBER_8; break;
+        case 9: numbertex = TX_PLAY_NUMBER_9; break;
+        default: numbertex = TX_PLAY_NUMBER_0; break;
+    }
+    int h = (int)round((float)size*0.44f);
+    int w = (int)round((float)h*(35.f/52.f));
+    spr = new pSprite(numbertex, x, y, w, h, ORIGIN_CENTER, FIELD_PLAY, SDL_Color(), 0);
+    spr->Show(fadeInStart, fadeInEnd);
+    spr->Hide(time, mEndTime);
+    spr->Kill(mEndTime+1000);
+    spr->Z = (float)time-0.6f;
+    mSprites.push_back(spr);
 	
 	mScoreSpriteId = 1;
 }
@@ -54,7 +76,6 @@ void HitCircle::Hit()
 {
 	long now = GameClock::Clock().Time();
 	uint32_t delta = MathHelper::Abs(mTime - now);
-    printf("HIT mTime %i\n", mTime);
 	
 	if (delta > DifficultyManager::GetHitWindow())
 	{

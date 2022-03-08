@@ -7,7 +7,7 @@
 class HitSpinner : public HitObject
 {
 	public:
-		HitSpinner(int32_t time, int32_t endtime, HitObjectSound sound, bool combo);
+		HitSpinner(int32_t time, int32_t endtime, HitObjectSound sound, bool combo, int32_t number_in_combo);
 		~HitSpinner();
 		
 		void Update();
