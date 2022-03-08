@@ -59,6 +59,7 @@ class pDrawable
 
 		void(*OnClick)(pDrawable* self, uint16_t x, uint16_t y);
         bool Clickable;
+        bool ExtendedClickableArea = false;
 	
 	protected:
 		uint32_t mOrigWidth, mOrigHeight;

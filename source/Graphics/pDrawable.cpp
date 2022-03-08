@@ -49,33 +49,40 @@ bool pDrawable::InBounds(int32_t x, int32_t y)
 		y -= (int32_t)GraphicsManager::PlayYOffset;
 	}
 
-	//uint32_t s_w = Width;
-	//uint32_t s_h = Height;
-	//uint32_t s_x = X;
-	//uint32_t s_y = Y;
+	uint32_t s_w = Width;
+	uint32_t s_h = Height;
+	uint32_t s_x = X;
+	uint32_t s_y = Y;
+
+    if (ExtendedClickableArea) {
+        // We use this flag for small-height buttons that are hard to tap with big fingers
+        // Virtually extending height here a little.
+        s_h += 30;
+        s_y -= 15;
+    }
 
 
 	switch (Origin)
 	{
 		case ORIGIN_TOPLEFT:
 		{
-			return x >= X && x <= X+(int32_t)Width
-				&& y >= Y && y <= Y+(int32_t)Height;
+			return x >= s_x && x <= s_x+(int32_t)s_w
+				&& y >= s_y && y <= s_y+(int32_t)s_h;
 		}
 		
 		case ORIGIN_CENTER:
 		{
-			int32_t halfWidth = (int32_t)Width>>1;
-			int32_t halfHeight = (int32_t)Height>>1;
+			int32_t halfWidth = (int32_t)s_w>>1;
+			int32_t halfHeight = (int32_t)s_h>>1;
 			
-			return x >= X-halfWidth && x <= X+halfWidth
-				&& y >= Y-halfHeight && y <= Y+halfHeight;
+			return x >= s_x-halfWidth && x <= s_x+halfWidth
+				&& y >= s_y-halfHeight && y <= s_y+halfHeight;
 		}
 		
 		case ORIGIN_BOTTOMLEFT:
 		{
-			return x >= X && x <= X+(int32_t)Width
-				&& y >= Y-(int32_t)Height && y <= Y;
+			return x >= s_x && x <= s_x+(int32_t)s_w
+				&& y >= s_y-(int32_t)s_h && y <= s_y;
 		}
 		
 		default:

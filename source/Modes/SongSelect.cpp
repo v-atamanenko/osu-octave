@@ -129,16 +129,19 @@ SongSelect::SongSelect() {
     btn_arrow_left->Angle = 180;
     btn_arrow_left->OnClick = OnBtnArrowLeftClick;
     btn_arrow_left->Clickable = true;
+    btn_arrow_left->ExtendedClickableArea = true;
     mSpriteManager->Add(btn_arrow_left);
 
     auto* btn_arrow_right = new pSprite(TX_BUTTON_ARROW, 841, 478, 78, 40, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
     btn_arrow_right->OnClick = OnBtnArrowRightClick;
     btn_arrow_right->Clickable = true;
+    btn_arrow_right->ExtendedClickableArea = true;
     mSpriteManager->Add(btn_arrow_right);
 
     btn_sort_all = new pSprite(TX_BUTTON_SM_ACTIVE, 400, 25, 78, 40, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
     btn_sort_all->OnClick = OnBtnSortAllClick;
     btn_sort_all->Clickable = true;
+    btn_sort_all->ExtendedClickableArea = true;
     mSpriteManager->Add(btn_sort_all);
     btn_sort_all_label = new pText("ALL", FONT_PIXEL_ACTIVE, 439, 45, SDL_Color({255,255,255}));
     btn_sort_all_label->Z = -0.02f;
@@ -148,6 +151,7 @@ SongSelect::SongSelect() {
     btn_sort_a_e = new pSprite(TX_BUTTON_XS, 536, 25, 67, 40, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
     btn_sort_a_e->OnClick = OnBtnSortAEClick;
     btn_sort_a_e->Clickable = true;
+    btn_sort_a_e->ExtendedClickableArea = true;
     mSpriteManager->Add(btn_sort_a_e);
     btn_sort_a_e_label = new pText("A-E", FONT_PIXEL, 569, 45, SDL_Color({67,19,115}));
     btn_sort_a_e_label->Z = -0.02f;
@@ -157,6 +161,7 @@ SongSelect::SongSelect() {
     btn_sort_f_j = new pSprite(TX_BUTTON_XS, 615, 25, 67, 40, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
     btn_sort_f_j->OnClick = OnBtnSortFJClick;
     btn_sort_f_j->Clickable = true;
+    btn_sort_f_j->ExtendedClickableArea = true;
     mSpriteManager->Add(btn_sort_f_j);
     btn_sort_f_j_label = new pText("F-J", FONT_PIXEL, 648, 45, SDL_Color({67,19,115}));
     btn_sort_f_j_label->Z = -0.02f;
@@ -166,6 +171,7 @@ SongSelect::SongSelect() {
     btn_sort_k_o = new pSprite(TX_BUTTON_XS, 694, 25, 67, 40, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
     btn_sort_k_o->OnClick = OnBtnSortKOClick;
     btn_sort_k_o->Clickable = true;
+    btn_sort_k_o->ExtendedClickableArea = true;
     mSpriteManager->Add(btn_sort_k_o);
     btn_sort_k_o_label = new pText("K-O", FONT_PIXEL, 727, 45, SDL_Color({67,19,115}));
     btn_sort_k_o_label->Z = -0.02f;
@@ -175,6 +181,7 @@ SongSelect::SongSelect() {
     btn_sort_p_t = new pSprite(TX_BUTTON_XS, 772, 25, 67, 40, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
     btn_sort_p_t->OnClick = OnBtnSortPTClick;
     btn_sort_p_t->Clickable = true;
+    btn_sort_p_t->ExtendedClickableArea = true;
     mSpriteManager->Add(btn_sort_p_t);
     btn_sort_p_t_label = new pText("P-T", FONT_PIXEL, 806, 45, SDL_Color({67,19,115}));
     btn_sort_p_t_label->Z = -0.02f;
@@ -184,6 +191,7 @@ SongSelect::SongSelect() {
     btn_sort_u_z = new pSprite(TX_BUTTON_XS, 852, 25, 67, 40, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
     btn_sort_u_z->OnClick = OnBtnSortUZClick;
     btn_sort_u_z->Clickable = true;
+    btn_sort_u_z->ExtendedClickableArea = true;
     mSpriteManager->Add(btn_sort_u_z);
     btn_sort_u_z_label = new pText("U-Z", FONT_PIXEL, 885, 45, SDL_Color({67,19,115}));
     btn_sort_u_z_label->Z = -0.02f;
@@ -375,7 +383,6 @@ void SongSelect::UpdateSonglist()
         if (isExpanded) {
             auto* bg = new pSprite(TX_BEATMAP_ENTRY_EXPANDED_BG, 351, 91 + (i * 94) + extra_y_offset, 609, 174, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.03f);
 
-            //bg->OnClick = OnBetmapEntryPlayClick;
             bg->OnClick = OnBetmapEntryExpandClick;
             bg->Clickable = true;
             bg->TagInt = i+beatmap_list_offset;
@@ -397,6 +404,7 @@ void SongSelect::UpdateSonglist()
             play->OnClick = OnBetmapEntryPlayClick;
             play->Clickable = true;
             play->Tag = map.Checksum;
+            play->ExtendedClickableArea = true;
 
             mSpriteManager->Add(play);
         }
