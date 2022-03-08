@@ -183,7 +183,7 @@ void BeatmapManager::Add(const char* map_filename, const char* map_subdir) {
     BeatmapEntry bme;
 
     if (Beatmap::LoadEntryData(map_filename, map_subdir, bme)) {
-        bme.BackgroundFilename = PreviewBuffer::GeneratePreview(map_subdir, bme.BackgroundFilename, bme.Checksum);
+        bme.BackgroundFilename = PreviewBuffer::GeneratePreview(map_subdir, bme.BackgroundFilename);
         bme.BackgroundFilepath =  std::string(map_subdir) + "/" + bme.BackgroundFilename;
         Beatmaps::set_beatmap(bme);
     }

@@ -3,6 +3,11 @@
 #include "Beatmaps/BeatmapManager.h"
 #include "DataStorage/Settings.h"
 
+inline bool file_exists(const std::string& fname) {
+    std::ifstream infile(fname);
+    return infile.good();
+}
+
 PreviewBuffer PreviewBuffer::sPreviewBuffer;
 
 PreviewBuffer::PreviewBuffer() {
@@ -189,10 +194,14 @@ void PreviewBuffer::Pics_FillBuffer(int last_page, int new_page, int per_page) {
     processingNow.store(false, std::memory_order_seq_cst);
 }
 
-std::string PreviewBuffer::GeneratePreview(const std::string &map_subdir, const std::string &BackgroundFilename, const std::string &Checksum) {
+std::string PreviewBuffer::GeneratePreview(const std::string &map_subdir, const std::string &BackgroundFilename) {
     std::string source_image_path = map_subdir + "/" + BackgroundFilename;
-    std::string target_image_filename = Checksum + ".png";
+    std::string target_image_filename = BackgroundFilename + "_preview.png";
     std::string target_image_path = map_subdir + "/" + target_image_filename;
+
+    if (file_exists(target_image_path)) {
+        return target_image_filename;
+    }
 
     SDL_Surface* loadedSurface = IMG_Load(source_image_path.c_str());
     if (loadedSurface == nullptr) {

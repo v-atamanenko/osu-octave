@@ -33,7 +33,7 @@ class PreviewBuffer
         SDL_Surface* GetTexture(int beatmap_id);
 
         BeatmapFilter lastAppliedFilter = FILTER_NONE;
-        static std::string GeneratePreview(const std::string& map_subdir, const std::string& BackgroundFilename, const std::string& Checksum);
+        static std::string GeneratePreview(const std::string& map_subdir, const std::string& BackgroundFilename);
         static PreviewBuffer& GetInstance() { return sPreviewBuffer; }
 
     protected:
