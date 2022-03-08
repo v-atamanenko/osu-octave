@@ -53,7 +53,9 @@ class Beatmap
 		
 		std::string& BaseDir() { return mBaseDir; }
 
-        int32_t AudioLeadIn() { return (mAudioLeadIn * -1); }
+        // -1000 is a hack for beatmaps that for some reason start at 0 ms.
+        [[nodiscard]] int32_t AudioLeadIn() const { return (mAudioLeadIn > 0) ? (mAudioLeadIn * -1) : (-1000); }
+
 		int32_t SkipTime() { return mSkipTime; }
         int32_t StartTime() { return mFirstObjectTime; }
         int32_t EndTime() { return mLastObjectEndTime; }
