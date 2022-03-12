@@ -1,0 +1,3 @@
+[submodule "lib/osu_sr_calculator_cpp"]
+	path = lib/osu_sr_calculator_cpp
+	url = https://github.com/v-atamanenko/osu_sr_calculator_cpp

@@ -23,6 +23,8 @@
 
 #include "DataStorage/Betmaps.h"
 
+#include "../lib/osu_sr_calculator_cpp/osu_sr_calculator/osu_sr_calculator.h"
+
 #ifndef __BEATMAP_H__
 #define __BEATMAP_H__
 

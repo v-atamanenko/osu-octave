@@ -16,8 +16,7 @@ HitObject::HitObject(int32_t x, int32_t y, int32_t time, HitObjectType type, Hit
 	mSound = sound;
 
     mNextObjectNumberInCombo = number_in_combo;
-    printf("n %i\n", number_in_combo);
-	mScoreSpriteId = 0;
+    mScoreSpriteId = 0;
 	
 	mComboEnd = false;
 	

@@ -10,10 +10,6 @@
 #include "Helpers/JSON.hpp"
 using json = nlohmann::json;
 
-#ifndef PATH_MAX
-#define PATH_MAX 1024
-#endif
-
 typedef struct Highscore {
     std::string checksum;
     uint32_t score = 0;

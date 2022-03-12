@@ -429,7 +429,6 @@ void SongSelect::UpdateSonglist()
             auto* mapVersion = new pText(map.Version, FONT_CONSOLE, 494, 154 + (i * 94) + extra_y_offset);
             mapVersion->Z = -0.05f;
 
-            //TODO: Replace this with actual highscore data
             auto* highscoreTitle = new pText("Personal best:", FONT_CONSOLE_BIG_BOLD, 494, 184 + (i * 94) + extra_y_offset);
             highscoreTitle->Z = -0.06f;
             auto* highscoreScoreTitle = new pText("Score:", FONT_CONSOLE_BOLD, 494, 204 + (i * 94) + extra_y_offset);
@@ -477,16 +476,26 @@ void SongSelect::UpdateSonglist()
             //TODO: Replace this with actual star rating
             auto* stars = new pSprite(TX_STARS, 712, 161 + (i * 94) + extra_y_offset, 196, 16, ORIGIN_TOPLEFT,
                                       FIELD_SCREEN, SDL_Color(), 255, -0.04f);
+            auto* starsFill = new pSprite(TX_STARS_FILL, 712, 161 + (i * 94) + extra_y_offset, 196, 16, ORIGIN_TOPLEFT,
+                                      FIELD_SCREEN, SDL_Color(), 255, -0.05f);
+
+            delete starsFill->UV;
+            starsFill->UV = new SDL_Rect({0,0,(int)floor(196.f*map.starRating/10.f),16});
             mSpriteManager->Add(stars);
+            mSpriteManager->Add(starsFill);
         } else {
             auto* ranking = new pSprite(score_tex, 869, 104 + (i * 94) + extra_y_offset, 40, 23,
                                         ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.04f);
             mSpriteManager->Add(ranking);
 
-            //TODO: Replace this with actual star rating
             auto* stars = new pSprite(TX_STARS, 712, 141 + (i * 94) + extra_y_offset, 196, 16, ORIGIN_TOPLEFT,
                                       FIELD_SCREEN, SDL_Color(), 255, -0.04f);
+            auto* starsFill = new pSprite(TX_STARS_FILL, 712, 141 + (i * 94) + extra_y_offset, 196, 16, ORIGIN_TOPLEFT,
+                                          FIELD_SCREEN, SDL_Color(), 255, -0.05f);
+            delete starsFill->UV;
+            starsFill->UV = new SDL_Rect({0,0,(int)floor(196.f*map.starRating/10.f),16});
             mSpriteManager->Add(stars);
+            mSpriteManager->Add(starsFill);
         }
 
         mEntriesDisplayed++;

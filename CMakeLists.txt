@@ -73,6 +73,8 @@ add_executable(${PROJECT_NAME}
 
         ${PROJECT_SOURCE_DIR}/source/main.cpp)
 
+add_subdirectory(${PROJECT_SOURCE_DIR}/lib/osu_sr_calculator_cpp)
+
 include_directories(
         ${PROJECT_SOURCE_DIR}/source
 )
@@ -81,6 +83,7 @@ if (BUILDTARGET STREQUAL "vita")
     add_definitions(-DVITA)
     find_package(SDL2 REQUIRED)
     target_link_libraries(${PROJECT_NAME}
+            osu_sr_calculator
             SDL2_mixer
             SDL2_ttf
             SDL2_image
@@ -125,7 +128,7 @@ else()
 
     INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS} ${SDL2IMAGE_INCLUDE_DIRS} ${SDL2MIXER_INCLUDE_DIRS} ${SDL2TTF_INCLUDE_DIRS})
 
-    TARGET_LINK_LIBRARIES(${PROJECT_NAME} SDL2_image SDL2_mixer SDL2_ttf SDL2)
+    TARGET_LINK_LIBRARIES(${PROJECT_NAME} osu_sr_calculator SDL2_image SDL2_mixer SDL2_ttf SDL2)
 
 
     #find_package(SDL2_image REQUIRED HINTS /usr/local/Cellar/sdl2_image/2.0.5/lib/pkgconfig/)

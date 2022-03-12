@@ -2,7 +2,7 @@
 
 pDrawable::~pDrawable() {
 	ClearTransforms();
-	delete UV;
+    if (UV != nullptr) delete UV;
 }
 
 void pDrawable::Update()

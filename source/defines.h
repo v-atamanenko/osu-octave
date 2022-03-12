@@ -15,6 +15,10 @@ extern SDL_Renderer *renderer;
 #define SCREEN_X_TO_PLAYFIELD_X(x) ((x)-PLAYFIELD_X_OFFSET)
 #define SCREEN_Y_TO_PLAYFIELD_Y(y) ((y)-PLAYFIELD_Y_OFFSET)
 
+#ifndef PATH_MAX
+#define PATH_MAX 1024
+#endif
+
 /*
  * NOTE! In DEF_*Directory/DEF_*Subdirectory defines, trailing slash is mandatory!
  */
@@ -24,7 +28,7 @@ extern SDL_Renderer *renderer;
 #define DEF_BeatmapsSubdirectory "maps/"
 #define DEF_SkinsSubdirectory "skins/"
 #define DEF_SettingsFilename "settings.json"
-#define DEF_HighscoresFilename "settings.json"
+#define DEF_HighscoresFilename "highscores.json"
 #define DEF_BeatmapsIndexFilename "beatmaps.json"
 #define DEF_BeatmapsStateFilename "beatmaps_state.json"
 #endif

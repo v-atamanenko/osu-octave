@@ -67,8 +67,8 @@ class SongSelect : public Mode
         static const int32_t mEntriesPerPage = 4;
         int32_t mEntriesDisplayed = 0;
 
-        int32_t mSpritesPerBeatmapEntry = 7;
-        int32_t mSpritesPerExpandedBeatmapEntry = 13;
+        int32_t mSpritesPerBeatmapEntry = 8;
+        int32_t mSpritesPerExpandedBeatmapEntry = 14;
 
         static pSprite* btn_sort_all;
         static pText* btn_sort_all_label;

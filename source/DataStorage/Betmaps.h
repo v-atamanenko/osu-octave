@@ -26,12 +26,13 @@ typedef struct BeatmapEntry {
     std::string AudioFilename;
     std::string BaseDir;
     std::string Checksum;
+    float starRating;
 } BeatmapEntry;
 
 inline void to_json(json& j, const BeatmapEntry h) {
     j = json{{"filename", h.Filename}, {"bg", h.BackgroundFilename}, {"bg_path", h.BackgroundFilepath}, {"title", h.Title},
              {"artist", h.Artist}, {"creator", h.Creator}, {"version", h.Version},
-             {"audiofilename", h.AudioFilename}, {"basedir", h.BaseDir}, {"checksum", h.Checksum}};
+             {"audiofilename", h.AudioFilename}, {"basedir", h.BaseDir}, {"checksum", h.Checksum}, {"star_rating", h.starRating}};
 }
 
 inline void from_json(const json& j, BeatmapEntry& h) {
@@ -45,6 +46,7 @@ inline void from_json(const json& j, BeatmapEntry& h) {
     j.at("audiofilename").get_to(h.AudioFilename);
     j.at("basedir").get_to(h.BaseDir);
     j.at("checksum").get_to(h.Checksum);
+    j.at("star_rating").get_to(h.starRating);
 }
 
 inline bool sortBeatmapsA_Z(const BeatmapEntry &a, const BeatmapEntry &b) {

@@ -31,6 +31,9 @@ bool Beatmap::LoadEntryData(const std::string &filename, const std::string &base
     }
 
     bm.Checksum = md5(p.title + p.artist + p.version + std::to_string(p.beatmapID));
+
+    std::map<std::string, Output> sr = calculateStarRating(basedir  + "/" + filename);
+    bm.starRating = sr["nomod"].total;
     return true;
 }
 
