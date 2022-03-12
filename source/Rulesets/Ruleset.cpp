@@ -128,14 +128,18 @@ void Ruleset::OnGameOver()
 
     mLifebar.Kill();
 
-    Highscore h;
-    h.accuracy = mCurrentScore.CountAccuracy();
-    h.combo = mCurrentScore.CurrentCombo();
-    h.score = mCurrentScore.CurrentScore();
-    h.checksum = BeatmapManager::Current().BeatmapChecksum();
-    strcpy(h.grade, mCurrentScore.GetGrade());
-    Scores::set_highscore(h);
-    Scores::save();
+    Highscore h_old;
+    Scores::get_highscore(BeatmapManager::Current().BeatmapChecksum(), h_old);
+    if (h_old.score < mCurrentScore.CurrentScore()) {
+        Highscore h;
+        h.accuracy = mCurrentScore.CountAccuracy();
+        h.combo = mCurrentScore.CurrentCombo();
+        h.score = mCurrentScore.CurrentScore();
+        h.checksum = BeatmapManager::Current().BeatmapChecksum();
+        strcpy(h.grade, mCurrentScore.GetGrade());
+        Scores::set_highscore(h);
+        Scores::save();
+    }
 }
 
 void Ruleset::OnFailed()
