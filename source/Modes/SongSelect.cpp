@@ -7,6 +7,7 @@ bool SongSelect::shouldHandlePageUpdate = false;
 
 int32_t SongSelect::mExpandEntryIndex = -1;
 bool SongSelect::shouldHandleEntryExpand = false;
+bool SongSelect::shouldExpandRandomEntry = false;
 
 pSprite* SongSelect::btn_sort_all = nullptr;
 pText* SongSelect::btn_sort_all_label = nullptr;
@@ -46,7 +47,7 @@ void OnBtnQuitClick(pDrawable* self, uint16_t x, uint16_t y) {
 }
 
 void OnBtnRandomClick(pDrawable* self, uint16_t x, uint16_t y) {
-    // X
+    SongSelect::PageRand();
 }
 
 void OnBtnArrowLeftClick(pDrawable* self, uint16_t x, uint16_t y) {
@@ -473,7 +474,6 @@ void SongSelect::UpdateSonglist()
                                         ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.04f);
             mSpriteManager->Add(ranking);
 
-            //TODO: Replace this with actual star rating
             auto* stars = new pSprite(TX_STARS, 712, 161 + (i * 94) + extra_y_offset, 196, 16, ORIGIN_TOPLEFT,
                                       FIELD_SCREEN, SDL_Color(), 255, -0.04f);
             auto* starsFill = new pSprite(TX_STARS_FILL, 712, 161 + (i * 94) + extra_y_offset, 196, 16, ORIGIN_TOPLEFT,
@@ -557,8 +557,13 @@ void SongSelect::Update()
     }
 
     reloadPreviews();
-
     mSpriteManager->Draw();
+
+    if (shouldExpandRandomEntry) {
+        int countEntriesOnPage = (mCurrentPage < (mCountPages-1)) ? mEntriesPerPage : (mSongListSize - (mEntriesPerPage * (mCountPages - 1)));
+        ExpandEntry(MathHelper::Random(mCurrentPage*mEntriesPerPage,(mCurrentPage*mEntriesPerPage)+countEntriesOnPage-1));
+        shouldExpandRandomEntry = false;
+    }
 }
 
 void SongSelect::LoadingScreenShow() {

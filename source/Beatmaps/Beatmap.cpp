@@ -316,6 +316,10 @@ void Beatmap::ReadNextObject() {
     if (mNextObjectCombo) {
         mNextObjectNumberInCombo = 1;
     }
+    if (mNextObjectNumberInCombo > 9) {
+        mNextObjectNumberInCombo = 1;
+        mNextObjectCombo = true;
+    }
 }
 
 std::string& Beatmap::BeatmapChecksum() {

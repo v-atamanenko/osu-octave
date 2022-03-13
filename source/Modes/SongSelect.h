@@ -37,6 +37,25 @@ class SongSelect : public Mode
                 Settings::set_int("page", mCurrentPage);
             }
         };
+        static void PageRand() {
+            if (mCountPages <= 1) {
+                shouldExpandRandomEntry = true;
+                return;
+            }
+
+            int p = MathHelper::Random(0, (mCountPages - 1));
+            if (p == mCurrentPage) {
+                while (p == mCurrentPage) {
+                    p = MathHelper::Random(0, (mCountPages - 1));
+                }
+            }
+
+            PreviewBuffer::GetInstance().Update(mCurrentPage, p, mEntriesPerPage);
+            mCurrentPage = p;
+            shouldHandlePageUpdate = true;
+            shouldExpandRandomEntry = true;
+            Settings::set_int("page", mCurrentPage);
+        };
         static void ExpandEntry(int index) {
             shouldHandlePageUpdate = shouldHandleEntryExpand = true;
             if (mExpandEntryIndex == index) {
@@ -64,6 +83,7 @@ class SongSelect : public Mode
         static int32_t mExpandEntryIndex;
         static bool shouldHandlePageUpdate;
         static bool shouldHandleEntryExpand;
+        static bool shouldExpandRandomEntry;
         static const int32_t mEntriesPerPage = 4;
         int32_t mEntriesDisplayed = 0;
 
