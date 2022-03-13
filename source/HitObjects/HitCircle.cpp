@@ -124,7 +124,7 @@ void HitCircle::Hit()
 		else
 		{
 			//otherwise missed
-			for (uint32_t i=0; i<3; ++i)
+			for (uint32_t i=0; i<4; ++i)
 			{
 				mSprites[i]->Kill(now);
 			}

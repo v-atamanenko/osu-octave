@@ -454,18 +454,17 @@ void HitSlider::OnTouchDown(const touchPosition& touch)
 			{
 				IncreaseScore(SCORE_MISS, true, true);
 			}
-
-            int comboNumberSpriteId = (int)mSprites.size()-1;
-            mSprites[comboNumberSpriteId]->Transform(TR_FADE, now, now+200, 150, 35);
-            mSprites[comboNumberSpriteId]->Transform(TR_FADE, now+200, now+270, 35, 0);
-            mSprites[comboNumberSpriteId]->Scale(now, now+150, 1, 1.3);
-            mSprites[comboNumberSpriteId]->Scale(now+150, now+270, 1.3, 1.7);
-
         }
 		
 		if (mChannel == -1)
 			mChannel = AudioManager::Engine().PlaySliderSound(mSound);
-	}
+
+        int comboNumberSpriteId = (int)mSprites.size()-1;
+        mSprites[comboNumberSpriteId]->Transform(TR_FADE, now, now+200, 150, 35);
+        mSprites[comboNumberSpriteId]->Transform(TR_FADE, now+200, now+270, 35, 0);
+        mSprites[comboNumberSpriteId]->Scale(now, now+150, 1, 1.3);
+        mSprites[comboNumberSpriteId]->Scale(now+150, now+270, 1.3, 1.7);
+    }
 }
 
 void HitSlider::OnTouch(const touchPosition& touch)
@@ -480,6 +479,12 @@ void HitSlider::OnTouch(const touchPosition& touch)
 		{
 			fStarted = true;
 			IncreaseScore(SCORE_MISS, true, true);
+
+            int comboNumberSpriteId = (int)mSprites.size()-1;
+            mSprites[comboNumberSpriteId]->Transform(TR_FADE, now, now+200, 150, 35);
+            mSprites[comboNumberSpriteId]->Transform(TR_FADE, now+200, now+270, 35, 0);
+            mSprites[comboNumberSpriteId]->Scale(now, now+150, 1, 1.3);
+            mSprites[comboNumberSpriteId]->Scale(now+150, now+270, 1.3, 1.7);
 		}
 		
 		mSprites[1]->Transform(TR_FADE, now, mEndTime, 255, 255);
