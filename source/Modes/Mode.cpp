@@ -2,6 +2,7 @@
 #include "Player.h"
 #include "SongSelect.h"
 #include "Welcome.h"
+#include "ModeSettings.h"
 #include "System/GameClock.h"
 #include "System/TextManager.h"
 
@@ -33,6 +34,11 @@ void ChangeModeOnDemand() {
             break;
         case MODE_WELCOME:
             Mode::sCurrentMode = new Welcome();
+            break;
+        case MODE_SETTINGS:
+            Mode::sCurrentMode = new ModeSettings();
+            break;
+        case MODE_ABOUT:
             break;
     }
 

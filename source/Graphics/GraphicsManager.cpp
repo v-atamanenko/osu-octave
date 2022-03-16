@@ -274,6 +274,17 @@ void GraphicsManager::LoadTexturesForMode(ModeType mod) {
         case MODE_WELCOME:
             LoadTexture(TX_WELCOME_BG, skin_path+"ui/welcome.png");
             break;
+        case MODE_SETTINGS:
+            LoadTexture(TX_SONGSELECT_BG, skin_path+"ui/song-selector.png");
+            LoadTexture(TX_BUTTON_BIG, skin_path+"ui/button-big.png");
+            LoadTexture(TX_BUTTON_BIG_ACTIVE, skin_path+"ui/button-big-active.png");
+            LoadTexture(TX_BUTTON_SETTINGS_ARROW, skin_path+"ui/button-settings-arrow.png");
+            LoadTexture(TX_BUTTON_SETTINGS_ARROW_ACTIVE, skin_path+"ui/button-settings-arrow-active.png");
+            LoadTexture(TX_BUTTON_SLIDER_CIRCLE, skin_path+"ui/slider-circle.png");
+            LoadTexture(TX_BUTTON_SLIDER_CIRCLE_ACTIVE, skin_path+"ui/slider-circle-active.png");
+            LoadTexture(TX_SETTINGS_PANEL_GAMEPLAY, skin_path+"ui/settings-panel-gameplay.png");
+            LoadTexture(TX_SETTINGS_PANEL_GENERAL, skin_path+"ui/settings-panel-general.png");
+            break;
     }
 }
 

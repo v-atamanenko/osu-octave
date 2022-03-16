@@ -100,6 +100,11 @@ class Settings
                     {"activeFilter", FILTER_NONE},
                     {"skin", "default"},
                     {"vitaUseBackTouch", false},
+                    {"volume_hitsounds", 100.0},
+                    {"volume_music", 100.0},
+                    {"volume_menumusic", 80.0},
+                    {"volume_uisounds", 70.0},
+                    {"bgdim", 80.0},
                     {"controls", {
                         {IH_CONTROL_ACTION, {{SDL_BUTTON_LEFT, IH_KEY_MOUSE}, {SDLK_z, IH_KEY_KEYBOARD}, {SDLK_x, IH_KEY_KEYBOARD}, {SDL_CONTROLLER_BUTTON_LEFTSHOULDER, IH_KEY_CONTROLLER}, {SDL_CONTROLLER_BUTTON_RIGHTSHOULDER, IH_KEY_CONTROLLER}}},
                         {IH_CONTROL_SKIP, {{SDLK_SPACE, IH_KEY_KEYBOARD}, {SDL_CONTROLLER_BUTTON_A, IH_KEY_CONTROLLER}}},

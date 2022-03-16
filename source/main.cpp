@@ -17,6 +17,7 @@ json Beatmaps::beatmaps;
 json Beatmaps::state;
 
 int main() {
+    Settings::load();
     SDLInitializer::initSDL();
     TextManager::Init();
 

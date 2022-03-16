@@ -31,7 +31,7 @@ void OnBetmapEntryPlayClick(pDrawable* self, uint16_t x, uint16_t y) {
     InputHelper::vitaUseBackTouch = Settings::get_bool("vitaUseBackTouch"); // VITA: Reset back touch usage flag
     BeatmapManager::Load(self->Tag);
     ChangeModeOnFrameEnd(MODE_PLAYER);
-    SongSelect::LoadingScreenHide();
+    //SongSelect::LoadingScreenHide();
 }
 
 void OnBetmapEntryExpandClick(pDrawable* self, uint16_t x, uint16_t y) {
@@ -44,6 +44,14 @@ void OnBtnQuitClick(pDrawable* self, uint16_t x, uint16_t y) {
     SDL_Event sdlevent;
     sdlevent.type = SDL_QUIT;
     SDL_PushEvent(&sdlevent);
+}
+
+void OnBtnSettingsClick(pDrawable* self, uint16_t x, uint16_t y) {
+    ChangeModeOnFrameEnd(MODE_SETTINGS);
+}
+
+void OnBtnAboutClick(pDrawable* self, uint16_t x, uint16_t y) {
+    ChangeModeOnFrameEnd(MODE_ABOUT);
 }
 
 void OnBtnRandomClick(pDrawable* self, uint16_t x, uint16_t y) {
@@ -95,6 +103,8 @@ SongSelect::SongSelect() {
     mSpriteManager->Add(bg);
 
     auto* btn_about = new pSprite(TX_BUTTON_BIG, 37, 281, 277, 55, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
+    btn_about->OnClick = OnBtnAboutClick;
+    btn_about->Clickable = true;
     mSpriteManager->Add(btn_about);
     auto* btn_about_label = new pText("About", FONT_PIXEL, 175, 308, SDL_Color({67,19,115}));
     btn_about_label->Z = -0.02f;
@@ -102,6 +112,8 @@ SongSelect::SongSelect() {
     mSpriteManager->Add(btn_about_label);
 
     auto* btn_settings = new pSprite(TX_BUTTON_BIG, 37, 349, 277, 55, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
+    btn_settings->OnClick = OnBtnSettingsClick;
+    btn_settings->Clickable = true;
     mSpriteManager->Add(btn_settings);
     auto* btn_settings_label = new pText("Settings", FONT_PIXEL, 175, 376, SDL_Color({67,19,115}));
     btn_settings_label->Z = -0.02f;

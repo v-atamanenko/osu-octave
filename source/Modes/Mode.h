@@ -8,7 +8,9 @@
 typedef enum {
 	MODE_PLAYER,
 	MODE_SONGSELECT,
-    MODE_WELCOME
+    MODE_WELCOME,
+    MODE_SETTINGS,
+    MODE_ABOUT
 } ModeType;
 
 class Mode
