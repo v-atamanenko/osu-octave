@@ -7,6 +7,103 @@
 #include "System/TextManager.h"
 #include "Graphics/SpriteContainer.h"
 
+class StringSelector : public SpriteContainer {
+public:
+    int32_t mX;
+    int32_t mY;
+    std::function<void(float)> value_change_callback;
+    std::function<void(const std::string&)> value_callback;
+    pText* selectedString;
+    pSprite* arrowLeft;
+    pSprite* arrowRight;
+    std::string mValue;
+    uint8_t clickedArrowId = 0; // 0 - unset, 1 - left, 2 - right
+    bool mTouchActive = false;
+    std::vector<std::string> mValues;
+    int mValueIndex;
+
+    StringSelector(int32_t x, int32_t y) {
+        mX = x;
+        mY = y;
+        selectedString = new pText("default", FONT_CONSOLE, mX+18, mY+8);
+        selectedString->Z = -0.6f;
+        arrowLeft = new pSprite(TX_BUTTON_SETTINGS_ARROW, mX+232+4, mY, 47, 32, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.5);
+        arrowRight = new pSprite(TX_BUTTON_SETTINGS_ARROW, mX+232+47, mY, 47, 32, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.5);
+        arrowRight->Rotate(180);
+
+        mSprites.push_back(selectedString);
+        mSprites.push_back(arrowLeft);
+        mSprites.push_back(arrowRight);
+    }
+
+    void Init(int valueIndex, const std::vector<std::string>& values) {
+        mValues = values;
+        mValueIndex = valueIndex;
+
+        mValue = mValues.at(mValueIndex);
+        selectedString->Text = mValue;
+    }
+
+    bool InBounds(int32_t x, int32_t y) {
+        SDL_Rect left_arr = arrowLeft->GetRect();
+        SDL_Rect right_arr = arrowRight->GetRect();
+        SDL_Point p = {x,y};
+
+        if (SDL_PointInRect(&p, &left_arr)) {
+            clickedArrowId = 1;
+            return true;
+        }
+
+        if (SDL_PointInRect(&p, &right_arr)) {
+            clickedArrowId = 2;
+            return true;
+        }
+
+        clickedArrowId = 0;
+        return false;
+    }
+
+    void OnTouchDown(const touchPosition& touch) {
+        mTouchActive = true;
+    }
+
+    bool OnTouch(const touchPosition& touch) {
+        if (!mTouchActive) {
+            return false;
+        }
+        if (clickedArrowId == 1) {
+            arrowLeft->Texture = TX_BUTTON_SETTINGS_ARROW_ACTIVE;
+        } else if (clickedArrowId == 2) {
+            arrowRight->Texture = TX_BUTTON_SETTINGS_ARROW_ACTIVE;
+        }
+        return true;
+    }
+
+    bool OnTouchUp(const touchPosition& touch) {
+        if (!mTouchActive) {
+            return false;
+        }
+
+        arrowLeft->Texture = TX_BUTTON_SETTINGS_ARROW;
+        arrowRight->Texture = TX_BUTTON_SETTINGS_ARROW;
+
+        if (clickedArrowId == 1) {
+            mValueIndex = ((mValueIndex - 1) < 0) ? (mValues.size() - 1) : mValueIndex - 1;
+        } else if (clickedArrowId == 2) {
+            mValueIndex = ((mValueIndex + 1) >= mValues.size()) ? 0 : mValueIndex + 1;
+        }
+
+        mValue = mValues.at(mValueIndex);
+        selectedString->Text = mValue;
+
+        value_callback(mValue);
+
+        clickedArrowId = 0;
+        mTouchActive = false;
+        return true;
+    }
+};
+
 class ValueSlider : public SpriteContainer {
 public:
     int32_t mX;
@@ -43,20 +140,24 @@ public:
     void OnTouchDown(const touchPosition& touch) {
         mTouchActive = true;
     }
-    void OnTouch(const touchPosition& touch) {
+    bool OnTouch(const touchPosition& touch) {
         if (!mTouchActive) {
-            return;
+            return false;
         }
         mSliderPosition = (touch.px < mX) ? mX : ((touch.px > mX + mWidth) ? mX+mWidth : touch.px);
         mSprites[0]->Move(mSliderPosition, mY);
+        mSprites[0]->Texture = TX_BUTTON_SLIDER_CIRCLE_ACTIVE;
         value_change_callback(((float)mSliderPosition - (float)mX) / (float)mWidth * 100.f);
+        return true;
     }
-    void OnTouchUp(const touchPosition& touch) {
+    bool OnTouchUp(const touchPosition& touch) {
         if (!mTouchActive) {
-            return;
+            return false;
         }
+        mSprites[0]->Texture = TX_BUTTON_SLIDER_CIRCLE;
         value_callback(((float)mSliderPosition - (float)mX) / (float)mWidth * 100.f);
         mTouchActive = false;
+        return true;
     }
 
 private:
@@ -76,25 +177,14 @@ public:
     void Clear();
     void InitCommonSprites();
 
-    pDrawable* mHitSoundsVolumeText;
-    pDrawable* mMusicVolumeText;
-    pDrawable* mMenuMusicVolumeText;
-    pDrawable* mUISoundsVolumeText;
-    pDrawable* mCurrentSkinText;
-    pDrawable* mBGDimLevelText;
-
-    ValueSlider* mHitSoundsVolumeSlider;
-    ValueSlider* mMusicVolumeSlider;
-    ValueSlider* mMenuMusicVolumeSlider;
-    ValueSlider* mUISoundsVolumeSlider;
-    ValueSlider* mBGDimLevelSlider;
-
 protected:
     std::vector<ValueSlider*> valueSliders;
-    void HandleInput();
+    std::vector<StringSelector*> stringSelectors;
+    void HandleInput() override;
     SpriteManager mSpriteManager;
 
     void CreateValueSlider(int32_t x, int32_t y, const std::string& setting_name);
+    void CreateStringSelector(int32_t x, int32_t y, const std::string& setting_name);
 };
 
 #endif //_MODESETTINGS_H

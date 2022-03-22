@@ -3,6 +3,7 @@
 
 #include <fstream>
 #include <limits>
+#include <dirent.h>
 
 #include "defines.h"
 #include "types.h"
@@ -77,6 +78,37 @@ class Settings
 
                 controls.insert({c, ctrls});
             }
+        }
+
+        static int get_available_skins(std::vector<std::string>& vec) {
+            std::string current_skin = get_str("skin");
+            int ret = 0;
+
+            char path[PATH_MAX];
+            snprintf(path, PATH_MAX, "%s%s", DEF_DataDirectory, DEF_SkinsSubdirectory);
+
+            DIR *dir = opendir(path);
+
+            struct dirent *entry = readdir(dir);
+
+            int i = 0;
+            while (entry != nullptr) {
+                if (entry->d_type == DT_DIR) {
+                    std::string dir_name = entry->d_name;
+                    if (dir_name != "." && dir_name != "..") {
+                        vec.emplace_back(dir_name);
+                        if (dir_name == current_skin) {
+                            ret = i;
+                        }
+                        i++;
+                    }
+                }
+
+                entry = readdir(dir);
+            }
+
+            closedir(dir);
+            return ret;
         }
 
         static void set_str(const std::string& key, const std::string& value) { settings[key] = value; }

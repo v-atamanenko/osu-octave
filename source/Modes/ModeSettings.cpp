@@ -21,7 +21,7 @@ ModeSettings::ModeSettings() {
 
 void ModeSettings::InitCommonSprites() {
     pDrawable* spr;
-    spr = new pSprite(TX_SONGSELECT_BG, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255);
+    spr = new pSprite(TX_SONGSELECT_BG, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, 0);
     mSpriteManager.Add(spr);
 
     spr = new pSprite(TX_BUTTON_BIG, 37, 281, 277, 55, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
@@ -60,6 +60,30 @@ void ValueSlider_saveDisplayedValue (float val, const std::string& setting_name)
     Settings::set_float(setting_name, val);
 }
 
+void StringSelector_saveDisplayedValue (const std::string& val, const std::string& setting_name) {
+    Settings::set_str(setting_name, val);
+}
+
+void ModeSettings::CreateStringSelector(int32_t x, int32_t y, const std::string& setting_name) {
+    int current_value_index;
+
+    std::vector<std::string> available_values;
+    if (setting_name == "skin") {
+        current_value_index = Settings::get_available_skins(available_values);
+    } else {
+        assert(false); // StringSelectors are only used for skin selection for now.
+    }
+
+    auto* ss = new StringSelector(x, y);
+    ss->Init(current_value_index, available_values);
+
+    std::function<void(const std::string& s)> saveval_lambda = [setting_name](const std::string& s) { return StringSelector_saveDisplayedValue(s, setting_name); };
+    ss->value_callback = saveval_lambda;
+
+    stringSelectors.push_back(ss);
+    ss->AddToSpriteManager(mSpriteManager);
+}
+
 void ModeSettings::CreateValueSlider(int32_t x, int32_t y, const std::string& setting_name) {
     float lastValue = Settings::get_float(setting_name);
     auto* vs = new ValueSlider(x, y);
@@ -90,6 +114,7 @@ void ModeSettings::TabGeneral() {
     CreateValueSlider(562, 214, "volume_music");
     CreateValueSlider(562, 258, "volume_menumusic");
     CreateValueSlider(562, 302, "volume_uisounds");
+    CreateStringSelector(562, 393, "skin");
     CreateValueSlider(562, 452, "bgdim");
 }
 
@@ -112,12 +137,35 @@ void ModeSettings::HandleInput() {
         if (InputHelper::KeyDown(Control::IH_CONTROL_ACTION) && v->InBounds(touch.px, touch.py) && ! InputHelper::BlockKeydown) {
             v->OnTouchDown(touch);
             InputHelper::BlockKeydown = true;
+            return;
         }
-        if (InputHelper::KeyHeld(Control::IH_CONTROL_ACTION))
-            v->OnTouch(touch);
+        if (InputHelper::KeyHeld(Control::IH_CONTROL_ACTION)) {
+            if (v->OnTouch(touch))
+                return;
+        }
 
-        if (InputHelper::KeyUp(Control::IH_CONTROL_ACTION))
-            v->OnTouchUp(touch);
+        if (InputHelper::KeyUp(Control::IH_CONTROL_ACTION)) {
+            if (v->OnTouchUp(touch))
+                return;
+        }
+    }
+
+    for(auto v : stringSelectors) {
+        if (InputHelper::KeyDown(Control::IH_CONTROL_ACTION) && v->InBounds(touch.px, touch.py) && ! InputHelper::BlockKeydown) {
+            v->OnTouchDown(touch);
+            InputHelper::BlockKeydown = true;
+            return;
+        }
+
+        if (InputHelper::KeyHeld(Control::IH_CONTROL_ACTION)) {
+            if (v->OnTouch(touch))
+                return;
+        }
+
+        if (InputHelper::KeyUp(Control::IH_CONTROL_ACTION)) {
+            if (v->OnTouchUp(touch))
+                return;
+        }
     }
 }
 
@@ -126,5 +174,11 @@ ModeSettings::~ModeSettings() {
         delete v;
     }
     valueSliders.clear();
+
+    for(auto v : stringSelectors) {
+        delete v;
+    }
+    stringSelectors.clear();
+
     Settings::save();
 }
