@@ -11,7 +11,6 @@ class StringSelector : public SpriteContainer {
 public:
     int32_t mX;
     int32_t mY;
-    std::function<void(float)> value_change_callback;
     std::function<void(const std::string&)> value_callback;
     pText* selectedString;
     pSprite* arrowLeft;
@@ -104,6 +103,87 @@ public:
     }
 };
 
+class RadioButton : public SpriteContainer {
+public:
+    int32_t mX;
+    int32_t mY;
+    const int32_t mWidth = 258;
+    const int32_t mHeight = 32;
+
+    std::function<void(bool)> value_callback;
+
+    pText* falseValueLabel;
+    pText* trueValueLabel;
+
+    pSprite* bg;
+
+    bool mValue;
+    bool mTouchActive = false;
+
+    RadioButton(int32_t x, int32_t y, const std::string& false_value_label, const std::string& true_value_label, bool value) {
+        mX = x;
+        mY = y;
+        mValue = value;
+
+        bg = new pSprite(TX_BUTTON_RADIO, mX, mY, mWidth, mHeight, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.5f);
+        falseValueLabel = new pText(false_value_label, FONT_PIXEL, mX+67, mY+16);
+        falseValueLabel->Z = -0.6f;
+        falseValueLabel->Origin = ORIGIN_CENTER;
+        trueValueLabel = new pText(true_value_label, FONT_PIXEL, mX+192, mY+16);
+        trueValueLabel->Z = -0.6f;
+        trueValueLabel->Origin = ORIGIN_CENTER;
+
+        if (mValue) {
+            bg->Angle = 180;
+            trueValueLabel->Font = FONT_PIXEL_ACTIVE;
+        } else {
+            falseValueLabel->Font = FONT_PIXEL_ACTIVE;
+        }
+
+        mSprites.push_back(falseValueLabel);
+        mSprites.push_back(trueValueLabel);
+        mSprites.push_back(bg);
+    }
+
+    bool InBounds(int32_t x, int32_t y) {
+        SDL_Rect r = SDL_Rect({mX, mY, mWidth, mHeight});
+        SDL_Point p = {x,y};
+
+        if (SDL_PointInRect(&p, &r)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    void OnTouchDown(const touchPosition& touch) {
+        mTouchActive = true;
+    }
+
+    bool OnTouchUp(const touchPosition& touch) {
+        if (!mTouchActive) {
+            return false;
+        }
+
+        mValue = !mValue;
+
+        if (mValue) {
+            bg->Angle = 180;
+            falseValueLabel->Font = FONT_PIXEL;
+            trueValueLabel->Font = FONT_PIXEL_ACTIVE;
+        } else {
+            bg->Angle = 0;
+            falseValueLabel->Font = FONT_PIXEL_ACTIVE;
+            trueValueLabel->Font = FONT_PIXEL;
+        }
+
+        value_callback(mValue);
+
+        mTouchActive = false;
+        return true;
+    }
+};
+
 class ValueSlider : public SpriteContainer {
 public:
     int32_t mX;
@@ -170,21 +250,38 @@ private:
 class ModeSettings : public Mode {
 public:
     ModeSettings();
+
     ~ModeSettings();
+
     void TabGeneral();
+
     void TabGameplay();
+
     void Update();
+
     void Clear();
+
     void InitCommonSprites();
 
+    // 0 — Unset; 1 — TabGeneral; 2 — TabGameplay
+    static uint8_t SwitchTabTo;
+
 protected:
-    std::vector<ValueSlider*> valueSliders;
-    std::vector<StringSelector*> stringSelectors;
+    std::vector<ValueSlider *> valueSliders;
+    std::vector<StringSelector *> stringSelectors;
+    std::vector<RadioButton *> radioButtons;
+
     void HandleInput() override;
+
     SpriteManager mSpriteManager;
 
-    void CreateValueSlider(int32_t x, int32_t y, const std::string& setting_name);
-    void CreateStringSelector(int32_t x, int32_t y, const std::string& setting_name);
+
+    void CreateValueSlider(int32_t x, int32_t y, const std::string &setting_name);
+
+    void CreateStringSelector(int32_t x, int32_t y, const std::string &setting_name);
+
+    void CreateRadioButton(int32_t x, int32_t y, const std::string &setting_name,
+                           const std::string &false_value_label, const std::string &true_value_label);
 };
 
 #endif //_MODESETTINGS_H

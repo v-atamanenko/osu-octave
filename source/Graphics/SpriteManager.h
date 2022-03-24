@@ -24,6 +24,8 @@ class SpriteManager
 		void Add(const std::vector<pDrawable*>& spr);
         void Remove(int32_t id);
         void RemoveLast();
+
+        void Clear();
 		
 		std::vector<pDrawable*>& Sprites() { return mSprites; }
 	

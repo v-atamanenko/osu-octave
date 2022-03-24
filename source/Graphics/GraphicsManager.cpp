@@ -244,7 +244,7 @@ void GraphicsManager::LoadTexturesForMode(ModeType mod) {
             LoadTexture(TX_GAMEOVER_BG, skin_path+"ui/gameover-bg.png");
             LoadTexture(TX_PAUSE_BG, skin_path+"ui/pause-bg.png");
 
-            CreateRectangularTexture(TX_PLAY_DARKEN_OVERLAY, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_Color({0, 0, 0, 150}));
+            CreateRectangularTexture(TX_PLAY_DARKEN_OVERLAY, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_Color({0, 0, 0, floor(Settings::get_float("bgdim") / 100 * 255)}));
             break;
         case MODE_SONGSELECT:
             LoadTexture(TX_SONGSELECT_BG, skin_path+"ui/song-selector.png");
@@ -284,6 +284,7 @@ void GraphicsManager::LoadTexturesForMode(ModeType mod) {
             LoadTexture(TX_BUTTON_SLIDER_CIRCLE_ACTIVE, skin_path+"ui/slider-circle-active.png");
             LoadTexture(TX_SETTINGS_PANEL_GAMEPLAY, skin_path+"ui/settings-panel-gameplay.png");
             LoadTexture(TX_SETTINGS_PANEL_GENERAL, skin_path+"ui/settings-panel-general.png");
+            LoadTexture(TX_BUTTON_RADIO, skin_path+"ui/radio-button.png");
             break;
     }
 }

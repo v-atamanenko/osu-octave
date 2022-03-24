@@ -10,10 +10,6 @@ class DarkenOverlay : public SpriteContainer
     public:
         DarkenOverlay();
         void Initialize();
-
-    protected:
-        float mHpCurrent;
-        int32_t mFillTime;
 };
 
 #endif //_DARKENOVERLAY_H

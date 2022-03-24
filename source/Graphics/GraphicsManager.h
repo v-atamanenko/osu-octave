@@ -69,7 +69,7 @@ class GraphicsManager
 
     bool LoadTexture(TextureType texid, const std::string& path);
 
-protected:
+    protected:
         std::map<TextureType, SDL_Surface*> mapsurfaces;
 		std::map<TextureType, SDL_Texture*> maptextures;
         std::shared_mutex mut_maptextures;

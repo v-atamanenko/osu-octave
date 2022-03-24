@@ -79,7 +79,16 @@ void SpriteManager::Remove(int32_t id) {
 }
 
 void SpriteManager::RemoveLast() {
+    delete mSprites.back();
     mSprites.pop_back();
+}
+
+void SpriteManager::Clear() {
+    for (auto spr : mSprites) {
+        delete spr;
+    }
+
+    mSprites.clear();
 }
 
 void SpriteManager::HandleTouchInput() {
