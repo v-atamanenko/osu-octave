@@ -31,6 +31,7 @@ public:
 protected:
     SpriteManager mSpriteManager;
     pSprite* mBG;
+    pSprite* mLogo;
     pText* mStatus;
     LoadingStage mStage = STAGE_LOAD_SETTINGS;
 };

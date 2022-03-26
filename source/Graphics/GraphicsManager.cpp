@@ -247,7 +247,8 @@ void GraphicsManager::LoadTexturesForMode(ModeType mod) {
             CreateRectangularTexture(TX_PLAY_DARKEN_OVERLAY, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_Color({0, 0, 0, floor(Settings::get_float("bgdim") / 100 * 255)}));
             break;
         case MODE_SONGSELECT:
-            LoadTexture(TX_SONGSELECT_BG, skin_path+"ui/song-selector.png");
+            LoadTexture(TX_LOGO, skin_path + "ui/logo.png");
+            LoadTexture(TX_MENU_BG, skin_path + "ui/menu-bg.png");
             LoadTexture(TX_BUTTON_BIG, skin_path+"ui/button-big.png");
             LoadTexture(TX_BUTTON_MED, skin_path+"ui/button-med.png");
             LoadTexture(TX_BUTTON_SM, skin_path+"ui/button-sm.png");
@@ -272,10 +273,12 @@ void GraphicsManager::LoadTexturesForMode(ModeType mod) {
             CreateRectangularTexture(TX_SONGLESECT_LOADING_BG, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_Color({255, 255, 255, 229}));
             break;
         case MODE_WELCOME:
+            LoadTexture(TX_LOGO, skin_path + "ui/logo.png");
             LoadTexture(TX_WELCOME_BG, skin_path+"ui/welcome.png");
             break;
         case MODE_SETTINGS:
-            LoadTexture(TX_SONGSELECT_BG, skin_path+"ui/song-selector.png");
+            LoadTexture(TX_LOGO, skin_path + "ui/logo.png");
+            LoadTexture(TX_MENU_BG, skin_path + "ui/menu-bg.png");
             LoadTexture(TX_BUTTON_BIG, skin_path+"ui/button-big.png");
             LoadTexture(TX_BUTTON_BIG_ACTIVE, skin_path+"ui/button-big-active.png");
             LoadTexture(TX_BUTTON_SETTINGS_ARROW, skin_path+"ui/button-settings-arrow.png");
@@ -285,6 +288,13 @@ void GraphicsManager::LoadTexturesForMode(ModeType mod) {
             LoadTexture(TX_SETTINGS_PANEL_GAMEPLAY, skin_path+"ui/settings-panel-gameplay.png");
             LoadTexture(TX_SETTINGS_PANEL_GENERAL, skin_path+"ui/settings-panel-general.png");
             LoadTexture(TX_BUTTON_RADIO, skin_path+"ui/radio-button.png");
+            break;
+        case MODE_ABOUT:
+            LoadTexture(TX_LOGO, skin_path + "ui/logo.png");
+            LoadTexture(TX_MENU_BG, skin_path + "ui/menu-bg.png");
+            LoadTexture(TX_BUTTON_BIG, skin_path+"ui/button-big.png");
+            LoadTexture(TX_BUTTON_BIG_ACTIVE, skin_path+"ui/button-big-active.png");
+            LoadTexture(TX_ABOUT, skin_path+"ui/about.png");
             break;
     }
 }

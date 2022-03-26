@@ -33,7 +33,7 @@ void ModeSettings::InitCommonSprites() {
     Clear();
 
     pDrawable* spr;
-    spr = new pSprite(TX_SONGSELECT_BG, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, 0);
+    spr = new pSprite(TX_MENU_BG, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, 0);
     mSpriteManager.Add(spr);
 
     spr = new pSprite(TX_BUTTON_BIG, 37, 281, 277, 55, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
@@ -117,6 +117,7 @@ void ModeSettings::CreateValueSlider(int32_t x, int32_t y, const std::string& se
     vs->Init(lastValue);
     auto* spr = new pText(std::to_string((int)(round(lastValue))),
                           FONT_PIXEL, x+281, y, SDL_Color());
+    spr->Z = -1.f;
     spr->Origin = ORIGIN_CENTER;
     mSpriteManager.Add(spr);
 
@@ -134,7 +135,7 @@ void ModeSettings::TabGeneral() {
     InitCommonSprites();
 
     pDrawable* spr;
-    spr = new pSprite(TX_SETTINGS_PANEL_GENERAL, 400, 46, 512, 453, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255);
+    spr = new pSprite(TX_SETTINGS_PANEL_GENERAL, 400, 46, 512, 453, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.1f);
     mSpriteManager.Add(spr);
 
     spr = new pSprite(TX_BUTTON_BIG, 558, 42, 158, 44, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 0);
@@ -154,7 +155,7 @@ void ModeSettings::TabGameplay() {
     InitCommonSprites();
 
     pDrawable* spr;
-    spr = new pSprite(TX_SETTINGS_PANEL_GAMEPLAY, 400, 46, 512, 453, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255);
+    spr = new pSprite(TX_SETTINGS_PANEL_GAMEPLAY, 400, 46, 512, 453, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.1f);
     mSpriteManager.Add(spr);
 
     spr = new pSprite(TX_BUTTON_BIG, 393, 42, 158, 44, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 0);

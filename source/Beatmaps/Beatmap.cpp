@@ -250,10 +250,24 @@ void Beatmap::Buffer(std::list<HitObject*>& hitObjectList)
                 printf("x: %f, y: %f;\n", screenPoints.at(screenPoints.size()-1).x, screenPoints.at(screenPoints.size()-1).y);
                 */
 
-                for (auto & screenPoint : screenPoints) {
+                int32_t lastAngle = 0;
+                for (int i = 0; i < screenPoints.size(); i++) {
                     auto* tPoint = new HitObjectPoint();
-                    tPoint->x = (int32_t)round(screenPoint.x);
-                    tPoint->y = (int32_t)round(screenPoint.y);
+                    tPoint->x = (int32_t)round(screenPoints[i].x);
+                    tPoint->y = (int32_t)round(screenPoints[i].y);
+
+                    if (i > 0) {
+                        int new_angle = floor(atan((screenPoints[i].y - screenPoints[i-1].y) / (screenPoints[i].x - screenPoints[i-1].x)));
+                        if (lastAngle + new_angle > 180) lastAngle = 0;
+                        tPoint->angle = lastAngle + new_angle;
+                        lastAngle = tPoint->angle;
+                    } else {
+                        int new_angle = floor(atan((screenPoints[i].y - y) / (screenPoints[i].x - x)));
+                        if (lastAngle + new_angle > 180) lastAngle = 0;
+                        tPoint->angle = lastAngle + new_angle;
+                        lastAngle = tPoint->angle;
+                    }
+
                     points.push_back(tPoint);
                 }
 

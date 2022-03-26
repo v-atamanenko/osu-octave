@@ -586,7 +586,7 @@ void HitSlider::MapSliderPath(pSprite* spr, std::vector<HitObjectPoint*>& points
 			for (uint32_t i=0; i<points.size()-1; ++i)
 			{
 				spr->Move(time+(loops*lengthtime)+(timeperpoint*i), time+(loops*lengthtime)+(timeperpoint*(i+1)), points[points.size()-i-1]->x, points[points.size()-i-1]->y, points[points.size()-i-2]->x, points[points.size()-i-2]->y);
-				spr->Rotate(time+(loops*lengthtime)+(timeperpoint*i), time+(loops*lengthtime)+(timeperpoint*(i+1)), points[points.size()-i-1]->angle+0x400, points[points.size()-i-2]->angle+0x400);
+				spr->Rotate(time+(loops*lengthtime)+(timeperpoint*i), time+(loops*lengthtime)+(timeperpoint*(i+1)), points[points.size()-i-1]->angle+180, points[points.size()-i-2]->angle+180);
 			}
 			++loops;
 		}

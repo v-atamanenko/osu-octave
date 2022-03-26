@@ -11,6 +11,16 @@
 #include "Helpers/JSON.hpp"
 using json = nlohmann::json;
 
+inline bool is_dir(char* p) {
+    DIR* filetest = opendir(p);
+    if (filetest == nullptr) {
+        return false;
+    } else {
+        closedir(filetest);
+        return true;
+    }
+}
+
 class Settings
 {
     public:
@@ -93,7 +103,9 @@ class Settings
 
             int i = 0;
             while (entry != nullptr) {
-                if (entry->d_type == DT_DIR) {
+                char entry_path[PATH_MAX];
+                snprintf(entry_path, PATH_MAX, "%s%s", path, entry->d_name);
+                if (is_dir(entry_path)) {
                     std::string dir_name = entry->d_name;
                     if (dir_name != "." && dir_name != "..") {
                         vec.emplace_back(dir_name);
