@@ -6,6 +6,7 @@
 #include "Graphics/SpriteManager.h"
 #include "System/TextManager.h"
 #include "Graphics/pText.h"
+#include "UIElements/Logo.h"
 
 #ifndef __WELCOME_H__
 #define __WELCOME_H__
@@ -23,6 +24,7 @@ class Welcome : public Mode
 {
 public:
     Welcome();
+    ~Welcome() override { delete mLogo; };
 
     void Update();
     void HandleInput();
@@ -31,7 +33,7 @@ public:
 protected:
     SpriteManager mSpriteManager;
     pSprite* mBG;
-    pSprite* mLogo;
+    Logo* mLogo;
     pText* mStatus;
     LoadingStage mStage = STAGE_LOAD_SETTINGS;
 };

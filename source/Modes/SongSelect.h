@@ -9,6 +9,7 @@
 #include "DataStorage/Settings.h"
 #include "DataStorage/Scores.h"
 #include "Graphics/pText.h"
+#include "UIElements/Logo.h"
 
 #ifndef __SONGSELECT_H__
 #define __SONGSELECT_H__
@@ -17,6 +18,9 @@ class SongSelect : public Mode
 {
 	public:
 		SongSelect();
+        ~SongSelect() override {
+            delete mLogo;
+        }
 
 		void Update();
 		void HandleInput();
@@ -79,7 +83,7 @@ class SongSelect : public Mode
         void UpdateSonglist();
         void reloadPreviews() const;
 
-        pSprite* mLogo;
+        Logo* mLogo;
 
 		static SpriteManager* mSpriteManager;
 

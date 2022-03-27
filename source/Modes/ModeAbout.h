@@ -6,15 +6,17 @@
 #include "Graphics/SpriteManager.h"
 #include "System/TextManager.h"
 #include "Graphics/SpriteContainer.h"
+#include "UIElements/Logo.h"
 
 class ModeAbout : public Mode {
 public:
     ModeAbout();
+    ~ModeAbout() override { delete mLogo; };
     void Update() override;
 
 protected:
     void HandleInput() override {};
-    pSprite* mLogo;
+    Logo* mLogo;
     SpriteManager mSpriteManager;
 };
 

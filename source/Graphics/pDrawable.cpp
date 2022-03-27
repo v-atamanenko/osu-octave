@@ -178,3 +178,11 @@ void pDrawable::Hide(long starttime, long endtime)
 	Transform(TR_FADE, starttime, endtime, 255, 0);
 }
 
+void pDrawable::Heartbeat(long starttime, long length, float min_scale, float max_scale)
+{
+    Scale(starttime, starttime+(length/5), min_scale, max_scale);
+    Scale(starttime+(length/5), starttime+(length/2.5), max_scale, min_scale);
+    Scale(starttime+(length/2.5), starttime+(length/1.667), min_scale, max_scale);
+    Scale(starttime+(length/1.667), starttime+(length/1.25), max_scale, min_scale);
+    Scale(starttime+(length/1.25), starttime+length, min_scale, min_scale);
+}

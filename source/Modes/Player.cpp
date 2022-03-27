@@ -22,7 +22,6 @@ Player::~Player()
     //GraphicsManager::Graphics().UnloadTextures();
     //AudioManager::Engine().MusicStop();
     mRuleset.StopMusic();
-    AudioManager::Engine().PlayBGM();
 }
 
 void Player::Update()
@@ -70,7 +69,8 @@ void Player::Update()
 
 void Player::HandleInput()
 {
-    mRuleset.HandleInput();
+    if (mPlayState == PLAYSTATE_PLAY)
+        mRuleset.HandleInput();
 
     //handle play mode input
     if (InputHelper::KeyDown(Control::IH_CONTROL_SKIP))

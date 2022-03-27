@@ -102,6 +102,8 @@ void OnBtnSortUZClick(pDrawable* self, uint16_t x, uint16_t y) {
 SongSelect::SongSelect() {
     InputHelper::vitaUseBackTouch = false; // VITA: Disable back touch for menu.
 
+    AudioManager::Engine().PlayBGM();
+
     GraphicsManager::Graphics().LoadTexturesForMode(MODE_SONGSELECT);
     PreviewBuffer::GetInstance().Update(-1, 0, mEntriesPerPage);
 
@@ -111,8 +113,8 @@ SongSelect::SongSelect() {
     auto* bg = new pSprite(TX_MENU_BG, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255);
     mSpriteManager->Add(bg);
 
-    mLogo = new pSprite(TX_LOGO, 176, 145, 224, 123, ORIGIN_CENTER, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
-    mSpriteManager->Add(mLogo);
+    mLogo = new Logo(176, 145);
+    mLogo->AddToSpriteManager(mSpriteManager);
 
     auto* btn_about = new pSprite(TX_BUTTON_BIG, 37, 281, 277, 55, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
     btn_about->OnClick = OnBtnAboutClick;
@@ -582,6 +584,7 @@ void SongSelect::Update()
 
     reloadPreviews();
     mSpriteManager->Draw();
+    mLogo->Update();
 
     if (shouldExpandRandomEntry) {
         int countEntriesOnPage = (mCurrentPage < (mCountPages-1)) ? mEntriesPerPage : (mSongListSize - (mEntriesPerPage * (mCountPages - 1)));

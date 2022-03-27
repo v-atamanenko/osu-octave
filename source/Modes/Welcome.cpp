@@ -13,13 +13,13 @@ Welcome::Welcome() {
     GraphicsManager::Graphics().LoadTexturesForMode(MODE_WELCOME);
 
     mBG = new pSprite(TX_WELCOME_BG, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255);
-    mLogo = new pSprite(TX_LOGO, 368, 210, 224, 123, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
+    mLogo = new Logo(480, 272, false);
 
     mStatus = new pText("loading settings...", FONT_PIXEL, 480, 422, SDL_Color());
     mStatus->Origin = ORIGIN_CENTER;
 
     mSpriteManager.Add(mBG);
-    mSpriteManager.Add(mLogo);
+    mLogo->AddToSpriteManager(mSpriteManager);
     mSpriteManager.Add(mStatus);
 }
 
@@ -33,6 +33,7 @@ void Welcome::Redraw() {
 
 void Welcome::Update() {
     mSpriteManager.Draw();
+    mLogo->Update();
 
     if (mStage == STAGE_LOAD_SETTINGS) {
         Welcome::Redraw();
@@ -95,5 +96,6 @@ void Welcome::Update() {
         mStage = STAGE_DONE;
 
         AudioManager::PlayWelcome();
+        mLogo->StartAnimation(1220+2142); // magic numbers are the lengths of two sound effects before bgm starts
     }
 }

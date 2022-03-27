@@ -129,6 +129,8 @@ class AudioManager
 		SampleSet mSampleSoft;
 		SampleSet* mSampleSets[3];
         UISounds mUISounds;
+
+        bool mBGMStarted = false;
 		
 		//music
 		static const uint32_t SIZE = 11025; //size of each HALF of the buffer

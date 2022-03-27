@@ -200,8 +200,11 @@ void AudioManager::PlaySliderTick()
 }
 
 void AudioManager::PlayBGM() {
+    if (mBGMStarted) return;
+
     std::string music_path = std::string(DEF_DataDirectory) + std::string(DEF_SkinsSubdirectory) + Settings::get_str("skin") + "/ui-sounds/bgm.mp3";
     MusicLoad(music_path);
+    mBGMStarted = true;
     MusicPlay(Settings::get_float("volume_menumusic"));
 }
 
@@ -210,6 +213,8 @@ void AudioManager::UpdateMusicVolume(float volume) {
 }
 
 int AudioManager::MusicLoad(std::string& filename) {
+    mBGMStarted = false;
+
     if (music != nullptr) {
         MusicStop();
         Mix_FreeMusic(music);

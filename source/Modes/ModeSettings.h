@@ -7,6 +7,7 @@
 #include "System/TextManager.h"
 #include "Graphics/SpriteContainer.h"
 #include "Helpers/AudioManager.h"
+#include "UIElements/Logo.h"
 
 class StringSelector : public SpriteContainer {
 public:
@@ -283,7 +284,7 @@ protected:
 
     SpriteManager mSpriteManager;
 
-    pSprite* mLogo;
+    Logo* mLogo = nullptr;
 
 
     void CreateValueSlider(int32_t x, int32_t y, const std::string &setting_name);

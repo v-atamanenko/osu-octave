@@ -25,6 +25,7 @@ class pDrawable
 		
 		void Transform(TransformType type, long starttime, long endtime, int32_t startvalue, int32_t endvalue);
 		void Scale(long starttime, long endtime, float start, float end);
+        void Heartbeat(long starttime, long length, float min_scale, float max_scale);
 		void Move(long starttime, long endtime, int32_t startx, int32_t starty, int32_t endx, int32_t endy);
 		void Move(long starttime, long endtime, int32_t endx, int32_t endy);
 		void Move(int32_t x, int32_t y);

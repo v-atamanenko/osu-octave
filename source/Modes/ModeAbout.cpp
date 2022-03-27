@@ -23,8 +23,8 @@ ModeAbout::ModeAbout() {
     spr = new pSprite(TX_MENU_BG, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, 0);
     mSpriteManager.Add(spr);
 
-    mLogo = new pSprite(TX_LOGO, 176, 145, 224, 123, ORIGIN_CENTER, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
-    mSpriteManager.Add(mLogo);
+    mLogo = new Logo(176, 145);
+    mLogo->AddToSpriteManager(mSpriteManager);
 
     spr = new pSprite(TX_BUTTON_BIG_ACTIVE, 37, 281, 277, 55, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
     spr->OnClick = ModeAbout_OnBtnAboutClick;
@@ -59,4 +59,5 @@ ModeAbout::ModeAbout() {
 
 void ModeAbout::Update() {
     mSpriteManager.Draw();
+    mLogo->Update();
 }

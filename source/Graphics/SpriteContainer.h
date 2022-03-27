@@ -17,6 +17,7 @@ class SpriteContainer
 	public:
 		virtual ~SpriteContainer();
 		void AddToSpriteManager(SpriteManager& spriteManager);
+        void AddToSpriteManager(SpriteManager* spriteManager);
 	
 	protected:
 		std::vector<pDrawable*> mSprites;
