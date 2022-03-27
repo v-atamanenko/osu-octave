@@ -22,6 +22,7 @@ class SongSelect : public Mode
 		void HandleInput();
 
         static void PageNext() {
+            AudioManager::Engine().PlayUISound(UISOUND_CLICK_SHORT_CONFIRM);
             if (mCurrentPage < (mCountPages - 1)) {
                 PreviewBuffer::GetInstance().Update(mCurrentPage, (mCurrentPage+1), mEntriesPerPage);
                 mCurrentPage++;
@@ -30,6 +31,7 @@ class SongSelect : public Mode
             }
         };
         static void PagePrev() {
+            AudioManager::Engine().PlayUISound(UISOUND_CLICK_SHORT_CONFIRM);
             if (mCurrentPage > 0) {
                 PreviewBuffer::GetInstance().Update(mCurrentPage, (mCurrentPage-1), mEntriesPerPage);
                 mCurrentPage--;
@@ -38,6 +40,7 @@ class SongSelect : public Mode
             }
         };
         static void PageRand() {
+            AudioManager::Engine().PlayUISound(UISOUND_CLICK_SHORT_CONFIRM);
             if (mCountPages <= 1) {
                 shouldExpandRandomEntry = true;
                 return;
@@ -59,8 +62,10 @@ class SongSelect : public Mode
         static void ExpandEntry(int index) {
             shouldHandlePageUpdate = shouldHandleEntryExpand = true;
             if (mExpandEntryIndex == index) {
+                AudioManager::Engine().PlayUISound(UISOUND_CLICK_CLOSE);
                 mExpandEntryIndex = -1; // Second tap on expanded entry should close it.
             } else {
+                AudioManager::Engine().PlayUISound(UISOUND_MENUCLICK);
                 mExpandEntryIndex = index;
             }
         };
@@ -73,6 +78,8 @@ class SongSelect : public Mode
 	protected:
         void UpdateSonglist();
         void reloadPreviews() const;
+
+        pSprite* mLogo;
 
 		static SpriteManager* mSpriteManager;
 

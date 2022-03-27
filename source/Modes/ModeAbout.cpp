@@ -1,4 +1,5 @@
 #include "ModeAbout.h"
+#include "Helpers/AudioManager.h"
 
 void ModeAbout_OnBtnQuitClick(pDrawable* self, uint16_t x, uint16_t y) {
     SDL_Event sdlevent;
@@ -7,10 +8,12 @@ void ModeAbout_OnBtnQuitClick(pDrawable* self, uint16_t x, uint16_t y) {
 }
 
 void ModeAbout_OnBtnSettingsClick(pDrawable* self, uint16_t x, uint16_t y) {
+    AudioManager::Engine().PlayUISound(UISOUND_MENUCLICK);
     ChangeModeOnFrameEnd(MODE_SETTINGS);
 }
 
 void ModeAbout_OnBtnAboutClick(pDrawable* self, uint16_t x, uint16_t y) {
+    AudioManager::Engine().PlayUISound(UISOUND_CLICK_CLOSE);
     ChangeModeOnFrameEnd(MODE_SONGSELECT);
 }
 
@@ -19,6 +22,9 @@ ModeAbout::ModeAbout() {
     pDrawable* spr;
     spr = new pSprite(TX_MENU_BG, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, 0);
     mSpriteManager.Add(spr);
+
+    mLogo = new pSprite(TX_LOGO, 176, 145, 224, 123, ORIGIN_CENTER, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
+    mSpriteManager.Add(mLogo);
 
     spr = new pSprite(TX_BUTTON_BIG_ACTIVE, 37, 281, 277, 55, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
     spr->OnClick = ModeAbout_OnBtnAboutClick;

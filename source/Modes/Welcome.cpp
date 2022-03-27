@@ -13,7 +13,7 @@ Welcome::Welcome() {
     GraphicsManager::Graphics().LoadTexturesForMode(MODE_WELCOME);
 
     mBG = new pSprite(TX_WELCOME_BG, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255);
-    mLogo = new pSprite(TX_LOGO, 368, 210, 224, 123, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255);
+    mLogo = new pSprite(TX_LOGO, 368, 210, 224, 123, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
 
     mStatus = new pText("loading settings...", FONT_PIXEL, 480, 422, SDL_Color());
     mStatus->Origin = ORIGIN_CENTER;
@@ -39,9 +39,9 @@ void Welcome::Update() {
 
         Scores::load();
         InputHelper::InitInput();
+        AudioManager::Engine().Initialize();
 
         std::string music_path = std::string(DEF_DataDirectory) + std::string(DEF_SkinsSubdirectory) + Settings::get_str("skin") + "/sounds/bgm.mp3";
-        AudioManager::Engine().MusicLoad(music_path);
 
         mStatus->Text = "looking for changes in beatmaps...";
         mStage = STAGE_CHECK_INDEX;
@@ -93,6 +93,7 @@ void Welcome::Update() {
         mBG->Clickable = true;
         mStatus->Text = "- tap to start -";
         mStage = STAGE_DONE;
-        AudioManager::Engine().MusicPlay();
+
+        AudioManager::PlayWelcome();
     }
 }

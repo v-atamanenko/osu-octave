@@ -4,6 +4,7 @@
 RulesetOsu::RulesetOsu() {
 	HitObject::SetScoreCallback(this);
 	mSpecialScore = 2;
+    mSpecialScorePrev = 2;
 }
 
 void RulesetOsu::IncreaseScore(ScoreType score, bool forceNoCombo, bool forceNoAnimation, HitObjectPoint point, bool comboEnd) {
@@ -36,6 +37,9 @@ void RulesetOsu::IncreaseScore(ScoreType score, bool forceNoCombo, bool forceNoA
 			break;
 
 		case SCORE_50:
+            if (mSpecialScore >= 1) {
+                AudioManager::Engine().PlayUISound(UISOUND_COMBOBREAK);
+            }
 			mSpecialScore = 0;
 			tex = TX_PLAY_HIT50;
 			hpIncrease = Lifebar::HP_50;
@@ -64,6 +68,9 @@ void RulesetOsu::IncreaseScore(ScoreType score, bool forceNoCombo, bool forceNoA
 
         case SCORE_MISS:
         default:
+            if (mSpecialScore >= 1 && mSpecialScorePrev != 0) {
+                AudioManager::Engine().PlayUISound(UISOUND_COMBOBREAK);
+            }
             mSpecialScore = 0;
             tex = TX_PLAY_HIT0;
             hpIncrease = (float)DifficultyManager::GetMissHpDrain();
@@ -89,6 +96,8 @@ void RulesetOsu::IncreaseScore(ScoreType score, bool forceNoCombo, bool forceNoA
 
 		mSpriteManager.Add(spr);
 	}
+
+    mSpecialScorePrev = mSpecialScore;
 
     if (comboEnd) {
         // Reset geki/katu modifier on combo end.

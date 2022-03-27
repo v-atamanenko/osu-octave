@@ -6,6 +6,7 @@
 #include "Graphics/SpriteManager.h"
 #include "System/TextManager.h"
 #include "Graphics/SpriteContainer.h"
+#include "Helpers/AudioManager.h"
 
 class StringSelector : public SpriteContainer {
 public:
@@ -82,6 +83,8 @@ public:
         if (!mTouchActive) {
             return false;
         }
+
+        AudioManager::Engine().PlayUISound(UISOUND_CLICK_SHORT_CONFIRM);
 
         arrowLeft->Texture = TX_BUTTON_SETTINGS_ARROW;
         arrowRight->Texture = TX_BUTTON_SETTINGS_ARROW;
@@ -168,10 +171,12 @@ public:
         mValue = !mValue;
 
         if (mValue) {
+            AudioManager::Engine().PlayUISound(UISOUND_CHECK_ON);
             bg->Angle = 180;
             falseValueLabel->Font = FONT_PIXEL;
             trueValueLabel->Font = FONT_PIXEL_ACTIVE;
         } else {
+            AudioManager::Engine().PlayUISound(UISOUND_CHECK_OFF);
             bg->Angle = 0;
             falseValueLabel->Font = FONT_PIXEL_ACTIVE;
             trueValueLabel->Font = FONT_PIXEL;
@@ -234,6 +239,9 @@ public:
         if (!mTouchActive) {
             return false;
         }
+
+        AudioManager::Engine().PlayUISound(UISOUND_CLICK_SHORT_CONFIRM);
+
         mSprites[0]->Texture = TX_BUTTON_SLIDER_CIRCLE;
         value_callback(((float)mSliderPosition - (float)mX) / (float)mWidth * 100.f);
         mTouchActive = false;
@@ -274,6 +282,8 @@ protected:
     void HandleInput() override;
 
     SpriteManager mSpriteManager;
+
+    pSprite* mLogo;
 
 
     void CreateValueSlider(int32_t x, int32_t y, const std::string &setting_name);

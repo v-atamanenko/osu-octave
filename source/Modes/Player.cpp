@@ -22,6 +22,7 @@ Player::~Player()
     //GraphicsManager::Graphics().UnloadTextures();
     //AudioManager::Engine().MusicStop();
     mRuleset.StopMusic();
+    AudioManager::Engine().PlayBGM();
 }
 
 void Player::Update()

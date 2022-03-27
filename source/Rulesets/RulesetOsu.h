@@ -22,6 +22,7 @@ class RulesetOsu : public Ruleset, public ICallback
 	
 	protected:
 		int mSpecialScore;
+        int mSpecialScorePrev;
 };
 
 #endif

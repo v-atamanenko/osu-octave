@@ -1,4 +1,5 @@
 #include "ModeSettings.h"
+#include "Helpers/AudioManager.h"
 
 uint8_t ModeSettings::SwitchTabTo = 0;
 
@@ -9,18 +10,22 @@ void ModeSettings_OnBtnQuitClick(pDrawable* self, uint16_t x, uint16_t y) {
 }
 
 void ModeSettings_OnBtnSettingsClick(pDrawable* self, uint16_t x, uint16_t y) {
+    AudioManager::Engine().PlayUISound(UISOUND_CLICK_CLOSE);
     ChangeModeOnFrameEnd(MODE_SONGSELECT);
 }
 
 void ModeSettings_OnBtnAboutClick(pDrawable* self, uint16_t x, uint16_t y) {
+    AudioManager::Engine().PlayUISound(UISOUND_MENUCLICK);
     ChangeModeOnFrameEnd(MODE_ABOUT);
 }
 
 void ModeSettings_SwitchTabToGameplay(pDrawable* self, uint16_t x, uint16_t y) {
+    AudioManager::Engine().PlayUISound(UISOUND_MENUCLICK);
     ModeSettings::SwitchTabTo = 2;
 }
 
 void ModeSettings_SwitchTabToGeneral(pDrawable* self, uint16_t x, uint16_t y) {
+    AudioManager::Engine().PlayUISound(UISOUND_MENUCLICK);
     ModeSettings::SwitchTabTo = 1;
 }
 
@@ -35,6 +40,9 @@ void ModeSettings::InitCommonSprites() {
     pDrawable* spr;
     spr = new pSprite(TX_MENU_BG, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, 0);
     mSpriteManager.Add(spr);
+
+    mLogo = new pSprite(TX_LOGO, 176, 145, 224, 123, ORIGIN_CENTER, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
+    mSpriteManager.Add(mLogo);
 
     spr = new pSprite(TX_BUTTON_BIG, 37, 281, 277, 55, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
     spr->OnClick = ModeSettings_OnBtnAboutClick;
@@ -70,6 +78,9 @@ void ValueSlider_updateDisplayedValue (float val, pText* valLabel) {
 
 void ValueSlider_saveDisplayedValue (float val, const std::string& setting_name) {
     Settings::set_float(setting_name, val);
+    if (setting_name == "volume_menumusic") {
+        AudioManager::Engine().UpdateMusicVolume(val);
+    }
 }
 
 void StringSelector_saveDisplayedValue (const std::string& val, const std::string& setting_name) {

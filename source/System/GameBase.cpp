@@ -8,7 +8,15 @@ GameBase::GameBase() {
 }
 
 int GameBase::Update() {
-    if (InputHelper::PollSDL() == -1) return -1;
+    int wantExit = InputHelper::PollSDL();
+
+    if (wantExit == -1) {
+        AudioManager::Engine().MusicStop();
+        AudioManager::Engine().PlayUISound(UISOUND_SEEYA);
+        SDL_Delay(1300);
+        return -1;
+    }
+
 	Mode::CurrentMode().HandleInput();
 
     GraphicsManager::Clear();

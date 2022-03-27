@@ -55,6 +55,38 @@ typedef struct {
     SampleSetInfo spinnerbonus;
 } SampleSet;
 
+typedef struct {
+    SampleSetInfo applause;
+    SampleSetInfo check_off;
+    SampleSetInfo check_on;
+    SampleSetInfo click_close;
+    SampleSetInfo click_short_confirm;
+    SampleSetInfo combobreak;
+    SampleSetInfo failsound;
+    SampleSetInfo menuback;
+    SampleSetInfo menuclick;
+    SampleSetInfo menuhit;
+    SampleSetInfo seeya;
+    SampleSetInfo welcome;
+    SampleSetInfo welcome_piano;
+} UISounds;
+
+typedef enum UISoundName {
+    UISOUND_APPLAUSE,
+    UISOUND_CHECK_OFF,
+    UISOUND_CHECK_ON,
+    UISOUND_CLICK_CLOSE,
+    UISOUND_CLICK_SHORT_CONFIRM,
+    UISOUND_COMBOBREAK,
+    UISOUND_FAILSOUND,
+    UISOUND_MENUBACK,
+    UISOUND_MENUCLICK,
+    UISOUND_MENUHIT,
+    UISOUND_SEEYA,
+    UISOUND_WELCOME,
+    UISOUND_WELCOME_PIANO
+} UISoundName;
+
 //intended usage:
 //AudioManager::Engine().PlaySample(SOUND_DATA(sound_name), loop)
 
@@ -62,6 +94,8 @@ class AudioManager
 {
 	public:
 		static AudioManager& Engine() { return sEngine; }
+
+        void Initialize();
 		
 		int PlaySample(SampleSetInfo info, bool loop = false, int channel = -1);
         //FIXME: void SetChannelFreq(int channel, uint16_t freq);
@@ -73,12 +107,17 @@ class AudioManager
 		int PlaySliderSound(HitObjectSound sound);
 		void PlaySliderTick();
         int PlaySpinnerSound(HitObjectSound sound);
+        void PlayUISound(UISoundName n);
+        static void PlayWelcome();
 		
 		//music
         int MusicLoad(std::string& filename);
-		int MusicPlay();
+		int MusicPlay(float volume=100.f); // volume: 0-100.f
 		int MusicSkipTo(uint32_t milliseconds);
+        void UpdateMusicVolume(float volume);
 		void MusicStop();
+
+        void PlayBGM();
 
         void MusicPause() const;
         void MusicResume() const;
@@ -89,6 +128,7 @@ class AudioManager
 		SampleSet mSampleNormal;
 		SampleSet mSampleSoft;
 		SampleSet* mSampleSets[3];
+        UISounds mUISounds;
 		
 		//music
 		static const uint32_t SIZE = 11025; //size of each HALF of the buffer

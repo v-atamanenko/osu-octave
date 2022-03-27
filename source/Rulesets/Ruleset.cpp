@@ -80,10 +80,13 @@ void Ruleset::OnGameOver()
 
     TextureType rankingtex;
     if (strcmp(mCurrentScore.GetGrade(), "SS") == 0) {
+        AudioManager::Engine().PlayUISound(UISOUND_APPLAUSE);
         rankingtex = TX_RANKING_SS_LG;
     } else if (strcmp(mCurrentScore.GetGrade(), "S") == 0) {
+        AudioManager::Engine().PlayUISound(UISOUND_APPLAUSE);
         rankingtex = TX_RANKING_S_LG;
     } else if (strcmp(mCurrentScore.GetGrade(), "A") == 0) {
+        AudioManager::Engine().PlayUISound(UISOUND_APPLAUSE);
         rankingtex = TX_RANKING_A_LG;
     } else if (strcmp(mCurrentScore.GetGrade(), "B") == 0) {
         rankingtex = TX_RANKING_B_LG;
@@ -144,6 +147,8 @@ void Ruleset::OnGameOver()
 
 void Ruleset::OnFailed()
 {
+    AudioManager::Engine().PlayUISound(UISOUND_FAILSOUND);
+
     int now = GameClock::Clock().Time();
     std::vector<pDrawable *> scoreScreenSprites;
 
@@ -350,6 +355,6 @@ void Ruleset::StopMusic() {
 
 void Ruleset::StartMusic() {
     mMusicStarted = true;
-    AudioManager::Engine().MusicPlay();
+    AudioManager::Engine().MusicPlay(Settings::get_float("volume_music"));
     GameClock::Clock().Reset();
 }

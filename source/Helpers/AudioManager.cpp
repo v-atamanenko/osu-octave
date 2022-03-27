@@ -6,91 +6,97 @@
 AudioManager AudioManager::sEngine;
 Mix_Music *music;
 
-AudioManager::AudioManager()
-{
+AudioManager::AudioManager() {
 #ifdef VITA
-    Mix_OpenAudio(44100, AUDIO_S16SYS, 2, 1024);
+    Mix_OpenAudio(44100, AUDIO_S16SYS, 6, 1024);
 #else
-    Mix_OpenAudio(44100, AUDIO_S32SYS, 2, 1024);
+    Mix_OpenAudio(44100, AUDIO_S32SYS, 6, 1024);
 #endif
-    int n = Mix_AllocateChannels(6);
-    printf("Allocated %i channels for SDL_Mixer\n", n);
+}
 
-	//sound init
-	ResetSamples();
-	
-	mSampleSets[0] = nullptr; //"none" sample set >.>
-	mSampleSets[1] = &mSampleNormal;
-	mSampleSets[2] = &mSampleSoft;
-	
-	//music init
-	//mChannel = -1;
-	//mBuffer = (u8*)new uint32_t[SIZE*2/4+1]; //div4 because uint32_t = 4 * u8
-	//irqEnable(IRQ_TIMER0);
-	//irqSet(IRQ_TIMER0, MusicTimerHandler);
+inline void loadSample(SampleSetInfo* s, const std::string &file, int volume) {
+    s->filename = file;
+    s->chunk = Mix_LoadWAV(s->filename.c_str());
+    Mix_VolumeChunk(s->chunk, volume);
+}
+
+void AudioManager::Initialize() {
+    ResetSamples();
+
+    mSampleSets[0] = nullptr; //"none" sample set >.>
+    mSampleSets[1] = &mSampleNormal;
+    mSampleSets[2] = &mSampleSoft;
 }
 
 void AudioManager::ResetSamples()
 {
     std::string path = std::string(DEF_DataDirectory) + std::string(DEF_SkinsSubdirectory) + Settings::get_str("skin") + "/sounds/";
-    mSampleNormal.hitnormal.filename = path + "normal-hitnormal.wav";
-    mSampleNormal.hitnormal.chunk = Mix_LoadWAV(mSampleNormal.hitnormal.filename.c_str());
+    int volume = (int)round(Settings::get_float("volume_hitsounds") / 100 * 128);
 
-    mSampleNormal.hitwhistle.filename = path + "normal-hitwhistle.wav";
-    mSampleNormal.hitwhistle.chunk = Mix_LoadWAV(mSampleNormal.hitwhistle.filename.c_str());
+    loadSample(&mSampleNormal.hitnormal, path + "normal-hitnormal.wav", volume);
+    loadSample(&mSampleNormal.hitwhistle, path + "normal-hitwhistle.wav", volume);
+    loadSample(&mSampleNormal.hitfinish, path + "normal-hitfinish.wav", volume);
+    loadSample(&mSampleNormal.hitclap, path + "normal-hitclap.wav", volume);
+    loadSample(&mSampleNormal.slidertick, path + "normal-slidertick.wav", volume);
+    loadSample(&mSampleNormal.sliderslide, path + "normal-sliderslide.wav", volume);
+    loadSample(&mSampleNormal.sliderwhistle, path + "normal-sliderwhistle.wav", volume);
+    loadSample(&mSampleNormal.spinnerspin, path + "spinnerspin.wav", volume);
+    loadSample(&mSampleNormal.spinnerbonus, path + "spinnerbonus.wav", volume);
+    loadSample(&mSampleSoft.hitnormal, path + "soft-hitnormal.wav", volume);
+    loadSample(&mSampleSoft.hitwhistle, path + "soft-hitwhistle.wav", volume);
+    loadSample(&mSampleSoft.hitfinish, path + "soft-hitfinish.wav", volume);
+    loadSample(&mSampleSoft.hitclap, path + "soft-hitclap.wav", volume);
+    loadSample(&mSampleSoft.slidertick, path + "soft-slidertick.wav", volume);
+    loadSample(&mSampleSoft.sliderslide, path + "soft-sliderslide.wav", volume);
+    loadSample(&mSampleSoft.sliderwhistle, path + "soft-sliderwhistle.wav", volume);
+    loadSample(&mSampleSoft.spinnerspin, path + "spinnerspin.wav", volume);
+    loadSample(&mSampleSoft.spinnerbonus, path + "spinnerbonus.wav", volume);
 
-    mSampleNormal.hitfinish.filename = path + "normal-hitfinish.wav";
-    mSampleNormal.hitfinish.chunk = Mix_LoadWAV(mSampleNormal.hitfinish.filename.c_str());
+    std::string uipath = std::string(DEF_DataDirectory) + std::string(DEF_SkinsSubdirectory) + Settings::get_str("skin") + "/ui-sounds/";
+    int uivolume = (int)round(Settings::get_float("volume_uisounds") / 100 * 128);
 
-    mSampleNormal.hitclap.filename = path + "normal-hitclap.wav";
-    mSampleNormal.hitclap.chunk = Mix_LoadWAV(mSampleNormal.hitclap.filename.c_str());
-
-    mSampleNormal.slidertick.filename = path + "normal-slidertick.wav";
-    mSampleNormal.slidertick.chunk = Mix_LoadWAV(mSampleNormal.slidertick.filename.c_str());
-
-    mSampleNormal.sliderslide.filename = path + "normal-sliderslide.wav";
-    mSampleNormal.sliderslide.chunk = Mix_LoadWAV(mSampleNormal.sliderslide.filename.c_str());
-
-    mSampleNormal.sliderwhistle.filename = path + "normal-sliderwhistle.wav";
-    mSampleNormal.sliderwhistle.chunk = Mix_LoadWAV(mSampleNormal.sliderwhistle.filename.c_str());
-
-    mSampleNormal.spinnerspin.filename = path + "spinnerspin.wav";
-    mSampleNormal.spinnerspin.chunk = Mix_LoadWAV(mSampleNormal.spinnerspin.filename.c_str());
-
-    mSampleNormal.spinnerbonus.filename = path + "spinnerbonus.wav";
-    mSampleNormal.spinnerbonus.chunk = Mix_LoadWAV(mSampleNormal.spinnerbonus.filename.c_str());
-
-    mSampleSoft.hitnormal.filename = path + "soft-hitnormal.wav";
-    mSampleSoft.hitnormal.chunk = Mix_LoadWAV(mSampleSoft.hitnormal.filename.c_str());
-
-    mSampleSoft.hitwhistle.filename = path + "soft-hitwhistle.wav";
-    mSampleSoft.hitwhistle.chunk = Mix_LoadWAV(mSampleSoft.hitwhistle.filename.c_str());
-
-    mSampleSoft.hitfinish.filename = path + "soft-hitfinish.wav";
-    mSampleSoft.hitfinish.chunk = Mix_LoadWAV(mSampleSoft.hitfinish.filename.c_str());
-
-    mSampleSoft.hitclap.filename = path + "soft-hitclap.wav";
-    mSampleSoft.hitclap.chunk = Mix_LoadWAV(mSampleSoft.hitclap.filename.c_str());
-
-    mSampleSoft.slidertick.filename = path + "soft-slidertick.wav";
-    mSampleSoft.slidertick.chunk = Mix_LoadWAV(mSampleSoft.slidertick.filename.c_str());
-
-    mSampleSoft.sliderslide.filename = path + "soft-sliderslide.wav";
-    mSampleSoft.sliderslide.chunk = Mix_LoadWAV(mSampleSoft.sliderslide.filename.c_str());
-
-    mSampleSoft.sliderwhistle.filename = path + "soft-sliderwhistle.wav";
-    mSampleSoft.sliderwhistle.chunk = Mix_LoadWAV(mSampleSoft.sliderwhistle.filename.c_str());
-
-    mSampleSoft.spinnerspin.filename = path + "spinnerspin.wav";
-    mSampleSoft.spinnerspin.chunk = Mix_LoadWAV(mSampleSoft.spinnerspin.filename.c_str());
-
-    mSampleSoft.spinnerbonus.filename = path + "spinnerbonus.wav";
-    mSampleSoft.spinnerbonus.chunk = Mix_LoadWAV(mSampleSoft.spinnerbonus.filename.c_str());
+    loadSample(&mUISounds.applause, uipath + "applause.wav", uivolume);
+    loadSample(&mUISounds.check_off, uipath + "check-off.wav", uivolume);
+    loadSample(&mUISounds.check_on, uipath + "check-on.wav", uivolume);
+    loadSample(&mUISounds.click_close, uipath + "click-close.wav", uivolume);
+    loadSample(&mUISounds.click_short_confirm, uipath + "click-short-confirm.wav", uivolume);
+    loadSample(&mUISounds.combobreak, uipath + "combobreak.wav",  MathHelper::Max((int)(round(volume*1.33)), 100));
+    loadSample(&mUISounds.failsound, uipath + "failsound.wav", MathHelper::Max((int)(round(volume*1.33)), 100));
+    loadSample(&mUISounds.menuback, uipath + "menuback.wav", uivolume);
+    loadSample(&mUISounds.menuclick, uipath + "menuclick.wav", uivolume);
+    loadSample(&mUISounds.menuhit, uipath + "menuhit.wav", uivolume);
+    loadSample(&mUISounds.seeya, uipath + "seeya.wav", uivolume);
+    loadSample(&mUISounds.welcome, uipath + "welcome.wav", uivolume);
+    loadSample(&mUISounds.welcome_piano, uipath + "welcome_piano.wav", uivolume);
 }
 
 int AudioManager::PlaySample(SampleSetInfo info, bool loop, int channel)
 {
    return Mix_PlayChannel(channel, info.chunk, loop ? -1 : 0);
+}
+
+static int PlayWelcome_Thread(void*)
+{
+    AudioManager::Engine().PlayUISound(UISOUND_WELCOME);
+    SDL_Delay(1220);
+    if (music != nullptr) {
+        // Beatmap started, don't continue with welcome sounds
+        return 0;
+    }
+    AudioManager::Engine().PlayUISound(UISOUND_WELCOME_PIANO);
+    SDL_Delay(2142);
+    if (music != nullptr) {
+        // Beatmap started, don't continue with welcome sounds
+        return 0;
+    }
+    AudioManager::Engine().PlayBGM();
+    return 0;
+}
+
+void AudioManager::PlayWelcome()
+{
+    auto *thread = SDL_CreateThread(PlayWelcome_Thread, "PlayWelcome_Thread", (void *)nullptr);
+    SDL_DetachThread(thread);
 }
 
 //TODO: Implement SetChannelFreq
@@ -102,6 +108,50 @@ int AudioManager::PlaySample(SampleSetInfo info, bool loop, int channel)
 void AudioManager::StopChannel(int channel)
 {
     Mix_HaltChannel(channel);
+}
+
+void AudioManager::PlayUISound(UISoundName n) {
+    switch (n) {
+        case (UISOUND_APPLAUSE):
+            PlaySample(mUISounds.applause);
+            break;
+        case UISOUND_CHECK_OFF:
+            PlaySample(mUISounds.check_off);
+            break;
+        case UISOUND_CHECK_ON:
+            PlaySample(mUISounds.check_on);
+            break;
+        case UISOUND_CLICK_CLOSE:
+            PlaySample(mUISounds.click_close);
+            break;
+        case UISOUND_CLICK_SHORT_CONFIRM:
+            PlaySample(mUISounds.click_short_confirm);
+            break;
+        case UISOUND_COMBOBREAK:
+            PlaySample(mUISounds.combobreak);
+            break;
+        case UISOUND_FAILSOUND:
+            PlaySample(mUISounds.failsound);
+            break;
+        case UISOUND_MENUBACK:
+            PlaySample(mUISounds.menuback);
+            break;
+        case UISOUND_MENUCLICK:
+            PlaySample(mUISounds.menuclick);
+            break;
+        case UISOUND_MENUHIT:
+            PlaySample(mUISounds.menuhit);
+            break;
+        case UISOUND_SEEYA:
+            PlaySample(mUISounds.seeya);
+            break;
+        case UISOUND_WELCOME:
+            PlaySample(mUISounds.welcome);
+            break;
+        case UISOUND_WELCOME_PIANO:
+            PlaySample(mUISounds.welcome_piano);
+            break;
+    }
 }
 
 void AudioManager::PlayHitSound(HitObjectSound sound)
@@ -149,6 +199,16 @@ void AudioManager::PlaySliderTick()
 	PlaySample(current->slidertick);
 }
 
+void AudioManager::PlayBGM() {
+    std::string music_path = std::string(DEF_DataDirectory) + std::string(DEF_SkinsSubdirectory) + Settings::get_str("skin") + "/ui-sounds/bgm.mp3";
+    MusicLoad(music_path);
+    MusicPlay(Settings::get_float("volume_menumusic"));
+}
+
+void AudioManager::UpdateMusicVolume(float volume) {
+    Mix_VolumeMusic((int)round(volume / 100 * 128));
+}
+
 int AudioManager::MusicLoad(std::string& filename) {
     if (music != nullptr) {
         MusicStop();
@@ -171,8 +231,9 @@ int AudioManager::MusicLoad(std::string& filename) {
     return mChannel;
 }
 
-int AudioManager::MusicPlay() {
+int AudioManager::MusicPlay(float volume) {
     if (music != nullptr) {
+        Mix_VolumeMusic((int)round(volume/100*128));
         mChannel = Mix_PlayMusic(music, -1);
         fprintf(stderr, "Started music on channel %i\n", mChannel);
     }

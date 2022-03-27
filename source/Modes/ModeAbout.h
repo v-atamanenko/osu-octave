@@ -14,6 +14,7 @@ public:
 
 protected:
     void HandleInput() override {};
+    pSprite* mLogo;
     SpriteManager mSpriteManager;
 };
 

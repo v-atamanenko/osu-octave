@@ -27,6 +27,7 @@ pText* SongSelect::loadingScreenLabel = nullptr;
 SpriteManager* SongSelect::mSpriteManager = nullptr;
 
 void OnBetmapEntryPlayClick(pDrawable* self, uint16_t x, uint16_t y) {
+    AudioManager::Engine().PlayUISound(UISOUND_MENUHIT);
     SongSelect::LoadingScreenShow();
     InputHelper::vitaUseBackTouch = Settings::get_bool("vitaUseBackTouch"); // VITA: Reset back touch usage flag
     BeatmapManager::Load(self->Tag);
@@ -47,10 +48,12 @@ void OnBtnQuitClick(pDrawable* self, uint16_t x, uint16_t y) {
 }
 
 void OnBtnSettingsClick(pDrawable* self, uint16_t x, uint16_t y) {
+    AudioManager::Engine().PlayUISound(UISOUND_MENUCLICK);
     ChangeModeOnFrameEnd(MODE_SETTINGS);
 }
 
 void OnBtnAboutClick(pDrawable* self, uint16_t x, uint16_t y) {
+    AudioManager::Engine().PlayUISound(UISOUND_MENUCLICK);
     ChangeModeOnFrameEnd(MODE_ABOUT);
 }
 
@@ -67,26 +70,32 @@ void OnBtnArrowRightClick(pDrawable* self, uint16_t x, uint16_t y) {
 }
 
 void OnBtnSortAllClick(pDrawable* self, uint16_t x, uint16_t y) {
+    AudioManager::Engine().PlayUISound(UISOUND_CLICK_SHORT_CONFIRM);
     SongSelect::ApplyFilter(FILTER_NONE);
 }
 
 void OnBtnSortAEClick(pDrawable* self, uint16_t x, uint16_t y) {
+    AudioManager::Engine().PlayUISound(UISOUND_CLICK_SHORT_CONFIRM);
     SongSelect::ApplyFilter(FILTER_ALPHA_A_E);
 }
 
 void OnBtnSortFJClick(pDrawable* self, uint16_t x, uint16_t y) {
+    AudioManager::Engine().PlayUISound(UISOUND_CLICK_SHORT_CONFIRM);
     SongSelect::ApplyFilter(FILTER_ALPHA_F_J);
 }
 
 void OnBtnSortKOClick(pDrawable* self, uint16_t x, uint16_t y) {
+    AudioManager::Engine().PlayUISound(UISOUND_CLICK_SHORT_CONFIRM);
     SongSelect::ApplyFilter(FILTER_ALPHA_K_O);
 }
 
 void OnBtnSortPTClick(pDrawable* self, uint16_t x, uint16_t y) {
+    AudioManager::Engine().PlayUISound(UISOUND_CLICK_SHORT_CONFIRM);
     SongSelect::ApplyFilter(FILTER_ALPHA_P_T);
 }
 
 void OnBtnSortUZClick(pDrawable* self, uint16_t x, uint16_t y) {
+    AudioManager::Engine().PlayUISound(UISOUND_CLICK_SHORT_CONFIRM);
     SongSelect::ApplyFilter(FILTER_ALPHA_U_Z);
 }
 
@@ -101,6 +110,9 @@ SongSelect::SongSelect() {
 
     auto* bg = new pSprite(TX_MENU_BG, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255);
     mSpriteManager->Add(bg);
+
+    mLogo = new pSprite(TX_LOGO, 176, 145, 224, 123, ORIGIN_CENTER, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
+    mSpriteManager->Add(mLogo);
 
     auto* btn_about = new pSprite(TX_BUTTON_BIG, 37, 281, 277, 55, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
     btn_about->OnClick = OnBtnAboutClick;
