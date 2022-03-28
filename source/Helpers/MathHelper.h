@@ -9,6 +9,14 @@
 #include <cmath>
 #include <cstdint>
 
+/**
+ * Convert the angle given in radians to degrees.
+ */
+template<typename F>
+F rad2deg(F angle) {
+    return angle * 180.0 / M_PI;
+}
+
 class MathHelper {
 public:
     static uint32_t		Abs(int32_t value) { return (value > 0 ? value : -value); }

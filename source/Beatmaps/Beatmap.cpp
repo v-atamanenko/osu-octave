@@ -256,17 +256,14 @@ void Beatmap::Buffer(std::list<HitObject*>& hitObjectList)
                     tPoint->x = (int32_t)round(screenPoints[i].x);
                     tPoint->y = (int32_t)round(screenPoints[i].y);
 
-                    if (i > 0) {
-                        int new_angle = floor(atan((screenPoints[i].y - screenPoints[i-1].y) / (screenPoints[i].x - screenPoints[i-1].x)));
-                        if (lastAngle + new_angle > 180) lastAngle = 0;
-                        tPoint->angle = lastAngle + new_angle;
-                        lastAngle = tPoint->angle;
+                    float ballAngle;
+                    if (i+1 < screenPoints.size()) {
+                        ballAngle = rad2deg( atan2(screenPoints[i+1].y - screenPoints[i].y, screenPoints[i+1].x - screenPoints[i].x) );
                     } else {
-                        int new_angle = floor(atan((screenPoints[i].y - y) / (screenPoints[i].x - x)));
-                        if (lastAngle + new_angle > 180) lastAngle = 0;
-                        tPoint->angle = lastAngle + new_angle;
-                        lastAngle = tPoint->angle;
+                        ballAngle = rad2deg( atan2(screenPoints[i].y - screenPoints[i-1].y, screenPoints[i].x - screenPoints[i-1].x) );
                     }
+
+                    tPoint->angle = ballAngle;
 
                     points.push_back(tPoint);
                 }
