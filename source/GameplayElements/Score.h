@@ -119,13 +119,13 @@ class Score
 		//The Maximum combo achieved
 		uint32_t mMaxCombo;
 		//Amount of 300s
-		uint32_t mCount300;
+		uint32_t mCount300 = 0;
 		//Amount of 100s
-		uint32_t mCount100;
+		uint32_t mCount100 = 0;
 		//Amount of 50s 
-		uint32_t mCount50;
+		uint32_t mCount50 = 0;
 		//Amount of Misses
-		uint32_t mCountMiss;
+		uint32_t mCountMiss = 0;
 		//Amount of Gekis
 		uint32_t mCountGeki;
 		//Amount of Katus

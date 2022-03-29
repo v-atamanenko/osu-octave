@@ -335,7 +335,8 @@ bool Ruleset::Update()
 
     TextManager::SetFont(FONT_SCORE);
     TextManager::PrintLocate(940, 10, ORIGIN_TOPRIGHT, "  %08u", mCurrentScore.CurrentScore());
-    TextManager::PrintLocate(20, 534, ORIGIN_BOTTOMLEFT, "%ix   ", mCurrentScore.CurrentCombo());
+    TextManager::PrintLocate(910, 44, ORIGIN_TOPRIGHT, "  %.2f%%", mCurrentScore.CountAccuracy());
+    TextManager::PrintLocate(20, 528, ORIGIN_BOTTOMLEFT, "%ix   ", mCurrentScore.CurrentCombo());
 
     if(mLifebar.GetCurrentHP() == 0.f && now > BeatmapManager::Current().SkipTime()) {
         return false; // Premature game over, HP is 0
