@@ -26,10 +26,10 @@ public:
     StringSelector(int32_t x, int32_t y) {
         mX = x;
         mY = y;
-        selectedString = new pText("default", FONT_CONSOLE, mX+18, mY+8);
+        selectedString = new pText("default", FONT_CONSOLE, mX+13, mY+8);
         selectedString->Z = -0.6f;
-        arrowLeft = new pSprite(TX_BUTTON_SETTINGS_ARROW, mX+232+4, mY, 47, 32, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.5);
-        arrowRight = new pSprite(TX_BUTTON_SETTINGS_ARROW, mX+232+47, mY, 47, 32, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.5);
+        arrowLeft = new pSprite(TX_BUTTON_SETTINGS_ARROW, mX+217+4, mY, 47, 32, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.5);
+        arrowRight = new pSprite(TX_BUTTON_SETTINGS_ARROW, mX+217+47, mY, 47, 32, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.5);
         arrowRight->Rotate(180);
 
         mSprites.push_back(selectedString);
@@ -287,7 +287,7 @@ protected:
     Logo* mLogo = nullptr;
 
 
-    void CreateValueSlider(int32_t x, int32_t y, const std::string &setting_name);
+    void CreateValueSlider(int32_t x, int32_t y, const std::string &setting_name, bool multiplier_mode=false);
 
     void CreateStringSelector(int32_t x, int32_t y, const std::string &setting_name);
 

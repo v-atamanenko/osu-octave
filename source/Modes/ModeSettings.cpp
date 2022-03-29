@@ -72,8 +72,14 @@ void ModeSettings::InitCommonSprites() {
     mSpriteManager.Add(spr);
 }
 
-void ValueSlider_updateDisplayedValue (float val, pText* valLabel) {
-    valLabel->Text = std::to_string((int)round(val));
+void ValueSlider_updateDisplayedValue (float val, pText* valLabel, bool multiplier_mode=false) {
+    if (multiplier_mode) {
+        char value_str[8];
+        snprintf(value_str, 8, "%.2fx", (float)((int)((val+100) * 1 + .5)) / 100.f);
+        valLabel->Text = value_str;
+    } else {
+        valLabel->Text = std::to_string((int)round(val));
+    }
 }
 
 void ValueSlider_saveDisplayedValue (float val, const std::string& setting_name) {
@@ -122,18 +128,35 @@ void ModeSettings::CreateStringSelector(int32_t x, int32_t y, const std::string&
     ss->AddToSpriteManager(mSpriteManager);
 }
 
-void ModeSettings::CreateValueSlider(int32_t x, int32_t y, const std::string& setting_name) {
+void ModeSettings::CreateValueSlider(int32_t x, int32_t y, const std::string& setting_name, bool multiplier_mode) {
     float lastValue = Settings::get_float(setting_name);
     auto* vs = new ValueSlider(x, y);
     vs->Init(lastValue);
-    auto* spr = new pText(std::to_string((int)(round(lastValue))),
-                          FONT_PIXEL, x+281, y, SDL_Color());
+    pText* spr;
+
+    if (multiplier_mode) {
+        char value_str[8];
+        snprintf(value_str, 8, "%.2fx", (float)((int)((lastValue+100) * 1 + .5)) / 100.f);
+        spr = new pText(value_str,FONT_PIXEL, x+266, y, SDL_Color());
+    } else {
+        spr = new pText(std::to_string((int)(round(lastValue))), FONT_PIXEL, x+266, y, SDL_Color());
+    }
+
     spr->Z = -1.f;
     spr->Origin = ORIGIN_CENTER;
     mSpriteManager.Add(spr);
 
-    std::function<void(float)> updateval_lambda = [spr](float f) { return ValueSlider_updateDisplayedValue(f, spr); };
-    vs->value_change_callback = updateval_lambda;
+    if (multiplier_mode) {
+        std::function<void(float)> updateval_lambda = [spr](float f) {
+            return ValueSlider_updateDisplayedValue(f, spr, true);
+        };
+        vs->value_change_callback = updateval_lambda;
+    } else {
+        std::function<void(float)> updateval_lambda = [spr](float f) {
+            return ValueSlider_updateDisplayedValue(f, spr);
+        };
+        vs->value_change_callback = updateval_lambda;
+    }
 
     std::function<void(float)> saveval_lambda = [setting_name](float f) { return ValueSlider_saveDisplayedValue(f, setting_name); };
     vs->value_callback = saveval_lambda;
@@ -146,7 +169,7 @@ void ModeSettings::TabGeneral() {
     InitCommonSprites();
 
     pDrawable* spr;
-    spr = new pSprite(TX_SETTINGS_PANEL_GENERAL, 400, 46, 512, 453, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.1f);
+    spr = new pSprite(TX_SETTINGS_PANEL_GENERAL, 390, 46, 531, 453, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.1f);
     mSpriteManager.Add(spr);
 
     spr = new pSprite(TX_BUTTON_BIG, 558, 42, 158, 44, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 0);
@@ -154,19 +177,20 @@ void ModeSettings::TabGeneral() {
     spr->OnClick = ModeSettings_SwitchTabToGameplay;
     mSpriteManager.Add(spr);
 
-    CreateValueSlider(562, 170, "volume_hitsounds");
-    CreateValueSlider(562, 214, "volume_music");
-    CreateValueSlider(562, 258, "volume_menumusic");
-    CreateValueSlider(562, 302, "volume_uisounds");
-    CreateStringSelector(562, 393, "skin");
-    CreateValueSlider(562, 452, "bgdim");
+    CreateValueSlider(589, 153, "volume_hitsounds");
+    CreateValueSlider(589, 197, "volume_music");
+    CreateValueSlider(589, 241, "volume_menumusic");
+    CreateValueSlider(589, 285, "volume_uisounds");
+    CreateStringSelector(589, 360, "skin");
+    CreateValueSlider(589, 419, "bgdim");
+    CreateValueSlider(589, 463, "hoscale", true);
 }
 
 void ModeSettings::TabGameplay() {
     InitCommonSprites();
 
     pDrawable* spr;
-    spr = new pSprite(TX_SETTINGS_PANEL_GAMEPLAY, 400, 46, 512, 453, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.1f);
+    spr = new pSprite(TX_SETTINGS_PANEL_GAMEPLAY, 390, 46, 531, 453, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.1f);
     mSpriteManager.Add(spr);
 
     spr = new pSprite(TX_BUTTON_BIG, 393, 42, 158, 44, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 0);

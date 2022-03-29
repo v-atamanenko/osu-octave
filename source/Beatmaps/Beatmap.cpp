@@ -119,7 +119,9 @@ void Beatmap::Initialize()
     DifficultyManager::SliderTickRate = (uint8_t)mParser->sliderTickRate;
 
     DifficultyManager::preempt_time_new = mParser->preemptMs;
-    DifficultyManager::circle_size_new = mParser->circleRadiusPx * 2;
+
+    float hoscale = (Settings::get_float("hoscale") + 100) / 100;
+    DifficultyManager::circle_size_new = (mParser->circleRadiusPx * 2) * hoscale;
     DifficultyManager::hit_window_300 = mParser->hitWindow300;
     DifficultyManager::hit_window_100 = mParser->hitWindow100;
     DifficultyManager::hit_window_50 = mParser->hitWindow50;
@@ -128,7 +130,6 @@ void Beatmap::Initialize()
     DifficultyManager::fadeInMs = mParser->fadeInMs;
 
     DifficultyManager::DifficultyPeppyStars = 0; // TODO: Learn how to count peppy stars
-    DifficultyManager::DifficultyEyupStars = 0; // TODO: Learn how to count eyup stars
 
     for (osuParser::TimingPoint tp : mParser->timingPoints) {
         int64_t time = tp.offset;

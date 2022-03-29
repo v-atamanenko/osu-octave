@@ -11,7 +11,6 @@ class DifficultyManager
 		static float SliderTickRate;
 
 		static uint8_t DifficultyPeppyStars;
-		static float DifficultyEyupStars;
 
 		//inline
 		static float GetCircleSize()   { return circle_size_new; }
