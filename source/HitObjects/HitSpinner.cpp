@@ -14,7 +14,7 @@ HitSpinner::HitSpinner(int32_t time, int32_t endtime, HitObjectSound sound, bool
 	mTotalRotation = 0; //counts rotations in current direction (resets)
 	mCurrentRotation = 0; //keeps track of which rotation we are at to count
 	mTotalSpins = 0; //counts total number of spins
-	mRequiredSpins = (mEndTime - mTime) / DifficultyManager::GetSpinnerTime(); //total spins required
+	mRequiredSpins = (uint32_t)round((((float)mEndTime - (float)mTime) / 1000.f) * DifficultyManager::GetSpinnerRPS()); //total spins required
 	
 	//mUV = SDL_Rect({0, 0, 256, 192});
 

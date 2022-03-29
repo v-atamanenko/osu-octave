@@ -83,7 +83,7 @@ HitSlider::HitSlider(int32_t x, int32_t y, int32_t time, uint32_t lengthtime, st
 	
 	uint32_t preempt = DifficultyManager::GetPreemptTime();
 	int32_t fadeInStart = (int32_t)time - (int32_t)preempt;
-	int32_t fadeInEnd = fadeInStart + (preempt >> 3);
+	int32_t fadeInEnd = fadeInStart + DifficultyManager::fadeInMs;
 	mEndTime = time + (repeats * lengthtime);
 	mLengthTime = lengthtime;
 	

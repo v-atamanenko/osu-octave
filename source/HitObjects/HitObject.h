@@ -54,7 +54,7 @@ class HitObject : public SpriteContainer
 		HitObject(int32_t x, int32_t y, int32_t time, HitObjectType type, HitObjectSound sound, bool combo, int32_t number_in_combo);
 
 		int32_t mX, mY;
-		int32_t mTime, mEndTime;
+		long mTime, mEndTime;
 		HitObjectType mType;
 		HitObjectSound mSound;
 		static SDL_Color mColour;

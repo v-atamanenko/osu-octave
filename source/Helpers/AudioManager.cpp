@@ -8,10 +8,11 @@ Mix_Music *music;
 
 AudioManager::AudioManager() {
 #ifdef VITA
-    Mix_OpenAudio(44100, AUDIO_S16SYS, 6, 1024);
+    Mix_OpenAudio(44100, AUDIO_S16SYS, 2, 1024);
 #else
-    Mix_OpenAudio(44100, AUDIO_S32SYS, 6, 1024);
+    Mix_OpenAudio(44100, AUDIO_S32SYS, 2, 1024);
 #endif
+    Mix_AllocateChannels(64);
 }
 
 inline void loadSample(SampleSetInfo* s, const std::string &file, int volume) {

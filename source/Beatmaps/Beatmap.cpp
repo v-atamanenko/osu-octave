@@ -118,6 +118,15 @@ void Beatmap::Initialize()
     DifficultyManager::SliderMultiplier = (uint8_t)mParser->sliderMultiplier;
     DifficultyManager::SliderTickRate = (uint8_t)mParser->sliderTickRate;
 
+    DifficultyManager::preempt_time_new = mParser->preemptMs;
+    DifficultyManager::circle_size_new = mParser->circleRadiusPx * 2;
+    DifficultyManager::hit_window_300 = mParser->hitWindow300;
+    DifficultyManager::hit_window_100 = mParser->hitWindow100;
+    DifficultyManager::hit_window_50 = mParser->hitWindow50;
+    DifficultyManager::hit_window = mParser->hitWindow50 * 2;
+    DifficultyManager::spinner_rps = mParser->requiredRPS;
+    DifficultyManager::fadeInMs = mParser->fadeInMs;
+
     DifficultyManager::DifficultyPeppyStars = 0; // TODO: Learn how to count peppy stars
     DifficultyManager::DifficultyEyupStars = 0; // TODO: Learn how to count eyup stars
 

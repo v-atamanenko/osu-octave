@@ -14,24 +14,36 @@ class DifficultyManager
 		static float DifficultyEyupStars;
 
 		//inline
-		static uint32_t GetCircleSize()   { return circleSize[DifficultyCircleSize] * 1.2; } //possibly *1.2
-		static uint32_t GetPreemptTime()  { return preemptTime[DifficultyOverall]; }
-		static uint32_t GetHitWindow300() { return hitWindow300[DifficultyOverall]; }
-		static uint32_t GetHitWindow100() { return hitWindow100[DifficultyOverall]; }
-		static uint32_t GetHitWindow50()  { return hitWindow50[DifficultyOverall]; }
-		static uint32_t GetHitWindow()    { return hitWindow50[DifficultyOverall] << 1; }
-		static uint32_t GetSpinnerTime()  { return spinnerTime[DifficultyOverall]; }
-		static int32_t  GetMissHpDrain()  { return missHpDrain[DifficultyHpDrain]; }
-		static float    GetHpDrainRate()  { return 1.f / (110.f + (float)missHpDrain[DifficultyHpDrain]); }
+		static float GetCircleSize()   { return circle_size_new; }
+		static long GetPreemptTime()  { return preempt_time_new; }
+		static long GetHitWindow300() { return hit_window_300; }
+		static long GetHitWindow100() { return hit_window_100; }
+		static long GetHitWindow50()  { return hit_window_50; }
+		static long GetHitWindow()    { return hit_window; }
+		static float GetSpinnerRPS()  { return spinner_rps; }
+		static float  GetMissHpDrain()  { return missHpDrain[DifficultyHpDrain]; }
+		static float    GetHpDrainRate()  { return 1.f / (110.f + missHpDrain[DifficultyHpDrain]); }
 
+        static long preempt_time_new;
+        static float circle_size_new;
+        static float spinner_rps;
+        static long fadeInMs;
+        static long hit_window_300;
+        static long hit_window_100;
+        static long hit_window_50;
+        static long hit_window;
+        static long spinner_time;
+        static long miss_hp_drain;
 	protected:
+
+
 		static uint32_t preemptTime[];
 		static uint32_t circleSize[];
 		static uint32_t hitWindow300[];
 		static uint32_t hitWindow100[];
 		static uint32_t hitWindow50[];
 		static uint32_t spinnerTime[];
-		static int32_t missHpDrain[];
+		static float missHpDrain[];
 };
 
 #endif // _H__DIFFICULTYMANAGER_H_
