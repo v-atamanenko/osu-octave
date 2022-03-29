@@ -553,10 +553,13 @@ HitObject OsuParser::_ParseFieldAsHitObject(const string& field)
             vector<string> values;
             SplitString(p, ":", values);
 
-            o.slider.curvePoints.push_back({
-                                                   (uint16_t)stoi(values[0]),
-                                                   (uint16_t)stoi(values[1]),
-                                           });
+            int x = stoi(values[0]);
+            int y = stoi(values[1]);
+
+            if (x < 1) x = 1;
+            if (y < 1) y = 1;
+
+            o.slider.curvePoints.push_back({(uint16_t)x, (uint16_t)y});
         }
 
         o.slider.nRepeats = (uint8_t)stoi(args[6]);
