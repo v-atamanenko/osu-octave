@@ -239,7 +239,7 @@ SongSelect::SongSelect() {
     mCurrentPage = Settings::get_int("page");
     mCountPages  = ceil(((float)mSongListSize/(float)mEntriesPerPage));
 
-    UpdateSonglist();
+    UpdateSonglist(true);
 }
 
 void SongSelect::ApplyFilter(BeatmapFilter f, bool resetPage) {
@@ -301,11 +301,11 @@ void SongSelect::ApplyFilter(BeatmapFilter f, bool resetPage) {
     }
 }
 
-void SongSelect::UpdateSonglist()
+void SongSelect::UpdateSonglist(bool initial)
 {
     int spritesToRemoveCount = mSpritesPerBeatmapEntry * mEntriesDisplayed;
     if (mEntryExpanded) spritesToRemoveCount += (mSpritesPerExpandedBeatmapEntry - mSpritesPerBeatmapEntry);
-    spritesToRemoveCount++; // to account for current_page_label
+    if (!initial) spritesToRemoveCount++; // to account for current_page_label, unless it's initial update.
     for (int i = 0; i < spritesToRemoveCount; ++i) {
         mSpriteManager->RemoveLast();
     }
@@ -507,8 +507,16 @@ void SongSelect::UpdateSonglist()
 
             delete starsFill->UV;
             starsFill->UV = new SDL_Rect({0,0,(int)floor(196.f*map.starRating/10.f),16});
+
+            char stars_text[32];
+            sprintf(stars_text, "%.2f", map.starRating);
+            auto* starsText = new pText(stars_text, FONT_CONSOLE, 707, 161 + (i * 94) + extra_y_offset);
+            starsText->Z = -0.06f;
+            starsText->Origin = ORIGIN_TOPRIGHT;
+
             mSpriteManager->Add(stars);
             mSpriteManager->Add(starsFill);
+            mSpriteManager->Add(starsText);
         } else {
             auto* ranking = new pSprite(score_tex, 869, 104 + (i * 94) + extra_y_offset, 40, 23,
                                         ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.04f);

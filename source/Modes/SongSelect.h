@@ -80,7 +80,7 @@ class SongSelect : public Mode
         static void LoadingScreenHide();
 	
 	protected:
-        void UpdateSonglist();
+        void UpdateSonglist(bool initial=false);
         void reloadPreviews() const;
 
         Logo* mLogo;
@@ -99,7 +99,7 @@ class SongSelect : public Mode
         int32_t mEntriesDisplayed = 0;
 
         int32_t mSpritesPerBeatmapEntry = 8;
-        int32_t mSpritesPerExpandedBeatmapEntry = 14;
+        int32_t mSpritesPerExpandedBeatmapEntry = 15;
 
         static pSprite* btn_sort_all;
         static pText* btn_sort_all_label;
