@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<livearea style="ad0" format-ver="01.00" content-rev="1">
+    <livearea-background>
+        <image>bg.png</image>
+    </livearea-background>
+    <frame id="frame1" >
+        <liveitem default="on">
+            <target>psla:</target>
+        </liveitem>
+    </frame>
+</livearea>

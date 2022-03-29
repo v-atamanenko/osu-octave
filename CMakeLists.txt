@@ -15,7 +15,7 @@ if (BUILDTARGET STREQUAL "vita")
     endif()
 endif()
 
-project(osu-ds)
+project(osu-octave)
 
 if (BUILDTARGET STREQUAL "vita")
     include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
@@ -140,12 +140,11 @@ endif()
 
 if (BUILDTARGET STREQUAL "vita")
     vita_create_self(eboot.bin ${PROJECT_NAME})
-    vita_create_vpk(osu-ds.vpk "OSU000001" eboot.bin
+    vita_create_vpk(osu-octave.vpk "OSU000001" eboot.bin
             VERSION "01.00"
-            NAME "osu-ds!"
-            #FILE sce_sys/icon0.png sce_sys/icon0.png
-            #FILE sce_sys/bg.png sce_sys/livearea/contents/bg.png
-            #FILE sce_sys/startup.png sce_sys/livearea/contents/startup.png
-            #FILE sce_sys/template.xml sce_sys/livearea/contents/template.xml
+            NAME "osu!octave"
+            FILE livearea/icon0.png sce_sys/icon0.png
+            FILE livearea/bg.png sce_sys/livearea/contents/bg.png
+            FILE livearea/template.xml sce_sys/livearea/contents/template.xml
             )
 endif()
