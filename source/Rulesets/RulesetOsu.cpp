@@ -37,10 +37,7 @@ void RulesetOsu::IncreaseScore(ScoreType score, bool forceNoCombo, bool forceNoA
 			break;
 
 		case SCORE_50:
-            if (mSpecialScore >= 1) {
-                AudioManager::Engine().PlayUISound(UISOUND_COMBOBREAK);
-            }
-			mSpecialScore = 0;
+            mSpecialScore = 0;
 			tex = TX_PLAY_HIT50;
 			hpIncrease = Lifebar::HP_50;
 			break;
