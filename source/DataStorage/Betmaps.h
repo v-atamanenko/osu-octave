@@ -76,6 +76,10 @@ public:
         sort(v);
     }
 
+    static void get_state(std::vector<std::string>& v) {
+        state["paths"].get_to(v);
+    }
+
     static bool is_path_in_state(const char* filename, const char* basedir) {
         std::string s = std::string(basedir) + "/" + std::string(filename);
         if (std::find(state["paths"].begin(), state["paths"].end(), s)!=state["paths"].end()) {
@@ -89,6 +93,24 @@ public:
     static void add_path_to_state(const char* filename, const char* basedir) {
         std::string s = std::string(basedir) + "/" + std::string(filename);
         state["paths"].emplace_back(s);
+    }
+
+    static void remove_path_from_state(const std::string& path) {
+        auto position = std::find(state["paths"].begin(), state["paths"].end(), path);
+        if (position != state["paths"].end())
+            state["paths"].erase(position);
+    }
+
+    static void remove_beatmap(const std::string& path) {
+        for (json::iterator it = beatmaps.begin(); it != beatmaps.end();) {
+            BeatmapEntry bm = it.value();
+            if (bm.BaseDir + "/" + bm.Filename == path) {
+                it = beatmaps.erase(it);
+                break;
+            } else {
+                it++;
+            }
+        }
     }
 
     static void clear() {

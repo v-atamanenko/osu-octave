@@ -2,10 +2,11 @@
 #include "PreviewBuffer.h"
 #include "Beatmaps/BeatmapManager.h"
 #include "DataStorage/Settings.h"
+#include <sys/stat.h>
 
 inline bool file_exists(const std::string& fname) {
-    std::ifstream infile(fname);
-    return infile.good();
+    struct stat buffer;
+    return (stat (fname.c_str(), &buffer) == 0);
 }
 
 PreviewBuffer PreviewBuffer::sPreviewBuffer;

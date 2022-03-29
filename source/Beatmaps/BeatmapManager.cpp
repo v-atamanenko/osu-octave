@@ -1,5 +1,11 @@
 #include "BeatmapManager.h"
 #include "Helpers/PreviewBuffer.h"
+#include <sys/stat.h>
+
+inline bool file_exists(const std::string& fname) {
+    struct stat buffer;
+    return (stat (fname.c_str(), &buffer) == 0);
+}
 
 Beatmap* BeatmapManager::mBeatmapCurrent = nullptr;
 std::vector<BeatmapEntry> BeatmapManager::mBeatmapsAll;
@@ -120,6 +126,16 @@ bool BeatmapManager::CheckIndex() {
 
     closedir(dir);
     free(maps_path);
+
+    std::vector<std::string> idx;
+    Beatmaps::get_state(idx);
+
+    for (auto &s : idx) {
+        if (!file_exists(s)) {
+            Beatmaps::remove_path_from_state(s);
+            Beatmaps::remove_beatmap(s);
+        }
+    }
 
     return res;
 }
