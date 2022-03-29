@@ -9,8 +9,6 @@ HitCircle::HitCircle(int32_t x, int32_t y, int32_t time, HitObjectType type, Hit
 	int32_t fadeInEnd = fadeInStart +  DifficultyManager::fadeInMs;
 	mEndTime = time + DifficultyManager::GetHitWindow50();
 
-    printf ("time %i, preempt %i, fadeInStart %i, fadeInEnd %i, mEndTime %li\n", time, preempt, fadeInStart, fadeInEnd, mEndTime);
-
 	pSprite* spr;
 	
 	spr = new pSprite(TX_PLAY_CIRCLEOVERLAY, x, y, size, size, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({0, 0, 0}), 0);
@@ -105,8 +103,9 @@ void HitCircle::Hit()
 				spr->Scale(now, now+150, 1, 1.7);
 				spr->Scale(now+150, now+270, 1.7, 1.9);
 			}
-			//kill the approach circle
+			//kill the approach circle and number
 			mSprites[2]->Kill(now);
+            mSprites[3]->Kill(now);
 			
 			if (delta < DifficultyManager::GetHitWindow300())
 			{
@@ -133,8 +132,7 @@ void HitCircle::Hit()
 			
 			IncreaseScore(SCORE_MISS);
 		}
+        mHit = true;
 	}
-	
-	mHit = true;
 }
 
