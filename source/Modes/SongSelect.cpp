@@ -305,7 +305,7 @@ void SongSelect::UpdateSonglist()
 {
     int spritesToRemoveCount = mSpritesPerBeatmapEntry * mEntriesDisplayed;
     if (mEntryExpanded) spritesToRemoveCount += (mSpritesPerExpandedBeatmapEntry - mSpritesPerBeatmapEntry);
-    if (spritesToRemoveCount != 0) spritesToRemoveCount++; // to account for current_page_label
+    spritesToRemoveCount++; // to account for current_page_label
     for (int i = 0; i < spritesToRemoveCount; ++i) {
         mSpriteManager->RemoveLast();
     }
