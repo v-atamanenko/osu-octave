@@ -63,6 +63,13 @@ void RulesetOsu::IncreaseScore(ScoreType score, bool forceNoCombo, bool forceNoA
             // Unreachable
             break;
 
+        case SCORE_COMBOBREAK:
+            if (mSpecialScore >= 1 && mSpecialScorePrev != 0 && mCurrentScore.CurrentCombo() >= 20) {
+                AudioManager::Engine().PlayUISound(UISOUND_COMBOBREAK);
+            }
+            mSpecialScore = 0;
+            break;
+
         case SCORE_MISS:
         default:
             if (mSpecialScore >= 1 && mSpecialScorePrev != 0 && mCurrentScore.CurrentCombo() >= 20) {

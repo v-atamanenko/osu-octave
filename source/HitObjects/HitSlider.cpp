@@ -434,26 +434,23 @@ void HitSlider::OnTouchDown(const touchPosition& touch)
 			fStarted = true;
 			mSprites[1]->Transform(TR_FADE, now, mEndTime, 255, 255);
 			mSprites[2]->Kill(now);
-			
-			//if it was hit within the window for any amount of points
-			if (delta < DifficultyManager::GetHitWindow50())
-			{
-				++mTicksHit;
-				
-				mSprites[7]->Show();
-				mSprites[7]->Hide(now+300, now+350);
-				mSprites[7]->Move(now, now+250, mSprites[7]->X, mSprites[7]->Y - 20);
-				mSprites[7]->Move(now+250, now+320, mSprites[7]->X, mSprites[7]->Y - 20,
-									mSprites[7]->X, mSprites[7]->Y - 30);
-				mSprites[7]->Move(now+350, now+350, mSprites[7]->X, mSprites[7]->Y);
-				
-				IncreaseScore(SCORE_TICK_30, false, true);
-				AudioManager::Engine().PlayHitSound(mSound);
-			}
-			else
-			{
-				IncreaseScore(SCORE_MISS, true, true);
-			}
+
+            mSprites[7]->Show();
+            mSprites[7]->Hide(now+300, now+350);
+            mSprites[7]->Move(now, now+250, mSprites[7]->X, mSprites[7]->Y - 20);
+            mSprites[7]->Move(now+250, now+320, mSprites[7]->X, mSprites[7]->Y - 20,
+                                mSprites[7]->X, mSprites[7]->Y - 30);
+            mSprites[7]->Move(now+350, now+350, mSprites[7]->X, mSprites[7]->Y);
+
+            //if it was hit within the window for any amount of points
+            if (delta < DifficultyManager::GetHitWindow50()) {
+                ++mTicksHit;
+
+                IncreaseScore(SCORE_TICK_30, false, true);
+                AudioManager::Engine().PlayHitSound(mSound);
+            } else {
+                IncreaseScore(SCORE_COMBOBREAK, true, true);
+            }
         }
 		
 		if (mChannel == -1)

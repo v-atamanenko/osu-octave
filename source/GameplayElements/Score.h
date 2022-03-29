@@ -21,7 +21,8 @@ typedef enum {
 	SCORE_TICK_10 = 10,
 	SCORE_SPIN_100 = 101, //should be 100 but conflicts with SCORE_100
 	SCORE_SPIN_1000 = 1000,
-	SCORE_MISS = 0
+	SCORE_MISS = 0,
+    SCORE_COMBOBREAK
 } ScoreType;
 
 class Score

@@ -25,6 +25,12 @@ void Score::Add(ScoreType score, bool forceNoCombo, bool gekiKatu) {
         return;
 	}
 
+    // Special case: SCORE_COMBOBREAK
+    if (score == SCORE_COMBOBREAK) {
+        mCombo = 0;
+        return;
+    }
+
     // Special case: SCORE_SPIN_100 / SCORE_SPIN_1000
 	if (score == SCORE_SPIN_100 || score == SCORE_SPIN_1000) {
 		if (score == SCORE_SPIN_100) mScore += 100;
