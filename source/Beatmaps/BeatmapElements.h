@@ -8,14 +8,14 @@
 #define __BEATMAPELEMENTS_H__
 
 typedef struct {
-	int32_t Time;
+    long Time;
 	float BeatTime;
 	uint8_t SampleSetId;
 } TimingPoint;
 
 typedef struct {
-	int32_t StartTime;
-	int32_t EndTime;
+    long StartTime;
+    long EndTime;
 } BreakPoint;
 
 class BeatmapElements
@@ -23,15 +23,15 @@ class BeatmapElements
 	public:
 		static BeatmapElements& Element() { return sInstance; }
 		
-		const TimingPoint& GetTimingPoint(int32_t time);
+		const TimingPoint& GetTimingPoint(long time);
 		const TimingPoint& GetTimingPoint();
 		
-		const bool IsBreak();
+		bool IsBreak();
 
         SDL_Color GetNextColour();
 		
-		void AddTimingPoint(int32_t time, float beattime, uint8_t samplesetid);
-		void AddBreakPoint(int32_t start, int32_t end);
+		void AddTimingPoint(long time, float beattime, uint8_t samplesetid);
+		void AddBreakPoint(long start, long end);
         void AddColor(SDL_Color c);
 		void ResetColours(bool fill);
 	

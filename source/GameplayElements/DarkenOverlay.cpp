@@ -14,7 +14,7 @@ void DarkenOverlay::Initialize()
     int start = BeatmapManager::Current().StartTime() - mFillTime;
     int end = MathHelper::Max(BeatmapManager::Current().StartTime(), 701) - 700;
 
-    mSprites[0]->Z = (float)(BeatmapManager::Current().EndTime() + 100);
+    mSprites[0]->Z = (float)(BeatmapManager::Current().EndTime() + 6000);
     mSprites[0]->Show(start,end);
 
     for (const BreakPoint& bp : BeatmapManager::Current().Breakpoints()) {

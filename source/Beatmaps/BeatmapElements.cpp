@@ -2,17 +2,8 @@
 #include "SDL.h"
 BeatmapElements BeatmapElements::sInstance;
 
-const TimingPoint& BeatmapElements::GetTimingPoint(int32_t time)
+const TimingPoint& BeatmapElements::GetTimingPoint(long time)
 {
-/*
-	uint32_t i;
-	for (i=0; i<mTimingPoints.size(); ++i)
-	{
-		if (mTimingPoints[i].Time > time)
-			break;
-	}
-	return mTimingPoints[MathHelper::Max(i-1, 0)];
-*/
 	uint32_t i;
 	for (
 		i = mTimingPoints.size() - 1;
@@ -27,11 +18,10 @@ const TimingPoint& BeatmapElements::GetTimingPoint()
 	return GetTimingPoint(GameClock::Clock().Time());
 }
 
-const bool BeatmapElements::IsBreak()
+bool BeatmapElements::IsBreak()
 {
-	for (uint32_t i=0; i<mBreakPoints.size(); ++i)
-	{
-		if (GameClock::Clock().Time() > mBreakPoints[i].StartTime && GameClock::Clock().Time() < mBreakPoints[i].EndTime)
+	for (auto & mBreakPoint : mBreakPoints) {
+		if (GameClock::Clock().Time() > mBreakPoint.StartTime && GameClock::Clock().Time() < mBreakPoint.EndTime)
 			return true;
 	}
 	return false;
@@ -46,7 +36,7 @@ SDL_Color BeatmapElements::GetNextColour()
 	return mColours[mCurrentColour];
 }
 
-void BeatmapElements::AddTimingPoint(int32_t time, float beattime, uint8_t samplesetid)
+void BeatmapElements::AddTimingPoint(long time, float beattime, uint8_t samplesetid)
 {
 	TimingPoint tPoint = {
 		time,
@@ -57,7 +47,7 @@ void BeatmapElements::AddTimingPoint(int32_t time, float beattime, uint8_t sampl
 	mTimingPoints.push_back(tPoint);
 }
 
-void BeatmapElements::AddBreakPoint(int32_t start, int32_t end)
+void BeatmapElements::AddBreakPoint(long start, long end)
 {
 	BreakPoint bPoint = {
 		start,

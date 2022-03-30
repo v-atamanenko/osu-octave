@@ -180,24 +180,26 @@ HitSlider::HitSlider(int32_t x, int32_t y, int32_t time, uint32_t lengthtime, st
 		else //if odd - slider end
 		{
 			p = points[pointCount-1];
-			tAngle = p->angle + 0x4000;
+			tAngle = p->angle + 180;
 			tAnimStart = fadeInStart;
 			tFadeInEnd = fadeInEnd;
 		}
 		
-		spr = new pSprite(TX_PLAY_SLIDERREVERSE, p->x, p->y, ballSize, ballSize, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({0,0,0}), 0);
+		spr = new pSprite(TX_PLAY_SLIDERREVERSE, p->x, p->y, ballSize*0.8, ballSize*0.8, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({0,0,0}), 0);
 		spr->Show(tAnimStart, tFadeInEnd);
         spr->Z = (float)time-0.8f;
+        spr->Angle = tAngle;
 		//todo: slider repeat explosion?
 		spr->Hide(time+(lengthtime*i));
 		
 		//animate arrow
+        float tAnimPeriod = BeatmapElements::Element().GetTimingPoint(mEndTime).BeatTime;
 		do
 		{
-			int32_t tAnimEnd = tAnimStart + 500;
-			spr->Rotate(tAnimStart, tAnimEnd, tAngle, tAngle+360);
-			spr->Scale(tAnimStart, tAnimEnd, 1, 0.9);
-			tAnimStart = tAnimEnd;
+			int32_t tAnimEnd = tAnimStart + 160;
+			spr->Scale(tAnimStart, tAnimEnd-80, 1, 0.9);
+            spr->Scale(tAnimStart+80, tAnimEnd, 0.9, 1);
+			tAnimStart = tAnimEnd + (tAnimPeriod-160);
 		} while (tAnimStart < time+(lengthtime*i));
 		
 		spr->Kill(mEndTime);
