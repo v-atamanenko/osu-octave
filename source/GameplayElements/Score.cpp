@@ -1,4 +1,5 @@
 #include "Score.h"
+#include "Beatmaps/BeatmapManager.h"
 #include <cstring>
 
 Score::Score()
@@ -17,7 +18,20 @@ Score::Score()
 	mBeatmapChecksum = "";
 }
 
+void Score::Increase(float base_value) {
+    // Score v1 calculation (c) McKay42/McOsu
+    const unsigned long breakTimeMS = BeatmapManager::Current().BreakDurationTotal();
+    const unsigned long lengthPlayable = BeatmapManager::Current().LengthPlayable();
+    const unsigned long drainLength = std::max(lengthPlayable - std::min(breakTimeMS, lengthPlayable), (unsigned long)1000) / 1000;
+
+    const int scoreComboMultiplier = std::max((int)mCombo-1, 0); // current combo, excluding the current hitobject which caused the addHitResult() call
+    const int difficultyMultiplier = (int)std::round((DifficultyManager::GetCircleSize() + (float)DifficultyManager::DifficultyHpDrain + DifficultyManager::DifficultyOverall + std::clamp<float>((float)BeatmapManager::Current().HitObjectCount() / (float)drainLength * 8.0f, 0.0f, 16.0f)) / 38.0f * 5.0f);
+
+    mScore += floor((float)base_value + ((base_value * ((float)scoreComboMultiplier * (float)difficultyMultiplier * mScoreMultiplier)) / 25));
+}
+
 void Score::Add(ScoreType score, bool forceNoCombo, bool gekiKatu) {
+    int32_t score_increase = 0;
     // Special case: SCORE_MISS
 	if (score == SCORE_MISS) {
 		mCombo = 0;
@@ -33,14 +47,15 @@ void Score::Add(ScoreType score, bool forceNoCombo, bool gekiKatu) {
 
     // Special case: SCORE_SPIN_100 / SCORE_SPIN_1000
 	if (score == SCORE_SPIN_100 || score == SCORE_SPIN_1000) {
-		if (score == SCORE_SPIN_100) mScore += 100;
-		else mScore += score;
+		if (score == SCORE_SPIN_100) score_increase += 100;
+		else score_increase += score;
+        Increase((float)score_increase);
         return;
 	}
 
     // Special case: SCORE_TICK_10 / SCORE_TICK_30
 	if (score == SCORE_TICK_30 || score == SCORE_TICK_10) {
-		mScore += score;
+		score_increase += score;
 
 		if (!forceNoCombo) {
 			++mCombo;
@@ -49,12 +64,12 @@ void Score::Add(ScoreType score, bool forceNoCombo, bool gekiKatu) {
 			if(mCombo > mMaxCombo)
 				mMaxCombo = mCombo;
 		}
+
+        Increase((float)score_increase);
         return;
 	}
 
     // Common case: SCORE_50, SCORE_100, SCORE_300
-    mScore += score + MathHelper::Max(0, (int32_t)mCombo-1) * (score/25) * DifficultyManager::DifficultyPeppyStars;
-
     if (!forceNoCombo) {
         ++mCombo;
 
@@ -62,6 +77,8 @@ void Score::Add(ScoreType score, bool forceNoCombo, bool gekiKatu) {
         if(mCombo > mMaxCombo)
             mMaxCombo = mCombo;
     }
+
+    Increase((float)score);
 
     //Increase the respective count
     switch(score) {

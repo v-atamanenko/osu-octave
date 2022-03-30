@@ -77,7 +77,7 @@ HitSlider::HitSlider(int32_t x, int32_t y, int32_t time, uint32_t lengthtime, st
 		}
 	}
 	
-	uint32_t circleSize = DifficultyManager::GetCircleSize();
+	uint32_t circleSize = DifficultyManager::GetCircleSizePX();
 	uint32_t ballSize = (circleSize >> 3) * 7; // 7/8 size
 	uint32_t tickSize = circleSize >> 2; // 1/4 size
 	

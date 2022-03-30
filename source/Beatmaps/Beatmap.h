@@ -62,6 +62,34 @@ class Beatmap
         int32_t StartTime() { return mFirstObjectTime; }
         int32_t EndTime() { return mLastObjectEndTime; }
 
+        [[nodiscard]] long BreakDurationTotal() const
+        {
+            long breakDurationTotal = 0;
+
+            for (auto &bp : mBreakPoints) {
+                breakDurationTotal += (bp.EndTime - bp.StartTime);
+            }
+
+            return breakDurationTotal;
+        }
+
+        [[nodiscard]] long LengthPlayable() const
+        {
+            if (mParser->hitObjects.empty()) { return 0; }
+            osuParser::HitObject last_ho = mParser->hitObjects[mParser->hitObjects.size()-1];
+            long last_ho_dur = 0;
+            if (last_ho.type == osuParser::HitObjectType::oSlider) {
+                last_ho_dur = last_ho.slider.duration;
+            } else if (last_ho.type == osuParser::HitObjectType::oSpinner) {
+                last_ho_dur = last_ho.spinner.duration;
+            }
+            return (last_ho.time + last_ho_dur) - mParser->hitObjects[0].time;
+        }
+
+        uint32_t HitObjectCount() const {
+            return mHitObjectCount;
+        }
+
 		std::string& BeatmapChecksum();
 
         bool Validate() { return mValid; };

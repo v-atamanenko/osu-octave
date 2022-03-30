@@ -12,13 +12,14 @@ uint32_t DifficultyManager::spinnerTime[] = {525, 480, 435, 390, 345, 300, 270, 
 float DifficultyManager::missHpDrain[] = {-10, -18, -26, -34, -42, -50, -56, -62, -68, -74, -80};
 
 uint8_t DifficultyManager::DifficultyHpDrain = 5;
-uint8_t DifficultyManager::DifficultyCircleSize = 5;
-uint8_t DifficultyManager::DifficultyOverall = 5;
+float DifficultyManager::DifficultyCircleSize = 5;
+float DifficultyManager::DifficultyOverall = 5;
 float DifficultyManager::SliderMultiplier = 1.0;
 float DifficultyManager::SliderTickRate = 1.0;
 uint8_t DifficultyManager::DifficultyPeppyStars = 3;
 
 long DifficultyManager::preempt_time_new = 0;
+float DifficultyManager::circle_size = 0;
 float DifficultyManager::circle_size_new = 0;
 float DifficultyManager::spinner_rps = 0;
 long DifficultyManager::fadeInMs = 0;

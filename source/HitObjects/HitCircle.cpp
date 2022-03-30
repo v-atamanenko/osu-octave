@@ -2,7 +2,7 @@
 
 HitCircle::HitCircle(int32_t x, int32_t y, int32_t time, HitObjectType type, HitObjectSound sound, bool combo, int32_t number_in_combo) : HitObject(x, y, time, type, sound, combo, number_in_combo)
 {
-	uint32_t size = DifficultyManager::GetCircleSize();
+	uint32_t size = DifficultyManager::GetCircleSizePX();
 	
 	uint32_t preempt = DifficultyManager::GetPreemptTime();
 	int32_t fadeInStart = (int32_t)time - (int32_t)preempt;

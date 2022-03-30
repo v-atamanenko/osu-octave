@@ -113,14 +113,15 @@ void Beatmap::Initialize()
     AudioManager::Engine().MusicLoad(mAudioFilename);
 
     DifficultyManager::DifficultyHpDrain = (uint8_t)mParser->hpDrainRate;
-    DifficultyManager::DifficultyCircleSize = (uint8_t)mParser->circleSize;
-    DifficultyManager::DifficultyOverall = (uint8_t)mParser->overallDifficulty;
-    DifficultyManager::SliderMultiplier = (uint8_t)mParser->sliderMultiplier;
-    DifficultyManager::SliderTickRate = (uint8_t)mParser->sliderTickRate;
+    DifficultyManager::DifficultyCircleSize = mParser->circleSize;
+    DifficultyManager::DifficultyOverall = mParser->overallDifficulty;
+    DifficultyManager::SliderMultiplier = mParser->sliderMultiplier;
+    DifficultyManager::SliderTickRate = mParser->sliderTickRate;
 
     DifficultyManager::preempt_time_new = mParser->preemptMs;
 
     float hoscale = (Settings::get_float("hoscale") + 100) / 100;
+    DifficultyManager::circle_size = mParser->circleSize;
     DifficultyManager::circle_size_new = (mParser->circleRadiusPx * 2) * hoscale;
     DifficultyManager::hit_window_300 = mParser->hitWindow300;
     DifficultyManager::hit_window_100 = mParser->hitWindow100;

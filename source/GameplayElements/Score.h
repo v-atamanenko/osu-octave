@@ -112,6 +112,8 @@ class Score
 	protected:
 		//The Final score
 		uint32_t mScore;
+        //Score multiplier, can change for different mods
+        float mScoreMultiplier = 1.0f;
 		//The Ending combo
 		uint32_t mCombo;
         //The Final grade letter
@@ -132,6 +134,8 @@ class Score
 		uint32_t mCountKatu;
 		//Checksum of the Map this play belongs to
 		std::string mBeatmapChecksum;
+
+    void Increase(float base_value);
 };
 
 #endif

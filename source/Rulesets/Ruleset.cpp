@@ -31,7 +31,7 @@ void Ruleset::Initialize()
 	mLifebar.Initialize();
 
     if (mCursor) {
-        mCursorSize = (int)round((float)DifficultyManager::GetCircleSize() * 0.83f);
+        mCursorSize = (int)round((float) DifficultyManager::GetCircleSizePX() * 0.83f);
         mCursorSprite = new pSprite(TX_PLAY_CURSOR, 100, 100, mCursorSize, mCursorSize, ORIGIN_CENTER, FIELD_SCREEN, SDL_Color(), 255, -1000090.f);
         mSpriteManager.Add(mCursorSprite);
     }
