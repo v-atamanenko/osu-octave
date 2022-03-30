@@ -137,6 +137,65 @@ class Settings
             o << std::setw(4) << settings << std::endl;
         }
 
+        static void update_action_controls(uint8_t scheme) {
+            if (!settings["controls"].is_array()) {
+                fprintf(stderr, "Setting 'controls' is null. Resetting settings.\n");
+                clear();
+            }
+
+            json controls_new = json::array();
+
+            for (auto & it_1 : settings["controls"]) {
+                // Now it_1 is a single [Control, std::vector<RawKey>] pair
+                Control c = it_1[0].get<Control>();
+
+                if (c != Control::IH_CONTROL_ACTION) {
+                    // Not action controls, append and skip.
+                    controls_new.push_back(it_1);
+                } else {
+                    json action_controls = json::array();
+                    switch (scheme) {
+                        case 0: // L, R
+                            action_controls = {
+                                    {SDL_BUTTON_LEFT, IH_KEY_MOUSE},
+                                    {SDLK_z, IH_KEY_KEYBOARD},
+                                    {SDLK_x, IH_KEY_KEYBOARD},
+                                    {SDL_CONTROLLER_BUTTON_LEFTSHOULDER, IH_KEY_CONTROLLER},
+                                    {SDL_CONTROLLER_BUTTON_RIGHTSHOULDER, IH_KEY_CONTROLLER}
+                            };
+                            break;
+                        case 1: // square, triangle
+                            action_controls = {
+                                    {SDL_BUTTON_LEFT, IH_KEY_MOUSE},
+                                    {SDLK_z, IH_KEY_KEYBOARD},
+                                    {SDLK_x, IH_KEY_KEYBOARD},
+                                    {SDL_CONTROLLER_BUTTON_X, IH_KEY_CONTROLLER},
+                                    {SDL_CONTROLLER_BUTTON_Y, IH_KEY_CONTROLLER}
+                            };
+                            break;
+                        case 2: // d-pad
+                            action_controls = {
+                                    {SDL_BUTTON_LEFT, IH_KEY_MOUSE},
+                                    {SDLK_z, IH_KEY_KEYBOARD},
+                                    {SDLK_x, IH_KEY_KEYBOARD},
+                                    {SDL_CONTROLLER_BUTTON_DPAD_UP, IH_KEY_CONTROLLER},
+                                    {SDL_CONTROLLER_BUTTON_DPAD_DOWN, IH_KEY_CONTROLLER},
+                                    {SDL_CONTROLLER_BUTTON_DPAD_LEFT, IH_KEY_CONTROLLER},
+                                    {SDL_CONTROLLER_BUTTON_DPAD_RIGHT, IH_KEY_CONTROLLER}
+                            };
+                            break;
+                        default:
+                            fprintf(stderr, "Unknown action control type: %i\n", scheme);
+                            assert(false);
+                            break;
+                    }
+                    controls_new.push_back({IH_CONTROL_ACTION, action_controls});
+                }
+            }
+
+            settings["controls"] = controls_new;
+        }
+
         static void clear() {
             settings = {
                     {"page", 0},
@@ -151,6 +210,7 @@ class Settings
                     {"bgdim", 65.0},
                     {"hoscale", 25.0},
                     {"enableStacking", false},
+                    {"controlScheme", 0},
                     {"controls", {
                         {IH_CONTROL_ACTION, {{SDL_BUTTON_LEFT, IH_KEY_MOUSE}, {SDLK_z, IH_KEY_KEYBOARD}, {SDLK_x, IH_KEY_KEYBOARD}, {SDL_CONTROLLER_BUTTON_LEFTSHOULDER, IH_KEY_CONTROLLER}, {SDL_CONTROLLER_BUTTON_RIGHTSHOULDER, IH_KEY_CONTROLLER}}},
                         {IH_CONTROL_SKIP, {{SDLK_SPACE, IH_KEY_KEYBOARD}, {SDL_CONTROLLER_BUTTON_A, IH_KEY_CONTROLLER}}},

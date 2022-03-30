@@ -111,7 +111,7 @@ class RadioButton : public SpriteContainer {
 public:
     int32_t mX;
     int32_t mY;
-    const int32_t mWidth = 258;
+    const int32_t mWidth = 270;
     const int32_t mHeight = 32;
 
     std::function<void(bool)> value_callback;
@@ -130,10 +130,10 @@ public:
         mValue = value;
 
         bg = new pSprite(TX_BUTTON_RADIO, mX, mY, mWidth, mHeight, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.5f);
-        falseValueLabel = new pText(false_value_label, FONT_PIXEL, mX+67, mY+16);
+        falseValueLabel = new pText(false_value_label, FONT_PIXEL, mX+70, mY+16);
         falseValueLabel->Z = -0.6f;
         falseValueLabel->Origin = ORIGIN_CENTER;
-        trueValueLabel = new pText(true_value_label, FONT_PIXEL, mX+192, mY+16);
+        trueValueLabel = new pText(true_value_label, FONT_PIXEL, mX+200, mY+16);
         trueValueLabel->Z = -0.6f;
         trueValueLabel->Origin = ORIGIN_CENTER;
 
@@ -182,6 +182,98 @@ public:
             falseValueLabel->Font = FONT_PIXEL_ACTIVE;
             trueValueLabel->Font = FONT_PIXEL;
         }
+
+        value_callback(mValue);
+
+        mTouchActive = false;
+        return true;
+    }
+};
+
+class TernaryButton : public SpriteContainer {
+public:
+    int32_t mX;
+    int32_t mY;
+    const int32_t mWidth = 270;
+    const int32_t mHeight = 32;
+
+    std::function<void(uint8_t)> value_callback;
+
+    pSprite* bg;
+
+    TextureType bgtex1;
+    TextureType bgtex2;
+    TextureType bgtex3;
+
+    uint8_t mValue;
+    uint8_t mClickedValue;
+    bool mTouchActive = false;
+
+    TernaryButton(int32_t x, int32_t y, uint8_t value, TextureType bg1, TextureType bg2, TextureType bg3) {
+        mX = x;
+        mY = y;
+        mValue = value;
+
+        bgtex1 = bg1;
+        bgtex2 = bg2;
+        bgtex3 = bg3;
+
+        TextureType currentBG;
+        switch (value) {
+            case 0: currentBG = bgtex1; break;
+            case 1: currentBG = bgtex2; break;
+            case 2: currentBG = bgtex3; break;
+        }
+
+        bg = new pSprite(currentBG, mX, mY, mWidth, mHeight, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.5f);
+        mSprites.push_back(bg);
+    }
+
+    bool InBounds(int32_t x, int32_t y) {
+        int32_t width_1_3 = floor(mWidth / 3);
+        SDL_Rect r_a = SDL_Rect({mX, mY, width_1_3, mHeight});
+        SDL_Rect r_b = SDL_Rect({mX+width_1_3, mY, width_1_3, mHeight});
+        SDL_Rect r_c = SDL_Rect({mX+width_1_3+width_1_3, mY, width_1_3, mHeight});
+        SDL_Point p = {x,y};
+
+        if (SDL_PointInRect(&p, &r_a)) {
+            mClickedValue = 0;
+            return true;
+        }
+
+        if (SDL_PointInRect(&p, &r_b)) {
+            mClickedValue = 1;
+            return true;
+        }
+
+        if (SDL_PointInRect(&p, &r_c)) {
+            mClickedValue = 2;
+            return true;
+        }
+
+        return false;
+    }
+
+    void OnTouchDown(const touchPosition& touch) {
+        mTouchActive = true;
+    }
+
+    bool OnTouchUp(const touchPosition& touch) {
+        if (!mTouchActive) {
+            return false;
+        }
+
+        mValue = mClickedValue;
+
+        TextureType currentBG;
+        switch (mValue) {
+            case 0: currentBG = bgtex1; break;
+            case 1: currentBG = bgtex2; break;
+            case 2: currentBG = bgtex3; break;
+        }
+
+        bg->Texture = currentBG;
+        AudioManager::Engine().PlayUISound(UISOUND_CHECK_ON);
 
         value_callback(mValue);
 
@@ -279,6 +371,7 @@ protected:
     std::vector<ValueSlider *> valueSliders;
     std::vector<StringSelector *> stringSelectors;
     std::vector<RadioButton *> radioButtons;
+    std::vector<TernaryButton *> ternaryButtons;
 
     void HandleInput() override;
 
@@ -293,6 +386,9 @@ protected:
 
     void CreateRadioButton(int32_t x, int32_t y, const std::string &setting_name,
                            const std::string &false_value_label, const std::string &true_value_label);
+
+    void CreateTernaryButton(int32_t x, int32_t y, const std::string &setting_name, TextureType bg1, TextureType bg2,
+                             TextureType bg3);
 };
 
 #endif //_MODESETTINGS_H

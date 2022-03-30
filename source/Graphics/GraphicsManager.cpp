@@ -288,6 +288,10 @@ void GraphicsManager::LoadTexturesForMode(ModeType mod) {
             LoadTexture(TX_SETTINGS_PANEL_GAMEPLAY, skin_path+"ui/settings-panel-gameplay.png");
             LoadTexture(TX_SETTINGS_PANEL_GENERAL, skin_path+"ui/settings-panel-general.png");
             LoadTexture(TX_BUTTON_RADIO, skin_path+"ui/radio-button.png");
+            LoadTexture(TX_SETTINGS_CONTROL_SELECTOR_1, skin_path+"ui/controls-selector-1.png");
+            LoadTexture(TX_SETTINGS_CONTROL_SELECTOR_2, skin_path+"ui/controls-selector-2.png");
+            LoadTexture(TX_SETTINGS_CONTROL_SELECTOR_3, skin_path+"ui/controls-selector-3.png");
+
             break;
         case MODE_ABOUT:
             LoadTexture(TX_LOGO, skin_path + "ui/logo.png");

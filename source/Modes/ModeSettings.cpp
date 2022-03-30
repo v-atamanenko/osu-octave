@@ -97,6 +97,20 @@ void RadioButton_saveDisplayedValue (bool val, const std::string& setting_name) 
     Settings::set_bool(setting_name, val);
 }
 
+
+void TernaryButton_saveDisplayedValue (uint8_t val, const std::string& setting_name) {
+    if (setting_name == "controlScheme") {
+        // ..
+    } else {
+        assert(false); // TernaryButtons are only used for control scheme selection for now.
+    }
+
+    Settings::update_action_controls(val);
+    InputHelper::InitInput();
+}
+
+
+
 void ModeSettings::CreateRadioButton(int32_t x, int32_t y, const std::string& setting_name,
                                      const std::string& false_value_label, const std::string& true_value_label) {
     auto* rb = new RadioButton(x, y, false_value_label, true_value_label, Settings::get_bool(setting_name));
@@ -105,6 +119,17 @@ void ModeSettings::CreateRadioButton(int32_t x, int32_t y, const std::string& se
     rb->value_callback = saveval_lambda;
 
     radioButtons.push_back(rb);
+    rb->AddToSpriteManager(mSpriteManager);
+}
+
+void ModeSettings::CreateTernaryButton(int32_t x, int32_t y, const std::string& setting_name,
+                                       TextureType bg1, TextureType bg2, TextureType bg3) {
+    auto* rb = new TernaryButton(x, y, Settings::get_int(setting_name), bg1, bg2, bg3);
+
+    std::function<void(uint8_t)> saveval_lambda = [setting_name](uint8_t s) { return TernaryButton_saveDisplayedValue(s, setting_name); };
+    rb->value_callback = saveval_lambda;
+
+    ternaryButtons.push_back(rb);
     rb->AddToSpriteManager(mSpriteManager);
 }
 
@@ -198,8 +223,11 @@ void ModeSettings::TabGameplay() {
     spr->OnClick = ModeSettings_SwitchTabToGeneral;
     mSpriteManager.Add(spr);
 
-    CreateRadioButton(562, 155, "noFail", "Disable", "Enable");
-    CreateRadioButton(562, 302, "vitaUseBackTouch", "Front touch", "Back touch");
+    CreateRadioButton(572, 155, "noFail", "Disable", "Enable");
+    CreateRadioButton(572, 280, "vitaUseBackTouch", "Front touch", "Back touch");
+    CreateTernaryButton(572, 326, "controlScheme", TX_SETTINGS_CONTROL_SELECTOR_1, TX_SETTINGS_CONTROL_SELECTOR_2, TX_SETTINGS_CONTROL_SELECTOR_3);
+    CreateRadioButton(572, 429, "enableStacking", "Disable", "Enable");
+
 }
 
 void ModeSettings::Update() {
@@ -236,6 +264,11 @@ void ModeSettings::Clear() {
         delete v;
     }
     radioButtons.clear();
+
+    for (auto v : ternaryButtons) {
+        delete v;
+    }
+    ternaryButtons.clear();
 
     delete mLogo;
 }
@@ -279,6 +312,19 @@ void ModeSettings::HandleInput() {
     }
 
     for(auto v : radioButtons) {
+        if (InputHelper::KeyDown(Control::IH_CONTROL_ACTION) && v->InBounds(touch.px, touch.py) && ! InputHelper::BlockKeydown) {
+            v->OnTouchDown(touch);
+            InputHelper::BlockKeydown = true;
+            return;
+        }
+
+        if (InputHelper::KeyUp(Control::IH_CONTROL_ACTION)) {
+            if (v->OnTouchUp(touch))
+                return;
+        }
+    }
+
+    for(auto v : ternaryButtons) {
         if (InputHelper::KeyDown(Control::IH_CONTROL_ACTION) && v->InBounds(touch.px, touch.py) && ! InputHelper::BlockKeydown) {
             v->OnTouchDown(touch);
             InputHelper::BlockKeydown = true;
