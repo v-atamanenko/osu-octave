@@ -1,13 +1,16 @@
+#pragma once
+
 #include <cstdio>
 #include <cstdarg>
 #include <vector>
+
 #include "SDL_ttf.h"
 #include "SDL_FontCache.h"
 
+#include "DataStorage/Settings.h"
 #include "Graphics/GraphicsManager.h"
 
-#ifndef __TEXTMANAGER_H__
-#define __TEXTMANAGER_H__
+#include "defines.h"
 
 #define NUMBER_OF_FONTS 9
 
@@ -30,17 +33,15 @@ class TextManager
         static void InitDeferred();
         static void SetFont(FontName font);
 
-        static void Print(float x, float y, const char *fmt, ...);
-        static void PrintLocate(float x, float y, DrawOrigin origin, const char *fmt, ...);
+        static void Print(OOInt x, OOInt y, const char *fmt, ...);
+        static void PrintLocate(OOInt x, OOInt y, DrawOrigin origin, const char *fmt, ...);
 	
 	protected:
 		static FC_Font* mFonts[NUMBER_OF_FONTS];
         static FontName currentFont;
 
-		static void AddFont(FontName font, const std::string& path, int ptsize=18, SDL_Color c={0, 0, 0, 255});
+		static void AddFont(FontName font, const std::string& path, OOInt ptsize=18, SDL_Color c={0, 0, 0, 255});
 
 	private:
 		TextManager() = default;
 };
-
-#endif

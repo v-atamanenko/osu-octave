@@ -1,13 +1,12 @@
 #include "HitObject.h"
 
 SDL_Color HitObject::mColour = {0,0,0};
-float HitObject::sScoreDeltaZ = 0;
-float HitObject::sSliderDeltaZ = 0;
-int32_t HitObject::sLastSliderTime = 0;
-ICallback* HitObject::mScoreCallback = NULL;
+OOFloat HitObject::sScoreDeltaZ = 0;
+OOFloat HitObject::sSliderDeltaZ = 0;
+OOInt HitObject::sLastSliderTime = 0;
+ICallback* HitObject::mScoreCallback = nullptr;
 
-HitObject::HitObject(int32_t x, int32_t y, int32_t time, HitObjectType type, HitObjectSound sound, bool combo, int32_t number_in_combo)
-{
+HitObject::HitObject(OOInt x, OOInt y, OOTime time, HitObjectType type, HitObjectSound sound, bool combo, OOInt number_in_combo) {
 	mX = x;
 	mY = y;
 	mTime = time;
@@ -23,25 +22,17 @@ HitObject::HitObject(int32_t x, int32_t y, int32_t time, HitObjectType type, Hit
 	if (combo) {
 		mColour = BeatmapElements::Element().GetNextColour();
 	}
-
 }
 
-HitObject::~HitObject()
-{
-}
-
-void HitObject::Hit()
-{
+void HitObject::Hit() {
 	mHit = true;
 }
 
-void HitObject::IncreaseScore(ScoreType score, bool forceNoCombo, bool forceNoAnimation)
-{
+void HitObject::IncreaseScore(ScoreType score, bool forceNoCombo, bool forceNoAnimation) {
 	IncreaseScore(score, forceNoCombo, forceNoAnimation, mScoreSpriteId);
 }
 
-void HitObject::IncreaseScore(ScoreType score, bool forceNoCombo, bool forceNoAnimation, uint32_t spriteId)
-{
+void HitObject::IncreaseScore(ScoreType score, bool forceNoCombo, bool forceNoAnimation, OOUInt spriteId) {
 	HitObjectPoint point = {
 		mSprites[spriteId]->X,
 		mSprites[spriteId]->Y,
@@ -62,16 +53,14 @@ void HitObject::IncreaseScore(ScoreType score, bool forceNoCombo, bool forceNoAn
 	delete[] args;
 }
 
-void HitObject::SetScoreCallback(ICallback* scoreCallback)
-{
+void HitObject::SetScoreCallback(ICallback* scoreCallback) {
 	//if (mScoreCallback != NULL)
 	//	delete mScoreCallback;
 	
 	mScoreCallback = scoreCallback;
 }
 
-void HitObject::SetPostCreateOptions(bool comboend, int32_t nextx, int32_t nexty)
-{
+void HitObject::SetPostCreateOptions(bool comboend, int32_t nextx, int32_t nexty) {
 	//set whether this is the last object of a combo
 	mComboEnd = comboend;
 	/*
@@ -103,4 +92,3 @@ void HitObject::SetPostCreateOptions(bool comboend, int32_t nextx, int32_t nexty
 	}
 	*/
 }
-

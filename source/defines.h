@@ -1,5 +1,4 @@
-#ifndef __DEFINES_H__
-#define __DEFINES_H__
+#pragma once
 
 #include "SDL.h"
 
@@ -42,5 +41,3 @@ extern SDL_Renderer *renderer;
 #define DEF_BeatmapsIndexFilename "beatmaps.json"
 #define DEF_BeatmapsStateFilename "beatmaps_state.json"
 #endif
-
-#endif // __DEFINES_H__

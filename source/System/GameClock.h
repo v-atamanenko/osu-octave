@@ -1,34 +1,32 @@
-#ifndef __GAMECLOCK_H__
-#define __GAMECLOCK_H__
+#pragma once
 
 #include "cstdint"
+#include <SDL_timer.h>
+#include "types.h"
 
 class GameClock
 {
 	public:
-		long Time() const;
+        [[nodiscard]] OOTime Time() const;
 		
-		void Update(); //calls should be synced with vblank
-		void SkipTo(int time);
+		void Update();
+		void SkipTo(OOTime time);
 		void Reset();
-        void Reset(int32_t to);
+        void Reset(OOTime to);
         void Pause();
         void Resume();
 		
 		static GameClock& Clock() { return sClock; }
-	
+
 	protected:
-        long mStartedAt;
-        long mLastUpdateAt;
-		long mTime;
+        OOTime mTime;
+        OOTime mLastUpdateAt;
+
         bool mPaused = false;
 		
 		static GameClock sClock;
-	
+
 	private:
 		GameClock();
 		~GameClock() = default;
 };
-
-#endif
-

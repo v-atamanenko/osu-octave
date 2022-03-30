@@ -2,9 +2,9 @@
 
 std::vector<SDL_Event> InputHelper::sdlEvents;
 std::vector<SDL_Event> InputHelper::simulatedKeyDowns;
-std::vector<int> InputHelper::heldControllerKeys;
-std::vector<int> InputHelper::heldKeyboardKeys;
-std::vector<int> InputHelper::heldMouseButtons;
+std::vector<OOInt> InputHelper::heldControllerKeys;
+std::vector<OOInt> InputHelper::heldKeyboardKeys;
+std::vector<OOInt> InputHelper::heldMouseButtons;
 touchPosition InputHelper::mTouch;
 bool InputHelper::BlockKeydown = false;
 
@@ -65,8 +65,8 @@ int InputHelper::PollSDL()
                 if ((event.tfinger.touchId == 0 && !vitaUseBackTouch) ||
                     (event.tfinger.touchId == 1 && vitaUseBackTouch)) {
 #endif
-                    mTouch.px = (uint32_t) round(event.tfinger.x * (float) SCREEN_WIDTH);
-                    mTouch.py = (uint32_t) round(event.tfinger.y * (float) SCREEN_HEIGHT);
+                    mTouch.px = (OOInt) round(event.tfinger.x * (OOFloat) SCREEN_WIDTH);
+                    mTouch.py = (OOInt) round(event.tfinger.y * (OOFloat) SCREEN_HEIGHT);
 #ifdef __vita__
                 }
 #endif
@@ -77,8 +77,8 @@ int InputHelper::PollSDL()
                 if ((event.tfinger.touchId == 0 && !vitaUseBackTouch) ||
                     (event.tfinger.touchId == 1 && vitaUseBackTouch)) {
 #endif
-                mTouch.px = (uint32_t) round(event.tfinger.x * (float) SCREEN_WIDTH);
-                mTouch.py = (uint32_t) round(event.tfinger.y * (float) SCREEN_HEIGHT);
+                mTouch.px = (OOInt) round(event.tfinger.x * (OOFloat) SCREEN_WIDTH);
+                mTouch.py = (OOInt) round(event.tfinger.y * (OOFloat) SCREEN_HEIGHT);
 #ifdef __vita__
                 }
 #endif
@@ -103,8 +103,7 @@ int InputHelper::PollSDL()
     return 0;
 }
 
-bool InputHelper::KeyDown(Control c)
-{
+bool InputHelper::KeyDown(Control c) {
     for (SDL_Event e : sdlEvents) {
         for (RawKey k : mControls[c]) {
             if (e.type == SDL_CONTROLLERBUTTONDOWN &&
@@ -249,12 +248,17 @@ touchPosition& InputHelper::TouchRead() {
 }
 
 void InputHelper::ClearInput() {
-    heldMouseButtons.clear();
-    heldKeyboardKeys.clear();
-    heldControllerKeys.clear();
     sdlEvents.clear();
+    simulatedKeyDowns.clear();
+    heldControllerKeys.clear();
+    heldKeyboardKeys.clear();
+    heldMouseButtons.clear();
+    BlockKeydown = false;
 }
 
 void InputHelper::InitInput() {
-    Settings::get_controls(mControls, &vitaUseBackTouch);
+    //ClearInput();
+    BlockKeydown = true;
+    Settings::get_controls(mControls, vitaUseBackTouch);
+    BlockKeydown = false;
 }

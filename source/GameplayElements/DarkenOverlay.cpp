@@ -1,20 +1,18 @@
 #include "DarkenOverlay.h"
 
-DarkenOverlay::DarkenOverlay()
-{
+DarkenOverlay::DarkenOverlay() {
     auto* spr = new pSprite(TX_PLAY_DARKEN_OVERLAY, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 0);
     mSprites.push_back(spr);
 }
 
-//can only be called after beatmap has been loaded
-void DarkenOverlay::Initialize()
-{
-    int32_t mFillTime = MathHelper::Min(10000, BeatmapManager::Current().StartTime() - BeatmapManager::Current().AudioLeadIn());
+// Can only be called after the beatmap has been loaded
+void DarkenOverlay::Initialize() {
+    OOTime mFillTime = MathHelper::Min(10000, BeatmapManager::Current().StartTime() - BeatmapManager::Current().AudioLeadIn());
 
-    int start = BeatmapManager::Current().StartTime() - mFillTime;
-    int end = MathHelper::Max(BeatmapManager::Current().StartTime(), 701) - 700;
+    OOTime start = BeatmapManager::Current().StartTime() - mFillTime;
+    OOTime end = MathHelper::Max(BeatmapManager::Current().StartTime(), 701) - 700;
 
-    mSprites[0]->Z = (float)(BeatmapManager::Current().EndTime() + 6000);
+    mSprites[0]->Z = (OOFloat)(BeatmapManager::Current().EndTime() + 6000);
     mSprites[0]->Show(start,end);
 
     for (const BreakPoint& bp : BeatmapManager::Current().Breakpoints()) {

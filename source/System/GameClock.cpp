@@ -1,25 +1,24 @@
-#include <SDL_timer.h>
 #include "GameClock.h"
+
 GameClock GameClock::sClock;
 
 GameClock::GameClock() {
-    mStartedAt = SDL_GetTicks();
-    mLastUpdateAt = SDL_GetTicks();
+    mLastUpdateAt = (OOTime)SDL_GetTicks();
 	mTime = 0;
 }
 
-long GameClock::Time() const {
+OOTime GameClock::Time() const {
 	return mTime;
 }
 
 void GameClock::Update() {
     if (!mPaused)
-        mTime += (SDL_GetTicks() - mLastUpdateAt);
-    mLastUpdateAt = SDL_GetTicks();
+        mTime += ((OOTime)SDL_GetTicks() - mLastUpdateAt);
+    mLastUpdateAt = (OOTime)SDL_GetTicks();
 }
 
-void GameClock::SkipTo(int time) {
-    mLastUpdateAt = SDL_GetTicks();
+void GameClock::SkipTo(OOTime time) {
+    mLastUpdateAt = (OOTime)SDL_GetTicks();
 	mTime = time;
 }
 
@@ -28,7 +27,7 @@ void GameClock::Reset() {
     mPaused = false;
 }
 
-void GameClock::Reset(int32_t to) {
+void GameClock::Reset(OOTime to) {
     SkipTo(to);
     mPaused = false;
 }
@@ -40,4 +39,3 @@ void GameClock::Pause() {
 void GameClock::Resume() {
     mPaused = false;
 }
-

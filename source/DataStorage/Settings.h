@@ -1,5 +1,4 @@
-#ifndef _SETTINGS_H
-#define _SETTINGS_H
+#pragma once
 
 #include <fstream>
 #include <limits>
@@ -9,6 +8,7 @@
 #include "types.h"
 
 #include "Helpers/JSON.hpp"
+
 using json = nlohmann::json;
 
 inline bool is_dir(char* p) {
@@ -32,14 +32,16 @@ class Settings
             }
             return settings[key].get<std::string>();
         }
+
         static int get_int(const std::string& key) {
             if (settings[key].is_null()) {
                 fprintf(stderr, "Setting %s is null. Resetting settings.\n", key.c_str());
                 clear();
                 return get_int(key);
             }
-            return settings[key].get<int>();
+            return settings[key].get<OOInt>();
         }
+
         static BeatmapFilter get_beatmapfilter(const std::string& key) {
             if (settings[key].is_null()) {
                 fprintf(stderr, "Setting %s is null. Resetting settings.\n", key.c_str());
@@ -48,14 +50,16 @@ class Settings
             }
             return settings[key].get<BeatmapFilter>();
         }
-        static float get_float(const std::string& key) {
+
+        static OOFloat get_float(const std::string& key) {
             if (settings[key].is_null()) {
                 fprintf(stderr, "Setting %s is null. Resetting settings.\n", key.c_str());
                 clear();
                 return get_float(key);
             }
-            return settings[key].get<float>();
+            return settings[key].get<OOFloat>();
         }
+
         static bool get_bool(const std::string& key) {
             if (settings[key].is_null()) {
                 fprintf(stderr, "Setting %s is null. Resetting settings.\n", key.c_str());
@@ -64,7 +68,8 @@ class Settings
             }
             return settings[key].get<bool>();
         }
-        static void get_controls(std::map<Control, std::vector<RawKey>>& controls, bool* vitaUseBackTouch) {
+
+        static void get_controls(std::map<Control, std::vector<RawKey>>& controls, bool& vitaUseBackTouch) {
             controls.clear();
             if (!settings["controls"].is_array()) {
                 fprintf(stderr, "Setting 'controls' is null. Resetting settings.\n");
@@ -72,7 +77,7 @@ class Settings
                 return get_controls(controls, vitaUseBackTouch);
             }
 
-            *vitaUseBackTouch = get_bool("vitaUseBackTouch");
+            vitaUseBackTouch = get_bool("vitaUseBackTouch");
 
             for (auto & it_1 : settings["controls"]) {
                 // Now it_1 is a single [Control, std::vector<RawKey>] pair
@@ -124,9 +129,9 @@ class Settings
         }
 
         static void set_str(const std::string& key, const std::string& value) { settings[key] = value; }
-        static void set_int(const std::string& key, const int value) { settings[key] = value; }
+        static void set_int(const std::string& key, const OOInt value) { settings[key] = value; }
         static void set_beatmapfilter(const std::string& key, const BeatmapFilter value) { settings[key] = value; }
-        static void set_float(const std::string& key, const float value) { settings[key] = value; }
+        static void set_float(const std::string& key, const OOFloat value) { settings[key] = value; }
         static void set_bool(const std::string& key, const bool value) { settings[key] = value; }
 
         static void save() {
@@ -137,7 +142,7 @@ class Settings
             o << std::setw(4) << settings << std::endl;
         }
 
-        static void update_action_controls(uint8_t scheme) {
+        static void update_action_controls(OOUShort scheme) {
             if (!settings["controls"].is_array()) {
                 fprintf(stderr, "Setting 'controls' is null. Resetting settings.\n");
                 clear();
@@ -239,5 +244,3 @@ class Settings
     private:
         static json settings;
 };
-
-#endif //_SETTINGS_H

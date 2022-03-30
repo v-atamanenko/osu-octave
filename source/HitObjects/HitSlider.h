@@ -1,10 +1,8 @@
+#pragma once
+
 #include <vector>
 #include "HitObject.h"
-
-#ifndef __HITSLIDER_H__
-#define __HITSLIDER_H__
-
-typedef std::vector<HitObjectPoint*>::iterator pointIterator;
+#include "Graphics/pSprite.h"
 
 typedef struct {
 	pSprite* Tick;
@@ -14,10 +12,10 @@ typedef struct {
 class HitSlider : public HitObject
 {
 	public:
-		HitSlider(int32_t x, int32_t y, int32_t time, uint32_t lengthtime, std::vector<HitObjectPoint*>& points, std::vector<HitObjectPoint*>& ticks, uint32_t repeats, HitObjectType type, HitObjectSound sound, bool combo, int32_t number_in_combo);
+		HitSlider(OOInt x, OOInt y, OOTime time, OOTime lengthtime, std::vector<HitObjectPoint*>& points, std::vector<HitObjectPoint*>& ticks, OOUInt repeats, HitObjectType type, HitObjectSound sound, bool combo, OOInt number_in_combo);
 		~HitSlider();
 		
-		bool InBounds(int32_t x, int32_t y);
+		bool InBounds(OOInt x, OOInt y);
 		
 		void Update();
 		
@@ -30,21 +28,19 @@ class HitSlider : public HitObject
         HitObjectPoint mEndPoint;
 	
 	protected:
-		static void MapSliderPath(pSprite* spr, std::vector<HitObjectPoint*>& points, int32_t time, uint32_t lengthtime, uint32_t repeats);
+		static void MapSliderPath(pSprite* spr, std::vector<HitObjectPoint*>& points, OOTime time, OOTime lengthtime, OOUInt repeats);
 		
 		bool fTouching, fStarted, fFinished;
+        bool mCreatedFadeoutTransform = false;
 		TickSprites* mTicks;
-		int32_t* mTickTimes;
-		uint32_t mTickTime, mLengthTime;
+		OOTime * mTickTimes;
+		OOTime mTickTime, mLengthTime;
 		
-		uint32_t mTickCount, mTicksHit, mTicksTarget;
-		uint32_t mRepeats, mRepeatCurrent;
-		int32_t mTimeLast;
+		OOUInt mTickCount, mTicksHit, mTicksTarget;
+		OOUInt mRepeats, mRepeatCurrent;
+		OOTime mTimeLast;
 		
-		uint32_t mSecondaryScoreSpriteId;
+		OOUInt mSecondaryScoreSpriteId;
 		
-		int mChannel;
+		OOInt mChannel;
 };
-
-#endif
-

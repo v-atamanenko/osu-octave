@@ -1,4 +1,3 @@
-#include "SDL.h"
 #include "RulesetOsu.h"
 
 RulesetOsu::RulesetOsu() {
@@ -10,7 +9,7 @@ RulesetOsu::RulesetOsu() {
 void RulesetOsu::IncreaseScore(ScoreType score, bool forceNoCombo, bool forceNoAnimation, HitObjectPoint point, bool comboEnd) {
     TextureType tex;
     float hpIncrease = 0;
-    long now = GameClock::Clock().Time();
+    OOTime now = GameClock::Clock().Time();
 
     switch (score) {
         case SCORE_300:

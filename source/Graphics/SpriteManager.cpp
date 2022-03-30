@@ -1,7 +1,4 @@
 #include "SpriteManager.h"
-#include <algorithm>
-
-SpriteManager::SpriteManager() = default;
 
 SpriteManager::~SpriteManager() {
 	for (auto & mSprite : mSprites) {
@@ -12,6 +9,7 @@ SpriteManager::~SpriteManager() {
 }
 
 void SpriteManager::SortZ() {
+    mSpritesSorted.clear();
     mSpritesSorted = mSprites;
     std::sort(mSpritesSorted.begin(), mSpritesSorted.end(), [](const pDrawable* first, const pDrawable* second) {
         return first->Z > second->Z;
@@ -22,7 +20,7 @@ void SpriteManager::Draw(bool ignoreInput) {
     for (auto it = mSprites.begin(); it != mSprites.end();) {
         pDrawable *spr = *it;
 
-        //if for some reason sprite is nonexistent then mark for deletion
+        // If for some reason the sprite is null, remove it.
         if (spr == nullptr) {
             it = mSprites.erase(it);
             continue;
@@ -30,7 +28,7 @@ void SpriteManager::Draw(bool ignoreInput) {
 
         spr->Update();
 
-        //if sprite is dead then mark for deletion
+        // If sprite is dead after the update, remove it.
         if (!spr->Alive()) {
             delete *it;
             it = mSprites.erase(it);
@@ -45,7 +43,7 @@ void SpriteManager::Draw(bool ignoreInput) {
 	for (auto it = mSpritesSorted.begin(); it != mSpritesSorted.end();) {
         pDrawable *spr = *it;
 
-       //no need to draw things you can't see
+        // No need to draw things you can't see.
         if (spr->Width == 0 || spr->Height == 0 || spr->Alpha == 0) {
             ++it;
             continue;
@@ -70,11 +68,11 @@ void SpriteManager::Add(const std::vector<pDrawable*>& spr) {
 	}
 }
 
-void SpriteManager::Remove(int32_t id) {
+[[maybe_unused]] void SpriteManager::Remove(OOUInt id) {
     if (mSprites.size() > id) {
         mSprites.erase(mSprites.begin() + id);
     } else {
-        fprintf(stderr, "[WARNING]: SpriteManager was asked to remove out-of-bounds sprite.");
+        fprintf(stderr, "[WARNING]: SpriteManager was asked to remove an out-of-bounds sprite.\n");
     }
 }
 
@@ -92,14 +90,15 @@ void SpriteManager::Clear() {
 }
 
 void SpriteManager::HandleTouchInput() {
-    if (!InputHelper::KeyDown(Control::IH_CONTROL_ACTION))
-		return;
+    if (!InputHelper::KeyDown(Control::IH_CONTROL_ACTION)) return;
 	touchPosition touchPos = InputHelper::TouchRead();
 
     SortZ();
     for (auto current : mSpritesSorted) {
-        if (current->InBounds((int32_t)touchPos.px, (int32_t)touchPos.py) && current->Clickable) {
-			current->OnClick(current, touchPos.px, touchPos.py);
-		}
+        if (current->Clickable) {
+            if (current->InBounds(touchPos.px, touchPos.py)) {
+                current->OnClick(current, touchPos.px, touchPos.py);
+            }
+        }
 	}
 }

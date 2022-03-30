@@ -1,5 +1,4 @@
 #include "SDLInitializer.h"
-#include "defines.h"
 
 SDLInitializer SDLInitializer::SDLI;
 

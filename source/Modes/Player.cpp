@@ -1,9 +1,6 @@
 #include "Player.h"
-#include "DataStorage/Settings.h"
-//#include "menuBG.h"
 
-Player::Player()
-{
+Player::Player() {
     GraphicsManager::Graphics().LoadTexturesForMode(MODE_PLAYER);
     BeatmapManager::Current().InitBG();
 
@@ -16,16 +13,11 @@ Player::Player()
     mNoFail = Settings::get_bool("noFail");
 }
 
-Player::~Player()
-{
-    //delete mBaseDir;
-    //GraphicsManager::Graphics().UnloadTextures();
-    //AudioManager::Engine().MusicStop();
+Player::~Player() {
     mRuleset.StopMusic();
 }
 
-void Player::Update()
-{
+void Player::Update() {
     GraphicsManager::Graphics().DrawBeatmapBackground();
 
     switch (mPlayState) {
@@ -63,23 +55,18 @@ void Player::Update()
         default:
             break;
     }
-
-    //AudioManager::Engine().MusicUpdate();
 }
 
-void Player::HandleInput()
-{
+void Player::HandleInput() {
     if (mPlayState == PLAYSTATE_PLAY)
         mRuleset.HandleInput();
 
     //handle play mode input
-    if (InputHelper::KeyDown(Control::IH_CONTROL_SKIP))
-    {
+    if (InputHelper::KeyDown(Control::IH_CONTROL_SKIP)) {
         mRuleset.Skip();
     }
 
-    if (InputHelper::KeyDown(Control::IH_CONTROL_QUIT))
-    {
+    if (InputHelper::KeyDown(Control::IH_CONTROL_QUIT)) {
         if (mPlayState == PLAYSTATE_PLAY) {
             mRuleset.OnPause();
             mPlayState = PLAYSTATE_PAUSE;

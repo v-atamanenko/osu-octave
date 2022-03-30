@@ -1,9 +1,6 @@
 #include "Score.h"
-#include "Beatmaps/BeatmapManager.h"
-#include <cstring>
 
-Score::Score()
-{
+Score::Score() {
 	mScore = 0;
 	mCombo = 0;
 	mScore = 0; 
@@ -18,20 +15,20 @@ Score::Score()
 	mBeatmapChecksum = "";
 }
 
-void Score::Increase(float base_value) {
+void Score::Increase(OOFloat base_value) {
     // Score v1 calculation (c) McKay42/McOsu
-    const unsigned long breakTimeMS = BeatmapManager::Current().BreakDurationTotal();
-    const unsigned long lengthPlayable = BeatmapManager::Current().LengthPlayable();
-    const unsigned long drainLength = std::max(lengthPlayable - std::min(breakTimeMS, lengthPlayable), (unsigned long)1000) / 1000;
+    const OOTime breakTimeMS = BeatmapManager::Current().BreakDurationTotal();
+    const OOTime lengthPlayable = BeatmapManager::Current().LengthPlayable();
+    const OOTime drainLength = std::max(lengthPlayable - std::min(breakTimeMS, lengthPlayable), (OOTime)1000) / 1000;
 
-    const int scoreComboMultiplier = std::max((int)mCombo-1, 0); // current combo, excluding the current hitobject which caused the addHitResult() call
-    const int difficultyMultiplier = (int)std::round((DifficultyManager::GetCircleSize() + (float)DifficultyManager::DifficultyHpDrain + DifficultyManager::DifficultyOverall + std::clamp<float>((float)BeatmapManager::Current().HitObjectCount() / (float)drainLength * 8.0f, 0.0f, 16.0f)) / 38.0f * 5.0f);
+    const OOInt scoreComboMultiplier = std::max((OOInt)mCombo-1, 0); // current combo, excluding the current hitobject which caused the addHitResult() call
+    const OOInt difficultyMultiplier = (OOInt)std::round((DifficultyManager::CS + DifficultyManager::HP + DifficultyManager::OD + std::clamp<OOFloat>((OOFloat)BeatmapManager::Current().HitObjectCount() / (OOFloat)drainLength * 8.0f, 0.0f, 16.0f)) / 38.0f * 5.0f);
 
-    mScore += floor((float)base_value + ((base_value * ((float)scoreComboMultiplier * (float)difficultyMultiplier * mScoreMultiplier)) / 25));
+    mScore += floor((OOFloat)base_value + ((base_value * ((OOFloat)scoreComboMultiplier * (OOFloat)difficultyMultiplier * mScoreMultiplier)) / 25));
 }
 
 void Score::Add(ScoreType score, bool forceNoCombo, bool gekiKatu) {
-    int32_t score_increase = 0;
+    OOInt score_increase = 0;
     // Special case: SCORE_MISS
 	if (score == SCORE_MISS) {
 		mCombo = 0;
@@ -49,7 +46,7 @@ void Score::Add(ScoreType score, bool forceNoCombo, bool gekiKatu) {
 	if (score == SCORE_SPIN_100 || score == SCORE_SPIN_1000) {
 		if (score == SCORE_SPIN_100) score_increase += 100;
 		else score_increase += score;
-        Increase((float)score_increase);
+        Increase((OOFloat)score_increase);
         return;
 	}
 
@@ -65,7 +62,7 @@ void Score::Add(ScoreType score, bool forceNoCombo, bool gekiKatu) {
 				mMaxCombo = mCombo;
 		}
 
-        Increase((float)score_increase);
+        Increase((OOFloat)score_increase);
         return;
 	}
 
@@ -78,7 +75,7 @@ void Score::Add(ScoreType score, bool forceNoCombo, bool gekiKatu) {
             mMaxCombo = mCombo;
     }
 
-    Increase((float)score);
+    Increase((OOFloat)score);
 
     //Increase the respective count
     switch(score) {
@@ -98,13 +95,13 @@ void Score::Add(ScoreType score, bool forceNoCombo, bool gekiKatu) {
     }
 }
 
-float Score::CountAccuracy() const {
+OOFloat Score::CountAccuracy() const {
     if ( mCount300 + mCount100 + mCount50 + mCountMiss == 0 ) {
         return 100.0f;
     }
 
-    return ((float)((300*(mCount300+mCountGeki)) + (100*(mCount100+mCountKatu)) + (50*mCount50)) /
-           (float)(300*(mCount300+mCountGeki+mCount100+mCountKatu+mCount50+mCountMiss)))*100;
+    return ((OOFloat)((300*(mCount300+mCountGeki)) + (100*(mCount100+mCountKatu)) + (50*mCount50)) /
+           (OOFloat)(300*(mCount300+mCountGeki+mCount100+mCountKatu+mCount50+mCountMiss)))*100;
 }
 
 void Score::CalculateGrade() {
@@ -116,8 +113,8 @@ void Score::CalculateGrade() {
     }
 
     uint32_t total_count = mCount300 + mCount100 + mCount50 + mCountMiss + mCountGeki + mCountKatu;
-    float p300 = (((float)mCount300+(float)mCountGeki) / (float)total_count) * 100;
-    float p50 = ((float)mCount50 / (float)total_count) * 100;
+    OOFloat p300 = (((OOFloat)mCount300+(OOFloat)mCountGeki) / (OOFloat)total_count) * 100;
+    OOFloat p50 = ((OOFloat)mCount50 / (OOFloat)total_count) * 100;
     if (p300 > 90.f && p50 < 1.f && mCountMiss == 0) {
         strncpy(mGrade, "S", GRADE_LEN);
         return;

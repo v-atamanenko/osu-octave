@@ -1,9 +1,17 @@
-#ifndef __TYPES_H__
-#define __TYPES_H__
+#pragma once
 
 #ifndef PATH_MAX
 #define PATH_MAX 1024
 #endif
+
+// OOTime / Osu-Octave Time, the type to be used to represent time.
+//#define OOTime int32_t
+typedef int32_t OOTime;
+typedef uint8_t OOUShort;
+typedef int8_t OOShort;
+typedef int32_t OOInt;
+typedef uint32_t OOUInt;
+typedef double OOFloat;
 
 typedef enum BeatmapFilter {
     FILTER_NONE,
@@ -19,8 +27,8 @@ typedef enum BeatmapFilter {
  */
 
 struct touchPosition {
-    uint32_t px;
-    uint32_t py;
+    OOInt px;
+    OOInt py;
 };
 
 typedef enum KeyType {
@@ -30,7 +38,7 @@ typedef enum KeyType {
 } KeyType;
 
 struct RawKey {
-    int key;
+    OOInt key;
     KeyType type;
 };
 
@@ -40,4 +48,20 @@ typedef enum Control {
     IH_CONTROL_QUIT = 2 // (SDLK_ESCAPE, IH_KEY_KEYBOARD) || (SDL_CONTROLLER_BUTTON_START, IH_KEY_CONTROLLER)
 } Control;
 
-#endif // __TYPES_H__
+/*
+ * Score types
+ */
+
+typedef enum {
+    SCORE_300 = 300,
+    SCORE_GEKI = 301,
+    SCORE_100 = 100,
+    SCORE_KATU = 102,
+    SCORE_50 = 50,
+    SCORE_TICK_30 = 30,
+    SCORE_TICK_10 = 10,
+    SCORE_SPIN_100 = 101, //should be 100 but conflicts with SCORE_100
+    SCORE_SPIN_1000 = 1000,
+    SCORE_MISS = 0,
+    SCORE_COMBOBREAK
+} ScoreType;

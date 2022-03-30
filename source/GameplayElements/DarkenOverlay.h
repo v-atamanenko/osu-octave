@@ -1,5 +1,4 @@
-#ifndef _DARKENOVERLAY_H
-#define _DARKENOVERLAY_H
+#pragma once
 
 #include "System/GameClock.h"
 #include "Graphics/SpriteContainer.h"
@@ -11,5 +10,3 @@ class DarkenOverlay : public SpriteContainer
         DarkenOverlay();
         void Initialize();
 };
-
-#endif //_DARKENOVERLAY_H

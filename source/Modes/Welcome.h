@@ -1,3 +1,5 @@
+#pragma once
+
 #include "SDL.h"
 #include <cstdio>
 
@@ -8,8 +10,10 @@
 #include "Graphics/pText.h"
 #include "UIElements/Logo.h"
 
-#ifndef __WELCOME_H__
-#define __WELCOME_H__
+#include "Graphics/pText.h"
+#include "Helpers/PreviewBuffer.h"
+#include "DataStorage/Settings.h"
+#include "DataStorage/Scores.h"
 
 typedef enum LoadingStage {
     STAGE_LOAD_SETTINGS,
@@ -26,8 +30,8 @@ public:
     Welcome();
     ~Welcome() override { delete mLogo; };
 
-    void Update();
-    void HandleInput();
+    void Update() override;
+    void HandleInput() override;
     void Redraw();
 
 protected:
@@ -37,6 +41,3 @@ protected:
     pText* mStatus;
     LoadingStage mStage = STAGE_LOAD_SETTINGS;
 };
-
-#endif
-

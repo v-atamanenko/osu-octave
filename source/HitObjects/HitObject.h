@@ -1,9 +1,10 @@
+#pragma once
+
 #include <cstdio>
 #include "SDL.h"
 
 #include "Beatmaps/BeatmapElements.h"
 #include "Beatmaps/DifficultyManager.h"
-#include "GameplayElements/Score.h"
 #include "Graphics/pSprite.h"
 #include "Graphics/pAnimation.h"
 #include "Graphics/GfxInfo.h"
@@ -11,32 +12,28 @@
 #include "Helpers/AudioManager.h"
 #include "System/ICallback.h"
 
-#ifndef __HITOBJECT_H__
-#define __HITOBJECT_H__
-
 typedef struct HitObjectPoint {
-	int32_t x, y;
-	int32_t angle = 0;
+	OOInt x, y;
+    OOInt angle = 0;
 } HitObjectPoint;
 
 typedef enum {
 	HIT_NORMAL = 0,
 	HIT_SLIDER = 1,
-	HIT_SPINNER = 3,
-    HIT_COMBO = 7,
+	HIT_SPINNER = 3
 } HitObjectType;
 
-typedef void (*HitHandler)(ScoreType score, bool forceNoCombo, bool forceNoAnimation, HitObjectPoint point);
+//typedef void (*HitHandler)(ScoreType score, bool forceNoCombo, bool forceNoAnimation, HitObjectPoint point);
 
 class HitObject : public SpriteContainer
 {
 	public:
-		virtual ~HitObject();
+		virtual ~HitObject() override {};
 		
-		virtual bool InBounds(int32_t x, int32_t y) { return true; }
+		virtual bool InBounds(OOInt x, OOInt y) { return true; }
 		
 		bool GetHit() { return mHit; }
-		int32_t GetEndTime() { return mEndTime; }
+        OOInt GetEndTime() { return mEndTime; }
 		
 		virtual void Update() {}
 		
@@ -46,39 +43,35 @@ class HitObject : public SpriteContainer
 		
 		virtual void Hit();
 		
-		void SetPostCreateOptions(bool comboend, int32_t nextx, int32_t nexty);
+		void SetPostCreateOptions(bool comboend, OOInt nextx, OOInt nexty);
 		
 		static void SetScoreCallback(ICallback* scoreCallback);
 
-    int32_t mX;
-    int32_t mY;
-protected:
-		HitObject(int32_t x, int32_t y, int32_t time, HitObjectType type, HitObjectSound sound, bool combo, int32_t number_in_combo);
+        OOInt mX;
+        OOInt mY;
+    protected:
+		HitObject(OOInt x, OOInt y, OOTime time, HitObjectType type, HitObjectSound sound, bool combo, OOInt number_in_combo);
 
-    long mTime, mEndTime;
+        OOTime mTime, mEndTime;
 		HitObjectType mType;
 		HitObjectSound mSound;
 		static SDL_Color mColour;
 
 		bool mHit;
 		bool mComboEnd;
-        int32_t mNextObjectNumberInCombo;
+        OOInt mNextObjectNumberInCombo;
 
-		uint32_t mScoreSpriteId;
+		OOUInt mScoreSpriteId;
 		
 		void IncreaseScore(ScoreType score, bool forceNoCombo = false, bool forceNoAnimation = false);
-		void IncreaseScore(ScoreType score, bool forceNoCombo, bool forceNoAnimation, uint32_t spriteId);
+		void IncreaseScore(ScoreType score, bool forceNoCombo, bool forceNoAnimation, OOUInt spriteId);
 	
 	private:
-		float mScoreDeltaZ;
+		OOFloat mScoreDeltaZ;
 		
-		static float sScoreDeltaZ;
-		static float sSliderDeltaZ;
-		static int32_t sLastSliderTime;
+		static OOFloat sScoreDeltaZ;
+		static OOFloat sSliderDeltaZ;
+		static OOInt sLastSliderTime;
 		
 		static ICallback* mScoreCallback;
 };
-
-#endif
-
-

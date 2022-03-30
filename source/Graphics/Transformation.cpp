@@ -1,7 +1,6 @@
 #include "Transformation.h"
 
-Transformation::Transformation(TransformType type, int32_t starttime, int32_t endtime, int32_t startvalue, int32_t endvalue)
-{
+Transformation::Transformation(TransformType type, OOTime starttime, OOTime endtime, OOInt startvalue, OOInt endvalue) {
 	this->type = type;
 	
 	this->starttime = starttime;
@@ -19,9 +18,8 @@ Transformation::Transformation(TransformType type, int32_t starttime, int32_t en
 	lastactive = false;
 }
 
-void Transformation::Update()
-{
-	int32_t time = GameClock::Clock().Time();
+void Transformation::Update() {
+    OOTime time = GameClock::Clock().Time();
 	
 	if (!active)
 	{
@@ -39,13 +37,11 @@ void Transformation::Update()
 		return;
 	}
 	
-	currentvalue = (int32_t)(((time-starttime)/(float)totaltime)*totalvalue + startvalue);
+	currentvalue = (OOInt)(((OOFloat)(time-starttime)/(OOFloat)totaltime)*(OOFloat)totalvalue + (OOFloat)startvalue);
 }
 
-bool Transformation::Active()
-{
-	if (lastactive)
-	{
+bool Transformation::Active() {
+	if (lastactive) {
 		lastactive = false;
 		return true;
 	}

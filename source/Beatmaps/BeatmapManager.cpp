@@ -1,18 +1,14 @@
 #include "BeatmapManager.h"
-#include "Helpers/PreviewBuffer.h"
-#include <sys/stat.h>
-
-inline bool file_exists(const std::string& fname) {
-    struct stat buffer;
-    return (stat (fname.c_str(), &buffer) == 0);
-}
-
 Beatmap* BeatmapManager::mBeatmapCurrent = nullptr;
 std::vector<BeatmapEntry> BeatmapManager::mBeatmapsAll;
 std::vector<BeatmapEntry> BeatmapManager::mBeatmapsFiltered;
 
-void BeatmapManager::Load(std::string &checksum)
-{
+inline bool file_exists(const std::string& fname) {
+    struct stat buffer{};
+    return (stat (fname.c_str(), &buffer) == 0);
+}
+
+void BeatmapManager::Load(std::string &checksum) {
 	if (mBeatmapCurrent != nullptr)
 		mBeatmapCurrent->CleanUp();
 
@@ -64,11 +60,16 @@ void BeatmapManager::Filter(BeatmapFilter f) {
 }
 
 bool BeatmapManager::CheckIndex() {
-    char* maps_path;
-    SDL_asprintf(&maps_path, "%s%s", DEF_DataDirectory, DEF_BeatmapsSubdirectory);
+    char maps_path[PATH_MAX];
+    snprintf(maps_path, PATH_MAX, "%s%s", DEF_DataDirectory, DEF_BeatmapsSubdirectory);
 
     DIR* dir = opendir(maps_path);
     struct dirent* entry;
+
+    if (dir == nullptr) {
+        fprintf(stderr, "Unable to open beatmaps dir (%s)!", maps_path);
+        return false;
+    }
 
     bool res = true;
 
@@ -77,8 +78,9 @@ bool BeatmapManager::CheckIndex() {
         if (entry->d_name[0] == '.')
             continue;
 
-        char* map_subdir;
-        SDL_asprintf(&map_subdir, "%s%s%s", DEF_DataDirectory, DEF_BeatmapsSubdirectory, entry->d_name);
+        char map_subdir[PATH_MAX];
+        snprintf(map_subdir, PATH_MAX, "%s%s%s", DEF_DataDirectory, DEF_BeatmapsSubdirectory, entry->d_name);
+
         DIR* subdir = opendir(map_subdir);
 
         //if this is a folder, find all the .ods files inside
@@ -117,15 +119,12 @@ bool BeatmapManager::CheckIndex() {
             closedir(subdir);
         }
 
-        free(map_subdir);
-
         if (!res) {
             break;
         }
     }
 
     closedir(dir);
-    free(maps_path);
 
     std::vector<std::string> idx;
     Beatmaps::get_state(idx);
@@ -141,20 +140,26 @@ bool BeatmapManager::CheckIndex() {
 }
 
 void BeatmapManager::BuildCollection() {
-	char* maps_path;
-    SDL_asprintf(&maps_path, "%s%s", DEF_DataDirectory, DEF_BeatmapsSubdirectory);
+    char maps_path[PATH_MAX];
+    snprintf(maps_path, PATH_MAX, "%s%s", DEF_DataDirectory, DEF_BeatmapsSubdirectory);
 
     DIR* dir = opendir(maps_path);
 	struct dirent* entry;
+
+    if (dir == nullptr) {
+        fprintf(stderr, "Unable to open beatmaps dir (%s)!", maps_path);
+        return;
+    }
 	
 	while ((entry = readdir(dir)) != nullptr) {
 		//ignore generic names
 		if (entry->d_name[0] == '.')
 			continue;
 
-        char* map_subdir;
-        SDL_asprintf(&map_subdir, "%s%s%s", DEF_DataDirectory, DEF_BeatmapsSubdirectory, entry->d_name);
-		DIR* subdir = opendir(map_subdir);
+        char map_subdir[PATH_MAX];
+        snprintf(map_subdir, PATH_MAX, "%s%s%s", DEF_DataDirectory, DEF_BeatmapsSubdirectory, entry->d_name);
+
+        DIR* subdir = opendir(map_subdir);
 		
 		//if this is a folder, find all the .ods files inside
 		if (subdir != nullptr) {
@@ -185,12 +190,9 @@ void BeatmapManager::BuildCollection() {
 
             closedir(subdir);
 		}
-
-        free(map_subdir);
 	}
 	
 	closedir(dir);
-    free(maps_path);
     Beatmaps::save();
 }
 
@@ -198,20 +200,55 @@ void BeatmapManager::Add(const char* map_filename, const char* map_subdir) {
     Beatmaps::add_path_to_state(map_filename, map_subdir);
     BeatmapEntry bme;
 
-    if (Beatmap::LoadEntryData(map_filename, map_subdir, bme)) {
+    if (LoadEntryData(map_filename, map_subdir, bme)) {
         bme.BackgroundFilename = PreviewBuffer::GeneratePreview(map_subdir, bme.BackgroundFilename);
-        bme.BackgroundFilepath =  std::string(map_subdir) + "/" + bme.BackgroundFilename;
+        bme.BackgroundFilepath = std::string(map_subdir) + "/" + bme.BackgroundFilename;
         Beatmaps::set_beatmap(bme);
     }
 }
 
-uint32_t BeatmapManager::MapCount()
-{
-	return BeatmapManager::Beatmaps().size();
+OOInt BeatmapManager::MapCount() {
+	return (OOInt)BeatmapManager::Beatmaps().size();
 }
 
-uint32_t BeatmapManager::SongCount()
-{
+OOInt BeatmapManager::SongCount() {
 	//TODO: algorithm plz
-	return BeatmapManager::Beatmaps().size();
+	return (OOInt)BeatmapManager::Beatmaps().size();
+}
+
+bool BeatmapManager::LoadEntryData(const std::string &filename, const std::string &basedir, BeatmapEntry& bm) {
+    std::ifstream file(basedir  + "/" + filename);
+    if (!file) {
+        fprintf(stderr, "Couldn't read .osu file %s\n", filename.c_str());
+        return false;
+    }
+
+    osuParser::OsuParser p(&file);
+    p.Parse();
+
+    if (p.mode != osuParser::gmStandard) {
+        // Not an osu! map
+        return false;
+    }
+
+    bm.Filename = filename;
+    bm.BaseDir = basedir;
+    bm.Title = p.title;
+    bm.Artist = p.artist;
+    bm.Creator = p.creator;
+    bm.Version = p.version;
+    bm.AudioFilename = basedir + "/" + p.audioFilename;
+
+    for (const osuParser::Event& e : p.events) {
+        if (e.type == osuParser::eBackground) {
+            bm.BackgroundFilename = e.file;
+            bm.BackgroundFilepath = basedir + "/" + e.file;
+        }
+    }
+
+    bm.Checksum = md5(p.title + p.artist + p.version + std::to_string(p.beatmapID));
+
+    std::map<std::string, Output> sr = calculateStarRating(basedir  + "/" + filename);
+    bm.starRating = sr["nomod"].total;
+    return true;
 }

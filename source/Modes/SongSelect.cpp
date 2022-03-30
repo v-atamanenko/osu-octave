@@ -1,11 +1,11 @@
 #include "SongSelect.h"
 
-int32_t SongSelect::mCurrentPage = 0;
-int32_t SongSelect::mCountPages  = 0;
-uint32_t SongSelect::mSongListSize  = 0;
+OOUInt SongSelect::mCurrentPage = 0;
+OOUInt SongSelect::mCountPages  = 0;
+OOUInt SongSelect::mSongListSize  = 0;
 bool SongSelect::shouldHandlePageUpdate = false;
 
-int32_t SongSelect::mExpandEntryIndex = -1;
+OOUInt SongSelect::mExpandEntryIndex = -1;
 bool SongSelect::shouldHandleEntryExpand = false;
 bool SongSelect::shouldExpandRandomEntry = false;
 
@@ -26,7 +26,7 @@ pText* SongSelect::loadingScreenLabel = nullptr;
 
 SpriteManager* SongSelect::mSpriteManager = nullptr;
 
-void OnBetmapEntryPlayClick(pDrawable* self, uint16_t x, uint16_t y) {
+void OnBetmapEntryPlayClick(pDrawable* self, OOInt x, OOInt y) {
     AudioManager::Engine().PlayUISound(UISOUND_MENUHIT);
     SongSelect::LoadingScreenShow();
     InputHelper::vitaUseBackTouch = Settings::get_bool("vitaUseBackTouch"); // VITA: Reset back touch usage flag
@@ -35,66 +35,66 @@ void OnBetmapEntryPlayClick(pDrawable* self, uint16_t x, uint16_t y) {
     //SongSelect::LoadingScreenHide();
 }
 
-void OnBetmapEntryExpandClick(pDrawable* self, uint16_t x, uint16_t y) {
+void OnBetmapEntryExpandClick(pDrawable* self, OOInt x, OOInt y) {
     int index = self->TagInt;
 
     SongSelect::ExpandEntry(index);
 }
 
-void OnBtnQuitClick(pDrawable* self, uint16_t x, uint16_t y) {
+void OnBtnQuitClick(pDrawable* self, OOInt x, OOInt y) {
     SDL_Event sdlevent;
     sdlevent.type = SDL_QUIT;
     SDL_PushEvent(&sdlevent);
 }
 
-void OnBtnSettingsClick(pDrawable* self, uint16_t x, uint16_t y) {
+void OnBtnSettingsClick(pDrawable* self, OOInt x, OOInt y) {
     AudioManager::Engine().PlayUISound(UISOUND_MENUCLICK);
     ChangeModeOnFrameEnd(MODE_SETTINGS);
 }
 
-void OnBtnAboutClick(pDrawable* self, uint16_t x, uint16_t y) {
+void OnBtnAboutClick(pDrawable* self, OOInt x, OOInt y) {
     AudioManager::Engine().PlayUISound(UISOUND_MENUCLICK);
     ChangeModeOnFrameEnd(MODE_ABOUT);
 }
 
-void OnBtnRandomClick(pDrawable* self, uint16_t x, uint16_t y) {
+void OnBtnRandomClick(pDrawable* self, OOInt x, OOInt y) {
     SongSelect::PageRand();
 }
 
-void OnBtnArrowLeftClick(pDrawable* self, uint16_t x, uint16_t y) {
+void OnBtnArrowLeftClick(pDrawable* self, OOInt x, OOInt y) {
     SongSelect::PagePrev();
 }
 
-void OnBtnArrowRightClick(pDrawable* self, uint16_t x, uint16_t y) {
+void OnBtnArrowRightClick(pDrawable* self, OOInt x, OOInt y) {
     SongSelect::PageNext();
 }
 
-void OnBtnSortAllClick(pDrawable* self, uint16_t x, uint16_t y) {
+void OnBtnSortAllClick(pDrawable* self, OOInt x, OOInt y) {
     AudioManager::Engine().PlayUISound(UISOUND_CLICK_SHORT_CONFIRM);
     SongSelect::ApplyFilter(FILTER_NONE);
 }
 
-void OnBtnSortAEClick(pDrawable* self, uint16_t x, uint16_t y) {
+void OnBtnSortAEClick(pDrawable* self, OOInt x, OOInt y) {
     AudioManager::Engine().PlayUISound(UISOUND_CLICK_SHORT_CONFIRM);
     SongSelect::ApplyFilter(FILTER_ALPHA_A_E);
 }
 
-void OnBtnSortFJClick(pDrawable* self, uint16_t x, uint16_t y) {
+void OnBtnSortFJClick(pDrawable* self, OOInt x, OOInt y) {
     AudioManager::Engine().PlayUISound(UISOUND_CLICK_SHORT_CONFIRM);
     SongSelect::ApplyFilter(FILTER_ALPHA_F_J);
 }
 
-void OnBtnSortKOClick(pDrawable* self, uint16_t x, uint16_t y) {
+void OnBtnSortKOClick(pDrawable* self, OOInt x, OOInt y) {
     AudioManager::Engine().PlayUISound(UISOUND_CLICK_SHORT_CONFIRM);
     SongSelect::ApplyFilter(FILTER_ALPHA_K_O);
 }
 
-void OnBtnSortPTClick(pDrawable* self, uint16_t x, uint16_t y) {
+void OnBtnSortPTClick(pDrawable* self, OOInt x, OOInt y) {
     AudioManager::Engine().PlayUISound(UISOUND_CLICK_SHORT_CONFIRM);
     SongSelect::ApplyFilter(FILTER_ALPHA_P_T);
 }
 
-void OnBtnSortUZClick(pDrawable* self, uint16_t x, uint16_t y) {
+void OnBtnSortUZClick(pDrawable* self, OOInt x, OOInt y) {
     AudioManager::Engine().PlayUISound(UISOUND_CLICK_SHORT_CONFIRM);
     SongSelect::ApplyFilter(FILTER_ALPHA_U_Z);
 }
@@ -246,7 +246,7 @@ void SongSelect::ApplyFilter(BeatmapFilter f, bool resetPage) {
     BeatmapManager::Filter(f);
     if (resetPage) {
         mCurrentPage = 0;
-        Settings::set_int("page", mCurrentPage);
+        Settings::set_int("page", (OOInt)mCurrentPage);
     }
 
     if (PreviewBuffer::GetInstance().lastAppliedFilter != f) {
@@ -303,7 +303,7 @@ void SongSelect::ApplyFilter(BeatmapFilter f, bool resetPage) {
 
 void SongSelect::UpdateSonglist(bool initial)
 {
-    int spritesToRemoveCount = mSpritesPerBeatmapEntry * mEntriesDisplayed;
+    OOUInt spritesToRemoveCount = mSpritesPerBeatmapEntry * mEntriesDisplayed;
     if (mEntryExpanded) spritesToRemoveCount += (mSpritesPerExpandedBeatmapEntry - mSpritesPerBeatmapEntry);
     if (!initial) spritesToRemoveCount++; // to account for current_page_label, unless it's initial update.
     for (int i = 0; i < spritesToRemoveCount; ++i) {
@@ -316,10 +316,10 @@ void SongSelect::UpdateSonglist(bool initial)
         shouldHandleEntryExpand = false;
     }
 
-    int beatmap_list_offset = mCurrentPage * mEntriesPerPage;
-    int entries_on_page = mEntriesPerPage;
+    OOUInt beatmap_list_offset = mCurrentPage * mEntriesPerPage;
+    OOUInt entries_on_page = mEntriesPerPage;
     if (beatmap_list_offset + (entries_on_page-1) >= mSongListSize) {
-        entries_on_page = (int)mSongListSize - (beatmap_list_offset);
+        entries_on_page = mSongListSize - beatmap_list_offset;
     }
 
     // Skip drawing first or last entry if we need to expand an entry and there's not enough free space
@@ -342,7 +342,7 @@ void SongSelect::UpdateSonglist(bool initial)
         }
     }
 
-    for (int i = 0; i < entries_on_page; i++) {
+    for (OOUInt i = 0; i < entries_on_page; i++) {
         if ((i == 0 && skipFirstEntry) || (i == (entries_on_page-1) && skipLastEntry)) {
             continue;
         }
@@ -374,7 +374,7 @@ void SongSelect::UpdateSonglist(bool initial)
             }
         }
 
-        int extra_y_offset = 0;
+        OOInt extra_y_offset = 0;
         if (skipFirstEntry) {
             // if we hid the first entry, shift everything 94 pixels up
             extra_y_offset = -94;
@@ -408,7 +408,7 @@ void SongSelect::UpdateSonglist(bool initial)
         GraphicsManager::Graphics().LoadBeatmapPicTexture(texid, PreviewBuffer::GetInstance().GetTexture(i+beatmap_list_offset));
 
         if (isExpanded) {
-            auto* bg = new pSprite(TX_BEATMAP_ENTRY_EXPANDED_BG, 351, 91 + (i * 94) + extra_y_offset, 609, 174, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.03f);
+            auto* bg = new pSprite(TX_BEATMAP_ENTRY_EXPANDED_BG, 351, 91 + ((OOInt)i * 94) + extra_y_offset, 609, 174, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.03f);
 
             bg->OnClick = OnBetmapEntryExpandClick;
             bg->Clickable = true;
@@ -416,7 +416,7 @@ void SongSelect::UpdateSonglist(bool initial)
 
             mSpriteManager->Add(bg);
         } else {
-            auto* bg = new pSprite(TX_BEATMAP_ENTRY_BG, 351, 91 + (i * 94) + extra_y_offset, 609, 80, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.03f);
+            auto* bg = new pSprite(TX_BEATMAP_ENTRY_BG, 351, 91 + ((OOInt)i * 94) + extra_y_offset, 609, 80, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.03f);
 
             bg->OnClick = OnBetmapEntryExpandClick;
             bg->Clickable = true;
@@ -426,7 +426,7 @@ void SongSelect::UpdateSonglist(bool initial)
         }
 
         if (isExpanded) {
-            auto* play = new pSprite(TX_BUTTON_PLAY, 831, 200 + (i * 94) + extra_y_offset, 78, 40, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.04f);
+            auto* play = new pSprite(TX_BUTTON_PLAY, 831, 200 + ((OOInt)i * 94) + extra_y_offset, 78, 40, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.04f);
 
             play->OnClick = OnBetmapEntryPlayClick;
             play->Clickable = true;
@@ -437,39 +437,39 @@ void SongSelect::UpdateSonglist(bool initial)
         }
 
         if (isExpanded) {
-            auto* pic = new pSprite(texid, 360, 118 + (i * 94) + extra_y_offset, 120, 120, ORIGIN_TOPLEFT, FIELD_SCREEN,
+            auto* pic = new pSprite(texid, 360, 118 + ((OOInt)i * 94) + extra_y_offset, 120, 120, ORIGIN_TOPLEFT, FIELD_SCREEN,
                                     SDL_Color(), 255, -0.04f);
             mSpriteManager->Add(pic);
         } else {
-            auto* pic = new pSprite(texid, 400, 91 + (i * 94) + extra_y_offset, 80, 80, ORIGIN_TOPLEFT, FIELD_SCREEN,
+            auto* pic = new pSprite(texid, 400, 91 + ((OOInt)i * 94) + extra_y_offset, 80, 80, ORIGIN_TOPLEFT, FIELD_SCREEN,
                                     SDL_Color(), 255, -0.04f);
             mSpriteManager->Add(pic);
         }
 
         if (isExpanded) {
-            auto* mapTitle = new pText(map.Title, FONT_CONSOLE_BIG_BOLD, 494, 117 + (i * 94) + extra_y_offset);
+            auto* mapTitle = new pText(map.Title, FONT_CONSOLE_BIG_BOLD, 494, 117 + ((OOInt)i * 94) + extra_y_offset);
             mapTitle->Z = -0.05f;
 
-            auto* mapArtist = new pText(map.Artist, FONT_CONSOLE, 494, 137 + (i * 94) + extra_y_offset);
+            auto* mapArtist = new pText(map.Artist, FONT_CONSOLE, 494, 137 + ((OOInt)i * 94) + extra_y_offset);
             mapArtist->Z = -0.05f;
 
-            auto* mapVersion = new pText(map.Version, FONT_CONSOLE, 494, 154 + (i * 94) + extra_y_offset);
+            auto* mapVersion = new pText(map.Version, FONT_CONSOLE, 494, 154 + ((OOInt)i * 94) + extra_y_offset);
             mapVersion->Z = -0.05f;
 
-            auto* highscoreTitle = new pText("Personal best:", FONT_CONSOLE_BIG_BOLD, 494, 184 + (i * 94) + extra_y_offset);
+            auto* highscoreTitle = new pText("Personal best:", FONT_CONSOLE_BIG_BOLD, 494, 184 + ((OOInt)i * 94) + extra_y_offset);
             highscoreTitle->Z = -0.06f;
-            auto* highscoreScoreTitle = new pText("Score:", FONT_CONSOLE_BOLD, 494, 204 + (i * 94) + extra_y_offset);
+            auto* highscoreScoreTitle = new pText("Score:", FONT_CONSOLE_BOLD, 494, 204 + ((OOInt)i * 94) + extra_y_offset);
             highscoreScoreTitle->Z = -0.06f;
 
             char highscoreScore_text[32];
             sprintf(highscoreScore_text, "%i (%ix)", score.score, score.combo);
-            auto* highscoreScore = new pText(highscoreScore_text, FONT_CONSOLE, 540, 204 + (i * 94) + extra_y_offset);
+            auto* highscoreScore = new pText(highscoreScore_text, FONT_CONSOLE, 540, 204 + ((OOInt)i * 94) + extra_y_offset);
             highscoreScore->Z = -0.06f;
-            auto* highscoreAccuracyTitle = new pText("Accuracy:", FONT_CONSOLE_BOLD, 494, 222 + (i * 94) + extra_y_offset);
+            auto* highscoreAccuracyTitle = new pText("Accuracy:", FONT_CONSOLE_BOLD, 494, 222 + ((OOInt)i * 94) + extra_y_offset);
             highscoreAccuracyTitle->Z = -0.06f;
             char highscoreAccuracy_text[32];
             sprintf(highscoreAccuracy_text, "%.3f%%", score.accuracy);
-            auto* highscoreAccuracy = new pText(highscoreAccuracy_text, FONT_CONSOLE, 563, 222 + (i * 94) + extra_y_offset);
+            auto* highscoreAccuracy = new pText(highscoreAccuracy_text, FONT_CONSOLE, 563, 222 + ((OOInt)i * 94) + extra_y_offset);
             highscoreAccuracy->Z = -0.06f;
 
             mSpriteManager->Add(mapTitle);
@@ -481,13 +481,13 @@ void SongSelect::UpdateSonglist(bool initial)
             mSpriteManager->Add(highscoreAccuracyTitle);
             mSpriteManager->Add(highscoreAccuracy);
         } else {
-            auto* mapTitle = new pText(map.Title, FONT_CONSOLE_BIG_BOLD, 494, 106 + (i * 94) + extra_y_offset);
+            auto* mapTitle = new pText(map.Title, FONT_CONSOLE_BIG_BOLD, 494, 106 + ((OOInt)i * 94) + extra_y_offset);
             mapTitle->Z = -0.05f;
 
-            auto* mapArtist = new pText(map.Artist, FONT_CONSOLE, 494, 126 + (i * 94) + extra_y_offset);
+            auto* mapArtist = new pText(map.Artist, FONT_CONSOLE, 494, 126 + ((OOInt)i * 94) + extra_y_offset);
             mapArtist->Z = -0.05f;
 
-            auto* mapVersion = new pText(map.Version, FONT_CONSOLE, 494, 143 + (i * 94) + extra_y_offset);
+            auto* mapVersion = new pText(map.Version, FONT_CONSOLE, 494, 143 + ((OOInt)i * 94) + extra_y_offset);
             mapVersion->Z = -0.05f;
 
             mSpriteManager->Add(mapTitle);
@@ -496,13 +496,13 @@ void SongSelect::UpdateSonglist(bool initial)
         }
 
         if (isExpanded) {
-            auto* ranking = new pSprite(score_tex, 869, 122 + (i * 94) + extra_y_offset, 40, 23,
+            auto* ranking = new pSprite(score_tex, 869, 122 + ((OOInt)i * 94) + extra_y_offset, 40, 23,
                                         ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.04f);
             mSpriteManager->Add(ranking);
 
-            auto* stars = new pSprite(TX_STARS, 712, 161 + (i * 94) + extra_y_offset, 196, 16, ORIGIN_TOPLEFT,
+            auto* stars = new pSprite(TX_STARS, 712, 161 + ((OOInt)i * 94) + extra_y_offset, 196, 16, ORIGIN_TOPLEFT,
                                       FIELD_SCREEN, SDL_Color(), 255, -0.04f);
-            auto* starsFill = new pSprite(TX_STARS_FILL, 712, 161 + (i * 94) + extra_y_offset, 196, 16, ORIGIN_TOPLEFT,
+            auto* starsFill = new pSprite(TX_STARS_FILL, 712, 161 + ((OOInt)i * 94) + extra_y_offset, 196, 16, ORIGIN_TOPLEFT,
                                       FIELD_SCREEN, SDL_Color(), 255, -0.05f);
 
             delete starsFill->UV;
@@ -510,7 +510,7 @@ void SongSelect::UpdateSonglist(bool initial)
 
             char stars_text[32];
             sprintf(stars_text, "%.2f", map.starRating);
-            auto* starsText = new pText(stars_text, FONT_CONSOLE, 707, 161 + (i * 94) + extra_y_offset);
+            auto* starsText = new pText(stars_text, FONT_CONSOLE, 707, 161 + ((OOInt)i * 94) + extra_y_offset);
             starsText->Z = -0.06f;
             starsText->Origin = ORIGIN_TOPRIGHT;
 
@@ -518,13 +518,13 @@ void SongSelect::UpdateSonglist(bool initial)
             mSpriteManager->Add(starsFill);
             mSpriteManager->Add(starsText);
         } else {
-            auto* ranking = new pSprite(score_tex, 869, 104 + (i * 94) + extra_y_offset, 40, 23,
+            auto* ranking = new pSprite(score_tex, 869, 104 + ((OOInt)i * 94) + extra_y_offset, 40, 23,
                                         ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.04f);
             mSpriteManager->Add(ranking);
 
-            auto* stars = new pSprite(TX_STARS, 712, 141 + (i * 94) + extra_y_offset, 196, 16, ORIGIN_TOPLEFT,
+            auto* stars = new pSprite(TX_STARS, 712, 141 + ((OOInt)i * 94) + extra_y_offset, 196, 16, ORIGIN_TOPLEFT,
                                       FIELD_SCREEN, SDL_Color(), 255, -0.04f);
-            auto* starsFill = new pSprite(TX_STARS_FILL, 712, 141 + (i * 94) + extra_y_offset, 196, 16, ORIGIN_TOPLEFT,
+            auto* starsFill = new pSprite(TX_STARS_FILL, 712, 141 + ((OOInt)i * 94) + extra_y_offset, 196, 16, ORIGIN_TOPLEFT,
                                           FIELD_SCREEN, SDL_Color(), 255, -0.05f);
             delete starsFill->UV;
             starsFill->UV = new SDL_Rect({0,0,(int)floor(196.f*map.starRating/10.f),16});
@@ -544,10 +544,10 @@ void SongSelect::UpdateSonglist(bool initial)
 }
 
 void SongSelect::reloadPreviews() const {
-    int beatmap_list_offset = mCurrentPage * mEntriesPerPage;
-    int entries_on_page = mEntriesPerPage;
+    OOUInt beatmap_list_offset = mCurrentPage * mEntriesPerPage;
+    OOUInt entries_on_page = mEntriesPerPage;
     if (beatmap_list_offset + (entries_on_page-1) >= mSongListSize) {
-        entries_on_page = (int)mSongListSize - (beatmap_list_offset);
+        entries_on_page = mSongListSize - (beatmap_list_offset);
     }
 
     for (int i = 0; i < entries_on_page; i++) {
@@ -595,7 +595,7 @@ void SongSelect::Update()
     mLogo->Update();
 
     if (shouldExpandRandomEntry) {
-        int countEntriesOnPage = (mCurrentPage < (mCountPages-1)) ? mEntriesPerPage : (mSongListSize - (mEntriesPerPage * (mCountPages - 1)));
+        OOUInt countEntriesOnPage = (mCurrentPage < (mCountPages-1)) ? mEntriesPerPage : (mSongListSize - (mEntriesPerPage * (mCountPages - 1)));
         ExpandEntry(MathHelper::Random(mCurrentPage*mEntriesPerPage,(mCurrentPage*mEntriesPerPage)+countEntriesOnPage-1));
         shouldExpandRandomEntry = false;
     }
@@ -604,12 +604,6 @@ void SongSelect::Update()
 void SongSelect::LoadingScreenShow() {
     loadingScreenBG->Alpha = 255;
     loadingScreenLabel->Alpha = 255;
-    Redraw();
-}
-
-void SongSelect::LoadingScreenHide() {
-    loadingScreenBG->Alpha = 0;
-    loadingScreenLabel->Alpha = 0;
     Redraw();
 }
 

@@ -1,9 +1,8 @@
+#pragma once
+
 #include <cstdio>
 #include <unistd.h>
 #include "Helpers/InputHelper.h"
-
-#ifndef __MODE_H__
-#define __MODE_H__
 
 typedef enum {
 	MODE_PLAYER,
@@ -36,5 +35,3 @@ class Mode
 
 void ChangeModeOnFrameEnd(ModeType mode);
 void ChangeModeOnDemand();
-
-#endif

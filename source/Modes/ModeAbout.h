@@ -1,5 +1,4 @@
-#ifndef _MODEABOUT_H
-#define _MODEABOUT_H
+#pragma once
 
 #include "DataStorage/Settings.h"
 #include "Graphics/pText.h"
@@ -19,5 +18,3 @@ protected:
     Logo* mLogo;
     SpriteManager mSpriteManager;
 };
-
-#endif //_MODEABOUT_H

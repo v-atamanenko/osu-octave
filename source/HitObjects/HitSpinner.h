@@ -1,13 +1,12 @@
+#pragma once
+
 #include <cmath>
 #include "HitObject.h"
-
-#ifndef __HITSPINNER_H__
-#define __HITSPINNER_H__
 
 class HitSpinner : public HitObject
 {
 	public:
-		HitSpinner(int32_t time, int32_t endtime, HitObjectSound sound, bool combo, int32_t number_in_combo);
+		HitSpinner(OOTime time, OOTime endtime, HitObjectSound sound, bool combo, OOInt number_in_combo);
 		~HitSpinner();
 		
 		void Update();
@@ -18,20 +17,16 @@ class HitSpinner : public HitObject
 		void Hit();
 	
 	protected:
-		int32_t GetAngle(int32_t x, int32_t y);
-		
-		int32_t mLastAngle;
+        OOInt GetAngle(OOInt x, OOInt y);
+
+        OOInt mLastAngle;
 		bool fSpinning;
-		int32_t mDirection, mZeroPoint;
-		float mTotalRotation;
-		uint32_t mCurrentRotation;
-		uint32_t mTotalSpins;
-		uint32_t mRequiredSpins;
+        OOInt mDirection, mZeroPoint;
+		OOFloat mTotalRotation;
+		OOUInt mCurrentRotation;
+        OOUInt mTotalSpins;
+        OOUInt mRequiredSpins;
 		
-		int mChannel;
-        int mChannelBonus;
+		OOInt mChannel;
+        OOInt mChannelBonus;
 };
-
-#endif
-
-

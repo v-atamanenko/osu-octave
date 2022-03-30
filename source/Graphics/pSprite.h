@@ -1,16 +1,13 @@
-#include "pDrawable.h"
+#pragma once
 
-#ifndef __PSPRITE_H__
-#define __PSPRITE_H__
+#include "pDrawable.h"
 
 class pSprite : public pDrawable {
 public:
-    pSprite(TextureType texture, int32_t x, int32_t y, uint32_t width, uint32_t height, DrawOrigin origin, FieldType fieldtype, SDL_Color color, uint32_t alpha, float z = 0);
+    pSprite(TextureType texture, OOInt x, OOInt y, OOUInt width, OOUInt height, DrawOrigin origin, FieldType fieldtype, SDL_Color color, OOUShort alpha, OOFloat z = 0);
 
     void Draw() override;
     SDL_Rect GetRect() {
-        return SDL_Rect({X, Y, Width, Height});
+        return SDL_Rect({X, Y, (OOInt)Width, (OOInt)Height});
     }
 };
-
-#endif

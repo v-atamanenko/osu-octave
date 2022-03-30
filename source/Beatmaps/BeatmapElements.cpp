@@ -1,25 +1,21 @@
 #include "BeatmapElements.h"
-#include "SDL.h"
 BeatmapElements BeatmapElements::sInstance;
 
-const TimingPoint& BeatmapElements::GetTimingPoint(long time)
-{
-	uint32_t i;
+const TimingPoint& BeatmapElements::GetTimingPoint(OOTime time) {
+	OOInt i;
 	for (
-		i = mTimingPoints.size() - 1;
+		i = (OOInt)mTimingPoints.size() - 1;
 		i > 0 && mTimingPoints[i].Time > time;
 		--i
 	);
 	return mTimingPoints[i];
 }
 
-const TimingPoint& BeatmapElements::GetTimingPoint()
-{
+const TimingPoint& BeatmapElements::GetTimingPoint() {
 	return GetTimingPoint(GameClock::Clock().Time());
 }
 
-bool BeatmapElements::IsBreak()
-{
+bool BeatmapElements::IsBreak() {
 	for (auto & mBreakPoint : mBreakPoints) {
 		if (GameClock::Clock().Time() > mBreakPoint.StartTime && GameClock::Clock().Time() < mBreakPoint.EndTime)
 			return true;
@@ -27,8 +23,7 @@ bool BeatmapElements::IsBreak()
 	return false;
 }
 
-SDL_Color BeatmapElements::GetNextColour()
-{
+SDL_Color BeatmapElements::GetNextColour() {
 	//backwards compatibility - increase counter BEFORE returning
 	if (++mCurrentColour >= mColours.size())
 		mCurrentColour = 0;
@@ -36,8 +31,7 @@ SDL_Color BeatmapElements::GetNextColour()
 	return mColours[mCurrentColour];
 }
 
-void BeatmapElements::AddTimingPoint(long time, float beattime, uint8_t samplesetid)
-{
+void BeatmapElements::AddTimingPoint(OOTime time, OOFloat beattime, OOUShort samplesetid) {
 	TimingPoint tPoint = {
 		time,
 		beattime,
@@ -47,8 +41,7 @@ void BeatmapElements::AddTimingPoint(long time, float beattime, uint8_t samplese
 	mTimingPoints.push_back(tPoint);
 }
 
-void BeatmapElements::AddBreakPoint(long start, long end)
-{
+void BeatmapElements::AddBreakPoint(OOTime start, OOTime end) {
 	BreakPoint bPoint = {
 		start,
 		end
@@ -57,8 +50,7 @@ void BeatmapElements::AddBreakPoint(long start, long end)
 	mBreakPoints.push_back(bPoint);
 }
 
-void BeatmapElements::ResetColours(bool fill)
-{
+void BeatmapElements::ResetColours(bool fill) {
 	mCurrentColour = 0;
 
     if (!fill) {
@@ -82,7 +74,6 @@ inline SDL_Color AdjustColor(SDL_Color c) {
     return y;
 }
 
-void BeatmapElements::AddColor(SDL_Color c)
-{
+void BeatmapElements::AddColor(SDL_Color c) {
     mColours.push_back(AdjustColor(c));
 }

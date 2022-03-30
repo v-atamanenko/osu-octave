@@ -1,51 +1,11 @@
 #include "Beatmap.h"
 
-bool Beatmap::LoadEntryData(const std::string &filename, const std::string &basedir, BeatmapEntry& bm) {
-    std::ifstream file(basedir  + "/" + filename);
-    if (!file) {
-        fprintf(stderr, "Couldn't read .osu file %s\n", filename.c_str());
-        return false;
-    }
-
-    osuParser::OsuParser p(&file);
-    p.Parse();
-
-    if (p.mode != osuParser::gmStandard) {
-        // Not an osu! map
-        return false;
-    }
-
-    bm.Filename = filename;
-    bm.BaseDir = basedir;
-    bm.Title = p.title;
-    bm.Artist = p.artist;
-    bm.Creator = p.creator;
-    bm.Version = p.version;
-    bm.AudioFilename = basedir + "/" + p.audioFilename;
-
-    for (const osuParser::Event& e : p.events) {
-        if (e.type == osuParser::eBackground) {
-            bm.BackgroundFilename = e.file;
-            bm.BackgroundFilepath = basedir + "/" + e.file;
-        }
-    }
-
-    bm.Checksum = md5(p.title + p.artist + p.version + std::to_string(p.beatmapID));
-
-    std::map<std::string, Output> sr = calculateStarRating(basedir  + "/" + filename);
-    bm.starRating = sr["nomod"].total;
-    return true;
-}
-
-Beatmap::Beatmap(const std::string &filename, const std::string &basedir)
-{
+Beatmap::Beatmap(const std::string &filename, const std::string &basedir) {
 	fLoadable = false;
 	
 	mFilename = filename;
 	mBaseDir = basedir;
     mParser = nullptr;
-
-	//mChecksumString = "";
 
     std::ifstream file(mBaseDir  + "/" + mFilename);
     if (!file) {
@@ -70,6 +30,7 @@ Beatmap::Beatmap(const std::string &filename, const std::string &basedir)
     mVersion = p.version;
     mAudioFilename = mBaseDir + "/" + p.audioFilename;
     mAudioLeadIn = p.audioLeadIn;
+    mBreakDurationTotal = 0;
 
     for (const osuParser::Event& e : p.events) {
         if (e.type == osuParser::eBackground) {
@@ -78,6 +39,7 @@ Beatmap::Beatmap(const std::string &filename, const std::string &basedir)
         }
         if (e.type == osuParser::eBreak) {
             mBreakPoints.push_back({e.begin, e.end});
+            mBreakDurationTotal += (e.end - e.begin);
         }
     }
 
@@ -87,8 +49,7 @@ Beatmap::Beatmap(const std::string &filename, const std::string &basedir)
 	fReady = false;
 }
 
-void Beatmap::Initialize()
-{
+void Beatmap::Initialize() {
     if (fReady) {
         return;
     }
@@ -112,33 +73,30 @@ void Beatmap::Initialize()
 
     AudioManager::Engine().MusicLoad(mAudioFilename);
 
-    DifficultyManager::DifficultyHpDrain = (uint8_t)mParser->hpDrainRate;
-    DifficultyManager::DifficultyCircleSize = mParser->circleSize;
-    DifficultyManager::DifficultyOverall = mParser->overallDifficulty;
+    DifficultyManager::HP = mParser->hpDrainRate;
+    DifficultyManager::CS = mParser->circleSize;
+    DifficultyManager::OD = mParser->overallDifficulty;
     DifficultyManager::SliderMultiplier = mParser->sliderMultiplier;
     DifficultyManager::SliderTickRate = mParser->sliderTickRate;
 
-    DifficultyManager::preempt_time_new = mParser->preemptMs;
+    DifficultyManager::PreemptMs = mParser->preemptMs;
 
-    float hoscale = (Settings::get_float("hoscale") + 100) / 100;
-    DifficultyManager::circle_size = mParser->circleSize;
-    DifficultyManager::circle_size_new = (mParser->circleRadiusPx * 2) * hoscale;
-    DifficultyManager::hit_window_300 = mParser->hitWindow300;
-    DifficultyManager::hit_window_100 = mParser->hitWindow100;
-    DifficultyManager::hit_window_50 = mParser->hitWindow50;
-    DifficultyManager::hit_window = mParser->hitWindow50 * 2;
-    DifficultyManager::spinner_rps = mParser->requiredRPS;
-    DifficultyManager::fadeInMs = mParser->fadeInMs;
-
-    DifficultyManager::DifficultyPeppyStars = 0; // TODO: Learn how to count peppy stars
+    OOFloat hoscale = (Settings::get_float("hoscale") + 100) / 100;
+    DifficultyManager::CircleDiameterPx = (mParser->circleRadiusPx * 2) * hoscale;
+    DifficultyManager::HitWindow300 = mParser->hitWindow300;
+    DifficultyManager::HitWindow100 = mParser->hitWindow100;
+    DifficultyManager::HitWindow50 = mParser->hitWindow50;
+    DifficultyManager::HitWindow = mParser->hitWindow50 * 2;
+    DifficultyManager::RequiredRPS = mParser->requiredRPS;
+    DifficultyManager::FadeInMs = mParser->fadeInMs;
 
     mStackingEnabled = Settings::get_bool("enableStacking");
 
     for (osuParser::TimingPoint tp : mParser->timingPoints) {
-        int64_t time = tp.offset;
-        double beattime = tp.adjustedMsPerBeat;
-        uint8_t samplesetid = tp.sampleSet;
-        if (samplesetid < 1 || samplesetid > 2) // TODO: Lear what are samplesets 0 and 3
+        OOTime time = tp.offset;
+        OOFloat beattime = tp.adjustedMsPerBeat;
+        OOUShort samplesetid = tp.sampleSet;
+        if (samplesetid < 1 || samplesetid > 2) // TODO: Learn what are samplesets 0 and 3
             samplesetid = 1;
         BeatmapElements::Element().AddTimingPoint(time, beattime, samplesetid);
     }
@@ -155,16 +113,14 @@ void Beatmap::Initialize()
     }
 }
 
-void Beatmap::CleanUp()
-{
+void Beatmap::CleanUp() {
 	//set object back to uninitialised state
 	fReady = false;
 	delete mParser;
     mParser = nullptr;
 }
 
-Beatmap::~Beatmap()
-{
+Beatmap::~Beatmap() {
 	delete mParser;
 }
 
@@ -197,20 +153,16 @@ void Beatmap::Buffer(std::list<HitObject*>& hitObjectList)
     assert(mParser != nullptr);
 
     //we buffer objects to 10 seconds ahead
-	while (mHitObjectRead < mHitObjectCount && mNextObjectTime < GameClock::Clock().Time() + 3000)
-	{
+	while (mHitObjectRead < mHitObjectCount && mNextObjectTime < GameClock::Clock().Time() + 4000) {
 		HitObject* object;
-		
-		//all coordinates are s16 in file but s32 in RAM
-		
+
 		HitObjectType type = mNextObjectType;
-		int32_t x = mNextObjectX;
-		int32_t y = mNextObjectY;
+        OOInt x = mNextObjectX;
+        OOInt y = mNextObjectY;
 		HitObjectSound sound = mNextObjectSound;
         mForceNewCombo = false;
 		
-		switch (type) //ignore HIT_COMBO
-        {
+		switch (type) { //ignore HIT_COMBO
 			case HIT_NORMAL:
 			{
 				object = new HitCircle(x, y, mNextObjectTime, type, sound, mNextObjectCombo, mNextObjectNumberInCombo);
@@ -221,8 +173,8 @@ void Beatmap::Buffer(std::list<HitObject*>& hitObjectList)
 			{
                 osuParser::HitObject ho = mParser->hitObjects.at(mHitObjectRead);
 
-				uint32_t repeats = ho.slider.nRepeats;
-                uint32_t lengthtime = ho.slider.durationPerRepeat;
+				OOUShort repeats = ho.slider.nRepeats;
+                OOTime lengthtime = ho.slider.durationPerRepeat;
 
                 std::vector<HitObjectPoint*> points;
 
@@ -247,51 +199,39 @@ void Beatmap::Buffer(std::list<HitObject*>& hitObjectList)
                 }
 
                 std::vector<Vector2> pts;
-                /*printf("Pushing points:\n");*/
                 for (osuParser::CurvePoint cp : ho.slider.curvePoints) {
-                    /*printf("x: %i, y: %i;\n", cp.x, cp.y);*/
                     pts.emplace_back(cp.x, cp.y);
                 }
-                OsuSliderCurve *m_curve = OsuSliderCurve::createCurve(curveType, pts, ho.slider.length);
+                OsuSliderCurve *m_curve = OsuSliderCurve::createCurve(curveType, pts, (float)ho.slider.length);
 
                 std::vector<Vector2> screenPoints = m_curve->getPoints();
-
-                /*
-                printf("Got points:\n");
-                printf("x: %f, y: %f;\n", screenPoints.at(0).x, screenPoints.at(0).y);
-                printf("x: %f, y: %f;\n", screenPoints.at((int)floor(screenPoints.size()/2)).x, screenPoints.at((int)floor(screenPoints.size()/2)).y);
-                printf("x: %f, y: %f;\n", screenPoints.at(screenPoints.size()-1).x, screenPoints.at(screenPoints.size()-1).y);
-                */
-
-                int32_t lastAngle = 0;
                 for (int i = 0; i < screenPoints.size(); i++) {
                     auto* tPoint = new HitObjectPoint();
-                    tPoint->x = (int32_t)round(screenPoints[i].x);
-                    tPoint->y = (int32_t)round(screenPoints[i].y);
+                    tPoint->x = (OOInt)round(screenPoints[i].x);
+                    tPoint->y = (OOInt)round(screenPoints[i].y);
 
-                    float ballAngle;
+                    OOFloat ballAngle;
                     if (i+1 < screenPoints.size()) {
                         ballAngle = rad2deg( atan2(screenPoints[i+1].y - screenPoints[i].y, screenPoints[i+1].x - screenPoints[i].x) );
                     } else {
                         ballAngle = rad2deg( atan2(screenPoints[i].y - screenPoints[i-1].y, screenPoints[i].x - screenPoints[i-1].x) );
                     }
 
-                    tPoint->angle = ballAngle;
-
+                    tPoint->angle = (OOInt)round(ballAngle);
                     points.push_back(tPoint);
                 }
 
                 std::vector<HitObjectPoint*> ticks;
-                float msPerBeat = BeatmapElements::Element().GetTimingPoint(mNextObjectTime).BeatTime;
-                float beatsPerSlider = (float)lengthtime / msPerBeat;
-                int ticksPerSlider = floor((float)DifficultyManager::SliderTickRate * beatsPerSlider);
+                OOFloat msPerBeat = BeatmapElements::Element().GetTimingPoint(mNextObjectTime).BeatTime;
+                OOFloat beatsPerSlider = (OOFloat)lengthtime / msPerBeat;
+                OOInt ticksPerSlider = floor(DifficultyManager::SliderTickRate * beatsPerSlider);
 
                 if (ticksPerSlider > 0) {
-                    int divider = floor((screenPoints.size())/(ticksPerSlider+1)) - 1;
+                    OOInt divider = (OOInt)floor( (OOFloat)(screenPoints.size()) / (OOFloat)(ticksPerSlider + 1)) - 1;
                     for (int i = 0, j = divider; i < ticksPerSlider; i++, j+=divider) {
                         auto* tPoint = new HitObjectPoint();
-                        tPoint->x = (int32_t)round(screenPoints[j].x);
-                        tPoint->y = (int32_t)round(screenPoints[j].y);
+                        tPoint->x = (OOInt)round(screenPoints[j].x);
+                        tPoint->y = (OOInt)round(screenPoints[j].y);
                         ticks.push_back(tPoint);
                     }
                 }
@@ -302,7 +242,7 @@ void Beatmap::Buffer(std::list<HitObject*>& hitObjectList)
                     ++mHitObjectRead;
                     continue;
                 }
-				
+
 				object = new HitSlider(x, y, mNextObjectTime, lengthtime, points, ticks, repeats, type, sound, mNextObjectCombo, mNextObjectNumberInCombo);
 
                 points.clear();
@@ -314,7 +254,7 @@ void Beatmap::Buffer(std::list<HitObject*>& hitObjectList)
 			case HIT_SPINNER:
 			{
                 osuParser::HitObject ho = mParser->hitObjects.at(mHitObjectRead);
-				int64_t endtime = ho.spinner.end;
+                OOTime endtime = ho.spinner.end;
 				object = new HitSpinner(mNextObjectTime, endtime, sound, mNextObjectCombo, mNextObjectNumberInCombo);
                 mForceNewCombo = true;
 				break;
@@ -328,18 +268,17 @@ void Beatmap::Buffer(std::list<HitObject*>& hitObjectList)
 		hitObjectList.push_back(object);
 		
 		++mHitObjectRead;
-		if (mHitObjectRead < mHitObjectCount)
-		{
+		if (mHitObjectRead < mHitObjectCount) {
 			ReadNextObject();
 			object->SetPostCreateOptions(mForceNewCombo || mNextObjectCombo, mNextObjectX, mNextObjectY);
 
             // Hacky way to do stacking
             if (type != HitObjectType::HIT_SPINNER && mNextObjectType != HitObjectType::HIT_SLIDER && mStackingEnabled) {
-                const int span = floor(DifficultyManager::circle_size_new / 12);
-                const int margin = 3;
+                const OOInt span = floor(DifficultyManager::CircleDiameterPx / 12);
+                const OOInt margin = 3;
 
-                int32_t local_x = object->mX;
-                int32_t local_y = object->mY;
+                OOInt local_x = object->mX;
+                OOInt local_y = object->mY;
                 if (mStackSize > 0) {
                     local_x -= span*mStackSize;
                     local_y -= span*mStackSize;
@@ -360,9 +299,7 @@ void Beatmap::Buffer(std::list<HitObject*>& hitObjectList)
             } else {
                 mStackSize = 0;
             }
-		}
-		else
-		{
+		} else {
 			object->SetPostCreateOptions(true, 0, 0);
 		}
 	}

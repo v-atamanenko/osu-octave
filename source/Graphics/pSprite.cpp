@@ -1,7 +1,6 @@
 #include "pSprite.h"
 
-pSprite::pSprite(TextureType texture, int32_t x, int32_t y, uint32_t width, uint32_t height, DrawOrigin origin, FieldType fieldtype, SDL_Color color, uint32_t alpha, float z)
-{
+pSprite::pSprite(TextureType texture, OOInt x, OOInt y, OOUInt width, OOUInt height, DrawOrigin origin, FieldType fieldtype, SDL_Color color, OOUShort alpha, OOFloat z) {
 	Texture = texture;
 	X = x;
 	Y = y;

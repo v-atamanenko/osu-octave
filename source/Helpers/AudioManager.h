@@ -1,34 +1,15 @@
+#pragma once
+
 #include <cstdio>
 #include <string>
 
 #include "SDL.h"
 #include "SDL_mixer.h"
 
+#include <unistd.h>
+#include "defines.h"
+#include "DataStorage/Settings.h"
 #include "Beatmaps/BeatmapElements.h"
-
-#ifndef __AUDIOMANAGER_H__
-#define __AUDIOMANAGER_H__
-
-/*
-#include "normal_hitnormal_bin.h"
-#include "normal_hitwhistle_bin.h"
-#include "normal_hitfinish_bin.h"
-#include "normal_hitclap_bin.h"
-#include "normal_slidertick_bin.h"
-#include "normal_sliderslide_bin.h"
-#include "normal_sliderwhistle_bin.h"
-
-#include "soft_hitnormal_bin.h"
-#include "soft_hitwhistle_bin.h"
-#include "soft_hitfinish_bin.h"
-#include "soft_hitclap_bin.h"
-#include "soft_slidertick_bin.h"
-#include "soft_sliderslide_bin.h"
-#include "soft_sliderwhistle_bin.h"
-
-#include "spinnerbonus_bin.h"
-#include "spinnerspin_bin.h"
-*/
 
 typedef enum {
 	SND_NORMAL = 0,
@@ -87,9 +68,6 @@ typedef enum UISoundName {
     UISOUND_WELCOME_PIANO
 } UISoundName;
 
-//intended usage:
-//AudioManager::Engine().PlaySample(SOUND_DATA(sound_name), loop)
-
 class AudioManager
 {
 	public:
@@ -97,9 +75,9 @@ class AudioManager
 
         void Initialize();
 		
-		int PlaySample(SampleSetInfo info, bool loop = false, int channel = -1);
+		int PlaySample(const SampleSetInfo& info, bool loop = false, OOInt channel = -1);
         //FIXME: void SetChannelFreq(int channel, uint16_t freq);
-		void StopChannel(int channel);
+		void StopChannel(OOInt channel);
 		
 		//sounds
 		void ResetSamples();
@@ -112,9 +90,9 @@ class AudioManager
 		
 		//music
         int MusicLoad(std::string& filename);
-		int MusicPlay(float volume=100.f); // volume: 0-100.f
-		int MusicSkipTo(uint32_t milliseconds);
-        void UpdateMusicVolume(float volume);
+		int MusicPlay(OOFloat volume=100.0); // volume: 0-100.f
+		int MusicSkipTo(OOTime milliseconds);
+        void UpdateMusicVolume(OOFloat volume);
 		void MusicStop();
 
         void PlayBGM();
@@ -132,14 +110,9 @@ class AudioManager
 
         bool mBGMStarted = false;
 		
-		//music
-		static const uint32_t SIZE = 11025; //size of each HALF of the buffer
-		int mChannel;
+		OOInt mChannel;
 
 	private:
 		AudioManager();
-		~AudioManager() {}
+		~AudioManager() = default;
 };
-
-#endif
-

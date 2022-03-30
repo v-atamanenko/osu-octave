@@ -1,10 +1,11 @@
+#pragma once
+
 #include "SDL.h"
 #include "SDL_image.h"
 #include "SDL_mixer.h"
 #include "SDL_ttf.h"
 
-#ifndef NANODOSU_SDLINITIALIZER
-#define NANODOSU_SDLINITIALIZER
+#include "defines.h"
 
 class SDLInitializer
 {
@@ -15,5 +16,3 @@ protected:
 private:
     SDLInitializer();
 };
-
-#endif //NANODOSU_SDLINITIALIZER

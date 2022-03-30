@@ -1,12 +1,10 @@
 #include "pText.h"
 
-#include <utility>
-
-pText::pText(std::string text, FontName font, uint16_t x, uint16_t y, SDL_Color clr) {
+pText::pText(const std::string& text, FontName font, OOInt x, OOInt y, SDL_Color clr) {
     this->X = x;
     this->Y = y;
     this->Z = -0.02f;
-    this->Text = std::move(text);
+    this->Text = text;
     this->Font = font;
     this->Clickable = false;
     this->mAlive = true;
@@ -20,9 +18,5 @@ pText::pText(std::string text, FontName font, uint16_t x, uint16_t y, SDL_Color 
 
 void pText::Draw() {
     TextManager::SetFont(this->Font);
-
-    TextManager::PrintLocate(
-            (float)this->X, (float)this->Y, this->Origin,
-            "%s", this->Text.c_str()
-	);
+    TextManager::PrintLocate(this->X, this->Y, this->Origin,"%s", this->Text.c_str());
 }

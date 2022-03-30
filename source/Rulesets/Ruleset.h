@@ -1,3 +1,5 @@
+#pragma once
+
 #include <cstdio>
 
 #include "Beatmaps/BeatmapManager.h"
@@ -8,14 +10,11 @@
 #include "GameplayElements/DarkenOverlay.h"
 #include "System/TextManager.h"
 
-#ifndef __RULESET_H__
-#define __RULESET_H__
-
 class Ruleset
 {
 	public:
 		Ruleset();
-		virtual ~Ruleset() {}
+		virtual ~Ruleset() = default;
 		
 		void Initialize();
 		void Skip();
@@ -48,9 +47,4 @@ class Ruleset
         std::vector<pDrawable *> pauseMenuSprites;
 		
 		virtual void OnSkip() = 0;
-
-
 };
-
-#endif
-

@@ -1,13 +1,13 @@
 #include "pAnimation.h"
 
-pAnimation::pAnimation(TextureType texture, uint32_t framecount, uint32_t fps, int32_t x, int32_t y, uint32_t width, uint32_t height, DrawOrigin origin, FieldType type, SDL_Color color, uint32_t alpha)
+pAnimation::pAnimation(TextureType texture, OOUInt framecount, OOUInt fps, OOInt x, OOInt y, OOUInt width, OOUInt height, DrawOrigin origin, FieldType type, SDL_Color color, OOUShort alpha)
 	: pSprite(texture, x, y, width, height, origin, type, color, alpha)
 {
 	mFrameCount = framecount;
 	mFrameCurrent = 0;
 	mOrigTexture = texture;
 	
-	mUpdatesPerFrame = 60.0f / (float)fps;
+	mUpdatesPerFrame = 60.0 / (OOFloat)fps;
 	mUpdatesWaited = 0;
 }
 

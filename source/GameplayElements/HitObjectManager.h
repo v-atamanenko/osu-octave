@@ -1,3 +1,5 @@
+#pragma once
+
 #include <cstdio>
 #include <list>
 
@@ -7,22 +9,18 @@
 #include "HitObjects/HitSpinner.h"
 #include "Helpers/InputHelper.h"
 
-#ifndef __HITOBJECTMANAGER_H__
-#define __HITOBJECTMANAGER_H__
-
-typedef std::list<HitObject*>::iterator hitObjectIterator;
-
 class HitObjectManager
 {
 	public:
-		~HitObjectManager();
-		
 		void Add(HitObject* object);
 		void HandleInput();
-	
+
+        ~HitObjectManager() {
+            for (auto & mHitObject : mHitObjects) {
+                delete mHitObject;
+            }
+        };
+
 	protected:
 		std::list<HitObject*> mHitObjects;
 };
-
-#endif
-

@@ -19,7 +19,7 @@ namespace osuParser
 {
 	// For readability and to follow format docs I'm typedefing all over the place
 	// NOTE: OsTime will always be represented in milliseconds
-	typedef int64_t OsTime;
+	typedef int32_t OsTime;
 	typedef uint8_t OsByte;
 	typedef uint16_t OsShort;
 	typedef uint32_t OsInteger;

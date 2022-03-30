@@ -2,15 +2,15 @@
 #include "Graphics/pText.h"
 #include "DataStorage/Scores.h"
 
-void OnBtnResumeClick(pDrawable* self, uint16_t x, uint16_t y) {
+void OnBtnResumeClick(pDrawable* self, OOInt x, OOInt y) {
     InputHelper::SimulateKeyDown(Control::IH_CONTROL_QUIT);
 }
 
-void OnBtnRetryClick(pDrawable* self, uint16_t x, uint16_t y) {
+void OnBtnRetryClick(pDrawable* self, OOInt x, OOInt y) {
     ChangeModeOnFrameEnd(MODE_PLAYER);
 }
 
-void OnBtnBackClick(pDrawable* self, uint16_t x, uint16_t y) {
+void OnBtnBackClick(pDrawable* self, OOInt x, OOInt y) {
     ChangeModeOnFrameEnd(MODE_SONGSELECT);
 }
 
@@ -31,7 +31,7 @@ void Ruleset::Initialize()
 	mLifebar.Initialize();
 
     if (mCursor) {
-        mCursorSize = (int)round((float) DifficultyManager::GetCircleSizePX() * 0.83f);
+        mCursorSize = (int)round(DifficultyManager::CircleDiameterPx * 0.83);
         mCursorSprite = new pSprite(TX_PLAY_CURSOR, 100, 100, mCursorSize, mCursorSize, ORIGIN_CENTER, FIELD_SCREEN, SDL_Color(), 255, -1000090.f);
         mSpriteManager.Add(mCursorSprite);
     }
@@ -266,7 +266,7 @@ void Ruleset::UpdatePause() {
 
 void Ruleset::UpdateGameOver()
 {
-    long now = GameClock::Clock().Time();
+    OOTime now = GameClock::Clock().Time();
     if (mCursor) {
         mCursorSprite->X = (int32_t)InputHelper::TouchRead().px;
         mCursorSprite->Y = (int32_t)InputHelper::TouchRead().py;
@@ -284,7 +284,7 @@ void Ruleset::UpdateGameOver()
 
 void Ruleset::UpdateFailed()
 {
-    long now = GameClock::Clock().Time();
+    OOTime now = GameClock::Clock().Time();
     if (mCursor) {
         mCursorSprite->X = (int32_t)InputHelper::TouchRead().px;
         mCursorSprite->Y = (int32_t)InputHelper::TouchRead().py;
@@ -302,7 +302,7 @@ void Ruleset::UpdateFailed()
 
 bool Ruleset::Update()
 {
-    long now = GameClock::Clock().Time();
+    OOTime now = GameClock::Clock().Time();
 
     if (mCursor) {
         mCursorSprite->X = (int32_t)InputHelper::TouchRead().px;

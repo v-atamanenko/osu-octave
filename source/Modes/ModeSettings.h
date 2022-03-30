@@ -1,5 +1,4 @@
-#ifndef _MODESETTINGS_H
-#define _MODESETTINGS_H
+#pragma once
 
 #include "DataStorage/Settings.h"
 #include "Graphics/pText.h"
@@ -284,15 +283,15 @@ public:
 
 class ValueSlider : public SpriteContainer {
 public:
-    int32_t mX;
-    int32_t mY;
-    int32_t mSliderPosition;
-    int32_t mWidth;
+    OOInt mX;
+    OOInt mY;
+    OOInt mSliderPosition;
+    OOUInt mWidth;
     bool mTouchActive = false;
-    std::function<void(float)> value_change_callback;
-    std::function<void(float)> value_callback;
+    std::function<void(OOFloat)> value_change_callback;
+    std::function<void(OOFloat)> value_callback;
 
-    ValueSlider(int32_t x, int32_t y, int32_t width=206) {
+    ValueSlider(OOInt x, OOInt y, OOUInt width=206) {
         mX = mSliderPosition = x;
         mY = y;
         mWidth = width;
@@ -302,13 +301,13 @@ public:
         mSprites.push_back(spr);
     }
 
-    void Init(float value) {
-        int pos = round((value / 100.f * mWidth) + mX);
+    void Init(OOFloat value) {
+        auto pos = (OOInt) round((value / 100.f * mWidth) + mX);
         mSliderPosition = (pos < mX) ? mX : ((pos > mX + mWidth) ? mX+mWidth : pos);
         mSprites[0]->X = mSliderPosition;
     }
 
-    bool InBounds(int32_t x, int32_t y) {
+    bool InBounds(OOInt x, OOInt y) {
         SDL_Rect r = {mSliderPosition - (slider_control_touchwidth / 2), mY - (slider_control_touchheight / 2),
                       slider_control_touchwidth, slider_control_touchheight};
         SDL_Point p = {x,y};
@@ -325,7 +324,7 @@ public:
         mSliderPosition = (touch.px < mX) ? mX : ((touch.px > mX + mWidth) ? mX+mWidth : touch.px);
         mSprites[0]->Move(mSliderPosition, mY);
         mSprites[0]->Texture = TX_BUTTON_SLIDER_CIRCLE_ACTIVE;
-        value_change_callback(((float)mSliderPosition - (float)mX) / (float)mWidth * 100.f);
+        value_change_callback(((OOFloat)mSliderPosition - (OOFloat)mX) / (OOFloat)mWidth * 100.f);
         return true;
     }
     bool OnTouchUp(const touchPosition& touch) {
@@ -336,29 +335,29 @@ public:
         AudioManager::Engine().PlayUISound(UISOUND_CLICK_SHORT_CONFIRM);
 
         mSprites[0]->Texture = TX_BUTTON_SLIDER_CIRCLE;
-        value_callback(((float)mSliderPosition - (float)mX) / (float)mWidth * 100.f);
+        value_callback(((OOFloat)mSliderPosition - (OOFloat)mX) / (OOFloat)mWidth * 100.f);
         mTouchActive = false;
         return true;
     }
 
 private:
-    const int slider_control_width = 22;
-    const int slider_control_height = 22;
-    const int slider_control_touchwidth = slider_control_width * 1.3;
-    const int slider_control_touchheight = slider_control_height * 1.3;
+    const OOInt slider_control_width = 22;
+    const OOInt slider_control_height = 22;
+    const OOInt slider_control_touchwidth = slider_control_width * 1.3;
+    const OOInt slider_control_touchheight = slider_control_height * 1.3;
 };
 
 class ModeSettings : public Mode {
 public:
     ModeSettings();
 
-    ~ModeSettings();
+    ~ModeSettings() override;
 
     void TabGeneral();
 
     void TabGameplay();
 
-    void Update();
+    void Update() override;
 
     void Clear();
 
@@ -380,15 +379,13 @@ protected:
     Logo* mLogo = nullptr;
 
 
-    void CreateValueSlider(int32_t x, int32_t y, const std::string &setting_name, bool multiplier_mode=false);
+    void CreateValueSlider(OOInt x, OOInt y, const std::string &setting_name, bool multiplier_mode=false);
 
-    void CreateStringSelector(int32_t x, int32_t y, const std::string &setting_name);
+    void CreateStringSelector(OOInt x, OOInt y, const std::string &setting_name);
 
-    void CreateRadioButton(int32_t x, int32_t y, const std::string &setting_name,
+    void CreateRadioButton(OOInt x, OOInt y, const std::string &setting_name,
                            const std::string &false_value_label, const std::string &true_value_label);
 
-    void CreateTernaryButton(int32_t x, int32_t y, const std::string &setting_name, TextureType bg1, TextureType bg2,
+    void CreateTernaryButton(OOInt x, OOInt y, const std::string &setting_name, TextureType bg1, TextureType bg2,
                              TextureType bg3);
 };
-
-#endif //_MODESETTINGS_H

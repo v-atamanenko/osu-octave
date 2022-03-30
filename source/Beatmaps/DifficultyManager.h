@@ -1,50 +1,29 @@
-#ifndef _H__DIFFICULTYMANAGER_H_
-#define _H__DIFFICULTYMANAGER_H_
+#pragma once
+
+#include "types.h"
 
 class DifficultyManager
 {
 	public:
-		static uint8_t DifficultyHpDrain;
-		static float DifficultyCircleSize;
-		static float DifficultyOverall;
-		static float SliderMultiplier;
-		static float SliderTickRate;
+		static OOFloat HP;
+		static OOFloat CS;
+		static OOFloat OD;
+		static OOFloat SliderMultiplier;
+		static OOFloat SliderTickRate;
 
-		static uint8_t DifficultyPeppyStars;
+        // Diameter of a circle based on CS in osu! pixels
+        static OOFloat CircleDiameterPx;
 
-		//inline
-        static float GetCircleSize()   { return circle_size; }
-		static float GetCircleSizePX()   { return circle_size_new; }
-		static long GetPreemptTime()  { return preempt_time_new; }
-		static long GetHitWindow300() { return hit_window_300; }
-		static long GetHitWindow100() { return hit_window_100; }
-		static long GetHitWindow50()  { return hit_window_50; }
-		static long GetHitWindow()    { return hit_window; }
-		static float GetSpinnerRPS()  { return spinner_rps; }
-		static float  GetMissHpDrain()  { return missHpDrain[DifficultyHpDrain]; }
-		static float    GetHpDrainRate()  { return 1.f / (110.f + missHpDrain[DifficultyHpDrain]); }
+        static OOTime PreemptMs;
+        static OOTime FadeInMs;
 
-        static long preempt_time_new;
-        static float circle_size;
-        static float circle_size_new;
-        static float spinner_rps;
-        static long fadeInMs;
-        static long hit_window_300;
-        static long hit_window_100;
-        static long hit_window_50;
-        static long hit_window;
-        static long spinner_time;
-        static long miss_hp_drain;
-	protected:
+        static OOTime HitWindow300;
+        static OOTime HitWindow100;
+        static OOTime HitWindow50;
+        static OOTime HitWindow;
 
+        static OOFloat RequiredRPS;
 
-		static uint32_t preemptTime[];
-		static uint32_t circleSize[];
-		static uint32_t hitWindow300[];
-		static uint32_t hitWindow100[];
-		static uint32_t hitWindow50[];
-		static uint32_t spinnerTime[];
-		static float missHpDrain[];
+        static OOFloat GetMissHpDrain() { return (-10) * HP; }
+		static OOFloat GetHpDrainRate() { return 1.f / (110.f + ((-10) * HP)); }
 };
-
-#endif // _H__DIFFICULTYMANAGER_H_

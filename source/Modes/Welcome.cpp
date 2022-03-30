@@ -1,11 +1,6 @@
 #include "Welcome.h"
 
-#include "Graphics/pText.h"
-#include "Helpers/PreviewBuffer.h"
-#include "DataStorage/Settings.h"
-#include "DataStorage/Scores.h"
-
-void TapToStartHandler(pDrawable* self, uint16_t x, uint16_t y) {
+void TapToStartHandler(pDrawable* self, OOInt x, OOInt y) {
     ChangeModeOnFrameEnd(MODE_SONGSELECT);
 }
 

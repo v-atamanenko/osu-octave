@@ -1,5 +1,4 @@
-#ifndef __GFXINFO_H__
-#define __GFXINFO_H__
+#pragma once
 
 typedef enum {
 	TX_PLAY_CIRCLE,
@@ -112,5 +111,3 @@ typedef enum {
     TX_BUTTON_RADIO,
     TX_ABOUT
 } TextureType;
-
-#endif

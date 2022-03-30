@@ -1,12 +1,11 @@
+#pragma once
+
 #include <vector>
 #include <map>
 #include "SDL.h"
 #include "types.h"
 #include "DataStorage/Settings.h"
 #include <algorithm>
-
-#ifndef __INPUTHELPER_H__
-#define __INPUTHELPER_H__
 
 class InputHelper
 {
@@ -27,11 +26,8 @@ class InputHelper
         static std::map<Control, std::vector<RawKey>> mControls;
         static std::vector<SDL_Event> sdlEvents;
         static std::vector<SDL_Event> simulatedKeyDowns;
-        static std::vector<int> heldControllerKeys;
-        static std::vector<int> heldKeyboardKeys;
-        static std::vector<int> heldMouseButtons;
+        static std::vector<OOInt> heldControllerKeys;
+        static std::vector<OOInt> heldKeyboardKeys;
+        static std::vector<OOInt> heldMouseButtons;
 		static touchPosition mTouch;
 };
-
-#endif
-

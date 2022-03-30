@@ -1,6 +1,4 @@
 #include "GameBase.h"
-#include "TextManager.h"
-#include "../Helpers/PreviewBuffer.h"
 
 GameBase::GameBase() {
 	ChangeModeOnFrameEnd(MODE_WELCOME);

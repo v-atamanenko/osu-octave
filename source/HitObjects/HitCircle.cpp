@@ -1,28 +1,27 @@
 #include "HitCircle.h"
 
-HitCircle::HitCircle(int32_t x, int32_t y, int32_t time, HitObjectType type, HitObjectSound sound, bool combo, int32_t number_in_combo) : HitObject(x, y, time, type, sound, combo, number_in_combo)
-{
-	uint32_t size = DifficultyManager::GetCircleSizePX();
+HitCircle::HitCircle(OOInt x, OOInt y, OOTime time, HitObjectType type, HitObjectSound sound, bool combo, OOInt number_in_combo) : HitObject(x, y, time, type, sound, combo, number_in_combo) {
+	auto size = (OOInt)round(DifficultyManager::CircleDiameterPx);
 	
-	uint32_t preempt = DifficultyManager::GetPreemptTime();
-	int32_t fadeInStart = (int32_t)time - (int32_t)preempt;
-	int32_t fadeInEnd = fadeInStart +  DifficultyManager::fadeInMs;
-	mEndTime = time + DifficultyManager::GetHitWindow50();
+	OOTime preempt = DifficultyManager::PreemptMs;
+	OOTime fadeInStart = time - preempt;
+	OOTime fadeInEnd = fadeInStart + DifficultyManager::FadeInMs;
+	mEndTime = time + DifficultyManager::HitWindow50;
 
 	pSprite* spr;
 	
-	spr = new pSprite(TX_PLAY_CIRCLEOVERLAY, x, y, size, size, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({0, 0, 0}), 0);
+	spr = new pSprite(TX_PLAY_CIRCLEOVERLAY, x, y, size, size, ORIGIN_CENTER, FIELD_PLAY, SDL_Color(), 0);
 	spr->Show(fadeInStart, fadeInEnd);
 	spr->Hide(time, mEndTime);
 	spr->Kill(mEndTime+1000);
-    spr->Z = (float)time;
+    spr->Z = (OOFloat)time;
 	mSprites.push_back(spr);
 	
 	spr = new pSprite(TX_PLAY_CIRCLE, x, y, size, size, ORIGIN_CENTER, FIELD_PLAY, mColour, 0);
 	spr->Show(fadeInStart, fadeInEnd);
 	spr->Hide(time, mEndTime);
 	spr->Kill(mEndTime+1000);
-    spr->Z = (float)time - 0.5f;
+    spr->Z = (OOFloat)time - 0.5;
 	mSprites.push_back(spr);
 	
 	spr = new pSprite(TX_PLAY_CIRCLEAPPROACH, x, y, size, size, ORIGIN_CENTER, FIELD_PLAY, mColour, 0);
@@ -30,7 +29,7 @@ HitCircle::HitCircle(int32_t x, int32_t y, int32_t time, HitObjectType type, Hit
 	spr->Hide(time, mEndTime);
 	spr->Scale(fadeInStart, time, 4, 1);
 	spr->Kill(mEndTime+1000);
-    spr->Z = (float)time;
+    spr->Z = (OOFloat)time;
 	mSprites.push_back(spr);
 
     TextureType numbertex;
@@ -46,55 +45,47 @@ HitCircle::HitCircle(int32_t x, int32_t y, int32_t time, HitObjectType type, Hit
         case 9: numbertex = TX_PLAY_NUMBER_9; break;
         default: numbertex = TX_PLAY_NUMBER_0; break;
     }
-    int h = (int)round((float)size*0.44f);
-    int w = (int)round((float)h*(35.f/52.f));
+
+    // TODO: Adaptive size of numbering
+    auto h = (OOInt)round((OOFloat)size*0.44);
+    auto w = (OOInt)round((OOFloat)h*(35.0/52.0));
     spr = new pSprite(numbertex, x, y, w, h, ORIGIN_CENTER, FIELD_PLAY, SDL_Color(), 0);
     spr->Show(fadeInStart, fadeInEnd);
     spr->Hide(time, mEndTime);
     spr->Kill(mEndTime+1000);
-    spr->Z = (float)time-0.6f;
+    spr->Z = (OOFloat)time-0.6;
     mSprites.push_back(spr);
 	
 	mScoreSpriteId = 1;
 }
 
-bool HitCircle::InBounds(int32_t x, int32_t y)
-{
+bool HitCircle::InBounds(OOInt x, OOInt y) {
 	//all sprites are the same, it doesn't matter which one
 	return mSprites[1]->InBounds(x, y);
 }
 
-void HitCircle::OnTouchDown(const touchPosition& touch)
-{
-	if (InBounds(touch.px, touch.py))
-	{
+void HitCircle::OnTouchDown(const touchPosition& touch) {
+	if (InBounds(touch.px, touch.py)) {
 		Hit();
 	}
 }
 
-void HitCircle::Hit()
-{
-	long now = GameClock::Clock().Time();
-	uint32_t delta = MathHelper::Abs(mTime - now);
+void HitCircle::Hit() {
+    OOTime now = GameClock::Clock().Time();
+	auto delta = (OOTime)MathHelper::Abs(mTime - now);
 	
-	if (delta > DifficultyManager::GetHitWindow())
-	{
+	if (delta > DifficultyManager::HitWindow) {
 		//too early, give the hitcircle a shake
-		for (auto spr : mSprites)
-		{
+		for (auto spr : mSprites) {
             spr->Move(now, now+20, mX+5, mY);
 			spr->Move(now+20, now+40, mX-5, mY);
 			spr->Move(now+40, now+60, mX+5, mY);
 			spr->Move(now+60, now+80, mX, mY);
 		}
-	}
-	else
-	{
-		if (delta < DifficultyManager::GetHitWindow50())
-		{
+	} else {
+		if (delta < DifficultyManager::HitWindow50) {
 			//if within the window for 50, the person hit it
-			for (uint32_t i=0; i<2; ++i)
-			{
+			for (int i=0; i<2; ++i) {
 				pDrawable* spr = mSprites[i];
 				
 				//circle explosion
@@ -107,26 +98,18 @@ void HitCircle::Hit()
 			mSprites[2]->Kill(now);
             mSprites[3]->Kill(now);
 			
-			if (delta < DifficultyManager::GetHitWindow300())
-			{
+			if (delta < DifficultyManager::HitWindow300) {
 				IncreaseScore(SCORE_300);
-			}
-			else if (delta < DifficultyManager::GetHitWindow100())
-			{
+			} else if (delta < DifficultyManager::HitWindow100) {
 				IncreaseScore(SCORE_100);
-			}
-			else
-			{
+			} else {
 				IncreaseScore(SCORE_50);
 			}
 			
 			AudioManager::Engine().PlayHitSound(mSound);
-		}
-		else
-		{
+		} else {
 			//otherwise missed
-			for (uint32_t i=0; i<4; ++i)
-			{
+			for (int i=0; i<4; ++i) {
 				mSprites[i]->Kill(now);
 			}
 			
@@ -135,4 +118,3 @@ void HitCircle::Hit()
         mHit = true;
 	}
 }
-

@@ -1,7 +1,4 @@
 #include "TextManager.h"
-#include "SDL_ttf.h"
-#include "defines.h"
-#include "DataStorage/Settings.h"
 
 FC_Font* TextManager::mFonts[NUMBER_OF_FONTS];
 FontName TextManager::currentFont;
@@ -36,7 +33,7 @@ void TextManager::SetFont(FontName font) {
     currentFont = font;
 }
 
-void TextManager::Print(float x, float y, const char *fmt, ...) {
+void TextManager::Print(OOInt x, OOInt y, const char *fmt, ...) {
     unsigned int fc_buffer_size = 1024;
     char fc_buffer[fc_buffer_size];
 
@@ -49,7 +46,7 @@ void TextManager::Print(float x, float y, const char *fmt, ...) {
     PrintLocate(x, y, ORIGIN_TOPLEFT, "%s", fc_buffer);
 }
 
-void TextManager::PrintLocate(float x, float y, DrawOrigin origin, const char *fmt, ...) {
+void TextManager::PrintLocate(OOInt x, OOInt y, DrawOrigin origin, const char *fmt, ...) {
     if (mFonts[currentFont] == nullptr) {
         return;
     }
@@ -73,18 +70,18 @@ void TextManager::PrintLocate(float x, float y, DrawOrigin origin, const char *f
             break; // do nothing
 
         case ORIGIN_CENTER:
-            x -= (float)w/2;
-            y -= (float)h/2;
+            x -= w/2;
+            y -= h/2;
             break;
 
         case ORIGIN_BOTTOMLEFT:
-            y -= (float)h;
+            y -= h;
             break;
 
         case ORIGIN_TOPRIGHT:
-            x -= (float)w;
+            x -= w;
             break;
     }
-    FC_Draw(mFonts[currentFont], renderer, x, y, "%s", fc_buffer);
+    FC_Draw(mFonts[currentFont], renderer, (float)x, (float)y, "%s", fc_buffer);
     //valist_FC_Draw(mFonts[currentFont], renderer, x, y, fc_buffer);
 }

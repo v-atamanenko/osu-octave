@@ -1,7 +1,4 @@
 #include "GraphicsManager.h"
-#include "DataStorage/Settings.h"
-#include <string>
-#include <algorithm>
 
 GraphicsManager GraphicsManager::sGraphicsManager;
 
@@ -82,17 +79,17 @@ void GraphicsManager::LoadBeatmapBackground(const std::string& path) {
     }
 
     SDL_Rect srcrect;
-    srcrect.w = (int)round((float)(loadedSurface->h) / ((float)SCREEN_HEIGHT/(float)SCREEN_WIDTH));
+    srcrect.w = (OOInt)round((OOFloat)(loadedSurface->h) / ((OOFloat)SCREEN_HEIGHT/(OOFloat)SCREEN_WIDTH));
 
     if (loadedSurface->w > loadedSurface->h && srcrect.w <= loadedSurface->w) {
         srcrect.h = loadedSurface->h;
-        srcrect.x = floor(((float)loadedSurface->w - (float)srcrect.w) / 2.f);
+        srcrect.x = floor(((OOFloat)loadedSurface->w - (OOFloat)srcrect.w) / 2.f);
         srcrect.y = 0;
     } else {
         srcrect.w = loadedSurface->w;
-        srcrect.h = (int)round((float)(loadedSurface->w) / ((float)SCREEN_WIDTH/(float)SCREEN_HEIGHT));
+        srcrect.h = (OOInt)round((OOFloat)(loadedSurface->w) / ((OOFloat)SCREEN_WIDTH/(OOFloat)SCREEN_HEIGHT));
         srcrect.x = 0;
-        srcrect.y = floor(((float)loadedSurface->h - (float)srcrect.h) / 2.f);
+        srcrect.y = floor(((OOFloat)loadedSurface->h - (OOFloat)srcrect.h) / 2.f);
     }
 
     SDL_Rect dstrect;
@@ -326,9 +323,9 @@ void GraphicsManager::UnloadTextures() {
     }
 }
 
-void GraphicsManager::Draw(TextureType tex, int32_t x, int32_t y, uint32_t width, uint32_t height, DrawOrigin origin, FieldType fieldtype, SDL_Color color, uint32_t alpha, int32_t angle, float z, const SDL_Rect* uv) {
+void GraphicsManager::Draw(TextureType tex, OOInt x, OOInt y, OOUInt width, OOUInt height, DrawOrigin origin, FieldType fieldtype, SDL_Color color, OOUInt alpha, OOInt angle, OOFloat z, const SDL_Rect* uv) {
     std::unique_lock lock_pbs(mut_maptextures);
-    int32_t x1, y1, x2, y2;
+    OOInt x1, y1, x2, y2;
 
     // We use "UV Coordinates" as a source rect for render copy, thus being able to draw textures partly.
     if (uv != nullptr) {
@@ -337,40 +334,40 @@ void GraphicsManager::Draw(TextureType tex, int32_t x, int32_t y, uint32_t width
     }
 
     if (fieldtype == FIELD_PLAY) {
-        x += (int32_t)PlayXOffset;
-        y += (int32_t)PlayYOffset;
+        x += (OOInt)PlayXOffset;
+        y += (OOInt)PlayYOffset;
     }
 
     switch (origin) {
         case ORIGIN_TOPLEFT:
             x1 = ForceBounds(x);
             y1 = ForceBounds(y);
-            x2 = ForceBounds(x + (int32_t)width);
-            y2 = ForceBounds(y + (int32_t)height);
+            x2 = ForceBounds(x + (OOInt)width);
+            y2 = ForceBounds(y + (OOInt)height);
             break;
 
         case ORIGIN_CENTER:
             width /= 2;
             height /= 2;
 
-            x1 = ForceBounds(x - (int32_t)width);
-            x2 = ForceBounds(x + (int32_t)width);
-            y1 = ForceBounds(y - (int32_t)height);
-            y2 = ForceBounds(y + (int32_t)height);
+            x1 = ForceBounds(x - (OOInt)width);
+            x2 = ForceBounds(x + (OOInt)width);
+            y1 = ForceBounds(y - (OOInt)height);
+            y2 = ForceBounds(y + (OOInt)height);
             break;
 
         case ORIGIN_BOTTOMLEFT:
             x1 = ForceBounds(x);
-            x2 = ForceBounds(x + (int32_t)width);
-            y1 = ForceBounds((SCREEN_HEIGHT) - y - (int32_t)height);
+            x2 = ForceBounds(x + (OOInt)width);
+            y1 = ForceBounds((SCREEN_HEIGHT) - y - (OOInt)height);
             y2 = ForceBounds((SCREEN_HEIGHT) - y);
             break;
 
         case ORIGIN_TOPRIGHT:
-            x1 = ForceBounds(x - (int32_t)width);
+            x1 = ForceBounds(x - (OOInt)width);
             x2 = ForceBounds(x);
             y1 = ForceBounds(y);
-            y2 = ForceBounds(y + (int32_t)height);
+            y2 = ForceBounds(y + (OOInt)height);
     }
 
 
@@ -411,13 +408,13 @@ void GraphicsManager::DrawFullScreenRectangle(SDL_Color c) {
     SDL_RenderFillRect(renderer, &r);
 }
 
-void GraphicsManager::CreateRectangularTexture(TextureType texid, uint32_t width, uint32_t height, SDL_Color c) {
+void GraphicsManager::CreateRectangularTexture(TextureType texid, OOUInt width, OOUInt height, SDL_Color c) {
     std::unique_lock lock_pbs(mut_maptextures);
 
     SDL_Texture* tex;
 
     uint32_t pf = SDL_GetWindowPixelFormat(window);
-    tex = SDL_CreateTexture(renderer, pf, SDL_TEXTUREACCESS_TARGET, width, height);
+    tex = SDL_CreateTexture(renderer, pf, SDL_TEXTUREACCESS_TARGET, (OOInt)width, (OOInt)height);
     SDL_SetTextureBlendMode(tex, SDL_BLENDMODE_BLEND);
 
     SDL_SetRenderTarget( renderer, tex );
@@ -432,10 +429,10 @@ void GraphicsManager::CreateRectangularTexture(TextureType texid, uint32_t width
     maptextures[texid] = tex;
 }
 
-bool GraphicsManager::ScaleSurface(SDL_Surface*& pSurface, const int limit) {
+bool GraphicsManager::ScaleSurface(SDL_Surface*& pSurface, const OOInt limit) {
     bool res = true;
-    int width = pSurface->w;
-    int height = pSurface->h;
+    OOInt width = pSurface->w;
+    OOInt height = pSurface->h;
 
     SDL_Rect sourceDimensions;
     sourceDimensions.x = 0;
@@ -443,8 +440,8 @@ bool GraphicsManager::ScaleSurface(SDL_Surface*& pSurface, const int limit) {
     sourceDimensions.w = width;
     sourceDimensions.h = height;
 
-    float scale = (float)limit / (float)width;
-    float scaleH = (float)limit / (float)height;
+    OOFloat scale = (OOFloat)limit / (OOFloat)width;
+    OOFloat scaleH = (OOFloat)limit / (OOFloat)height;
 
     if (scaleH < scale) {
         scale = scaleH;
@@ -453,8 +450,8 @@ bool GraphicsManager::ScaleSurface(SDL_Surface*& pSurface, const int limit) {
     SDL_Rect targetDimensions;
     targetDimensions.x = 0;
     targetDimensions.y = 0;
-    targetDimensions.w = (int)((float)width * scale);
-    targetDimensions.h = (int)((float)height * scale);
+    targetDimensions.w = (OOInt)floor(((OOFloat)width * scale));
+    targetDimensions.h = (OOInt)floor(((OOFloat)height * scale));
 
     // create a 32 bits per pixel surface to Blit the image to first, before BlitScaled
     // https://stackoverflow.com/questions/33850453/sdl2-blit-scaled-from-a-palettized-8bpp-surface-gives-error-blit-combination/33944312
@@ -468,11 +465,10 @@ bool GraphicsManager::ScaleSurface(SDL_Surface*& pSurface, const int limit) {
             pSurface->format->Bmask,
             pSurface->format->Amask);
 
-    if (SDL_BlitSurface(pSurface, NULL, p32BPPSurface, NULL) < 0) {
+    if (SDL_BlitSurface(pSurface, nullptr, p32BPPSurface, nullptr) < 0) {
         fprintf(stderr, "Error did not blit surface: %s\n", SDL_GetError());
         res = false;
-    }
-    else {
+    } else {
         // create another 32 bits per pixel surface are the desired scale
         SDL_Surface *pScaleSurface = SDL_CreateRGBSurface(
                 p32BPPSurface->flags,
@@ -489,14 +485,13 @@ bool GraphicsManager::ScaleSurface(SDL_Surface*& pSurface, const int limit) {
         // https://stackoverflow.com/questions/20587999/sdl-blitscaled-doesnt-work
         SDL_FillRect(pScaleSurface, &targetDimensions, SDL_MapRGBA(pScaleSurface->format, 255, 0, 0, 255));
 
-        if (SDL_BlitScaled(p32BPPSurface, NULL, pScaleSurface, NULL) < 0) {
+        if (SDL_BlitScaled(p32BPPSurface, nullptr, pScaleSurface, nullptr) < 0) {
             fprintf(stderr, "Error did not scale surface: %s\n", SDL_GetError());
 
             SDL_FreeSurface(pScaleSurface);
-            pScaleSurface = NULL;
+            pScaleSurface = nullptr;
             res = false;
-        }
-        else {
+        } else {
             SDL_FreeSurface(pSurface);
 
             pSurface = pScaleSurface;
@@ -506,7 +501,7 @@ bool GraphicsManager::ScaleSurface(SDL_Surface*& pSurface, const int limit) {
     }
 
     SDL_FreeSurface(p32BPPSurface);
-    p32BPPSurface = NULL;
+    p32BPPSurface = nullptr;
     return res;
 }
 
@@ -514,7 +509,7 @@ bool GraphicsManager::CropSurfaceToSquare(SDL_Surface*& loadedSurface) {
     SDL_Rect srcrect;
     srcrect.h = srcrect.w = loadedSurface->h;
     srcrect.y = 0;
-    srcrect.x = floor(((float)loadedSurface->w / 2.f) - ((float)loadedSurface->h / 2.f));
+    srcrect.x = floor(((OOFloat)loadedSurface->w / 2.f) - ((OOFloat)loadedSurface->h / 2.f));
 
     SDL_Rect dstrect;
     dstrect.h = dstrect.w = srcrect.h;

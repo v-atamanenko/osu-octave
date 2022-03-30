@@ -1,5 +1,4 @@
-#ifndef _SCORES_H
-#define _SCORES_H
+#pragma once
 
 #include <fstream>
 #include <limits>
@@ -8,13 +7,14 @@
 #include "GameplayElements/Score.h"
 
 #include "Helpers/JSON.hpp"
+
 using json = nlohmann::json;
 
 typedef struct Highscore {
     std::string checksum;
-    uint32_t score = 0;
-    uint32_t combo = 0;
-    float accuracy = 0.f;
+    OOUInt score = 0;
+    OOUInt combo = 0;
+    OOFloat accuracy = 0;
     char grade[GRADE_LEN] = {'U','N','\0'};
 } Highscore;
 
@@ -75,5 +75,3 @@ class Scores
     private:
         static json scores;
 };
-
-#endif //_SCORES_H

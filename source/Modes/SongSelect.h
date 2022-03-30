@@ -1,3 +1,5 @@
+#pragma once
+
 #include "SDL.h"
 #include <cstdio>
 
@@ -11,9 +13,6 @@
 #include "Graphics/pText.h"
 #include "UIElements/Logo.h"
 
-#ifndef __SONGSELECT_H__
-#define __SONGSELECT_H__
-
 class SongSelect : public Mode
 {
 	public:
@@ -22,25 +21,25 @@ class SongSelect : public Mode
             delete mLogo;
         }
 
-		void Update();
-		void HandleInput();
+		void Update() override;
+		void HandleInput() override;
 
         static void PageNext() {
             AudioManager::Engine().PlayUISound(UISOUND_CLICK_SHORT_CONFIRM);
             if (mCurrentPage < (mCountPages - 1)) {
-                PreviewBuffer::GetInstance().Update(mCurrentPage, (mCurrentPage+1), mEntriesPerPage);
+                PreviewBuffer::GetInstance().Update((OOInt)mCurrentPage, (mCurrentPage+1), mEntriesPerPage);
                 mCurrentPage++;
                 shouldHandlePageUpdate = true;
-                Settings::set_int("page", mCurrentPage);
+                Settings::set_int("page", (OOInt)mCurrentPage);
             }
         };
         static void PagePrev() {
             AudioManager::Engine().PlayUISound(UISOUND_CLICK_SHORT_CONFIRM);
             if (mCurrentPage > 0) {
-                PreviewBuffer::GetInstance().Update(mCurrentPage, (mCurrentPage-1), mEntriesPerPage);
+                PreviewBuffer::GetInstance().Update((OOInt)mCurrentPage, (mCurrentPage-1), mEntriesPerPage);
                 mCurrentPage--;
                 shouldHandlePageUpdate = true;
-                Settings::set_int("page", mCurrentPage);
+                Settings::set_int("page", (OOInt)mCurrentPage);
             }
         };
         static void PageRand() {
@@ -50,20 +49,20 @@ class SongSelect : public Mode
                 return;
             }
 
-            int p = MathHelper::Random(0, (mCountPages - 1));
+            auto p = (OOUInt) MathHelper::Random(0, (mCountPages - 1));
             if (p == mCurrentPage) {
                 while (p == mCurrentPage) {
                     p = MathHelper::Random(0, (mCountPages - 1));
                 }
             }
 
-            PreviewBuffer::GetInstance().Update(mCurrentPage, p, mEntriesPerPage);
+            PreviewBuffer::GetInstance().Update((OOInt)mCurrentPage, p, mEntriesPerPage);
             mCurrentPage = p;
             shouldHandlePageUpdate = true;
             shouldExpandRandomEntry = true;
-            Settings::set_int("page", mCurrentPage);
+            Settings::set_int("page", (OOInt)mCurrentPage);
         };
-        static void ExpandEntry(int index) {
+        static void ExpandEntry(OOUInt index) {
             shouldHandlePageUpdate = shouldHandleEntryExpand = true;
             if (mExpandEntryIndex == index) {
                 AudioManager::Engine().PlayUISound(UISOUND_CLICK_CLOSE);
@@ -77,7 +76,6 @@ class SongSelect : public Mode
         static void Redraw();
 
         static void LoadingScreenShow();
-        static void LoadingScreenHide();
 	
 	protected:
         void UpdateSonglist(bool initial=false);
@@ -87,19 +85,19 @@ class SongSelect : public Mode
 
 		static SpriteManager* mSpriteManager;
 
-        static uint32_t mSongListSize;
+        static OOUInt mSongListSize;
         bool mEntryExpanded = false;
-        static int32_t mCurrentPage;
-        static int32_t mCountPages;
-        static int32_t mExpandEntryIndex;
+        static OOUInt mCurrentPage;
+        static OOUInt mCountPages;
+        static OOUInt mExpandEntryIndex;
         static bool shouldHandlePageUpdate;
         static bool shouldHandleEntryExpand;
         static bool shouldExpandRandomEntry;
-        static const int32_t mEntriesPerPage = 4;
-        int32_t mEntriesDisplayed = 0;
+        static const OOUInt mEntriesPerPage = 4;
+        OOUInt mEntriesDisplayed = 0;
 
-        int32_t mSpritesPerBeatmapEntry = 8;
-        int32_t mSpritesPerExpandedBeatmapEntry = 15;
+        OOUInt mSpritesPerBeatmapEntry = 8;
+        OOUInt mSpritesPerExpandedBeatmapEntry = 15;
 
         static pSprite* btn_sort_all;
         static pText* btn_sort_all_label;
@@ -117,6 +115,3 @@ class SongSelect : public Mode
         static pSprite* loadingScreenBG;
         static pText* loadingScreenLabel;
 };
-
-#endif
-

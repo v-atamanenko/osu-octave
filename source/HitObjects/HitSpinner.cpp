@@ -1,11 +1,6 @@
 #include "HitSpinner.h"
 
-#ifndef TEXTURE_PACK
-#define TEXTURE_PACK(u, v) (((u) & 0xFFFF) | ((v) << 16))
-#endif
-
-HitSpinner::HitSpinner(int32_t time, int32_t endtime, HitObjectSound sound, bool combo, int32_t number_in_combo) : HitObject(256, 192, time, HIT_SPINNER, sound, combo, number_in_combo)
-{
+HitSpinner::HitSpinner(OOTime time, OOTime endtime, HitObjectSound sound, bool combo, OOInt number_in_combo) : HitObject(256, 192, time, HIT_SPINNER, sound, combo, number_in_combo) {
 	mEndTime = endtime;
 	fSpinning = false;
 	
@@ -14,13 +9,11 @@ HitSpinner::HitSpinner(int32_t time, int32_t endtime, HitObjectSound sound, bool
 	mTotalRotation = 0; //counts rotations in current direction (resets)
 	mCurrentRotation = 0; //keeps track of which rotation we are at to count
 	mTotalSpins = 0; //counts total number of spins
-	mRequiredSpins = (uint32_t)round((((float)mEndTime - (float)mTime) / 1000.f) * DifficultyManager::GetSpinnerRPS()); //total spins required
-	
-	//mUV = SDL_Rect({0, 0, 256, 192});
+	mRequiredSpins = (OOUInt)round((((OOFloat)mEndTime - (OOFloat)mTime) / 1000.0) * DifficultyManager::RequiredRPS); //total spins required
 
 	pSprite* spr;
 	
-	spr = new pSprite(TX_PLAY_CIRCLEAPPROACH, 480, 302, 460, 460, ORIGIN_CENTER, FIELD_SCREEN, SDL_Color({0, 0, 0}), 0, (float)time+5000.f-0.06f);
+	spr = new pSprite(TX_PLAY_CIRCLEAPPROACH, 480, 302, 460, 460, ORIGIN_CENTER, FIELD_SCREEN, SDL_Color(), 0, (OOFloat)time+5000.0-0.06);
 	spr->Show(time-300, time);
 	spr->Hide(endtime, endtime+300);
 	spr->Scale(time-300, endtime, 1, 0);
@@ -29,19 +22,19 @@ HitSpinner::HitSpinner(int32_t time, int32_t endtime, HitObjectSound sound, bool
 
     // Using FIELD_PLAY and SCREEN_X_TO_PLAYFIELD_X/SCREEN_Y_TO_PLAYFIELD_Y here, because mSprites[1] is used as a point
     // for score sprite on spinner hit. And for displaying that sprite, FIELD_PLAY is used always.
-	spr = new pSprite(TX_PLAY_SPINNER, SCREEN_X_TO_PLAYFIELD_X(480), SCREEN_Y_TO_PLAYFIELD_Y(302), 440, 440, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({0, 0, 0}), 0, (float)time+5000.f-0.05f);
+	spr = new pSprite(TX_PLAY_SPINNER, SCREEN_X_TO_PLAYFIELD_X(480), SCREEN_Y_TO_PLAYFIELD_Y(302), 440, 440, ORIGIN_CENTER, FIELD_PLAY, SDL_Color(), 0, (OOFloat)time+5000.0-0.05);
 	spr->Show(time-300, time);
 	spr->Hide(endtime, endtime+300);
 	spr->Kill(endtime+300);
 	mSprites.push_back(spr);
 	
-	spr = new pSprite(TX_PLAY_SPINNERBARS, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, ORIGIN_BOTTOMLEFT, FIELD_SCREEN, SDL_Color({0, 0, 0}), 0, (float)time+5000.f-0.05f);
+	spr = new pSprite(TX_PLAY_SPINNERBARS, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, ORIGIN_BOTTOMLEFT, FIELD_SCREEN, SDL_Color(), 0, (OOFloat)time+5000.0-0.05);
 	spr->Show(time-300, time);
 	spr->Hide(endtime, endtime+300);
 	spr->Kill(endtime+300);
 	mSprites.push_back(spr);
 	
-	spr = new pSprite(TX_PLAY_SPINNERBG, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color({0, 0, 0}), 0, (float)time+5000.f-0.03f);
+	spr = new pSprite(TX_PLAY_SPINNERBG, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 0, (OOFloat)time+5000.0-0.03);
 	spr->Show(time-300, time+300);
 	spr->Hide(endtime, endtime+300);
 	spr->Kill(endtime+300);
@@ -56,8 +49,7 @@ HitSpinner::HitSpinner(int32_t time, int32_t endtime, HitObjectSound sound, bool
     mChannelBonus = -1;
 }
 
-HitSpinner::~HitSpinner()
-{
+HitSpinner::~HitSpinner() {
 	if (mChannel != -1)
         AudioManager::Engine().StopChannel(mChannel);
     if (mChannelBonus != -1)
@@ -66,13 +58,13 @@ HitSpinner::~HitSpinner()
 
 void HitSpinner::Update()
 {
-	float ratio = ((float)mTotalSpins + MathHelper::Frc(mTotalRotation)) / (float)mRequiredSpins;
+	OOFloat ratio = ((OOFloat)mTotalSpins + MathHelper::Frc(mTotalRotation)) / (OOFloat)mRequiredSpins;
 	
 	//set spinner bars
-	uint32_t height = MathHelper::Max(0, MathHelper::Min(SCREEN_HEIGHT, (int32_t)floor(ratio*(float)(SCREEN_HEIGHT))) - (int32_t)MathHelper::Random(0, 20));
+	OOUInt height = MathHelper::Max(0, MathHelper::Min(SCREEN_HEIGHT, (OOInt)floor(ratio*(OOFloat)(SCREEN_HEIGHT))) - (OOInt)MathHelper::Random(0, 20));
 
     delete mSprites[2]->UV;
-    mSprites[2]->UV = new SDL_Rect({0, SCREEN_HEIGHT-height, SCREEN_WIDTH, height});
+    mSprites[2]->UV = new SDL_Rect({0, SCREEN_HEIGHT-height, SCREEN_WIDTH, (OOInt)height});
 
     //set spinner sound
 	if (mChannel == -1 && GameClock::Clock().Time() >= mTime)
@@ -89,28 +81,23 @@ void HitSpinner::Update()
 
 void HitSpinner::OnTouchDown(const touchPosition& touch)
 {
-	if (GameClock::Clock().Time() >= mTime && GameClock::Clock().Time() <= mEndTime)
-	{
+	if (GameClock::Clock().Time() >= mTime && GameClock::Clock().Time() <= mEndTime) {
 		mLastAngle = GetAngle(touch.px, touch.py);
 		fSpinning = true;
 	}
 }
 
-void HitSpinner::OnTouch(const touchPosition& touch)
-{
-	if (GameClock::Clock().Time() >= mTime && GameClock::Clock().Time() <= mEndTime)
-	{
-		if (MathHelper::Abs((int32_t)touch.px - (SCREEN_WIDTH / 2)) < 10 && MathHelper::Abs((int32_t)touch.py - (SCREEN_HEIGHT/2)) < 10)
-		{
+void HitSpinner::OnTouch(const touchPosition& touch) {
+	if (GameClock::Clock().Time() >= mTime && GameClock::Clock().Time() <= mEndTime) {
+		if (MathHelper::Abs((OOInt)touch.px - (SCREEN_WIDTH / 2)) < 10 && MathHelper::Abs((OOInt)touch.py - (SCREEN_HEIGHT/2)) < 10) {
 			fSpinning = false;
 			return;
 		}
 		
 		//work out the new angle
-		int32_t newAngle = GetAngle((int32_t)touch.px, (int32_t)touch.py);
+		OOInt newAngle = GetAngle(touch.px, touch.py);
 		
-		if (!fSpinning)
-		{
+		if (!fSpinning) {
 			mLastAngle = newAngle;
 			fSpinning = true;
 			return;
@@ -119,9 +106,10 @@ void HitSpinner::OnTouch(const touchPosition& touch)
 		if (newAngle == mLastAngle)
 			return;
 		
-		int32_t deltaAngle = newAngle - mLastAngle;
+		OOInt deltaAngle = newAngle - mLastAngle;
 		
 		//hack for passing through line x=320 where y<265
+        //TODO: what?
 		if (deltaAngle > 16384)
 			deltaAngle -= 32768;
 		else if (deltaAngle < -16384)
@@ -130,8 +118,7 @@ void HitSpinner::OnTouch(const touchPosition& touch)
 		mSprites[1]->Angle += deltaAngle;
 		
 		//if player changes direction add to total rotations and start count again
-		if (mDirection != MathHelper::Sgn(deltaAngle))
-		{
+		if (mDirection != MathHelper::Sgn(deltaAngle)) {
 			mDirection = MathHelper::Sgn(deltaAngle);
 			mZeroPoint = mSprites[1]->Angle;
 			mTotalRotation = 0;
@@ -141,14 +128,12 @@ void HitSpinner::OnTouch(const touchPosition& touch)
 		mTotalRotation = MathHelper::Abs(mSprites[1]->Angle - mZeroPoint) / 32768.0;
 		
 		//if we have made an extra circle (or more) add to total
-		if (mCurrentRotation < (uint32_t)mTotalRotation)
-		{
-			mTotalSpins += (uint32_t)mTotalRotation - mCurrentRotation;
-			mCurrentRotation = (uint32_t)mTotalRotation;
+		if (mCurrentRotation < (uint32_t)mTotalRotation) {
+			mTotalSpins += (OOUInt)round(mTotalRotation) - mCurrentRotation;
+			mCurrentRotation = (OOUInt)round(mTotalRotation);
 			
 			IncreaseScore(SCORE_SPIN_100, true, true);
-			if (mTotalSpins > mRequiredSpins)
-			{
+			if (mTotalSpins > mRequiredSpins) {
 				IncreaseScore(SCORE_SPIN_1000, true, true);
 				mChannelBonus = AudioManager::Engine().PlaySpinnerSound(SND_BONUS);
 			}
@@ -160,27 +145,17 @@ void HitSpinner::OnTouch(const touchPosition& touch)
 
 void HitSpinner::Hit()
 {
-	if (mRequiredSpins > 0 && (mTotalSpins == 0 || mTotalSpins < MathHelper::Max(0, (int32_t)(mRequiredSpins - 2))))
-	{
+	if (mRequiredSpins > 0 && (mTotalSpins == 0 || mTotalSpins < MathHelper::Max(0, (OOInt)(mRequiredSpins - 2)))) {
 		IncreaseScore(SCORE_MISS);
-	}
-	else
-	{
+	} else {
 		//compatibility with osu!pc
-		if (mRequiredSpins == 0)
-		{
+		if (mRequiredSpins == 0) {
 			IncreaseScore(SCORE_50, false, true); //score sprite doesn't show if you score 50 on spinners
-		}
-		else if (mTotalSpins >= mRequiredSpins)
-		{
+		} else if (mTotalSpins >= mRequiredSpins) {
 			IncreaseScore(SCORE_300);
-		}
-		else if (mTotalSpins == MathHelper::Max(0, (int32_t)(mRequiredSpins - 1)))
-		{
+		} else if (mTotalSpins == MathHelper::Max(0, (OOInt)(mRequiredSpins - 1))) {
 			IncreaseScore(SCORE_100);
-		}
-		else if (mTotalSpins == MathHelper::Max(0, (int32_t)(mRequiredSpins - 2)))
-		{
+		} else if (mTotalSpins == MathHelper::Max(0, (OOInt)(mRequiredSpins - 2))) {
 			IncreaseScore(SCORE_50, false, true); //score sprite doesn't show if you score 50 on spinners
 		}
 		
@@ -196,13 +171,13 @@ void HitSpinner::Hit()
 	mHit = true;
 }
 
-int32_t HitSpinner::GetAngle(int32_t x, int32_t y)
-{
-	float theta = atan((float)((float)y-(SCREEN_HEIGHT/2.f))/((float)x-(SCREEN_WIDTH/2.f)));
-	int32_t angle = floor(theta*32768/6.2832);
+OOInt HitSpinner::GetAngle(OOInt x, OOInt y) {
+	OOFloat theta = atan((OOFloat)((OOFloat)y-(SCREEN_HEIGHT/2.f))/((OOFloat)x-(SCREEN_WIDTH/2.f)));
+	OOInt angle = floor(theta*32768/6.2832);
 	
 	//hack - let's hope this won't come back to haunt me
-	if (x < floor(SCREEN_WIDTH/2.f))
+    //TODO: what?
+	if (x < (OOInt)floor(SCREEN_WIDTH/2.f))
 		angle += 16384;
 
 	return angle;

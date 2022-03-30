@@ -1,18 +1,10 @@
-#include <SDL_timer.h>
 #include "PreviewBuffer.h"
-#include "Beatmaps/BeatmapManager.h"
-#include "DataStorage/Settings.h"
-#include <sys/stat.h>
-
-inline bool file_exists(const std::string& fname) {
-    struct stat buffer;
-    return (stat (fname.c_str(), &buffer) == 0);
-}
 
 PreviewBuffer PreviewBuffer::sPreviewBuffer;
 
-PreviewBuffer::PreviewBuffer() {
-
+inline bool file_exists(const std::string& fname) {
+    struct stat buffer{};
+    return (stat (fname.c_str(), &buffer) == 0);
 }
 
 void PreviewBuffer::Init() {
@@ -28,12 +20,12 @@ void PreviewBuffer::Init() {
     processingNow.store(false, std::memory_order_seq_cst);
 }
 
-SDL_Surface* PreviewBuffer::GetTexture(int beatmap_id) {
+SDL_Surface* PreviewBuffer::GetTexture(OOUInt beatmap_id) {
     std::shared_lock lock(mut_buf);
     return buf.at(beatmap_id);
 }
 
-void PreviewBuffer::Update(int last_page, int new_page, int per_page) {
+void PreviewBuffer::Update(OOInt last_page, OOUInt new_page, OOUInt per_page) {
     std::thread t1(&PreviewBuffer::Pics_FillBuffer, this, last_page, new_page, per_page);
     t1.detach();
     printf("PreviewBuffer thread started\n");
@@ -83,7 +75,7 @@ SDL_Surface* PreviewBuffer::LoadSquare(const std::string& path) {
     return loadedSurface;
 }
 
-void PreviewBuffer::Pics_FillBuffer(int last_page, int new_page, int per_page) {
+void PreviewBuffer::Pics_FillBuffer(OOInt last_page, OOUInt new_page, OOUInt per_page) {
     while ( processingNow.load(std::memory_order_seq_cst) ){
         std::this_thread::sleep_for(std::chrono::milliseconds(200));
     }
@@ -166,7 +158,7 @@ void PreviewBuffer::Pics_FillBuffer(int last_page, int new_page, int per_page) {
         if (last_page > new_page) {
             // Page moved backward.
             // We have to make sure that we have cache for 3 previous pages.
-            int page_offset = ((new_page - 3) * per_page);
+            OOInt page_offset = (((OOInt)new_page - 3) * (OOInt)per_page);
             if (page_offset < 0) page_offset = 0;
 
             if (pbs.FirstLoadedTexId <= page_offset) {

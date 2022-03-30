@@ -1,5 +1,4 @@
-#ifndef __PreviewBuffer_H__
-#define __PreviewBuffer_H__
+#pragma once
 
 #include <map>
 #include <SDL.h>
@@ -8,6 +7,10 @@
 #include <utility>
 #include <atomic>
 #include "Beatmaps/BeatmapManager.h"
+#include <SDL_timer.h>
+#include "DataStorage/Settings.h"
+#include <sys/stat.h>
+
 
 #ifdef DESKTOP
 #define PICTURE_CACHE_MAX_SIZE_BYTES (512 * 1024 * 1024) // 512 MB
@@ -28,9 +31,9 @@ class PreviewBuffer
 {
     public:
         void Init();
-        void Update(int last_page, int new_page, int per_page);
+        void Update(OOInt last_page, OOUInt new_page, OOUInt per_page);
         void Pics_ResetBuffer();
-        SDL_Surface* GetTexture(int beatmap_id);
+        SDL_Surface* GetTexture(OOUInt beatmap_id);
 
         BeatmapFilter lastAppliedFilter = FILTER_NONE;
         static std::string GeneratePreview(const std::string& map_subdir, const std::string& BackgroundFilename);
@@ -52,13 +55,10 @@ class PreviewBuffer
         static PreviewBuffer sPreviewBuffer;
 
         SDL_Surface* LoadSquare(const std::string& path);
-        void Pics_FillBuffer(int last_page, int new_page, int per_page);
+        void Pics_FillBuffer(OOInt last_page, OOUInt new_page, OOUInt per_page);
         void Pics_ClearBuffer();
 
     private:
-        PreviewBuffer();
+        PreviewBuffer() = default;
         ~PreviewBuffer() { Pics_ClearBuffer(); };
 };
-
-#endif
-

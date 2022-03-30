@@ -1,3 +1,5 @@
+#pragma once
+
 #include <cstring>
 #include "Mode.h"
 
@@ -10,9 +12,7 @@
 #include "GameplayElements/HitObjectManager.h"
 #include "Rulesets/Ruleset.h"
 #include "Rulesets/RulesetOsu.h"
-
-#ifndef __PLAYER_H__
-#define __PLAYER_H__
+#include "DataStorage/Settings.h"
 
 typedef enum {
 	PLAYSTATE_PLAY,
@@ -25,15 +25,13 @@ class Player : public Mode
 {
 	public:
 		Player();
-		~Player();
+		~Player() override;
 		
-		void Update();
-		void HandleInput();
+		void Update() override;
+		void HandleInput() override;
 	
 	protected:
 		RulesetOsu mRuleset;
 		PlayState mPlayState;
         bool mNoFail = false;
 };
-
-#endif

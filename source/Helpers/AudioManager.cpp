@@ -1,6 +1,3 @@
-#include <unistd.h>
-#include "defines.h"
-#include "DataStorage/Settings.h"
 #include "AudioManager.h"
 
 AudioManager AudioManager::sEngine;
@@ -12,13 +9,15 @@ AudioManager::AudioManager() {
 #else
     Mix_OpenAudio(44100, AUDIO_S32SYS, 2, 1024);
 #endif
-    Mix_AllocateChannels(64);
+    Mix_AllocateChannels(52);
 }
 
-inline void loadSample(SampleSetInfo* s, const std::string &file, int volume) {
+inline void loadSample(SampleSetInfo* s, const std::string &file, OOInt volume) {
     s->filename = file;
     s->chunk = Mix_LoadWAV(s->filename.c_str());
-    Mix_VolumeChunk(s->chunk, volume);
+
+    if (s->chunk != nullptr)
+        Mix_VolumeChunk(s->chunk, volume);
 }
 
 void AudioManager::Initialize() {
@@ -29,10 +28,9 @@ void AudioManager::Initialize() {
     mSampleSets[2] = &mSampleSoft;
 }
 
-void AudioManager::ResetSamples()
-{
+void AudioManager::ResetSamples() {
     std::string path = std::string(DEF_DataDirectory) + std::string(DEF_SkinsSubdirectory) + Settings::get_str("skin") + "/sounds/";
-    int volume = (int)round(Settings::get_float("volume_hitsounds") / 100 * 128);
+    OOInt volume = (OOInt)round(Settings::get_float("volume_hitsounds") / 100 * 128);
 
     loadSample(&mSampleNormal.hitnormal, path + "normal-hitnormal.wav", volume);
     loadSample(&mSampleNormal.hitwhistle, path + "normal-hitwhistle.wav", volume);
@@ -54,15 +52,15 @@ void AudioManager::ResetSamples()
     loadSample(&mSampleSoft.spinnerbonus, path + "spinnerbonus.wav", volume);
 
     std::string uipath = std::string(DEF_DataDirectory) + std::string(DEF_SkinsSubdirectory) + Settings::get_str("skin") + "/ui-sounds/";
-    int uivolume = (int)round(Settings::get_float("volume_uisounds") / 100 * 128);
+    OOInt uivolume = (OOInt)round(Settings::get_float("volume_uisounds") / 100 * 128);
 
     loadSample(&mUISounds.applause, uipath + "applause.wav", uivolume);
     loadSample(&mUISounds.check_off, uipath + "check-off.wav", uivolume);
     loadSample(&mUISounds.check_on, uipath + "check-on.wav", uivolume);
     loadSample(&mUISounds.click_close, uipath + "click-close.wav", uivolume);
     loadSample(&mUISounds.click_short_confirm, uipath + "click-short-confirm.wav", uivolume);
-    loadSample(&mUISounds.combobreak, uipath + "combobreak.wav",  MathHelper::Max((int)(round(volume*1.33)), 100));
-    loadSample(&mUISounds.failsound, uipath + "failsound.wav", MathHelper::Max((int)(round(volume*1.33)), 100));
+    loadSample(&mUISounds.combobreak, uipath + "combobreak.wav",  MathHelper::Max((OOInt)(round(volume*1.33)), 100));
+    loadSample(&mUISounds.failsound, uipath + "failsound.wav", MathHelper::Max((OOInt)(round(volume*1.33)), 100));
     loadSample(&mUISounds.menuback, uipath + "menuback.wav", uivolume);
     loadSample(&mUISounds.menuclick, uipath + "menuclick.wav", uivolume);
     loadSample(&mUISounds.menuhit, uipath + "menuhit.wav", uivolume);
@@ -71,13 +69,11 @@ void AudioManager::ResetSamples()
     loadSample(&mUISounds.welcome_piano, uipath + "welcome_piano.wav", uivolume);
 }
 
-int AudioManager::PlaySample(SampleSetInfo info, bool loop, int channel)
-{
+int AudioManager::PlaySample(const SampleSetInfo& info, bool loop, OOInt channel) {
    return Mix_PlayChannel(channel, info.chunk, loop ? -1 : 0);
 }
 
-static int PlayWelcome_Thread(void*)
-{
+static int PlayWelcome_Thread(void*) {
     AudioManager::Engine().PlayUISound(UISOUND_WELCOME);
     SDL_Delay(1220);
     if (music != nullptr) {
@@ -94,8 +90,7 @@ static int PlayWelcome_Thread(void*)
     return 0;
 }
 
-void AudioManager::PlayWelcome()
-{
+void AudioManager::PlayWelcome() {
     auto *thread = SDL_CreateThread(PlayWelcome_Thread, "PlayWelcome_Thread", (void *)nullptr);
     SDL_DetachThread(thread);
 }
@@ -106,8 +101,7 @@ void AudioManager::PlayWelcome()
 //	soundSetFreq(channel, freq);
 //}
 
-void AudioManager::StopChannel(int channel)
-{
+void AudioManager::StopChannel(OOInt channel) {
     Mix_HaltChannel(channel);
 }
 
@@ -155,8 +149,7 @@ void AudioManager::PlayUISound(UISoundName n) {
     }
 }
 
-void AudioManager::PlayHitSound(HitObjectSound sound)
-{
+void AudioManager::PlayHitSound(HitObjectSound sound) {
 	SampleSet* current = mSampleSets[BeatmapElements::Element().GetTimingPoint().SampleSetId];
 	
 	PlaySample(current->hitnormal);
@@ -171,8 +164,7 @@ void AudioManager::PlayHitSound(HitObjectSound sound)
 		PlaySample(current->hitclap);
 }
 
-int AudioManager::PlaySliderSound(HitObjectSound sound)
-{
+int AudioManager::PlaySliderSound(HitObjectSound sound) {
 	SampleSet* current = mSampleSets[BeatmapElements::Element().GetTimingPoint().SampleSetId];
 	
 	if (sound & SND_WHISTLE)
@@ -181,8 +173,7 @@ int AudioManager::PlaySliderSound(HitObjectSound sound)
 		return PlaySample(current->sliderslide, true);
 }
 
-int AudioManager::PlaySpinnerSound(HitObjectSound sound)
-{
+int AudioManager::PlaySpinnerSound(HitObjectSound sound) {
     SampleSet* current = mSampleSets[BeatmapElements::Element().GetTimingPoint().SampleSetId];
 
     if (sound & SND_BONUS) {
@@ -193,8 +184,7 @@ int AudioManager::PlaySpinnerSound(HitObjectSound sound)
     }
 }
 
-void AudioManager::PlaySliderTick()
-{
+void AudioManager::PlaySliderTick() {
 	SampleSet* current = mSampleSets[BeatmapElements::Element().GetTimingPoint().SampleSetId];
 	
 	PlaySample(current->slidertick);
@@ -209,8 +199,8 @@ void AudioManager::PlayBGM() {
     MusicPlay(Settings::get_float("volume_menumusic"));
 }
 
-void AudioManager::UpdateMusicVolume(float volume) {
-    Mix_VolumeMusic((int)round(volume / 100 * 128));
+void AudioManager::UpdateMusicVolume(OOFloat volume) {
+    Mix_VolumeMusic((OOInt)round(volume / 100 * 128));
 }
 
 int AudioManager::MusicLoad(std::string& filename) {
@@ -237,23 +227,22 @@ int AudioManager::MusicLoad(std::string& filename) {
     return mChannel;
 }
 
-int AudioManager::MusicPlay(float volume) {
+int AudioManager::MusicPlay(OOFloat volume) {
     if (music != nullptr) {
-        Mix_VolumeMusic((int)round(volume/100*128));
+        Mix_VolumeMusic((OOInt)round(volume/100*128));
         mChannel = Mix_PlayMusic(music, -1);
         fprintf(stderr, "Started music on channel %i\n", mChannel);
     }
     return mChannel;
 }
 
-int AudioManager::MusicSkipTo(uint32_t milliseconds)
-{
+int AudioManager::MusicSkipTo(OOTime milliseconds) {
     if (mChannel == -1) {
         fprintf(stderr, "Mix_SetMusicPosition failed: mChannel is -1\n");
 		return -1;
     }
 
-    if (Mix_SetMusicPosition((double)((double)milliseconds / (double)1000)) == -1) {
+    if (Mix_SetMusicPosition((double)((OOFloat)milliseconds / (OOFloat)1000)) == -1) {
         fprintf(stderr, "Mix_SetMusicPosition failed: %s\n", Mix_GetError());
         mChannel = -1;
     }
@@ -261,8 +250,7 @@ int AudioManager::MusicSkipTo(uint32_t milliseconds)
     return mChannel;
 }
 
-void AudioManager::MusicStop()
-{
+void AudioManager::MusicStop() {
 	if (mChannel == -1)
 		return;
 
@@ -270,15 +258,13 @@ void AudioManager::MusicStop()
     mChannel = -1;
 }
 
-void AudioManager::MusicPause() const
-{
+void AudioManager::MusicPause() const {
     if (mChannel == -1)
         return;
     Mix_PauseMusic();
 }
 
-void AudioManager::MusicResume() const
-{
+void AudioManager::MusicResume() const {
     if (mChannel == -1)
         return;
     Mix_ResumeMusic();

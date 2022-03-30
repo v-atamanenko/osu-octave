@@ -1,19 +1,14 @@
 #include "SpriteContainer.h"
 
-SpriteContainer::~SpriteContainer()
-{
-	if (mSpriteOwner)
-	{
-		for (auto & mSprite : mSprites)
-		{
-            fprintf(stderr, "we're deleting something\n");
-			delete mSprite;
+SpriteContainer::~SpriteContainer() {
+	if (mSpriteOwner) {
+		for (auto & mSprite : mSprites) {
+            delete mSprite;
 		}
 	}
 }
 
-void SpriteContainer::AddToSpriteManager(SpriteManager& spriteManager)
-{
+void SpriteContainer::AddToSpriteManager(SpriteManager& spriteManager) {
 	spriteManager.Add(mSprites);
 	
 	//once sprites are added to spritemanager, the memory
@@ -21,8 +16,7 @@ void SpriteContainer::AddToSpriteManager(SpriteManager& spriteManager)
 	mSpriteOwner = false;
 }
 
-void SpriteContainer::AddToSpriteManager(SpriteManager* spriteManager)
-{
+void SpriteContainer::AddToSpriteManager(SpriteManager* spriteManager) {
     spriteManager->Add(mSprites);
 
     //once sprites are added to spritemanager, the memory

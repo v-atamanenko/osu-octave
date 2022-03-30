@@ -2,11 +2,10 @@
 
 pDrawable::~pDrawable() {
 	ClearTransforms();
-    if (UV != nullptr) delete UV;
+    delete UV;
 }
 
-void pDrawable::Update()
-{
+void pDrawable::Update() {
 	for (auto tr : mTransformations)
 	{
         tr->Update();
@@ -41,18 +40,17 @@ void pDrawable::Update()
 	}
 }
 
-bool pDrawable::InBounds(int32_t x, int32_t y)
-{
+bool pDrawable::InBounds(OOInt x, OOInt y) const {
 	if (Field == FIELD_PLAY)
 	{
-		x -= (int32_t)GraphicsManager::PlayXOffset;
-		y -= (int32_t)GraphicsManager::PlayYOffset;
+		x -= (OOInt)GraphicsManager::PlayXOffset;
+		y -= (OOInt)GraphicsManager::PlayYOffset;
 	}
 
-	auto s_w = (int32_t)Width;
-	auto s_h = (int32_t)Height;
-	int32_t s_x = X;
-	int32_t s_y = Y;
+	auto s_w = (OOInt)Width;
+	auto s_h = (OOInt)Height;
+	OOInt s_x = X;
+	OOInt s_y = Y;
 
     if (ExtendedClickableArea) {
         // We use this flag for small-height buttons that are hard to tap with big fingers
@@ -66,14 +64,14 @@ bool pDrawable::InBounds(int32_t x, int32_t y)
 	{
 		case ORIGIN_TOPLEFT:
 		{
-			return x >= s_x && x <= s_x+(int32_t)s_w
-				&& y >= s_y && y <= s_y+(int32_t)s_h;
+			return x >= s_x && x <= s_x+s_w
+				&& y >= s_y && y <= s_y+s_h;
 		}
 		
 		case ORIGIN_CENTER:
 		{
-			int32_t halfWidth = (int32_t)s_w>>1;
-			int32_t halfHeight = (int32_t)s_h>>1;
+			OOInt halfWidth = s_w>>1;
+			OOInt halfHeight = s_h>>1;
 			
 			return x >= s_x-halfWidth && x <= s_x+halfWidth
 				&& y >= s_y-halfHeight && y <= s_y+halfHeight;
@@ -81,8 +79,8 @@ bool pDrawable::InBounds(int32_t x, int32_t y)
 		
 		case ORIGIN_BOTTOMLEFT:
 		{
-			return x >= s_x && x <= s_x+(int32_t)s_w
-				&& y >= s_y-(int32_t)s_h && y <= s_y;
+			return x >= s_x && x <= s_x+s_w
+				&& y >= s_y-s_h && y <= s_y;
 		}
 		
 		default:
@@ -90,99 +88,86 @@ bool pDrawable::InBounds(int32_t x, int32_t y)
 	}
 }
 
-void pDrawable::Kill(long time)
-{
+void pDrawable::Kill(OOTime time) {
 	Transform(TR_KILL, time, time, 0, 0);
 }
 
-void pDrawable::ClearTransforms()
-{
-	for (auto & mTransformation : mTransformations)
-	{
+void pDrawable::ClearTransforms() {
+	for (auto & mTransformation : mTransformations) {
 		delete mTransformation;
 	}
 	
 	mTransformations.clear();
 }
 
-void pDrawable::Transform(Transformation* transform)
-{
+void pDrawable::Transform(Transformation* transform) {
 	mTransformations.push_back(transform);
 }
 
-void pDrawable::Transform(TransformType type, long starttime, long endtime, int32_t startvalue, int32_t endvalue)
-{
+void pDrawable::Transform(TransformType type, OOTime starttime, OOTime endtime, OOInt startvalue, OOInt endvalue) {
 	Transform(new Transformation(type, starttime, endtime, startvalue, endvalue));
 }
 
-void pDrawable::Scale(long starttime, long endtime, float start, float end)
-{
-	Transform(TR_SCALEX, starttime, endtime, mOrigWidth*start, mOrigWidth*end);
-	Transform(TR_SCALEY, starttime, endtime, mOrigHeight*start, mOrigHeight*end);
+void pDrawable::Scale(OOTime starttime, OOTime endtime, OOFloat start, OOFloat end) {
+	Transform(TR_SCALEX, starttime, endtime, (OOInt)round((OOFloat)mOrigWidth*start), (OOInt)round((OOFloat)mOrigWidth*end));
+	Transform(TR_SCALEY, starttime, endtime, (OOInt)round((OOFloat)mOrigHeight*start), (OOInt)round((OOFloat)mOrigHeight*end));
 }
 
-void pDrawable::Move(long starttime, long endtime, int32_t startx, int32_t starty, int32_t endx, int32_t endy)
-{
+void pDrawable::Move(OOTime starttime, OOTime endtime, OOInt startx, OOInt starty, OOInt endx, OOInt endy) {
 	Transform(TR_MOVEX, starttime, endtime, startx, endx);
 	Transform(TR_MOVEY, starttime, endtime, starty, endy);
 }
 
-void pDrawable::Move(long starttime, long endtime, int32_t endx, int32_t endy)
-{
+void pDrawable::Move(OOTime starttime, OOTime endtime, OOInt endx, OOInt endy) {
 	Move(starttime, endtime, X, Y, endx, endy);
 }
 
-void pDrawable::Move(int32_t endx, int32_t endy)
-{
+void pDrawable::Move(OOInt endx, OOInt endy) {
 	X = endx;
 	Y = endy;
 }
 
-void pDrawable::Rotate(long starttime, long endtime, int32_t starta, int32_t enda)
-{
+void pDrawable::Rotate(OOTime starttime, OOTime endtime, OOInt starta, OOInt enda) {
 	Transform(TR_ROTATE, starttime, endtime, starta, enda);
 }
 
-void pDrawable::Rotate(int32_t angle)
-{
+void pDrawable::Rotate(OOInt angle) {
 	Transform(TR_ROTATE, GameClock::Clock().Time(), GameClock::Clock().Time(), angle, angle);
 }
 
-void pDrawable::Show()
-{
+void pDrawable::Show() {
 	Show(GameClock::Clock().Time());
 }
 
-void pDrawable::Show(long time)
-{
+void pDrawable::Show(OOTime time) {
 	Transform(TR_FADE, time, time, 255, 255);
 }
 
-void pDrawable::Show(long starttime, long endtime)
-{
+void pDrawable::Show(OOTime starttime, OOTime endtime) {
 	Transform(TR_FADE, starttime, endtime, 0, 255);
 }
 
-void pDrawable::Hide()
-{
+void pDrawable::Hide() {
 	Hide(GameClock::Clock().Time());
 }
 
-void pDrawable::Hide(long time)
-{
+void pDrawable::Hide(OOTime time) {
 	Transform(TR_FADE, time, time, 0, 0);
 }
 
-void pDrawable::Hide(long starttime, long endtime)
-{
+void pDrawable::Hide(OOTime starttime, OOTime endtime) {
 	Transform(TR_FADE, starttime, endtime, 255, 0);
 }
 
-void pDrawable::Heartbeat(long starttime, long length, float min_scale, float max_scale)
-{
-    Scale(starttime, starttime+(length/5), min_scale, max_scale);
-    Scale(starttime+(length/5), starttime+(length/2.5), max_scale, min_scale);
-    Scale(starttime+(length/2.5), starttime+(length/1.667), min_scale, max_scale);
-    Scale(starttime+(length/1.667), starttime+(length/1.25), max_scale, min_scale);
-    Scale(starttime+(length/1.25), starttime+length, min_scale, min_scale);
+void pDrawable::Heartbeat(OOTime starttime, OOTime length, OOFloat min_scale, OOFloat max_scale) {
+    auto time_a = (OOTime)round((OOFloat)starttime+((OOFloat)length/5));
+    auto time_b = (OOTime)round((OOFloat)starttime+((OOFloat)length/2.5));
+    auto time_c = (OOTime)round((OOFloat)starttime+((OOFloat)length/1.667));
+    auto time_d = (OOTime)round((OOFloat)starttime+((OOFloat)length/1.25));
+
+    Scale(starttime, time_a, min_scale, max_scale);
+    Scale(time_a, time_b, max_scale, min_scale);
+    Scale(time_b, time_c, min_scale, max_scale);
+    Scale(time_c, time_d, max_scale, min_scale);
+    Scale(time_d, starttime+length, min_scale, min_scale);
 }

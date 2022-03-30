@@ -1,13 +1,13 @@
-//#include <math.h>
+#pragma once
 
-#ifndef __MATHHELPER_H__
-#define __MATHHELPER_H__
-
+#ifndef PI
 #define PI 3.14159265
+#endif
 
 #include <algorithm>
 #include <cmath>
 #include <cstdint>
+#include "types.h"
 
 /**
  * Convert the angle given in radians to degrees.
@@ -23,7 +23,7 @@ public:
     static int32_t		Max(int32_t value1, int32_t value2) { return (value1 > value2 ? value1 : value2); }
     static int32_t		Min(int32_t value1, int32_t value2) { return (value1 < value2 ? value1 : value2); }
     static int32_t		Sgn(int32_t value) { return (value == (int32_t)Abs(value) ? 1 : -1); }
-    static float	Frc(float value) { return value - (int)value; }
+    static OOFloat	    Frc(OOFloat value) { return value - (int)value; }
     static double CosineInterpolate(double y1, double y2, double mu);
 
     static uint32_t Random(uint32_t min, uint32_t max);
@@ -235,8 +235,4 @@ inline std::ostream& operator<<(std::ostream& os, const Vector2& vec) {
     return os;
 }
 // END OF VECTOR2 /////////////////////////////////////////////////////////////
-
-#endif
-
-
 

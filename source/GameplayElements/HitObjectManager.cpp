@@ -1,29 +1,17 @@
 #include "HitObjectManager.h"
 
-HitObjectManager::~HitObjectManager()
-{
-	//delete hitobjects
-	for (auto & mHitObject : mHitObjects)
-	{
-		delete mHitObject;
-	}
-}
-
-void HitObjectManager::Add(HitObject* object)
-{
+void HitObjectManager::Add(HitObject* object) {
 	mHitObjects.push_back(object);
 }
 
-void HitObjectManager::HandleInput()
-{
+void HitObjectManager::HandleInput() {
 	touchPosition touch = InputHelper::TouchRead();
 	
 	HitObject* hitObject;
 	
 	// remove all hitobjects before the current time and all hitobjects that have been hit
 	bool process = true;
-	while (process)
-	{
+	while (process) {
 		process = false;
 		
 		if (mHitObjects.empty())
@@ -32,8 +20,7 @@ void HitObjectManager::HandleInput()
 		// process hitobjects one at a time
 		hitObject = mHitObjects.front();
 		
-		if (hitObject->GetEndTime() <= GameClock::Clock().Time() || hitObject->GetHit())
-		{
+		if (hitObject->GetEndTime() <= GameClock::Clock().Time() || hitObject->GetHit()) {
 			// Sprites are handled by spritemanager and will not be deleted (see HitObject.h)
 			if ((GameClock::Clock().Time() - hitObject->GetEndTime() < 1000) && ! hitObject->GetHit()) {
                 hitObject->Hit();
@@ -52,11 +39,14 @@ void HitObjectManager::HandleInput()
         hitObject->OnTouchDown(touch);
         InputHelper::BlockKeydown = true;
     }
-	if (InputHelper::KeyHeld(Control::IH_CONTROL_ACTION))
-		hitObject->OnTouch(touch);
-	
-	if (InputHelper::KeyUp(Control::IH_CONTROL_ACTION))
-		hitObject->OnTouchUp(touch);
-	
+
+	if (InputHelper::KeyHeld(Control::IH_CONTROL_ACTION)) {
+        hitObject->OnTouch(touch);
+    }
+
+	if (InputHelper::KeyUp(Control::IH_CONTROL_ACTION)) {
+        hitObject->OnTouchUp(touch);
+    }
+
 	hitObject->Update();
 }

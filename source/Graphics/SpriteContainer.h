@@ -1,16 +1,14 @@
+#pragma once
+
 #include <cstdio>
 #include <vector>
 
 #include "pSprite.h"
 #include "SpriteManager.h"
 
-#ifndef __SPRITECONTAINER_H__
-#define __SPRITECONTAINER_H__
-
-typedef std::vector<pDrawable*>::iterator spriteIterator;
-
-/* a generic base class for all objects that require sprites
- * sprite cleanup is automatically handled
+/*
+ * A generic base class for all objects that require sprites.
+ * Sprite cleanup is handled automatically.
  */
 class SpriteContainer
 {
@@ -25,6 +23,3 @@ class SpriteContainer
 	private:
 		bool mSpriteOwner;
 };
-
-#endif
-

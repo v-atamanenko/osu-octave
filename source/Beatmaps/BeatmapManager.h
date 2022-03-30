@@ -1,18 +1,22 @@
+#pragma once
+
 #include <cstdio>
 #include <string>
 #include <dirent.h>
 #include <cstring>
 #include <vector>
+#include <sys/stat.h>
 
-#include "Beatmap.h"
+#include "Beatmaps/Beatmap.h"
 #include "BeatmapElements.h"
 #include "DifficultyManager.h"
 #include "Modes/Mode.h"
 #include "DataStorage/Betmaps.h"
 #include "types.h"
+#include "Helpers/PreviewBuffer.h"
 
-#ifndef __BEATMAPMANAGER_H__
-#define __BEATMAPMANAGER_H__
+#include "Parser/OsuParser.h"
+#include "../lib/osu_sr_calculator_cpp/osu_sr_calculator/osu_sr_calculator.h"
 
 class BeatmapManager
 {
@@ -24,9 +28,10 @@ class BeatmapManager
         static bool CheckIndex();
         static void Load(std::string &checksum);
         static void Filter(BeatmapFilter f);
-		static uint32_t MapCount();
-		static uint32_t SongCount();
-		
+		static OOInt MapCount();
+		static OOInt SongCount();
+
+        static bool LoadEntryData(const std::string &filename, const std::string &basedir, BeatmapEntry& bm);
 		static std::vector<BeatmapEntry>& Beatmaps() { return mBeatmapsFiltered; }
 	
 	protected:
@@ -36,6 +41,3 @@ class BeatmapManager
         static std::vector<BeatmapEntry> mBeatmapsAll;
         static std::vector<BeatmapEntry> mBeatmapsFiltered;
 };
-
-#endif
-

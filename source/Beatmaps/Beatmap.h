@@ -1,3 +1,5 @@
+#pragma once
+
 #include <cstring>
 #include <unistd.h>
 #include <list>
@@ -23,12 +25,6 @@
 
 #include "DataStorage/Betmaps.h"
 
-#include "../lib/osu_sr_calculator_cpp/osu_sr_calculator/osu_sr_calculator.h"
-
-#ifndef __BEATMAP_H__
-#define __BEATMAP_H__
-
-//typedef list<HitObject*>::iterator hitObjectIterator;
 
 class Beatmap
 {
@@ -42,79 +38,55 @@ class Beatmap
 		void InitBG();
 		
 		void Buffer(std::list<HitObject*>& hitObjectList);
-		bool GameOver() { return mHitObjectRead == mHitObjectCount && GameClock::Clock().Time() >= mLastObjectEndTime + 3000; }
+		[[nodiscard]] bool GameOver() const { return mHitObjectRead == mHitObjectCount && GameClock::Clock().Time() >= mLastObjectEndTime + 3000; }
 		
 		std::string& Filename() { return mFilename; }
-        std::string& BackgroundFilename() { return mBackgroundFilename; }
+        [[maybe_unused]] std::string& BackgroundFilename() { return mBackgroundFilename; }
 		std::string& Title() { return mTitle; }
-		std::string& Artist() { return mArtist; }
-		std::string& Creator() { return mCreator; }
-		std::string& Version() { return mVersion; }
-		std::string& AudioFilename() { return mAudioFilename; }
+        [[maybe_unused]] std::string& Artist() { return mArtist; }
+        [[maybe_unused]] std::string& Creator() { return mCreator; }
+        [[maybe_unused]] std::string& Version() { return mVersion; }
+        [[maybe_unused]] std::string& AudioFilename() { return mAudioFilename; }
         std::vector<BreakPoint>& Breakpoints() { return mBreakPoints; }
-		
-		std::string& BaseDir() { return mBaseDir; }
 
-        // -1000 is a hack for beatmaps that for some reason start at 0 ms.
-        [[nodiscard]] int32_t AudioLeadIn() const { return (mAudioLeadIn > 0) ? (mAudioLeadIn * -1) : (-1000); }
+        [[maybe_unused]] std::string& BaseDir() { return mBaseDir; }
 
-		int32_t SkipTime() { return mSkipTime; }
-        int32_t StartTime() { return mFirstObjectTime; }
-        int32_t EndTime() { return mLastObjectEndTime; }
+        // -1000 is a hack for beatmaps that for some reason start at about 0 ms.
+        [[nodiscard]] OOTime AudioLeadIn() const { return (mAudioLeadIn > 0) ? (mAudioLeadIn * -1) : (-1000); }
 
-        [[nodiscard]] long BreakDurationTotal() const
-        {
-            long breakDurationTotal = 0;
+		[[nodiscard]] OOTime SkipTime() const { return mSkipTime; }
+        [[nodiscard]] OOTime StartTime() const { return mFirstObjectTime; }
+        [[nodiscard]] OOTime EndTime() const { return mLastObjectEndTime; }
+        [[nodiscard]] OOTime LengthPlayable() const { return (mLastObjectEndTime - mFirstObjectTime); }
+        [[nodiscard]] OOTime BreakDurationTotal() const { return mBreakDurationTotal; }
 
-            for (auto &bp : mBreakPoints) {
-                breakDurationTotal += (bp.EndTime - bp.StartTime);
-            }
-
-            return breakDurationTotal;
-        }
-
-        [[nodiscard]] long LengthPlayable() const
-        {
-            if (mParser->hitObjects.empty()) { return 0; }
-            osuParser::HitObject last_ho = mParser->hitObjects[mParser->hitObjects.size()-1];
-            long last_ho_dur = 0;
-            if (last_ho.type == osuParser::HitObjectType::oSlider) {
-                last_ho_dur = last_ho.slider.duration;
-            } else if (last_ho.type == osuParser::HitObjectType::oSpinner) {
-                last_ho_dur = last_ho.spinner.duration;
-            }
-            return (last_ho.time + last_ho_dur) - mParser->hitObjects[0].time;
-        }
-
-        uint32_t HitObjectCount() const {
-            return mHitObjectCount;
-        }
+        [[nodiscard]] OOInt HitObjectCount() const { return mHitObjectCount; }
 
 		std::string& BeatmapChecksum();
 
-        bool Validate() { return mValid; };
-        static bool LoadEntryData(const std::string &filename, const std::string &basedir, BeatmapEntry& bm);
+        [[nodiscard]] bool Validate() const { return mValid; };
 	
 	protected:
         osuParser::OsuParser* mParser;
 		
-		uint32_t mHitObjectCount, mHitObjectRead;
-        int32_t mFirstObjectTime, mLastObjectEndTime;
+		OOInt mHitObjectCount, mHitObjectRead;
+        OOTime mFirstObjectTime, mLastObjectEndTime;
+        OOTime mBreakDurationTotal;
 
         // Stacking (experimental)
         bool mStackingEnabled;
-        int mStackSize = 0;
+        OOInt mStackSize = 0;
 		
 		void ReadNextObject();
-        int32_t mNextObjectTime;
-        int32_t mNextObjectX, mNextObjectY;
-        int32_t mNextObjectNumberInCombo = 1;
+        OOTime mNextObjectTime;
+        OOInt mNextObjectX, mNextObjectY;
+        OOInt mNextObjectNumberInCombo = 1;
         HitObjectSound mNextObjectSound;
 		HitObjectType mNextObjectType;
         bool mForceNewCombo;
 
-        int32_t mAudioLeadIn;
-        int32_t mSkipTime;
+        OOTime mAudioLeadIn;
+        OOTime mSkipTime;
 		bool mNextObjectCombo;
 		
 		bool fReady, fLoadable;
@@ -134,6 +106,3 @@ class Beatmap
 	private:
 		std::string mBeatmapChecksum;
 };
-
-#endif
-

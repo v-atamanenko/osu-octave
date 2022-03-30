@@ -1,5 +1,8 @@
+#pragma once
+
 #include <cstring>
 #include <string>
+#include <algorithm>
 #include <cstdio>
 #include <map>
 #include <shared_mutex>
@@ -11,9 +14,7 @@
 
 #include "defines.h"
 #include "Modes/Mode.h"
-
-#ifndef __GRAPHICSMANAGER_H__
-#define __GRAPHICSMANAGER_H__
+#include "DataStorage/Settings.h"
 
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
 #define rmask 0xff000000
@@ -44,14 +45,13 @@ class GraphicsManager
 	public:
 		static GraphicsManager& Graphics() { return sGraphicsManager; }
 
-		void Draw(TextureType tex, int32_t x, int32_t y, uint32_t width, uint32_t height, DrawOrigin origin, FieldType fieldtype, SDL_Color color, uint32_t alpha, int32_t angle, float z = 0, const SDL_Rect* uv = nullptr);
+		void Draw(TextureType tex, OOInt x, OOInt y, OOUInt width, OOUInt height, DrawOrigin origin, FieldType fieldtype, SDL_Color color, OOUInt alpha, OOInt angle, OOFloat z = 0, const SDL_Rect* uv = nullptr);
 
         void CreateTextureFromSurface(SDL_Surface* bg, TextureType texid);
         void LoadBeatmapPicTexture(TextureType texid, SDL_Surface *tex);
         void LoadBeatmapBackground(const std::string& path);
         void DrawBeatmapBackground();
 
-        static SDL_Texture* LoadSquareTexture(const std::string& path);
         void LoadTexturesForMode(ModeType mod);
         void UnloadTextures();
         SDL_Texture * GetTexture(TextureType texid);
@@ -61,11 +61,11 @@ class GraphicsManager
         static void Clear();
         static void Present();
 
-        static bool ScaleSurface(SDL_Surface*& pSurface, int limit);
+        static bool ScaleSurface(SDL_Surface*& pSurface, OOInt limit);
         static bool CropSurfaceToSquare(SDL_Surface*& loadedSurface);
 
-        static const uint32_t PlayXOffset = PLAYFIELD_X_OFFSET;
-		static const uint32_t PlayYOffset = PLAYFIELD_Y_OFFSET;
+        static const OOUInt PlayXOffset = PLAYFIELD_X_OFFSET;
+		static const OOUInt PlayYOffset = PLAYFIELD_Y_OFFSET;
 
     bool LoadTexture(TextureType texid, const std::string& path);
 
@@ -74,15 +74,12 @@ class GraphicsManager
 		std::map<TextureType, SDL_Texture*> maptextures;
         std::shared_mutex mut_maptextures;
 
-    void CreateRectangularTexture(TextureType texid, uint32_t width, uint32_t height, SDL_Color c);
+        void CreateRectangularTexture(TextureType texid, OOUInt width, OOUInt height, SDL_Color c);
 
-
-        static int32_t ForceBounds(int32_t value);
+        static OOInt ForceBounds(OOInt value);
 		static GraphicsManager sGraphicsManager;
 	
 	private:
 		GraphicsManager() = default;
 		~GraphicsManager() = default;
 };
-
-#endif // __GRAPHICSMANAGER_H__

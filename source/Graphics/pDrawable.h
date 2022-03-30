@@ -1,17 +1,13 @@
+#pragma once
+
 #include <vector>
 #include <string>
+#include <functional>
 #include "SDL.h"
 
 #include "GraphicsManager.h"
 #include "Transformation.h"
 #include "System/GameClock.h"
-
-#ifndef __PDRAWABLE_H__
-#define __PDRAWABLE_H__
-
-#include <functional>
-
-typedef std::vector<Transformation*>::iterator transformIterator;
 
 class pDrawable
 {
@@ -19,55 +15,53 @@ class pDrawable
 		virtual ~pDrawable();
 		
 		virtual void Update();
-		bool InBounds(int32_t x, int32_t y);
-		void Kill(long time);
+		[[nodiscard]] bool InBounds(OOInt x, OOInt y) const;
+		void Kill(OOTime time);
 		void ClearTransforms();
 		
-		void Transform(TransformType type, long starttime, long endtime, int32_t startvalue, int32_t endvalue);
-		void Scale(long starttime, long endtime, float start, float end);
-        void Heartbeat(long starttime, long length, float min_scale, float max_scale);
-		void Move(long starttime, long endtime, int32_t startx, int32_t starty, int32_t endx, int32_t endy);
-		void Move(long starttime, long endtime, int32_t endx, int32_t endy);
-		void Move(int32_t x, int32_t y);
-		void Rotate(long starttime, long endtime, int32_t starta, int32_t enda);
-		void Rotate(int32_t angle);
+		void Transform(TransformType type, OOTime starttime, OOTime endtime, int32_t startvalue, int32_t endvalue);
+		void Scale(OOTime starttime, OOTime endtime, OOFloat start, OOFloat end);
+        void Heartbeat(OOTime starttime, OOTime length, OOFloat min_scale, OOFloat max_scale);
+		void Move(OOTime starttime, OOTime endtime, OOInt startx, OOInt starty, OOInt endx, OOInt endy);
+		void Move(OOTime starttime, OOTime endtime, OOInt endx, OOInt endy);
+		void Move(OOInt x, OOInt y);
+		void Rotate(OOTime starttime, OOTime endtime, OOInt starta, OOInt enda);
+		void Rotate(OOInt angle);
 		
 		void Show();
-		void Show(long time);
-		void Show(long starttime, long endtime);
+		void Show(OOTime time);
+		void Show(OOTime starttime, OOTime endtime);
 		void Hide();
-		void Hide(long time);
-		void Hide(long starttime, long endtime);
+		void Hide(OOTime time);
+		void Hide(OOTime starttime, OOTime endtime);
 
 		[[nodiscard]] bool Alive() const { return mAlive; }
 
 		virtual void Draw() = 0;
-		
-		int32_t X, Y;
-		uint32_t Width, Height;
+
+        OOInt X, Y;
+		OOUInt Width, Height;
 		SDL_Color Color;
-		uint32_t Alpha;
-		int32_t Angle;
-		float Z;
+		OOUShort Alpha;
+		OOInt Angle;
+		OOFloat Z;
 		SDL_Rect* UV;
 
 		std::string Tag;
-        int TagInt;
+        OOInt TagInt;
 		
 		DrawOrigin Origin;
 		FieldType Field = FIELD_PLAY;
 		TextureType Texture;
 
-		void(*OnClick)(pDrawable* self, uint16_t x, uint16_t y);
+		void(*OnClick)(pDrawable* self, OOInt x, OOInt y);
         bool Clickable;
         bool ExtendedClickableArea = false;
 	
 	protected:
-		uint32_t mOrigWidth, mOrigHeight;
+		OOUInt mOrigWidth, mOrigHeight;
 		bool mAlive;
 		std::vector<Transformation*> mTransformations;
 		
 		void Transform(Transformation* transform);
 };
-
-#endif // __PDRAWABLE_H__
