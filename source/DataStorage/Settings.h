@@ -150,6 +150,7 @@ class Settings
                     {"volume_uisounds", 65.0},
                     {"bgdim", 65.0},
                     {"hoscale", 25.0},
+                    {"enableStacking", false},
                     {"controls", {
                         {IH_CONTROL_ACTION, {{SDL_BUTTON_LEFT, IH_KEY_MOUSE}, {SDLK_z, IH_KEY_KEYBOARD}, {SDLK_x, IH_KEY_KEYBOARD}, {SDL_CONTROLLER_BUTTON_LEFTSHOULDER, IH_KEY_CONTROLLER}, {SDL_CONTROLLER_BUTTON_RIGHTSHOULDER, IH_KEY_CONTROLLER}}},
                         {IH_CONTROL_SKIP, {{SDLK_SPACE, IH_KEY_KEYBOARD}, {SDL_CONTROLLER_BUTTON_A, IH_KEY_CONTROLLER}}},

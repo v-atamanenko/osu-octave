@@ -26,6 +26,8 @@ class HitSlider : public HitObject
 		void OnTouchUp(const touchPosition& touch);
 		
 		void Hit();
+
+        HitObjectPoint mEndPoint;
 	
 	protected:
 		static void MapSliderPath(pSprite* spr, std::vector<HitObjectPoint*>& points, int32_t time, uint32_t lengthtime, uint32_t repeats);

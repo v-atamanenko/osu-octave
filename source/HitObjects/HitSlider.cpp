@@ -140,6 +140,8 @@ HitSlider::HitSlider(int32_t x, int32_t y, int32_t time, uint32_t lengthtime, st
 	mSprites.push_back(spr);
 	
 	//slider end
+    mEndPoint = {points[pointCount-1]->x, points[pointCount-1]->y};
+
 	spr = new pSprite(TX_PLAY_CIRCLEOVERLAY, points[pointCount-1]->x, points[pointCount-1]->y, circleSize, circleSize, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({0,0,0}), 0);
 	spr->Show(fadeInStart, fadeInEnd);
 	spr->Kill(mEndTime+1000);

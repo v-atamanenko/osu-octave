@@ -100,6 +100,10 @@ class Beatmap
 		
 		uint32_t mHitObjectCount, mHitObjectRead;
         int32_t mFirstObjectTime, mLastObjectEndTime;
+
+        // Stacking (experimental)
+        bool mStackingEnabled;
+        int mStackSize = 0;
 		
 		void ReadNextObject();
         int32_t mNextObjectTime;

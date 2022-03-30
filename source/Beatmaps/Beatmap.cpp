@@ -132,6 +132,8 @@ void Beatmap::Initialize()
 
     DifficultyManager::DifficultyPeppyStars = 0; // TODO: Learn how to count peppy stars
 
+    mStackingEnabled = Settings::get_bool("enableStacking");
+
     for (osuParser::TimingPoint tp : mParser->timingPoints) {
         int64_t time = tp.offset;
         double beattime = tp.adjustedMsPerBeat;
@@ -208,7 +210,7 @@ void Beatmap::Buffer(std::list<HitObject*>& hitObjectList)
         mForceNewCombo = false;
 		
 		switch (type) //ignore HIT_COMBO
-		{
+        {
 			case HIT_NORMAL:
 			{
 				object = new HitCircle(x, y, mNextObjectTime, type, sound, mNextObjectCombo, mNextObjectNumberInCombo);
@@ -330,6 +332,34 @@ void Beatmap::Buffer(std::list<HitObject*>& hitObjectList)
 		{
 			ReadNextObject();
 			object->SetPostCreateOptions(mForceNewCombo || mNextObjectCombo, mNextObjectX, mNextObjectY);
+
+            // Hacky way to do stacking
+            if (type != HitObjectType::HIT_SPINNER && mNextObjectType != HitObjectType::HIT_SLIDER && mStackingEnabled) {
+                const int span = floor(DifficultyManager::circle_size_new / 12);
+                const int margin = 3;
+
+                int32_t local_x = object->mX;
+                int32_t local_y = object->mY;
+                if (mStackSize > 0) {
+                    local_x -= span*mStackSize;
+                    local_y -= span*mStackSize;
+                }
+                bool exact_match = (abs(mNextObjectX - local_x) < margin) && (abs(mNextObjectY - local_y) < margin);
+                bool slider_match = false;
+                if (type == HitObjectType::HIT_SLIDER) {
+                    slider_match = abs(((HitSlider*)object)->mEndPoint.x - mNextObjectX) < margin && abs(((HitSlider*)object)->mEndPoint.y - mNextObjectY) < margin;
+                }
+                if (slider_match || exact_match) {
+                    mStackSize++;
+
+                    mNextObjectX += span*mStackSize;
+                    mNextObjectY += span*mStackSize;
+                } else {
+                    mStackSize = 0;
+                }
+            } else {
+                mStackSize = 0;
+            }
 		}
 		else
 		{
