@@ -211,6 +211,7 @@ HitSlider::HitSlider(int32_t x, int32_t y, int32_t time, uint32_t lengthtime, st
 		spr->Show(fadeInStart, fadeInEnd);
 		spr->Hide(mEndTime, mEndTime+120);
 		spr->Kill(mEndTime+120);
+        spr->Z = (float)time;
 		mSprites.push_back(spr);
 		
 		//add to list for tracking ticks

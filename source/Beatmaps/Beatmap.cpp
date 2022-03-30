@@ -279,7 +279,19 @@ void Beatmap::Buffer(std::list<HitObject*>& hitObjectList)
                 }
 
                 std::vector<HitObjectPoint*> ticks;
-                //FIXME: Add ticks
+                float msPerBeat = BeatmapElements::Element().GetTimingPoint(mNextObjectTime).BeatTime;
+                float beatsPerSlider = (float)lengthtime / msPerBeat;
+                int ticksPerSlider = floor((float)DifficultyManager::SliderTickRate * beatsPerSlider);
+
+                if (ticksPerSlider > 0) {
+                    int divider = floor((screenPoints.size())/(ticksPerSlider+1)) - 1;
+                    for (int i = 0, j = divider; i < ticksPerSlider; i++, j+=divider) {
+                        auto* tPoint = new HitObjectPoint();
+                        tPoint->x = (int32_t)round(screenPoints[j].x);
+                        tPoint->y = (int32_t)round(screenPoints[j].y);
+                        ticks.push_back(tPoint);
+                    }
+                }
 
                 if (points.empty()) {
                     fprintf(stderr, "[ERROR]: Zero points in slider. Skipping.\n");
