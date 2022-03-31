@@ -73,6 +73,17 @@ OsuParser::OsuParser(istream* stream)
 
 OsuParser::~OsuParser() {};
 
+inline double MapDifficultyRange(double difficulty, double min, double mid, double max)
+{
+    //difficulty = HitObjectManager.ApplyModsToDifficulty(difficulty, 1.4, ActiveMods);
+
+    if (difficulty > 5)
+        return mid + (max - mid) * (difficulty - 5) / 5;
+    if (difficulty < 5)
+        return mid - (mid - min) * (5 - difficulty) / 5;
+    return mid;
+}
+
 // Goes through istream and reads all data
 void OsuParser::Parse()
 {
@@ -159,10 +170,7 @@ void OsuParser::Parse()
         hitWindow100 = 140.0 - 8.0 * OD;
         hitWindow50 = 200.0 - 10.0 * OD;
 
-        // TODO: add mapDifficulty function for readability sake
-        requiredRPS = (OD < 5.0 || IsEqualDouble(OD, 5.0))
-                      ? (3.0 - 2.0 / 5.0 * OD)
-                      : (5.0 - 5.0 / 2.0 + OD / 2.0);
+        requiredRPS = MapDifficultyRange(OD, 3, 5, 7.5);
     }
 
     // EVENTS
@@ -527,7 +535,7 @@ HitObject OsuParser::_ParseFieldAsHitObject(const string& field)
     if (o.type == oSpinner)
     {
         o.spinner.isSpinner = true;
-        o.spinner.end = stoll(args[5]);
+        o.spinner.end = (OsTime)stoll(args[5]);
         o.spinner.duration = o.spinner.end - o.time;
     }
 
