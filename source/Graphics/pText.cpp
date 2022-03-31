@@ -18,5 +18,8 @@ pText::pText(const std::string& text, FontName font, OOInt x, OOInt y, SDL_Color
 
 void pText::Draw() {
     TextManager::SetFont(this->Font);
-    TextManager::PrintLocate(this->X, this->Y, this->Origin,"%s", this->Text.c_str());
+
+    TextManager::PrintLocateColor(this->X, this->Y, this->Origin,
+                                  SDL_Color({this->Color.r, this->Color.g, this->Color.b, this->Alpha}),
+                                  "%s", this->Text.c_str());
 }

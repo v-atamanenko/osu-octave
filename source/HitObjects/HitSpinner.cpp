@@ -9,7 +9,10 @@ HitSpinner::HitSpinner(OOTime time, OOTime endtime, HitObjectSound sound, bool c
 	mTotalRotation = 0; //counts rotations in current direction (resets)
 	mCurrentRotation = 0; //keeps track of which rotation we are at to count
 	mTotalSpins = 0; //counts total number of spins
-	mRequiredSpins = (OOUInt)round((((OOFloat)mEndTime - (OOFloat)mTime) / 1000.0) * DifficultyManager::RequiredRPS); //total spins required
+    mLastAngle = 0;
+
+    auto spinner_length_seconds = (OOUInt)floor(((OOFloat)mEndTime - (OOFloat)mTime) / 1000.0); // Why would anyone floor that? Ask peppy :P
+	mRequiredSpins = (OOUInt)round((OOFloat)spinner_length_seconds * DifficultyManager::RequiredRPS); //total spins required
 
 	pSprite* spr;
 	
@@ -39,7 +42,21 @@ HitSpinner::HitSpinner(OOTime time, OOTime endtime, HitObjectSound sound, bool c
 	spr->Hide(endtime, endtime+300);
 	spr->Kill(endtime+300);
 	mSprites.push_back(spr);
-	
+
+    spr = new pSprite(TX_PLAY_SPINNER_RPM_BG, SCREEN_WIDTH / 2, SCREEN_HEIGHT - 25, 180, 50, ORIGIN_CENTER, FIELD_SCREEN, SDL_Color(), 0, (OOFloat)time+5000.0-0.06);
+    spr->Show(time-300, time+300);
+    spr->Hide(endtime, endtime+300);
+    spr->Kill(endtime+300);
+    mSprites.push_back(spr);
+
+    mRPMIndicator = new pText("0", FONT_SCORE, SCREEN_WIDTH / 2 + 42, SCREEN_HEIGHT - 24, SDL_Color({255,255,255}));
+    mRPMIndicator->Show(time-300, time+300);
+    mRPMIndicator->Hide(endtime, endtime+300);
+    mRPMIndicator->Kill(endtime+300);
+    mRPMIndicator->Origin = ORIGIN_CENTER;
+    mRPMIndicator->Alpha = 0;
+    mSprites.push_back(mRPMIndicator);
+
 	mScoreSpriteId = 1;
 
     delete mSprites[2]->UV;
@@ -58,9 +75,9 @@ HitSpinner::~HitSpinner() {
 
 void HitSpinner::Update()
 {
+
 	OOFloat ratio = ((OOFloat)mTotalSpins + MathHelper::Frc(mTotalRotation)) / (OOFloat)mRequiredSpins;
-	
-	//set spinner bars
+    //set spinner bars
 	OOUInt height = MathHelper::Max(0, MathHelper::Min(SCREEN_HEIGHT, (OOInt)floor(ratio*(OOFloat)(SCREEN_HEIGHT))) - (OOInt)MathHelper::Random(0, 20));
 
     delete mSprites[2]->UV;
@@ -69,7 +86,14 @@ void HitSpinner::Update()
     //set spinner sound
 	if (mChannel == -1 && GameClock::Clock().Time() >= mTime)
 		mChannel = AudioManager::Engine().PlaySpinnerSound(SND_NORMAL);
-	
+
+    OOTime deltaTime = GameClock::Clock().Time() - mTime;
+
+    if (deltaTime != 0) {
+        OOFloat multiplier = 1 / ((OOFloat)deltaTime / 60000); // 60000 ms in m
+        mRPM = (mReallyTotalRotation * multiplier) / (((OOFloat)deltaTime / 60000) * multiplier);
+        mRPMIndicator->Text = std::to_string((OOInt)(round(mRPM)));
+    }
 	//if (mChannel != -1)
         //TODO: changing freq
 		//AudioManager::Engine().SetChannelFreq(mChannel, MathHelper::Min((uint32_t)(10000 + (ratio * 30000)), 65535));
@@ -88,7 +112,9 @@ void HitSpinner::OnTouchDown(const touchPosition& touch)
 }
 
 void HitSpinner::OnTouch(const touchPosition& touch) {
-	if (GameClock::Clock().Time() >= mTime && GameClock::Clock().Time() <= mEndTime) {
+    OOTime now = GameClock::Clock().Time();
+
+	if (now >= mTime && now <= mEndTime) {
 		if (MathHelper::Abs((OOInt)touch.px - (SCREEN_WIDTH / 2)) < 10 && MathHelper::Abs((OOInt)touch.py - (SCREEN_HEIGHT/2)) < 10) {
 			fSpinning = false;
 			return;
@@ -108,27 +134,16 @@ void HitSpinner::OnTouch(const touchPosition& touch) {
 		
 		OOInt deltaAngle = newAngle - mLastAngle;
 		
-		//hack for passing through line x=320 where y<265
-        //TODO: what?
-		if (deltaAngle > 16384)
-			deltaAngle -= 32768;
-		else if (deltaAngle < -16384)
-			deltaAngle += 32768;
-		
 		mSprites[1]->Angle += deltaAngle;
 		
-		//if player changes direction add to total rotations and start count again
-		if (mDirection != MathHelper::Sgn(deltaAngle)) {
-			mDirection = MathHelper::Sgn(deltaAngle);
-			mZeroPoint = mSprites[1]->Angle;
-			mTotalRotation = 0;
-			mCurrentRotation = 0;
-		}
-		
-		mTotalRotation = MathHelper::Abs(mSprites[1]->Angle - mZeroPoint) / 32768.0;
-		
+		mReallyTotalRotation += ((OOFloat)MathHelper::Abs(deltaAngle) / 720);
+        mTotalRotation += ((OOFloat)MathHelper::Abs(deltaAngle) / 720);// / 32768.0;
+
+
 		//if we have made an extra circle (or more) add to total
-		if (mCurrentRotation < (uint32_t)mTotalRotation) {
+
+		if (mCurrentRotation < (OOUInt)round(mTotalRotation)) {
+            printf("Here. mCurrentRotation=%i; (OOUInt)round(mTotalRotation))=%i;mTotalRotation=%f;mRR=%i\n", mCurrentRotation, (OOUInt)round(mTotalRotation), mTotalRotation, mRequiredSpins);
 			mTotalSpins += (OOUInt)round(mTotalRotation) - mCurrentRotation;
 			mCurrentRotation = (OOUInt)round(mTotalRotation);
 			
@@ -172,13 +187,7 @@ void HitSpinner::Hit()
 }
 
 OOInt HitSpinner::GetAngle(OOInt x, OOInt y) {
-	OOFloat theta = atan((OOFloat)((OOFloat)y-(SCREEN_HEIGHT/2.f))/((OOFloat)x-(SCREEN_WIDTH/2.f)));
-	OOInt angle = floor(theta*32768/6.2832);
-	
-	//hack - let's hope this won't come back to haunt me
-    //TODO: what?
-	if (x < (OOInt)floor(SCREEN_WIDTH/2.f))
-		angle += 16384;
-
-	return angle;
+    OOFloat screenmidx = ((OOFloat)SCREEN_WIDTH/2.0);
+    OOFloat screenmidy = ((OOFloat)SCREEN_HEIGHT/2.0);
+    return ((OOInt) rad2deg(atan2(screenmidx-(OOFloat)x, screenmidy-(OOFloat)y))) * (-1);
 }

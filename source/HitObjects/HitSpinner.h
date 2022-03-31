@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include "HitObject.h"
+#include "Graphics/pText.h"
 
 class HitSpinner : public HitObject
 {
@@ -23,9 +24,13 @@ class HitSpinner : public HitObject
 		bool fSpinning;
         OOInt mDirection, mZeroPoint;
 		OOFloat mTotalRotation;
+        OOFloat mReallyTotalRotation = 0; // yeah,sorry about that
 		OOUInt mCurrentRotation;
         OOUInt mTotalSpins;
         OOUInt mRequiredSpins;
+        pText* mRPMIndicator;
+        OOFloat mRPM = 0;
+        OOTime mLastUpdateAt = -1;
 		
 		OOInt mChannel;
         OOInt mChannelBonus;
