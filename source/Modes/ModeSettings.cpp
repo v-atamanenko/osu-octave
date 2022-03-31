@@ -57,7 +57,7 @@ void ModeSettings::InitCommonSprites() {
     spr->OnClick = ModeSettings_OnBtnSettingsClick;
     spr->Clickable = true;
     mSpriteManager.Add(spr);
-    spr = new pText("Settings", FONT_PIXEL_ACTIVE, 175, 376, SDL_Color({67,19,115}));
+    spr = new pText("Settings", FONT_PIXEL, 175, 376, SDL_Color({255,255,255}));
     spr->Z = -0.02;
     spr->Origin = ORIGIN_CENTER;
     mSpriteManager.Add(spr);
@@ -167,9 +167,9 @@ void ModeSettings::CreateValueSlider(OOInt x, OOInt y, const std::string& settin
     if (multiplier_mode) {
         char value_str[8];
         snprintf(value_str, 8, "%.2fx", (OOFloat)((OOInt)((lastValue+100) * 1 + .5)) / 100.f);
-        spr = new pText(value_str,FONT_PIXEL, x+266, y, SDL_Color());
+        spr = new pText(value_str,FONT_PIXEL, x+266, y, SDL_Color({67,19,115}));
     } else {
-        spr = new pText(std::to_string((OOInt)(round(lastValue))), FONT_PIXEL, x+266, y, SDL_Color());
+        spr = new pText(std::to_string((OOInt)(round(lastValue))), FONT_PIXEL, x+266, y, SDL_Color({67,19,115}));
     }
 
     spr->Z = -1.0;

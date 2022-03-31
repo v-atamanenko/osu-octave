@@ -99,27 +99,27 @@ void Ruleset::OnGameOver()
     auto* rankspr = new pSprite(rankingtex, 741, 163, 212, 243, ORIGIN_CENTER, FIELD_SCREEN, SDL_Color(), 0, 0);
     scoreScreenSprites.push_back(rankspr);
 
-    auto scoreLbl = new pText(mCurrentScore.CurrentScoreFormatted(), FONT_NUMBERING, 480, 48, SDL_Color());
+    auto scoreLbl = new pText(mCurrentScore.CurrentScoreFormatted(), FONT_NUMBERING, 480, 48, SDL_Color({67,19,115}));
     scoreLbl->Origin = ORIGIN_TOPRIGHT;
     scoreScreenSprites.push_back(scoreLbl);
 
-    scoreLbl = new pText(mCurrentScore.Count300Formatted(), FONT_NUMBERING, 152, 162, SDL_Color());
+    scoreLbl = new pText(mCurrentScore.Count300Formatted(), FONT_NUMBERING, 152, 162, SDL_Color({67,19,115}));
     scoreScreenSprites.push_back(scoreLbl);
-    scoreLbl = new pText(mCurrentScore.Count100Formatted(), FONT_NUMBERING, 152, 237, SDL_Color());
+    scoreLbl = new pText(mCurrentScore.Count100Formatted(), FONT_NUMBERING, 152, 237, SDL_Color({67,19,115}));
     scoreScreenSprites.push_back(scoreLbl);
-    scoreLbl = new pText(mCurrentScore.Count50Formatted(), FONT_NUMBERING, 152, 311, SDL_Color());
-    scoreScreenSprites.push_back(scoreLbl);
-
-    scoreLbl = new pText(mCurrentScore.CountGekiFormatted(), FONT_NUMBERING, 369, 162, SDL_Color());
-    scoreScreenSprites.push_back(scoreLbl);
-    scoreLbl = new pText(mCurrentScore.CountKatuFormatted(), FONT_NUMBERING, 369, 237, SDL_Color());
-    scoreScreenSprites.push_back(scoreLbl);
-    scoreLbl = new pText(mCurrentScore.CountMissFormatted(), FONT_NUMBERING, 369, 311, SDL_Color());
+    scoreLbl = new pText(mCurrentScore.Count50Formatted(), FONT_NUMBERING, 152, 311, SDL_Color({67,19,115}));
     scoreScreenSprites.push_back(scoreLbl);
 
-    scoreLbl = new pText(mCurrentScore.CountAccuracyFormatted(), FONT_NUMBERING, 77, 412, SDL_Color());
+    scoreLbl = new pText(mCurrentScore.CountGekiFormatted(), FONT_NUMBERING, 369, 162, SDL_Color({67,19,115}));
     scoreScreenSprites.push_back(scoreLbl);
-    scoreLbl = new pText(mCurrentScore.MaxComboFormatted(), FONT_NUMBERING, 297, 412, SDL_Color());
+    scoreLbl = new pText(mCurrentScore.CountKatuFormatted(), FONT_NUMBERING, 369, 237, SDL_Color({67,19,115}));
+    scoreScreenSprites.push_back(scoreLbl);
+    scoreLbl = new pText(mCurrentScore.CountMissFormatted(), FONT_NUMBERING, 369, 311, SDL_Color({67,19,115}));
+    scoreScreenSprites.push_back(scoreLbl);
+
+    scoreLbl = new pText(mCurrentScore.CountAccuracyFormatted(), FONT_NUMBERING, 77, 412, SDL_Color({67,19,115}));
+    scoreScreenSprites.push_back(scoreLbl);
+    scoreLbl = new pText(mCurrentScore.MaxComboFormatted(), FONT_NUMBERING, 297, 412, SDL_Color({67,19,115}));
     scoreScreenSprites.push_back(scoreLbl);
 
     for (auto s : scoreScreenSprites) {
@@ -174,27 +174,27 @@ void Ruleset::OnFailed()
     auto* rankspr = new pSprite(TX_RANKING_F_LG, 741, 163, 212, 243, ORIGIN_CENTER, FIELD_SCREEN, SDL_Color(), 0, 0);
     scoreScreenSprites.push_back(rankspr);
 
-    auto scoreLbl = new pText(mCurrentScore.CurrentScoreFormatted(), FONT_NUMBERING, 480, 48, SDL_Color());
+    auto scoreLbl = new pText(mCurrentScore.CurrentScoreFormatted(), FONT_NUMBERING, 480, 48, SDL_Color({67,19,115}));
     scoreLbl->Origin = ORIGIN_TOPRIGHT;
     scoreScreenSprites.push_back(scoreLbl);
 
-    scoreLbl = new pText(mCurrentScore.Count300Formatted(), FONT_NUMBERING, 152, 162, SDL_Color());
+    scoreLbl = new pText(mCurrentScore.Count300Formatted(), FONT_NUMBERING, 152, 162, SDL_Color({67,19,115}));
     scoreScreenSprites.push_back(scoreLbl);
-    scoreLbl = new pText(mCurrentScore.Count100Formatted(), FONT_NUMBERING, 152, 237, SDL_Color());
+    scoreLbl = new pText(mCurrentScore.Count100Formatted(), FONT_NUMBERING, 152, 237, SDL_Color({67,19,115}));
     scoreScreenSprites.push_back(scoreLbl);
-    scoreLbl = new pText(mCurrentScore.Count50Formatted(), FONT_NUMBERING, 152, 311, SDL_Color());
-    scoreScreenSprites.push_back(scoreLbl);
-
-    scoreLbl = new pText(mCurrentScore.CountGekiFormatted(), FONT_NUMBERING, 369, 162, SDL_Color());
-    scoreScreenSprites.push_back(scoreLbl);
-    scoreLbl = new pText(mCurrentScore.CountKatuFormatted(), FONT_NUMBERING, 369, 237, SDL_Color());
-    scoreScreenSprites.push_back(scoreLbl);
-    scoreLbl = new pText(mCurrentScore.CountMissFormatted(), FONT_NUMBERING, 369, 311, SDL_Color());
+    scoreLbl = new pText(mCurrentScore.Count50Formatted(), FONT_NUMBERING, 152, 311, SDL_Color({67,19,115}));
     scoreScreenSprites.push_back(scoreLbl);
 
-    scoreLbl = new pText(mCurrentScore.CountAccuracyFormatted(), FONT_NUMBERING, 77, 412, SDL_Color());
+    scoreLbl = new pText(mCurrentScore.CountGekiFormatted(), FONT_NUMBERING, 369, 162, SDL_Color({67,19,115}));
     scoreScreenSprites.push_back(scoreLbl);
-    scoreLbl = new pText(mCurrentScore.MaxComboFormatted(), FONT_NUMBERING, 297, 412, SDL_Color());
+    scoreLbl = new pText(mCurrentScore.CountKatuFormatted(), FONT_NUMBERING, 369, 237, SDL_Color({67,19,115}));
+    scoreScreenSprites.push_back(scoreLbl);
+    scoreLbl = new pText(mCurrentScore.CountMissFormatted(), FONT_NUMBERING, 369, 311, SDL_Color({67,19,115}));
+    scoreScreenSprites.push_back(scoreLbl);
+
+    scoreLbl = new pText(mCurrentScore.CountAccuracyFormatted(), FONT_NUMBERING, 77, 412, SDL_Color({67,19,115}));
+    scoreScreenSprites.push_back(scoreLbl);
+    scoreLbl = new pText(mCurrentScore.MaxComboFormatted(), FONT_NUMBERING, 297, 412, SDL_Color({67,19,115}));
     scoreScreenSprites.push_back(scoreLbl);
 
     for (auto s : scoreScreenSprites) {

@@ -25,7 +25,7 @@ public:
     StringSelector(int32_t x, int32_t y) {
         mX = x;
         mY = y;
-        selectedString = new pText("default", FONT_CONSOLE, mX+13, mY+8);
+        selectedString = new pText("default", FONT_CONSOLE, mX+13, mY+8, SDL_Color({67,19,115}));
         selectedString->Z = -0.6f;
         arrowLeft = new pSprite(TX_BUTTON_SETTINGS_ARROW, mX+217+4, mY, 47, 32, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.5);
         arrowRight = new pSprite(TX_BUTTON_SETTINGS_ARROW, mX+217+47, mY, 47, 32, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.5);
@@ -129,18 +129,18 @@ public:
         mValue = value;
 
         bg = new pSprite(TX_BUTTON_RADIO, mX, mY, mWidth, mHeight, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.5f);
-        falseValueLabel = new pText(false_value_label, FONT_PIXEL, mX+70, mY+16);
+        falseValueLabel = new pText(false_value_label, FONT_PIXEL, mX+70, mY+16, SDL_Color({67,19,115}));
         falseValueLabel->Z = -0.6f;
         falseValueLabel->Origin = ORIGIN_CENTER;
-        trueValueLabel = new pText(true_value_label, FONT_PIXEL, mX+200, mY+16);
+        trueValueLabel = new pText(true_value_label, FONT_PIXEL, mX+200, mY+16, SDL_Color({67,19,115}));
         trueValueLabel->Z = -0.6f;
         trueValueLabel->Origin = ORIGIN_CENTER;
 
         if (mValue) {
             bg->Angle = 180;
-            trueValueLabel->Font = FONT_PIXEL_ACTIVE;
+            trueValueLabel->Color = SDL_Color({255,255,255});
         } else {
-            falseValueLabel->Font = FONT_PIXEL_ACTIVE;
+            falseValueLabel->Color = SDL_Color({255,255,255});
         }
 
         mSprites.push_back(falseValueLabel);
@@ -173,13 +173,13 @@ public:
         if (mValue) {
             AudioManager::Engine().PlayUISound(UISOUND_CHECK_ON);
             bg->Angle = 180;
-            falseValueLabel->Font = FONT_PIXEL;
-            trueValueLabel->Font = FONT_PIXEL_ACTIVE;
+            trueValueLabel->Color = SDL_Color({255,255,255});
+            falseValueLabel->Color = SDL_Color({67,19,115});
         } else {
             AudioManager::Engine().PlayUISound(UISOUND_CHECK_OFF);
             bg->Angle = 0;
-            falseValueLabel->Font = FONT_PIXEL_ACTIVE;
-            trueValueLabel->Font = FONT_PIXEL;
+            trueValueLabel->Color = SDL_Color({67,19,115});
+            falseValueLabel->Color = SDL_Color({255,255,255});
         }
 
         value_callback(mValue);

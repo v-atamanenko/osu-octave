@@ -159,6 +159,7 @@ void OsuParser::Parse()
         hitWindow100 = 140.0 - 8.0 * OD;
         hitWindow50 = 200.0 - 10.0 * OD;
 
+        // TODO: add mapDifficulty function for readability sake
         requiredRPS = (OD < 5.0 || IsEqualDouble(OD, 5.0))
                       ? (3.0 - 2.0 / 5.0 * OD)
                       : (5.0 - 5.0 / 2.0 + OD / 2.0);

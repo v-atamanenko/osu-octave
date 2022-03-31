@@ -226,7 +226,7 @@ SongSelect::SongSelect() {
     mSpriteManager->Add(btn_sort_u_z_label);
 
     loadingScreenBG = new pSprite(TX_SONGLESECT_LOADING_BG, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 0, -100.f);
-    loadingScreenLabel = new pText("LOADING", FONT_NUMBERING, 480, 274, SDL_Color());
+    loadingScreenLabel = new pText("LOADING", FONT_NUMBERING, 480, 274, SDL_Color({67,19,115}));
     loadingScreenLabel->Origin = ORIGIN_CENTER;
     loadingScreenLabel->Z = -150.f;
     loadingScreenLabel->Alpha = 0;
@@ -447,29 +447,29 @@ void SongSelect::UpdateSonglist(bool initial)
         }
 
         if (isExpanded) {
-            auto* mapTitle = new pText(map.Title, FONT_CONSOLE_BIG_BOLD, 494, 117 + ((OOInt)i * 94) + extra_y_offset);
+            auto* mapTitle = new pText(map.Title, FONT_CONSOLE_BIG_BOLD, 494, 117 + ((OOInt)i * 94) + extra_y_offset, SDL_Color({67,19,115}));
             mapTitle->Z = -0.05f;
 
-            auto* mapArtist = new pText(map.Artist, FONT_CONSOLE, 494, 137 + ((OOInt)i * 94) + extra_y_offset);
+            auto* mapArtist = new pText(map.Artist, FONT_CONSOLE, 494, 137 + ((OOInt)i * 94) + extra_y_offset, SDL_Color({67,19,115}));
             mapArtist->Z = -0.05f;
 
-            auto* mapVersion = new pText(map.Version, FONT_CONSOLE, 494, 154 + ((OOInt)i * 94) + extra_y_offset);
+            auto* mapVersion = new pText(map.Version, FONT_CONSOLE, 494, 154 + ((OOInt)i * 94) + extra_y_offset, SDL_Color({67,19,115}));
             mapVersion->Z = -0.05f;
 
-            auto* highscoreTitle = new pText("Personal best:", FONT_CONSOLE_BIG_BOLD, 494, 184 + ((OOInt)i * 94) + extra_y_offset);
+            auto* highscoreTitle = new pText("Personal best:", FONT_CONSOLE_BIG_BOLD, 494, 184 + ((OOInt)i * 94) + extra_y_offset, SDL_Color({67,19,115}));
             highscoreTitle->Z = -0.06f;
-            auto* highscoreScoreTitle = new pText("Score:", FONT_CONSOLE_BOLD, 494, 204 + ((OOInt)i * 94) + extra_y_offset);
+            auto* highscoreScoreTitle = new pText("Score:", FONT_CONSOLE_BOLD, 494, 204 + ((OOInt)i * 94) + extra_y_offset, SDL_Color({67,19,115}));
             highscoreScoreTitle->Z = -0.06f;
 
             char highscoreScore_text[32];
             sprintf(highscoreScore_text, "%i (%ix)", score.score, score.combo);
-            auto* highscoreScore = new pText(highscoreScore_text, FONT_CONSOLE, 540, 204 + ((OOInt)i * 94) + extra_y_offset);
+            auto* highscoreScore = new pText(highscoreScore_text, FONT_CONSOLE, 540, 204 + ((OOInt)i * 94) + extra_y_offset, SDL_Color({67,19,115}));
             highscoreScore->Z = -0.06f;
-            auto* highscoreAccuracyTitle = new pText("Accuracy:", FONT_CONSOLE_BOLD, 494, 222 + ((OOInt)i * 94) + extra_y_offset);
+            auto* highscoreAccuracyTitle = new pText("Accuracy:", FONT_CONSOLE_BOLD, 494, 222 + ((OOInt)i * 94) + extra_y_offset, SDL_Color({67,19,115}));
             highscoreAccuracyTitle->Z = -0.06f;
             char highscoreAccuracy_text[32];
             sprintf(highscoreAccuracy_text, "%.3f%%", score.accuracy);
-            auto* highscoreAccuracy = new pText(highscoreAccuracy_text, FONT_CONSOLE, 563, 222 + ((OOInt)i * 94) + extra_y_offset);
+            auto* highscoreAccuracy = new pText(highscoreAccuracy_text, FONT_CONSOLE, 563, 222 + ((OOInt)i * 94) + extra_y_offset, SDL_Color({67,19,115}));
             highscoreAccuracy->Z = -0.06f;
 
             mSpriteManager->Add(mapTitle);
@@ -481,13 +481,13 @@ void SongSelect::UpdateSonglist(bool initial)
             mSpriteManager->Add(highscoreAccuracyTitle);
             mSpriteManager->Add(highscoreAccuracy);
         } else {
-            auto* mapTitle = new pText(map.Title, FONT_CONSOLE_BIG_BOLD, 494, 106 + ((OOInt)i * 94) + extra_y_offset);
+            auto* mapTitle = new pText(map.Title, FONT_CONSOLE_BIG_BOLD, 494, 106 + ((OOInt)i * 94) + extra_y_offset, SDL_Color({67,19,115}));
             mapTitle->Z = -0.05f;
 
-            auto* mapArtist = new pText(map.Artist, FONT_CONSOLE, 494, 126 + ((OOInt)i * 94) + extra_y_offset);
+            auto* mapArtist = new pText(map.Artist, FONT_CONSOLE, 494, 126 + ((OOInt)i * 94) + extra_y_offset, SDL_Color({67,19,115}));
             mapArtist->Z = -0.05f;
 
-            auto* mapVersion = new pText(map.Version, FONT_CONSOLE, 494, 143 + ((OOInt)i * 94) + extra_y_offset);
+            auto* mapVersion = new pText(map.Version, FONT_CONSOLE, 494, 143 + ((OOInt)i * 94) + extra_y_offset, SDL_Color({67,19,115}));
             mapVersion->Z = -0.05f;
 
             mSpriteManager->Add(mapTitle);
@@ -510,7 +510,7 @@ void SongSelect::UpdateSonglist(bool initial)
 
             char stars_text[32];
             sprintf(stars_text, "%.2f", map.starRating);
-            auto* starsText = new pText(stars_text, FONT_CONSOLE, 707, 161 + ((OOInt)i * 94) + extra_y_offset);
+            auto* starsText = new pText(stars_text, FONT_CONSOLE, 707, 161 + ((OOInt)i * 94) + extra_y_offset, SDL_Color({67,19,115}));
             starsText->Z = -0.06f;
             starsText->Origin = ORIGIN_TOPRIGHT;
 

@@ -30,7 +30,7 @@ ModeAbout::ModeAbout() {
     spr->OnClick = ModeAbout_OnBtnAboutClick;
     spr->Clickable = true;
     mSpriteManager.Add(spr);
-    spr = new pText("About", FONT_PIXEL_ACTIVE, 175, 308, SDL_Color({67,19,115}));
+    spr = new pText("About", FONT_PIXEL, 175, 308, SDL_Color({255,255,255}));
     spr->Z = -0.02;
     spr->Origin = ORIGIN_CENTER;
     mSpriteManager.Add(spr);

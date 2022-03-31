@@ -10,7 +10,7 @@ Welcome::Welcome() {
     mBG = new pSprite(TX_WELCOME_BG, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255);
     mLogo = new Logo(480, 272, false);
 
-    mStatus = new pText("loading settings...", FONT_PIXEL, 480, 422, SDL_Color());
+    mStatus = new pText("loading settings...", FONT_PIXEL, 480, 422, SDL_Color({67,19,115}));
     mStatus->Origin = ORIGIN_CENTER;
 
     mSpriteManager.Add(mBG);

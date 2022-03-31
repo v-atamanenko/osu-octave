@@ -35,7 +35,8 @@ class TextManager
 
         static void Print(OOInt x, OOInt y, const char *fmt, ...);
         static void PrintLocate(OOInt x, OOInt y, DrawOrigin origin, const char *fmt, ...);
-	
+        static void PrintLocateColor(OOInt x, OOInt y, DrawOrigin origin, SDL_Color clr, const char *fmt, ...);
+
 	protected:
 		static FC_Font* mFonts[NUMBER_OF_FONTS];
         static FontName currentFont;
