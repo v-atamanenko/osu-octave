@@ -99,16 +99,19 @@ void RadioButton_saveDisplayedValue (bool val, const std::string& setting_name) 
 
 
 void TernaryButton_saveDisplayedValue (uint8_t val, const std::string& setting_name) {
-    if (setting_name == "controlScheme") {
-        // ..
-    } else {
-        assert(false); // TernaryButtons are only used for control scheme selection for now.
-    }
-
     Settings::set_int(setting_name, val);
-    Settings::update_action_controls(val);
-    Settings::save();
-    InputHelper::InitInput();
+
+    if (setting_name == "controlScheme") {
+        bool temp = InputHelper::vitaUseBackTouch;
+
+        Settings::update_action_controls(val);
+        Settings::save();
+        InputHelper::InitInput();
+
+        InputHelper::vitaUseBackTouch = temp;
+    } else {
+        // TernaryButtons are only used for control scheme selection for now.
+    }
 }
 
 
