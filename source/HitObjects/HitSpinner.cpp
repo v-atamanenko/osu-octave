@@ -11,10 +11,32 @@ HitSpinner::HitSpinner(OOTime time, OOTime endtime, HitObjectSound sound, bool c
 	mTotalSpins = 0; //counts total number of spins
     mLastAngle = 0;
 
-    auto spinner_length_seconds = (OOUInt)floor(((OOFloat)mEndTime - (OOFloat)mTime) / 1000.0); // Why would anyone floor that? Ask peppy :P
-	mRequiredSpins = (OOUInt)round((OOFloat)spinner_length_seconds * DifficultyManager::RequiredRPS); //total spins required
+    // auto spinner_length_seconds = (OOUInt)floor(((OOFloat)mEndTime - (OOFloat)mTime) / 1000.0); // Why would anyone floor that? Ask peppy :P
+	// mRequiredSpins = (OOUInt)round((OOFloat)spinner_length_seconds * DifficultyManager::RequiredRPS); //total spins required
 
-	pSprite* spr;
+    /*
+     * A bit of a story. These two variables above (spinner_length_seconds, mRequiredSpins)
+     * are produced exactly as McOsu does and apparently as osu! did before 2016 according
+     * to my friend who might have seen the source code.
+     *
+     * But the mRequiredSpins are always very off from current osu! values. I was unable
+     * to figure oth the actual algorithm behind the current osu! spinner calculations.
+     * But I found an algorithm opsu! uses. It's still off, but not that bad.
+     *
+     * A few measurements:
+     * osu! algo | McOsu algo | opsu algo
+     * 40        | 78         | 44
+     * 18        | 18         | 14
+     * 16        | 24         | 15
+     *
+     * Should come back to this once >.>
+     */
+
+    OOFloat spinner_length_minutes = ((OOFloat)mEndTime - (OOFloat)mTime) / 60000;
+    OOFloat spinsPerMinute = 100 + (DifficultyManager::OD * 15);
+    mRequiredSpins = ceil(spinsPerMinute * spinner_length_minutes);
+
+    pSprite* spr;
 	
 	spr = new pSprite(TX_PLAY_CIRCLEAPPROACH, 480, 302, 460, 460, ORIGIN_CENTER, FIELD_SCREEN, SDL_Color(), 0, (OOFloat)time+5000.0-0.06);
 	spr->Show(time-300, time);
@@ -122,9 +144,12 @@ void HitSpinner::OnTouch(const touchPosition& touch) {
 		
 		//work out the new angle
 		OOInt newAngle = GetAngle(touch.px, touch.py);
+
+        // TODO: Right now you can spin a spinner like a DJ's plate moving the cursor back and forth.
+        // Might actually be considered a feature 🤔
 		
 		if (!fSpinning) {
-			mLastAngle = newAngle;
+			mLastAngle = 0;
 			fSpinning = true;
 			return;
 		}
@@ -137,15 +162,13 @@ void HitSpinner::OnTouch(const touchPosition& touch) {
 		mSprites[1]->Angle += deltaAngle;
 		
 		mReallyTotalRotation += ((OOFloat)MathHelper::Abs(deltaAngle) / 720);
-        mTotalRotation += ((OOFloat)MathHelper::Abs(deltaAngle) / 720);// / 32768.0;
-
+        mTotalRotation += ((OOFloat)MathHelper::Abs(deltaAngle) / 720);
 
 		//if we have made an extra circle (or more) add to total
 
-		if (mCurrentRotation < (OOUInt)round(mTotalRotation)) {
-            printf("Here. mCurrentRotation=%i; (OOUInt)round(mTotalRotation))=%i;mTotalRotation=%f;mRR=%i\n", mCurrentRotation, (OOUInt)round(mTotalRotation), mTotalRotation, mRequiredSpins);
-			mTotalSpins += (OOUInt)round(mTotalRotation) - mCurrentRotation;
-			mCurrentRotation = (OOUInt)round(mTotalRotation);
+		if (mCurrentRotation < (OOUInt)floor(mTotalRotation)) {
+            mTotalSpins += (OOUInt)floor(mTotalRotation) - mCurrentRotation;
+            mCurrentRotation = (OOUInt)floor(mTotalRotation);
 			
 			IncreaseScore(SCORE_SPIN_100, true, true);
 			if (mTotalSpins > mRequiredSpins) {
