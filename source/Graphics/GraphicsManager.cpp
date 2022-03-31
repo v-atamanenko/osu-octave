@@ -181,6 +181,7 @@ void GraphicsManager::LoadTexturesForMode(ModeType mod) {
             LoadTexture(TX_PLAY_DISC, skin_path+"gameplay/disc.png");
             LoadTexture(TX_PLAY_SLIDERTICK, skin_path+"gameplay/slidertick.png");
             LoadTexture(TX_PLAY_SLIDERREVERSE, skin_path+"gameplay/sliderreverse.png");
+            LoadTexture(TX_PLAY_SLIDERBORDER, skin_path+"gameplay/sliderborder.png");
 
             LoadTexture(TX_WHITE, skin_path+"gameplay/white.png");
 

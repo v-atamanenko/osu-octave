@@ -221,11 +221,20 @@ HitSlider::HitSlider(OOInt x, OOInt y, OOTime time, OOTime lengthtime, std::vect
 	//slider path
 	for (OOUInt i=0; i<pointCount; ++i)
 	{
+        //slider border
+        spr = new pSprite(TX_PLAY_SLIDERBORDER, points[i]->x, points[i]->y, (OOUInt)(ballSize*1.10), (OOUInt)(ballSize*1.10), ORIGIN_CENTER, FIELD_PLAY, SDL_Color(), 0);
+        spr->Show(fadeInStart+29, fadeInEnd);
+        spr->Hide(mEndTime-31, mEndTime+71);
+        spr->Kill(mEndTime+71);
+        spr->Z = (OOFloat)time+4.0;
+        mSprites.push_back(spr);
+
+        // slider body
 		spr = new pSprite(TX_PLAY_DISC, points[i]->x, points[i]->y, ballSize, ballSize, ORIGIN_CENTER, FIELD_PLAY, mColour, 0);
 		spr->Show(fadeInStart+30, fadeInEnd);
 		spr->Hide(mEndTime-30, mEndTime+70);
 		spr->Kill(mEndTime+70);
-        spr->Z = (OOFloat)time+0.1;
+        spr->Z = (OOFloat)time+0.2;
 		mSprites.push_back(spr);
 	}
 
@@ -400,7 +409,7 @@ void HitSlider::Update() {
 	if (now >= mTime + (mLengthTime * OOTime(mRepeatCurrent + 1))) {
 		for (OOUInt j=0; j<mTickCount; ++j) {
 			//no need to reshow visible sprites
-			if (mTicks[j].Tick->Alpha != 31)
+			if (mTicks[j].Tick->Alpha != 255)
 				mTicks[j].Tick->Show(now, now+50);
 		}
         printf("mRepeatCurrent+\n");
