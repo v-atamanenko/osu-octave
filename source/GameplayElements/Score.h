@@ -28,10 +28,10 @@ class Score
             return str;
         }
 		OOUInt CurrentCombo() const            { return mCombo; }
-        std::string CurrentComboFormatted() const{
+        std::string MaxComboFormatted() const{
             unsigned int fc_buffer_size = 32;
             char fc_buffer[fc_buffer_size];
-            snprintf(fc_buffer, fc_buffer_size, "%ix", mCombo);
+            snprintf(fc_buffer, fc_buffer_size, "%ix", mMaxCombo);
             std::string str(fc_buffer);
             return str;
         }

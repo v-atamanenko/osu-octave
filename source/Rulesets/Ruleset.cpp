@@ -119,7 +119,7 @@ void Ruleset::OnGameOver()
 
     scoreLbl = new pText(mCurrentScore.CountAccuracyFormatted(), FONT_NUMBERING, 77, 412, SDL_Color());
     scoreScreenSprites.push_back(scoreLbl);
-    scoreLbl = new pText(mCurrentScore.CurrentComboFormatted(), FONT_NUMBERING, 297, 412, SDL_Color());
+    scoreLbl = new pText(mCurrentScore.MaxComboFormatted(), FONT_NUMBERING, 297, 412, SDL_Color());
     scoreScreenSprites.push_back(scoreLbl);
 
     for (auto s : scoreScreenSprites) {
@@ -136,7 +136,7 @@ void Ruleset::OnGameOver()
     if (h_old.score < mCurrentScore.CurrentScore()) {
         Highscore h;
         h.accuracy = mCurrentScore.CountAccuracy();
-        h.combo = mCurrentScore.CurrentCombo();
+        h.combo = mCurrentScore.MaxCombo();
         h.score = mCurrentScore.CurrentScore();
         h.checksum = BeatmapManager::Current().BeatmapChecksum();
         strcpy(h.grade, mCurrentScore.GetGrade());
@@ -194,7 +194,7 @@ void Ruleset::OnFailed()
 
     scoreLbl = new pText(mCurrentScore.CountAccuracyFormatted(), FONT_NUMBERING, 77, 412, SDL_Color());
     scoreScreenSprites.push_back(scoreLbl);
-    scoreLbl = new pText(mCurrentScore.CurrentComboFormatted(), FONT_NUMBERING, 297, 412, SDL_Color());
+    scoreLbl = new pText(mCurrentScore.MaxComboFormatted(), FONT_NUMBERING, 297, 412, SDL_Color());
     scoreScreenSprites.push_back(scoreLbl);
 
     for (auto s : scoreScreenSprites) {
