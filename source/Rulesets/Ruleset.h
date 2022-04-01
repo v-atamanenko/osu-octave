@@ -14,7 +14,7 @@ class Ruleset
 {
 	public:
 		Ruleset();
-		virtual ~Ruleset() = default;
+		virtual ~Ruleset();
 		
 		void Initialize();
 		void Skip();

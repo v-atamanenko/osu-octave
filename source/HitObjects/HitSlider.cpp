@@ -136,13 +136,21 @@ HitSlider::HitSlider(OOInt x, OOInt y, OOTime time, OOTime lengthtime, std::vect
     mEndPoint = {points[pointCount-1]->x, points[pointCount-1]->y};
 
 	spr = new pSprite(TX_PLAY_CIRCLEOVERLAY, points[pointCount-1]->x, points[pointCount-1]->y, circleSize, circleSize, ORIGIN_CENTER, FIELD_PLAY, SDL_Color(), 0);
-	spr->Show(fadeInStart, fadeInEnd);
+
+    if (!Settings::get_bool("disableSliderEndCircle")) {
+        spr->Show(fadeInStart, fadeInEnd);
+    }
+
 	spr->Kill(mEndTime+1000);
     spr->Z = (OOFloat)time - 0.45;
 	mSprites.push_back(spr);
 	
 	spr = new pSprite(TX_PLAY_CIRCLE, points[pointCount-1]->x, points[pointCount-1]->y, circleSize, circleSize, ORIGIN_CENTER, FIELD_PLAY, mColour, 0);
-	spr->Show(fadeInStart, fadeInEnd);
+
+    if (!Settings::get_bool("disableSliderEndCircle")) {
+        spr->Show(fadeInStart, fadeInEnd);
+    }
+
 	spr->Kill(mEndTime+1000);
     spr->Z = (OOFloat)time - 0.4;
 	mSprites.push_back(spr);

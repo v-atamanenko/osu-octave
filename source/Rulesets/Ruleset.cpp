@@ -19,10 +19,13 @@ Ruleset::Ruleset()
 {
     mDarkenOverlay.AddToSpriteManager(mSpriteManager);
 	mLifebar.AddToSpriteManager(mSpriteManager);
-#ifdef __vita__
-    // The setting is always false unless running on the Vita.
-    mCursor = Settings::get_bool("vitaUseBackTouch");
-#endif
+
+    mCursor = Settings::get_bool("vitaUseBackTouch") || Settings::get_bool("alwaysShowCursor");
+    if (mCursor) SDL_ShowCursor(SDL_DISABLE);
+}
+
+Ruleset::~Ruleset() {
+    if (mCursor) SDL_ShowCursor(SDL_ENABLE);
 }
 
 void Ruleset::Initialize()
