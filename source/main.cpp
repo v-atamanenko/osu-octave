@@ -4,8 +4,6 @@
 #include "System/GameClock.h"
 #include "System/TextManager.h"
 #include "DataStorage/Settings.h"
-#include "DataStorage/Scores.h"
-#include "DataStorage/Betmaps.h"
 #include "DataStorage/Skins.h"
 
 #ifdef VITA
@@ -16,6 +14,9 @@ unsigned int _newlib_heap_size_user = 200 * 1024 * 1024;
 int main() {
 #ifdef __vita__
     scePowerSetArmClockFrequency(444);
+    scePowerSetBusClockFrequency(222);
+    scePowerSetGpuClockFrequency(222);
+    scePowerSetGpuXbarClockFrequency(166);
 #endif
 
     Settings::load();
@@ -24,7 +25,7 @@ int main() {
     TextManager::Init();
 
 	GameBase osu;
-    while(osu.Update() != -1) {
+    while (osu.Update() != -1) {
         GameClock::Clock().Update();
 	}
 

@@ -9,7 +9,6 @@ SpriteManager::~SpriteManager() {
 }
 
 void SpriteManager::SortZ() {
-    mSpritesSorted.clear();
     mSpritesSorted = mSprites;
     std::sort(mSpritesSorted.begin(), mSpritesSorted.end(), [](const pDrawable* first, const pDrawable* second) {
         return first->Z > second->Z;

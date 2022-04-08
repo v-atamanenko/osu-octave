@@ -383,15 +383,17 @@ void GraphicsManager::Draw(TextureType tex, OOInt x, OOInt y, OOUInt width, OOUI
         return;
     SDL_Rect dst = {x1, y1, x2-x1, y2-y1};
 
+    SDL_Texture* tex_to_draw = maptextures[tex];
+
     if ((color.r != 0) && (color.g != 0) && (color.b != 0)) {
-        SDL_SetTextureColorMod(maptextures[tex], color.r, color.g, color.b);
+        SDL_SetTextureColorMod(tex_to_draw, color.r, color.g, color.b);
     }
 
-    SDL_SetTextureAlphaMod(maptextures[tex], alpha);
-    SDL_RenderCopyEx(renderer, maptextures[tex], uv, &dst, angle, nullptr, SDL_FLIP_NONE);
+    SDL_SetTextureAlphaMod(tex_to_draw, alpha);
+    SDL_RenderCopyEx(renderer, tex_to_draw, uv, &dst, angle, nullptr, SDL_FLIP_NONE);
 
     if ((color.r != 0) && (color.g != 0) && (color.b != 0)) {
-        SDL_SetTextureColorMod(maptextures[tex], 255, 255, 255);
+        SDL_SetTextureColorMod(tex_to_draw, 255, 255, 255);
     }
 }
 

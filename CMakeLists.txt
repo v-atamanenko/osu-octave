@@ -24,10 +24,12 @@ endif()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++17 -Wno-narrowing -Wno-psabi")
 
-if (NOT BUILDTARGET STREQUAL "vita")
-    # DEBUG:
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 -fsanitize=address,undefined,integer")
-endif()
+#if (NOT BUILDTARGET STREQUAL "vita")
+#    # DEBUG:
+#    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 -fsanitize=address,undefined,integer")
+#endif()
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
 
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0")
 

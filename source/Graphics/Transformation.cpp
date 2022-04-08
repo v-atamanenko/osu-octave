@@ -21,23 +21,21 @@ Transformation::Transformation(TransformType type, OOTime starttime, OOTime endt
 void Transformation::Update() {
     OOTime time = GameClock::Clock().Time();
 	
-	if (!active)
-	{
+	if (!active) {
 		if (time > starttime)
 			active = true;
 		else
 			return;
 	}
 	
-	if (time > endtime)
-	{
+	if (time > endtime) {
 		active = false;
 		currentvalue = endvalue;
 		lastactive = true;
 		return;
 	}
 	
-	currentvalue = (OOInt)(((OOFloat)(time-starttime)/(OOFloat)totaltime)*(OOFloat)totalvalue + (OOFloat)startvalue);
+	currentvalue = startvalue + (OOInt)round(((OOFloat)(time-starttime)/(OOFloat)totaltime) * (OOFloat)totalvalue);
 }
 
 bool Transformation::Active() {
