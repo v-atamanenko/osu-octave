@@ -6,16 +6,12 @@
 #include "DataStorage/Settings.h"
 #include "DataStorage/Scores.h"
 #include "DataStorage/Betmaps.h"
+#include "DataStorage/Skins.h"
 
 #ifdef VITA
 unsigned int _newlib_heap_size_user = 200 * 1024 * 1024;
 #include <psp2/power.h>
 #endif
-
-json Settings::settings;
-json Scores::scores;
-json Beatmaps::beatmaps;
-json Beatmaps::state;
 
 int main() {
 #ifdef __vita__
@@ -23,6 +19,7 @@ int main() {
 #endif
 
     Settings::load();
+    Skins::init_skin();
     SDLInitializer::initSDL();
     TextManager::Init();
 

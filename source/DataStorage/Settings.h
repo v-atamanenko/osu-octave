@@ -11,16 +11,6 @@
 
 using json = nlohmann::json;
 
-inline bool is_dir(char* p) {
-    DIR* filetest = opendir(p);
-    if (filetest == nullptr) {
-        return false;
-    } else {
-        closedir(filetest);
-        return true;
-    }
-}
-
 class Settings
 {
     public:
@@ -93,39 +83,6 @@ class Settings
 
                 controls.insert({c, ctrls});
             }
-        }
-
-        static int get_available_skins(std::vector<std::string>& vec) {
-            std::string current_skin = get_str("skin");
-            int ret = 0;
-
-            char path[PATH_MAX];
-            snprintf(path, PATH_MAX, "%s%s", DEF_DataDirectory, DEF_SkinsSubdirectory);
-
-            DIR *dir = opendir(path);
-
-            struct dirent *entry = readdir(dir);
-
-            int i = 0;
-            while (entry != nullptr) {
-                char entry_path[PATH_MAX];
-                snprintf(entry_path, PATH_MAX, "%s%s", path, entry->d_name);
-                if (is_dir(entry_path)) {
-                    std::string dir_name = entry->d_name;
-                    if (dir_name != "." && dir_name != "..") {
-                        vec.emplace_back(dir_name);
-                        if (dir_name == current_skin) {
-                            ret = i;
-                        }
-                        i++;
-                    }
-                }
-
-                entry = readdir(dir);
-            }
-
-            closedir(dir);
-            return ret;
         }
 
         static void set_str(const std::string& key, const std::string& value) { settings[key] = value; }
@@ -221,7 +178,6 @@ class Settings
                         {IH_CONTROL_SKIP, {{SDLK_SPACE, IH_KEY_KEYBOARD}, {SDL_CONTROLLER_BUTTON_A, IH_KEY_CONTROLLER}}},
                         {IH_CONTROL_QUIT, {{SDLK_ESCAPE, IH_KEY_KEYBOARD}, {SDL_CONTROLLER_BUTTON_START, IH_KEY_CONTROLLER}}}
                     }},
-                    {"disableSliderEndCircle", false},
                     {"alwaysShowCursor", false}
             };
         }

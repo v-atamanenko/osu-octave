@@ -33,6 +33,7 @@ endif()
 
 add_executable(${PROJECT_NAME}
         ${PROJECT_SOURCE_DIR}/source/System/SDLInitializer.cpp # Must stay on top!
+        ${PROJECT_SOURCE_DIR}/source/DataStorage/DataStorage.cpp
         ${PROJECT_SOURCE_DIR}/source/Modes/Player.cpp
         ${PROJECT_SOURCE_DIR}/source/Modes/SongSelect.cpp
         ${PROJECT_SOURCE_DIR}/source/Modes/Welcome.cpp
@@ -72,8 +73,8 @@ add_executable(${PROJECT_NAME}
         ${PROJECT_SOURCE_DIR}/source/Helpers/OsuSliderCurves.cpp
         ${PROJECT_SOURCE_DIR}/source/Helpers/PreviewBuffer.cpp
 
-        ${PROJECT_SOURCE_DIR}/source/Parser/OsuParser.cpp
-        ${PROJECT_SOURCE_DIR}/source/Parser/OsUtils.cpp
+        ${PROJECT_SOURCE_DIR}/lib/OsuParser/OsuParser.cpp
+        ${PROJECT_SOURCE_DIR}/lib/OsuParser/OsUtils.cpp
 
         ${PROJECT_SOURCE_DIR}/source/main.cpp)
 
