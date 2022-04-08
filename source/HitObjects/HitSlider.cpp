@@ -426,8 +426,7 @@ void HitSlider::Update() {
 			if (mTicks[j].Tick->Alpha != 255)
 				mTicks[j].Tick->Show(now, now+50);
 		}
-        printf("mRepeatCurrent+\n");
-		++mRepeatCurrent;
+        ++mRepeatCurrent;
 	}
 	
 	mTimeLast = now;

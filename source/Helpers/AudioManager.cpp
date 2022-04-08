@@ -13,12 +13,17 @@ AudioManager::AudioManager() {
 }
 
 inline void loadSample(SampleSetInfo* s, const std::string &file, OOInt volume) {
+    if (s->chunk != nullptr) {
+        Mix_FreeChunk(s->chunk);
+    }
+
     s->filename = file;
     s->chunk = Mix_LoadWAV(s->filename.c_str());
 
     if (s->chunk != nullptr)
         Mix_VolumeChunk(s->chunk, volume);
 }
+
 
 void AudioManager::Initialize() {
     ResetSamples();
@@ -228,7 +233,6 @@ int AudioManager::MusicPlay(OOFloat volume) {
     if (music != nullptr) {
         Mix_VolumeMusic((OOInt)round(volume/100*128));
         mChannel = Mix_PlayMusic(music, -1);
-        fprintf(stderr, "Started music on channel %i\n", mChannel);
     }
     return mChannel;
 }

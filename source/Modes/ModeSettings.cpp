@@ -92,6 +92,11 @@ void ValueSlider_saveDisplayedValue (OOFloat val, const std::string& setting_nam
 
 void StringSelector_saveDisplayedValue (const std::string& val, const std::string& setting_name) {
     Settings::set_str(setting_name, val);
+
+    if (setting_name == "skin") {
+        Skins::init_skin();
+        AudioManager::Engine().ResetSamples();
+    }
 }
 
 void RadioButton_saveDisplayedValue (bool val, const std::string& setting_name) {

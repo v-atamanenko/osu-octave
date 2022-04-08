@@ -14,7 +14,7 @@
 #include "DataStorage/Skins.h"
 #include "Beatmaps/BeatmapElements.h"
 
-typedef enum {
+typedef enum HitObjectSound {
 	SND_NORMAL = 0,
 	SND_WHISTLE = 1,
 	SND_FINISH = 2,
@@ -22,12 +22,12 @@ typedef enum {
     SND_BONUS = 32 // Spinner only
 } HitObjectSound;
 
-typedef struct {
+typedef struct SampleSetInfo {
 	std::string filename;
-    Mix_Chunk * chunk;
+    Mix_Chunk * chunk = nullptr;
 } SampleSetInfo;
 
-typedef struct {
+typedef struct SampleSet {
 	SampleSetInfo hitnormal;
 	SampleSetInfo hitwhistle;
 	SampleSetInfo hitfinish;
@@ -39,7 +39,7 @@ typedef struct {
     SampleSetInfo spinnerbonus;
 } SampleSet;
 
-typedef struct {
+typedef struct UISounds {
     SampleSetInfo applause;
     SampleSetInfo check_off;
     SampleSetInfo check_on;
