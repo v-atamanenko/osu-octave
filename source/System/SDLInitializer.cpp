@@ -17,6 +17,7 @@ SDLInitializer::SDLInitializer() {
     }
 
     SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 
 #ifdef __vita__
     // VITA: Touch events will not generate mouse events
