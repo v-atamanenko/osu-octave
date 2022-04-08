@@ -453,14 +453,14 @@ void HitSlider::OnTouchDown(const touchPosition& touch) {
             mSprites[7]->Move(now+350, now+350, mSprites[7]->X, mSprites[7]->Y);
 
             //if it was hit within the window for any amount of points
-            if (delta < DifficultyManager::HitWindow50) {
+            //if (delta < DifficultyManager::HitWindow) {
                 ++mTicksHit;
 
                 IncreaseScore(SCORE_TICK_30, false, true);
                 AudioManager::Engine().PlayHitSound(mSound);
-            } else {
-                IncreaseScore(SCORE_COMBOBREAK, true, true);
-            }
+            //} else {
+            //    IncreaseScore(SCORE_COMBOBREAK, true, true);
+            //}
         }
 		
 		if (mChannel == -1)
@@ -482,7 +482,7 @@ void HitSlider::OnTouch(const touchPosition& touch) {
 		//if we're touching it without tapping it, then we missed the slider start
 		if (delta < DifficultyManager::HitWindow && !fStarted) {
 			fStarted = true;
-			IncreaseScore(SCORE_MISS, true, true);
+			//IncreaseScore(SCORE_MISS, true, true);
 
             OOUInt comboNumberSpriteId = mSprites.size() - 1;
             mSprites[comboNumberSpriteId]->Transform(TR_FADE, now, now+200, 150, 35);

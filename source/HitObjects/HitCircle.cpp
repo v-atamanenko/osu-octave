@@ -8,20 +8,22 @@ HitCircle::HitCircle(OOInt x, OOInt y, OOTime time, HitObjectType type, HitObjec
 	OOTime fadeInEnd = fadeInStart + DifficultyManager::FadeInMs;
 	mEndTime = time + DifficultyManager::HitWindow50;
 
+    OOFloat BaseZ = (OOFloat)time - 750; // Dirty hack to put circles on top of slider ends when it's underneath
+
 	pSprite* spr;
 	
 	spr = new pSprite(TX_PLAY_CIRCLEOVERLAY, x, y, size, size, ORIGIN_CENTER, FIELD_PLAY, SDL_Color(), 0);
 	spr->Show(fadeInStart, fadeInEnd);
 	spr->Hide(time, mEndTime);
 	spr->Kill(mEndTime+1000);
-    spr->Z = (OOFloat)time;
+    spr->Z = BaseZ;
 	mSprites.push_back(spr);
 	
 	spr = new pSprite(TX_PLAY_CIRCLE, x, y, size, size, ORIGIN_CENTER, FIELD_PLAY, SDL_Color(), 0);
 	spr->Show(fadeInStart, fadeInEnd);
 	spr->Hide(time, mEndTime);
 	spr->Kill(mEndTime+1000);
-    spr->Z = (OOFloat)time - 0.5;
+    spr->Z = BaseZ - 0.5;
     if (Skins::get_options().TintHitCircles) spr->Color = mColour;
 	mSprites.push_back(spr);
 	
@@ -30,7 +32,7 @@ HitCircle::HitCircle(OOInt x, OOInt y, OOTime time, HitObjectType type, HitObjec
 	spr->Hide(time, mEndTime);
 	spr->Scale(fadeInStart, time, 4, 1);
 	spr->Kill(mEndTime+1000);
-    spr->Z = (OOFloat)time;
+    spr->Z = BaseZ;
     if (Skins::get_options().TintHitCircles) spr->Color = mColour;
 	mSprites.push_back(spr);
 
@@ -55,7 +57,7 @@ HitCircle::HitCircle(OOInt x, OOInt y, OOTime time, HitObjectType type, HitObjec
     spr->Show(fadeInStart, fadeInEnd);
     spr->Hide(time, mEndTime);
     spr->Kill(mEndTime+1000);
-    spr->Z = (OOFloat)time-0.6;
+    spr->Z = BaseZ-0.6;
     mSprites.push_back(spr);
 	
 	mScoreSpriteId = 1;
