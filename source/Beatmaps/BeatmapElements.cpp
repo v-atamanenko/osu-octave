@@ -1,4 +1,6 @@
 #include "BeatmapElements.h"
+#include "DataStorage/Skins.h"
+
 BeatmapElements BeatmapElements::sInstance;
 
 const TimingPoint& BeatmapElements::GetTimingPoint(OOTime time) {
@@ -58,10 +60,42 @@ void BeatmapElements::ResetColours(bool fill) {
     }
 
     if (mColours.empty() && fill) {
-        mColours.push_back(SDL_Color({229, 198, 255}));
-        mColours.push_back(SDL_Color({176, 225, 255}));
-        mColours.push_back(SDL_Color({254, 218, 244}));
-        mColours.push_back(SDL_Color({223, 255, 250}));
+        int skin_colors_added = 0;
+        if (Skins::get_options().TintCustomColor1.r != 0 ||
+            Skins::get_options().TintCustomColor1.g != 0 ||
+            Skins::get_options().TintCustomColor1.b != 0 ||
+            Skins::get_options().TintCustomColor1.a != 0) {
+            mColours.push_back(Skins::get_options().TintCustomColor1);
+            skin_colors_added++;
+        }
+        if (Skins::get_options().TintCustomColor2.r != 0 ||
+            Skins::get_options().TintCustomColor2.g != 0 ||
+            Skins::get_options().TintCustomColor2.b != 0 ||
+            Skins::get_options().TintCustomColor2.a != 0) {
+            mColours.push_back(Skins::get_options().TintCustomColor2);
+            skin_colors_added++;
+        }
+        if (Skins::get_options().TintCustomColor3.r != 0 ||
+            Skins::get_options().TintCustomColor3.g != 0 ||
+            Skins::get_options().TintCustomColor3.b != 0 ||
+            Skins::get_options().TintCustomColor3.a != 0) {
+            mColours.push_back(Skins::get_options().TintCustomColor3);
+            skin_colors_added++;
+        }
+        if (Skins::get_options().TintCustomColor4.r != 0 ||
+            Skins::get_options().TintCustomColor4.g != 0 ||
+            Skins::get_options().TintCustomColor4.b != 0 ||
+            Skins::get_options().TintCustomColor4.a != 0) {
+            mColours.push_back(Skins::get_options().TintCustomColor4);
+            skin_colors_added++;
+        }
+
+        if (skin_colors_added == 0) {
+            mColours.push_back(SDL_Color({229, 198, 254}));
+            mColours.push_back(SDL_Color({176, 225, 254}));
+            mColours.push_back(SDL_Color({254, 218, 244}));
+            mColours.push_back(SDL_Color({223, 255, 250}));
+        }
     }
 }
 

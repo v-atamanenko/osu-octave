@@ -2,11 +2,6 @@
 
 PreviewBuffer PreviewBuffer::sPreviewBuffer;
 
-inline bool file_exists(const std::string& fname) {
-    struct stat buffer{};
-    return (stat (fname.c_str(), &buffer) == 0);
-}
-
 void PreviewBuffer::Init() {
     std::string path = std::string(DEF_DataDirectory) + std::string(DEF_SkinsSubdirectory) + Settings::get_str("skin") + "/ui/preview.png";
     preview_default = IMG_Load( path.c_str() );
@@ -28,11 +23,11 @@ SDL_Surface* PreviewBuffer::GetTexture(OOUInt beatmap_id) {
 void PreviewBuffer::Update(OOInt last_page, OOUInt new_page, OOUInt per_page) {
     std::thread t1(&PreviewBuffer::Pics_FillBuffer, this, last_page, new_page, per_page);
     t1.detach();
-    printf("PreviewBuffer thread started\n");
+    //printf("PreviewBuffer thread started\n");
 }
 
 void PreviewBuffer::Pics_ClearBuffer() {
-    printf("Clearing buffer...\n");
+    //printf("Clearing buffer...\n");
     for (auto const& x : buf) {
         if (preview_default != x.second) {
             SDL_FreeSurface(x.second);
@@ -104,7 +99,7 @@ void PreviewBuffer::Pics_FillBuffer(OOInt last_page, OOUInt new_page, OOUInt per
 
                 pbs.UsedUpBytes += (tex->w * tex->h * 4);
                 if (pbs.UsedUpBytes >= PICTURE_CACHE_MAX_SIZE_BYTES) {
-                    printf("Reached PICTURE_CACHE_MAX_SIZE_BYTES at index %i\n", i);
+                    //printf("Reached PICTURE_CACHE_MAX_SIZE_BYTES at index %i\n", i);
                     SDL_FreeSurface(tex);
                     break;
                 } else {
@@ -118,7 +113,7 @@ void PreviewBuffer::Pics_FillBuffer(OOInt last_page, OOUInt new_page, OOUInt per
             std::unique_lock lock(mut_pbs);
             pbs.FillBufferInitialDone = true;
         }
-        printf("FillBufferInitialDone\n");
+        //printf("FillBufferInitialDone\n");
         processingNow.store(false, std::memory_order_seq_cst);
         return;
     }

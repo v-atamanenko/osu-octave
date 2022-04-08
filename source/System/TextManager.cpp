@@ -5,21 +5,19 @@ FontName TextManager::currentFont;
 
 void TextManager::Init() {
     std::string path = std::string(DEF_DataDirectory) + std::string(DEF_SkinsSubdirectory) + Settings::get_str("skin") + "/fonts/";
-    AddFont(FONT_PIXEL, path+"primary.ttf", 20, SDL_Color({67, 19, 115, 255}));
+    AddFont(FONT_PIXEL, Skins::get_res_path(FONT_PIXEL), 20, SDL_Color({67, 19, 115, 255}));
     currentFont = FONT_PIXEL;
 }
 
 void TextManager::InitDeferred() {
     std::string path = std::string(DEF_DataDirectory) + std::string(DEF_SkinsSubdirectory) + Settings::get_str("skin") + "/fonts/";
-    AddFont(FONT_CONSOLE_BIG, path+"sans.ttf", 16);
-    AddFont(FONT_CONSOLE_BIG_BOLD, path+"sans-bold.ttf", 16);
-    AddFont(FONT_CONSOLE, path+"sans.ttf", 14);
-    AddFont(FONT_CONSOLE_BOLD, path+"sans-bold.ttf", 14);
-    AddFont(FONT_SCORE, path+"primary.ttf", 36, SDL_Color({250, 245, 239, 255}));
+    AddFont(FONT_CONSOLE_BIG, Skins::get_res_path(FONT_CONSOLE_BIG), 16);
+    AddFont(FONT_CONSOLE_BIG_BOLD,Skins::get_res_path(FONT_CONSOLE_BIG_BOLD), 16);
+    AddFont(FONT_CONSOLE, Skins::get_res_path(FONT_CONSOLE), 14);
+    AddFont(FONT_CONSOLE_BOLD, Skins::get_res_path(FONT_CONSOLE_BOLD), 14);
+    AddFont(FONT_SCORE, Skins::get_res_path(FONT_SCORE), 36, SDL_Color({250, 245, 239, 255}));
 
-    AddFont(FONT_PIXEL_ACTIVE, path+"primary.ttf", 20, SDL_Color({250, 245, 239, 255}));
-
-    AddFont(FONT_NUMBERING, path+"numbering.ttf", 60, SDL_Color({67, 19, 155, 255}));
+    AddFont(FONT_NUMBERING, Skins::get_res_path(FONT_NUMBERING), 60, SDL_Color({67, 19, 155, 255}));
 
     currentFont = FONT_CONSOLE;
 }

@@ -12,8 +12,7 @@ HitSlider::HitSlider(OOInt x, OOInt y, OOTime time, OOTime lengthtime, std::vect
 	OOUInt tickCount = ticks.size();
 	
 	mTickCount = tickCount;
-    printf("mTickCount %i\n", mTickCount);
-	mTicksHit = 0;
+    mTicksHit = 0;
 	mRepeats = repeats;
 	mRepeatCurrent = 0;
 	mTicksTarget = (tickCount + 1) * repeats + 1;
@@ -85,8 +84,6 @@ HitSlider::HitSlider(OOInt x, OOInt y, OOTime time, OOTime lengthtime, std::vect
 	
 	pSprite* spr;
 	
-	//todo: fix formula
-	//uint32_t fps = (uint32_t)(DifficultyManager::SliderMultiplier*3.142*ballSize*1000/beatTime);
 	OOUInt fps = 60;
 	
 	//slider ball
@@ -94,6 +91,7 @@ HitSlider::HitSlider(OOInt x, OOInt y, OOTime time, OOTime lengthtime, std::vect
 	spr->Show(time);
 	MapSliderPath(spr, points, time, lengthtime, repeats);
 	spr->Kill(mEndTime);
+    if (Skins::get_options().TintSliderBall) spr->Color = mColour;
 	mSprites.push_back(spr);
 	
 	spr = new pSprite(TX_PLAY_SLIDERFOLLOW, x, y, ballSize, ballSize, ORIGIN_CENTER, FIELD_PLAY, SDL_Color(), 0);
@@ -101,6 +99,7 @@ HitSlider::HitSlider(OOInt x, OOInt y, OOTime time, OOTime lengthtime, std::vect
 	spr->Scale(mEndTime, mEndTime+50, 2, 1.5);
 	MapSliderPath(spr, points, time, lengthtime, repeats);
 	spr->Kill(mEndTime+100);
+    if (Skins::get_options().TintSliderBall) spr->Color = mColour;
 	mSprites.push_back(spr);
 	
 	if ((repeats&0x1)==1) { //if ODD score is at end
@@ -112,24 +111,26 @@ HitSlider::HitSlider(OOInt x, OOInt y, OOTime time, OOTime lengthtime, std::vect
 	}
 	
 	//slider start
-	spr = new pSprite(TX_PLAY_CIRCLEAPPROACH, x, y, circleSize, circleSize, ORIGIN_CENTER, FIELD_PLAY, mColour, 0);
+	spr = new pSprite(TX_PLAY_CIRCLEAPPROACH, x, y, circleSize, circleSize, ORIGIN_CENTER, FIELD_PLAY, SDL_Color(), 0);
 	spr->Show(fadeInStart, fadeInEnd);
 	spr->Hide(time, time+100);
 	spr->Scale(fadeInStart, time, 4, 1);
 	spr->Kill(mEndTime);
     spr->Z = (OOFloat)time-0.6;
+    if (Skins::get_options().TintSliderCircles) spr->Color = mColour;
 	mSprites.push_back(spr);
 	
-	spr = new pSprite(TX_PLAY_CIRCLEOVERLAY, x, y, circleSize, circleSize, ORIGIN_CENTER, FIELD_PLAY, SDL_Color({0,0,0}), 0);
+	spr = new pSprite(TX_PLAY_CIRCLEOVERLAY, x, y, circleSize, circleSize, ORIGIN_CENTER, FIELD_PLAY, SDL_Color(), 0);
 	spr->Show(fadeInStart, fadeInEnd);
 	spr->Kill(mEndTime+1000);
     spr->Z = (OOFloat)time - 0.51;
 	mSprites.push_back(spr);
 	
-	spr = new pSprite(TX_PLAY_CIRCLE, x, y, circleSize, circleSize, ORIGIN_CENTER, FIELD_PLAY, mColour, 0);
+	spr = new pSprite(TX_PLAY_CIRCLE, x, y, circleSize, circleSize, ORIGIN_CENTER, FIELD_PLAY, SDL_Color(), 0);
 	spr->Show(fadeInStart, fadeInEnd);
 	spr->Kill(mEndTime+1000);
     spr->Z = (OOFloat)time - 0.5;
+    if (Skins::get_options().TintSliderCircles) spr->Color = mColour;
 	mSprites.push_back(spr);
 	
 	//slider end
@@ -137,7 +138,7 @@ HitSlider::HitSlider(OOInt x, OOInt y, OOTime time, OOTime lengthtime, std::vect
 
 	spr = new pSprite(TX_PLAY_CIRCLEOVERLAY, points[pointCount-1]->x, points[pointCount-1]->y, circleSize, circleSize, ORIGIN_CENTER, FIELD_PLAY, SDL_Color(), 0);
 
-    if (!Settings::get_bool("disableSliderEndCircle")) {
+    if (Skins::get_options().ShowSliderEndCircle) {
         spr->Show(fadeInStart, fadeInEnd);
     }
 
@@ -145,14 +146,15 @@ HitSlider::HitSlider(OOInt x, OOInt y, OOTime time, OOTime lengthtime, std::vect
     spr->Z = (OOFloat)time - 0.45;
 	mSprites.push_back(spr);
 	
-	spr = new pSprite(TX_PLAY_CIRCLE, points[pointCount-1]->x, points[pointCount-1]->y, circleSize, circleSize, ORIGIN_CENTER, FIELD_PLAY, mColour, 0);
+	spr = new pSprite(TX_PLAY_CIRCLE, points[pointCount-1]->x, points[pointCount-1]->y, circleSize, circleSize, ORIGIN_CENTER, FIELD_PLAY, SDL_Color(), 0);
 
-    if (!Settings::get_bool("disableSliderEndCircle")) {
+    if (Skins::get_options().ShowSliderEndCircle) {
         spr->Show(fadeInStart, fadeInEnd);
     }
 
 	spr->Kill(mEndTime+1000);
     spr->Z = (OOFloat)time - 0.4;
+    if (Skins::get_options().TintSliderCircles) spr->Color = mColour;
 	mSprites.push_back(spr);
 	
 	//slider30 sprites
@@ -213,7 +215,7 @@ HitSlider::HitSlider(OOInt x, OOInt y, OOTime time, OOTime lengthtime, std::vect
 		spr->Hide(mEndTime, mEndTime+120);
 		spr->Kill(mEndTime+120);
         spr->Z = (OOFloat)time;
-		mSprites.push_back(spr);
+        mSprites.push_back(spr);
 		
 		//add to list for tracking ticks
 		mTicks[i].Tick = spr;
@@ -234,15 +236,19 @@ HitSlider::HitSlider(OOInt x, OOInt y, OOTime time, OOTime lengthtime, std::vect
         spr->Show(fadeInStart+29, fadeInEnd);
         spr->Hide(mEndTime-31, mEndTime+71);
         spr->Kill(mEndTime+71);
-        spr->Z = (OOFloat)time+4.0;
+        spr->Z = (OOFloat)time+4.0-((OOFloat)i / 1000);
+        spr->Angle = points[i]->angle;
+        if (Skins::get_options().TintSliderBorder) spr->Color = mColour;
         mSprites.push_back(spr);
 
         // slider body
-		spr = new pSprite(TX_PLAY_DISC, points[i]->x, points[i]->y, ballSize, ballSize, ORIGIN_CENTER, FIELD_PLAY, mColour, 0);
+		spr = new pSprite(TX_PLAY_SLIDERBODY, points[i]->x, points[i]->y, ballSize, ballSize, ORIGIN_CENTER, FIELD_PLAY, mColour, 0);
 		spr->Show(fadeInStart+30, fadeInEnd);
 		spr->Hide(mEndTime-30, mEndTime+70);
 		spr->Kill(mEndTime+70);
-        spr->Z = (OOFloat)time+0.2;
+        spr->Z = (OOFloat)time+0.2-((OOFloat)i / 1000);
+        spr->Angle = points[i]->angle;
+        if (Skins::get_options().TintSliderPath) spr->Color = mColour;
 		mSprites.push_back(spr);
 	}
 

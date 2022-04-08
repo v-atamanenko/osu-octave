@@ -170,7 +170,7 @@ SongSelect::SongSelect() {
     btn_sort_all->Clickable = true;
     btn_sort_all->ExtendedClickableArea = true;
     mSpriteManager->Add(btn_sort_all);
-    btn_sort_all_label = new pText("ALL", FONT_PIXEL_ACTIVE, 439, 45, SDL_Color({255,255,255}));
+    btn_sort_all_label = new pText("ALL", FONT_PIXEL, 439, 45, SDL_Color({255,255,255}));
     btn_sort_all_label->Z = -0.02f;
     btn_sort_all_label->Origin = ORIGIN_CENTER;
     mSpriteManager->Add(btn_sort_all_label);
@@ -262,15 +262,15 @@ void SongSelect::ApplyFilter(BeatmapFilter f, bool resetPage) {
 
     btn_sort_all->Texture = TX_BUTTON_SM;
     btn_sort_all_label->Color = SDL_Color({67,19,115});
-    btn_sort_a_e->Texture = TX_BUTTON_SM;
+    btn_sort_a_e->Texture = TX_BUTTON_XS;
     btn_sort_a_e_label->Color = SDL_Color({67,19,115});
-    btn_sort_f_j->Texture = TX_BUTTON_SM;
+    btn_sort_f_j->Texture = TX_BUTTON_XS;
     btn_sort_f_j_label->Color = SDL_Color({67,19,115});
-    btn_sort_k_o->Texture = TX_BUTTON_SM;
+    btn_sort_k_o->Texture = TX_BUTTON_XS;
     btn_sort_k_o_label->Color = SDL_Color({67,19,115});
-    btn_sort_p_t->Texture = TX_BUTTON_SM;
+    btn_sort_p_t->Texture = TX_BUTTON_XS;
     btn_sort_p_t_label->Color = SDL_Color({67,19,115});
-    btn_sort_u_z->Texture = TX_BUTTON_SM;
+    btn_sort_u_z->Texture = TX_BUTTON_XS;
     btn_sort_u_z_label->Color = SDL_Color({67,19,115});
 
     switch (f) {
@@ -279,23 +279,23 @@ void SongSelect::ApplyFilter(BeatmapFilter f, bool resetPage) {
             btn_sort_all_label->Color = SDL_Color({255,255,255});
             break;
         case FILTER_ALPHA_A_E:
-            btn_sort_a_e->Texture = TX_BUTTON_SM_ACTIVE;
+            btn_sort_a_e->Texture = TX_BUTTON_XS_ACTIVE;
             btn_sort_a_e_label->Color = SDL_Color({255,255,255});
             break;
         case FILTER_ALPHA_F_J:
-            btn_sort_f_j->Texture = TX_BUTTON_SM_ACTIVE;
+            btn_sort_f_j->Texture = TX_BUTTON_XS_ACTIVE;
             btn_sort_f_j_label->Color = SDL_Color({255,255,255});
             break;
         case FILTER_ALPHA_K_O:
-            btn_sort_k_o->Texture = TX_BUTTON_SM_ACTIVE;
+            btn_sort_k_o->Texture = TX_BUTTON_XS_ACTIVE;
             btn_sort_k_o_label->Color = SDL_Color({255,255,255});
             break;
         case FILTER_ALPHA_P_T:
-            btn_sort_p_t->Texture = TX_BUTTON_SM_ACTIVE;
+            btn_sort_p_t->Texture = TX_BUTTON_XS_ACTIVE;
             btn_sort_p_t_label->Color = SDL_Color({255,255,255});
             break;
         case FILTER_ALPHA_U_Z:
-            btn_sort_u_z->Texture = TX_BUTTON_SM_ACTIVE;
+            btn_sort_u_z->Texture = TX_BUTTON_XS_ACTIVE;
             btn_sort_u_z_label->Color = SDL_Color({255,255,255});
             break;
     }

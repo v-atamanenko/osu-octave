@@ -2,13 +2,16 @@
 
 #include <cstdio>
 #include <string>
+#include <unistd.h>
 
 #include "SDL.h"
 #include "SDL_mixer.h"
 
-#include <unistd.h>
 #include "defines.h"
+#include "types.h"
+
 #include "DataStorage/Settings.h"
+#include "DataStorage/Skins.h"
 #include "Beatmaps/BeatmapElements.h"
 
 typedef enum {
@@ -52,22 +55,6 @@ typedef struct {
     SampleSetInfo welcome_piano;
 } UISounds;
 
-typedef enum UISoundName {
-    UISOUND_APPLAUSE,
-    UISOUND_CHECK_OFF,
-    UISOUND_CHECK_ON,
-    UISOUND_CLICK_CLOSE,
-    UISOUND_CLICK_SHORT_CONFIRM,
-    UISOUND_COMBOBREAK,
-    UISOUND_FAILSOUND,
-    UISOUND_MENUBACK,
-    UISOUND_MENUCLICK,
-    UISOUND_MENUHIT,
-    UISOUND_SEEYA,
-    UISOUND_WELCOME,
-    UISOUND_WELCOME_PIANO
-} UISoundName;
-
 class AudioManager
 {
 	public:
@@ -89,7 +76,7 @@ class AudioManager
         static void PlayWelcome();
 		
 		//music
-        int MusicLoad(std::string& filename);
+        int MusicLoad(const std::string& filename);
 		int MusicPlay(OOFloat volume=100.0); // volume: 0-100.f
 		int MusicSkipTo(OOTime milliseconds);
         void UpdateMusicVolume(OOFloat volume);

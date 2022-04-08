@@ -29,44 +29,42 @@ void AudioManager::Initialize() {
 }
 
 void AudioManager::ResetSamples() {
-    std::string path = std::string(DEF_DataDirectory) + std::string(DEF_SkinsSubdirectory) + Settings::get_str("skin") + "/sounds/";
     OOInt volume = (OOInt)round(Settings::get_float("volume_hitsounds") / 100 * 128);
 
-    loadSample(&mSampleNormal.hitnormal, path + "normal-hitnormal.wav", volume);
-    loadSample(&mSampleNormal.hitwhistle, path + "normal-hitwhistle.wav", volume);
-    loadSample(&mSampleNormal.hitfinish, path + "normal-hitfinish.wav", volume);
-    loadSample(&mSampleNormal.hitclap, path + "normal-hitclap.wav", volume);
-    loadSample(&mSampleNormal.slidertick, path + "normal-slidertick.wav", volume);
-    loadSample(&mSampleNormal.sliderslide, path + "normal-sliderslide.wav", volume);
-    loadSample(&mSampleNormal.sliderwhistle, path + "normal-sliderwhistle.wav", volume);
-    loadSample(&mSampleNormal.spinnerspin, path + "spinnerspin.wav", volume);
-    loadSample(&mSampleNormal.spinnerbonus, path + "spinnerbonus.wav", volume);
-    loadSample(&mSampleSoft.hitnormal, path + "soft-hitnormal.wav", volume);
-    loadSample(&mSampleSoft.hitwhistle, path + "soft-hitwhistle.wav", volume);
-    loadSample(&mSampleSoft.hitfinish, path + "soft-hitfinish.wav", volume);
-    loadSample(&mSampleSoft.hitclap, path + "soft-hitclap.wav", volume);
-    loadSample(&mSampleSoft.slidertick, path + "soft-slidertick.wav", volume);
-    loadSample(&mSampleSoft.sliderslide, path + "soft-sliderslide.wav", volume);
-    loadSample(&mSampleSoft.sliderwhistle, path + "soft-sliderwhistle.wav", volume);
-    loadSample(&mSampleSoft.spinnerspin, path + "spinnerspin.wav", volume);
-    loadSample(&mSampleSoft.spinnerbonus, path + "spinnerbonus.wav", volume);
+    loadSample(&mSampleNormal.hitnormal, Skins::get_res_path(HITSOUND_NORMAL_HITNORMAL), volume);
+    loadSample(&mSampleNormal.hitwhistle, Skins::get_res_path(HITSOUND_NORMAL_HITWHISTLE), volume);
+    loadSample(&mSampleNormal.hitfinish, Skins::get_res_path(HITSOUND_NORMAL_HITFINISH), volume);
+    loadSample(&mSampleNormal.hitclap, Skins::get_res_path(HITSOUND_NORMAL_HITCLAP), volume);
+    loadSample(&mSampleNormal.slidertick, Skins::get_res_path(HITSOUND_NORMAL_SLIDERTICK), volume);
+    loadSample(&mSampleNormal.sliderslide, Skins::get_res_path(HITSOUND_NORMAL_SLIDERSLIDE), volume);
+    loadSample(&mSampleNormal.sliderwhistle, Skins::get_res_path(HITSOUND_NORMAL_SLIDERWHISTLE), volume);
+    loadSample(&mSampleNormal.spinnerspin, Skins::get_res_path(HITSOUND_NORMAL_SPINNERSPIN), volume);
+    loadSample(&mSampleNormal.spinnerbonus, Skins::get_res_path(HITSOUND_NORMAL_SPINNERBONUS), volume);
+    loadSample(&mSampleSoft.hitnormal, Skins::get_res_path(HITSOUND_SOFT_HITNORMAL), volume);
+    loadSample(&mSampleSoft.hitwhistle, Skins::get_res_path(HITSOUND_SOFT_HITWHISTLE), volume);
+    loadSample(&mSampleSoft.hitfinish, Skins::get_res_path(HITSOUND_SOFT_HITFINISH), volume);
+    loadSample(&mSampleSoft.hitclap, Skins::get_res_path(HITSOUND_SOFT_HITCLAP), volume);
+    loadSample(&mSampleSoft.slidertick, Skins::get_res_path(HITSOUND_SOFT_SLIDERTICK), volume);
+    loadSample(&mSampleSoft.sliderslide, Skins::get_res_path(HITSOUND_SOFT_SLIDERSLIDE), volume);
+    loadSample(&mSampleSoft.sliderwhistle, Skins::get_res_path(HITSOUND_SOFT_SLIDERWHISTLE), volume);
+    loadSample(&mSampleSoft.spinnerspin, Skins::get_res_path(HITSOUND_SOFT_SPINNERSPIN), volume);
+    loadSample(&mSampleSoft.spinnerbonus, Skins::get_res_path(HITSOUND_SOFT_SPINNERBONUS), volume);
 
-    std::string uipath = std::string(DEF_DataDirectory) + std::string(DEF_SkinsSubdirectory) + Settings::get_str("skin") + "/ui-sounds/";
     OOInt uivolume = (OOInt)round(Settings::get_float("volume_uisounds") / 100 * 128);
 
-    loadSample(&mUISounds.applause, uipath + "applause.wav", uivolume);
-    loadSample(&mUISounds.check_off, uipath + "check-off.wav", uivolume);
-    loadSample(&mUISounds.check_on, uipath + "check-on.wav", uivolume);
-    loadSample(&mUISounds.click_close, uipath + "click-close.wav", uivolume);
-    loadSample(&mUISounds.click_short_confirm, uipath + "click-short-confirm.wav", uivolume);
-    loadSample(&mUISounds.combobreak, uipath + "combobreak.wav",  MathHelper::Max((OOInt)(round(volume*1.33)), 100));
-    loadSample(&mUISounds.failsound, uipath + "failsound.wav", MathHelper::Max((OOInt)(round(volume*1.33)), 100));
-    loadSample(&mUISounds.menuback, uipath + "menuback.wav", uivolume);
-    loadSample(&mUISounds.menuclick, uipath + "menuclick.wav", uivolume);
-    loadSample(&mUISounds.menuhit, uipath + "menuhit.wav", uivolume);
-    loadSample(&mUISounds.seeya, uipath + "seeya.wav", uivolume);
-    loadSample(&mUISounds.welcome, uipath + "welcome.wav", uivolume);
-    loadSample(&mUISounds.welcome_piano, uipath + "welcome_piano.wav", uivolume);
+    loadSample(&mUISounds.applause, Skins::get_res_path(UISOUND_APPLAUSE), uivolume);
+    loadSample(&mUISounds.check_off, Skins::get_res_path(UISOUND_CHECK_OFF), uivolume);
+    loadSample(&mUISounds.check_on, Skins::get_res_path(UISOUND_CHECK_ON), uivolume);
+    loadSample(&mUISounds.click_close, Skins::get_res_path(UISOUND_CLICK_CLOSE), uivolume);
+    loadSample(&mUISounds.click_short_confirm, Skins::get_res_path(UISOUND_CLICK_SHORT_CONFIRM), uivolume);
+    loadSample(&mUISounds.combobreak, Skins::get_res_path(UISOUND_COMBOBREAK), MathHelper::Max((OOInt)(round(volume*1.33)), 100));
+    loadSample(&mUISounds.failsound, Skins::get_res_path(UISOUND_FAILSOUND), MathHelper::Max((OOInt)(round(volume*1.33)), 100));
+    loadSample(&mUISounds.menuback, Skins::get_res_path(UISOUND_MENUBACK), uivolume);
+    loadSample(&mUISounds.menuclick, Skins::get_res_path(UISOUND_MENUCLICK), uivolume);
+    loadSample(&mUISounds.menuhit, Skins::get_res_path(UISOUND_MENUHIT), uivolume);
+    loadSample(&mUISounds.seeya, Skins::get_res_path(UISOUND_SEEYA), uivolume);
+    loadSample(&mUISounds.welcome, Skins::get_res_path(UISOUND_WELCOME), uivolume);
+    loadSample(&mUISounds.welcome_piano, Skins::get_res_path(UISOUND_WELCOME_PIANO), uivolume);
 }
 
 int AudioManager::PlaySample(const SampleSetInfo& info, bool loop, OOInt channel) {
@@ -193,8 +191,7 @@ void AudioManager::PlaySliderTick() {
 void AudioManager::PlayBGM() {
     if (mBGMStarted) return;
 
-    std::string music_path = std::string(DEF_DataDirectory) + std::string(DEF_SkinsSubdirectory) + Settings::get_str("skin") + "/ui-sounds/bgm.mp3";
-    MusicLoad(music_path);
+    MusicLoad(Skins::get_res_path(UISOUND_BGM));
     mBGMStarted = true;
     MusicPlay(Settings::get_float("volume_menumusic"));
 }
@@ -203,7 +200,7 @@ void AudioManager::UpdateMusicVolume(OOFloat volume) {
     Mix_VolumeMusic((OOInt)round(volume / 100 * 128));
 }
 
-int AudioManager::MusicLoad(std::string& filename) {
+int AudioManager::MusicLoad(const std::string& filename) {
     mBGMStarted = false;
 
     if (music != nullptr) {

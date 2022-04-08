@@ -1,0 +1,19 @@
+{
+    "Name": "Classic",
+    "Author": "gl33ntwine",
+    "Version": "1.0",
+
+    "TintHitCircles": true,
+    "TintSliderCircles": true,
+    "TintSliderPath": true,
+    "TintSliderBorder": false,
+    "TintSliderBall": false,
+    "TintUseBeatmapColors": true,
+
+    "TintCustomColor1": [0,0,0,0],
+    "TintCustomColor2": [0,0,0,0],
+    "TintCustomColor3": [0,0,0,0],
+    "TintCustomColor4": [0,0,0,0],
+
+    "ShowSliderEndCircle": true
+}

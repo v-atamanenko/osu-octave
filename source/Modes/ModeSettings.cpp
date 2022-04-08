@@ -1,5 +1,6 @@
 #include "ModeSettings.h"
 #include "Helpers/AudioManager.h"
+#include "DataStorage/Skins.h"
 
 uint8_t ModeSettings::SwitchTabTo = 0;
 
@@ -143,7 +144,7 @@ void ModeSettings::CreateStringSelector(OOInt x, OOInt y, const std::string& set
 
     std::vector<std::string> available_values;
     if (setting_name == "skin") {
-        current_value_index = Settings::get_available_skins(available_values);
+        current_value_index = Skins::get_available_skins(available_values);
     } else {
         assert(false); // StringSelectors are only used for skin selection for now.
     }

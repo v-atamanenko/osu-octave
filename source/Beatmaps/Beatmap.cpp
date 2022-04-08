@@ -107,9 +107,11 @@ void Beatmap::Initialize() {
         }
     }
 
-    BeatmapElements::Element().ResetColours(false);
-    for (const osuParser::RGBAColor& c : mParser->colors) {
-        BeatmapElements::Element().AddColor({c.r, c.g, c.b});
+    if (Skins::get_options().TintUseBeatmapColors) {
+        BeatmapElements::Element().ResetColours(false);
+        for (const osuParser::RGBAColor& c : mParser->colors) {
+            BeatmapElements::Element().AddColor({c.r, c.g, c.b});
+        }
     }
 }
 

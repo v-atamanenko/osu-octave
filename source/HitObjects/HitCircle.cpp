@@ -17,19 +17,21 @@ HitCircle::HitCircle(OOInt x, OOInt y, OOTime time, HitObjectType type, HitObjec
     spr->Z = (OOFloat)time;
 	mSprites.push_back(spr);
 	
-	spr = new pSprite(TX_PLAY_CIRCLE, x, y, size, size, ORIGIN_CENTER, FIELD_PLAY, mColour, 0);
+	spr = new pSprite(TX_PLAY_CIRCLE, x, y, size, size, ORIGIN_CENTER, FIELD_PLAY, SDL_Color(), 0);
 	spr->Show(fadeInStart, fadeInEnd);
 	spr->Hide(time, mEndTime);
 	spr->Kill(mEndTime+1000);
     spr->Z = (OOFloat)time - 0.5;
+    if (Skins::get_options().TintHitCircles) spr->Color = mColour;
 	mSprites.push_back(spr);
 	
-	spr = new pSprite(TX_PLAY_CIRCLEAPPROACH, x, y, size, size, ORIGIN_CENTER, FIELD_PLAY, mColour, 0);
+	spr = new pSprite(TX_PLAY_CIRCLEAPPROACH, x, y, size, size, ORIGIN_CENTER, FIELD_PLAY, SDL_Color(), 0);
 	spr->Show(fadeInStart, fadeInEnd);
 	spr->Hide(time, mEndTime);
 	spr->Scale(fadeInStart, time, 4, 1);
 	spr->Kill(mEndTime+1000);
     spr->Z = (OOFloat)time;
+    if (Skins::get_options().TintHitCircles) spr->Color = mColour;
 	mSprites.push_back(spr);
 
     TextureType numbertex;

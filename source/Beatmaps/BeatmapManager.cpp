@@ -3,11 +3,6 @@ Beatmap* BeatmapManager::mBeatmapCurrent = nullptr;
 std::vector<BeatmapEntry> BeatmapManager::mBeatmapsAll;
 std::vector<BeatmapEntry> BeatmapManager::mBeatmapsFiltered;
 
-inline bool file_exists(const std::string& fname) {
-    struct stat buffer{};
-    return (stat (fname.c_str(), &buffer) == 0);
-}
-
 void BeatmapManager::Load(std::string &checksum) {
 	if (mBeatmapCurrent != nullptr)
 		mBeatmapCurrent->CleanUp();

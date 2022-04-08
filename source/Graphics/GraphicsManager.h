@@ -13,8 +13,10 @@
 #include "GfxInfo.h"
 
 #include "defines.h"
+#include "types.h"
 #include "Modes/Mode.h"
 #include "DataStorage/Settings.h"
+#include "DataStorage/Skins.h"
 
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
 #define rmask 0xff000000
@@ -27,18 +29,6 @@
 #define bmask 0x00ff0000
 #define amask 0xff000000
 #endif
-
-typedef enum {
-	ORIGIN_CENTER,
-	ORIGIN_TOPLEFT,
-	ORIGIN_BOTTOMLEFT,
-	ORIGIN_TOPRIGHT
-} DrawOrigin;
-
-typedef enum {
-	FIELD_SCREEN,
-	FIELD_PLAY
-} FieldType;
 
 class GraphicsManager
 {
@@ -67,7 +57,7 @@ class GraphicsManager
         static const OOUInt PlayXOffset = PLAYFIELD_X_OFFSET;
 		static const OOUInt PlayYOffset = PLAYFIELD_Y_OFFSET;
 
-    bool LoadTexture(TextureType texid, const std::string& path);
+        bool LoadTexture(TextureType texid);
 
     protected:
         std::map<TextureType, SDL_Surface*> mapsurfaces;

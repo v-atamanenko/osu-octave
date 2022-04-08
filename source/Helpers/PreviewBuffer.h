@@ -9,8 +9,9 @@
 #include "Beatmaps/BeatmapManager.h"
 #include <SDL_timer.h>
 #include "DataStorage/Settings.h"
-#include <sys/stat.h>
+#include <Helpers/IO.h>
 
+//TODO: Is there a better way to determine cache size than setting a constant value?
 
 #ifdef DESKTOP
 #define PICTURE_CACHE_MAX_SIZE_BYTES (512 * 1024 * 1024) // 512 MB

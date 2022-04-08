@@ -5,7 +5,6 @@
 #include <dirent.h>
 #include <cstring>
 #include <vector>
-#include <sys/stat.h>
 
 #include "Beatmaps/Beatmap.h"
 #include "BeatmapElements.h"
@@ -14,8 +13,9 @@
 #include "DataStorage/Betmaps.h"
 #include "types.h"
 #include "Helpers/PreviewBuffer.h"
+#include "Helpers/IO.h"
 
-#include "Parser/OsuParser.h"
+#include "../lib/OsuParser/OsuParser.h"
 #include "../lib/osu_sr_calculator_cpp/osu_sr_calculator/osu_sr_calculator.h"
 
 class BeatmapManager
