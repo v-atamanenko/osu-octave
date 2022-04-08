@@ -35,9 +35,8 @@ void HitObjectManager::HandleInput() {
 	
 	// now we are left with the next hitobject that can react to user interaction
 	
-	if (InputHelper::KeyDown(Control::IH_CONTROL_ACTION) && ! InputHelper::BlockKeydown) {
+	if (InputHelper::KeyDown(Control::IH_CONTROL_ACTION)) {
         hitObject->OnTouchDown(touch);
-        InputHelper::BlockKeydown = true;
     }
 
 	if (InputHelper::KeyHeld(Control::IH_CONTROL_ACTION)) {

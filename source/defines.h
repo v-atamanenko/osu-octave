@@ -18,6 +18,12 @@ extern SDL_Renderer *renderer;
 #define PATH_MAX 1024
 #endif
 
+#ifdef VITA
+#define IS_PLATFORM_VITA true
+#else
+#define IS_PLATFORM_VITA false
+#endif
+
 /*
  * NOTE! In DEF_*Directory/DEF_*Subdirectory defines, trailing slash is mandatory!
  */

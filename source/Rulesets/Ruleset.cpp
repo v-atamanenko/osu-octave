@@ -332,7 +332,7 @@ bool Ruleset::Update()
 	}
 	
 	mLifebar.Update();
-	mSpriteManager.Draw();
+	mSpriteManager.Draw(true); // Input handled separately
 
     // score/combo output
 

@@ -282,9 +282,8 @@ void ModeSettings::HandleInput() {
     touchPosition touch = InputHelper::TouchRead();
 
     for(auto v : valueSliders) {
-        if (InputHelper::KeyDown(Control::IH_CONTROL_ACTION) && v->InBounds(touch.px, touch.py) && ! InputHelper::BlockKeydown) {
+        if (InputHelper::KeyDown(Control::IH_CONTROL_ACTION) && v->InBounds(touch.px, touch.py)) {
             v->OnTouchDown(touch);
-            InputHelper::BlockKeydown = true;
             return;
         }
         if (InputHelper::KeyHeld(Control::IH_CONTROL_ACTION)) {
@@ -299,9 +298,8 @@ void ModeSettings::HandleInput() {
     }
 
     for(auto v : stringSelectors) {
-        if (InputHelper::KeyDown(Control::IH_CONTROL_ACTION) && v->InBounds(touch.px, touch.py) && ! InputHelper::BlockKeydown) {
+        if (InputHelper::KeyDown(Control::IH_CONTROL_ACTION) && v->InBounds(touch.px, touch.py)) {
             v->OnTouchDown(touch);
-            InputHelper::BlockKeydown = true;
             return;
         }
 
@@ -317,9 +315,8 @@ void ModeSettings::HandleInput() {
     }
 
     for(auto v : radioButtons) {
-        if (InputHelper::KeyDown(Control::IH_CONTROL_ACTION) && v->InBounds(touch.px, touch.py) && ! InputHelper::BlockKeydown) {
+        if (InputHelper::KeyDown(Control::IH_CONTROL_ACTION) && v->InBounds(touch.px, touch.py)) {
             v->OnTouchDown(touch);
-            InputHelper::BlockKeydown = true;
             return;
         }
 
@@ -330,9 +327,8 @@ void ModeSettings::HandleInput() {
     }
 
     for(auto v : ternaryButtons) {
-        if (InputHelper::KeyDown(Control::IH_CONTROL_ACTION) && v->InBounds(touch.px, touch.py) && ! InputHelper::BlockKeydown) {
+        if (InputHelper::KeyDown(Control::IH_CONTROL_ACTION) && v->InBounds(touch.px, touch.py)) {
             v->OnTouchDown(touch);
-            InputHelper::BlockKeydown = true;
             return;
         }
 

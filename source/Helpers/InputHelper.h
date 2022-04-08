@@ -17,17 +17,18 @@ class InputHelper
         static void SimulateKeyUp();
 		static touchPosition& TouchRead();
         static int PollSDL();
-        static void ClearInput();
         static void InitInput();
-        static bool BlockKeydown;
         static bool vitaUseBackTouch;
 
 	protected:
         static std::map<Control, std::vector<RawKey>> mControls;
-        static std::vector<SDL_Event> sdlEvents;
         static std::vector<SDL_Event> simulatedKeyDowns;
-        static std::vector<OOInt> heldControllerKeys;
-        static std::vector<OOInt> heldKeyboardKeys;
-        static std::vector<OOInt> heldMouseButtons;
+        static std::vector<RawKey> blockedKeys;
+        static std::vector<RawKey> uppedKeys;
+        static std::vector<RawKey> downedKeys;
 		static touchPosition mTouch;
+
+        static inline bool checkKeyState(std::vector<RawKey>& v, const RawKey &k);
+        static inline void releaseKey(const RawKey& k);
+        static inline void holdKey(const RawKey& k);
 };
