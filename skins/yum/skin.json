@@ -1,0 +1,19 @@
+{
+    "Name": "yum",
+    "Author": "yun",
+    "Version": "1.0",
+
+    "TintHitCircles": true,
+    "TintSliderCircles": true,
+    "TintSliderPath": false,
+    "TintSliderBorder": true,
+    "TintSliderBall": false,
+    "TintUseBeatmapColors": true,
+
+    "TintCustomColor1": [0,0,0,0],
+    "TintCustomColor2": [0,0,0,0],
+    "TintCustomColor3": [0,0,0,0],
+    "TintCustomColor4": [0,0,0,0],
+
+    "ShowSliderEndCircle": false
+}
