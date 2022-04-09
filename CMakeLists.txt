@@ -146,7 +146,7 @@ endif()
 if (BUILDTARGET STREQUAL "vita")
     vita_create_self(eboot.bin ${PROJECT_NAME})
     vita_create_vpk(osu-octave.vpk "OSU000001" eboot.bin
-            VERSION "01.00"
+            VERSION "01.10"
             NAME "osu!octave"
             FILE livearea/icon0.png sce_sys/icon0.png
             FILE livearea/bg.png sce_sys/livearea/contents/bg.png
