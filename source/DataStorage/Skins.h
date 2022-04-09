@@ -39,8 +39,25 @@ typedef struct Skin {
     SDL_Color TintCustomColor3 = {0,0,0,0};
     SDL_Color TintCustomColor4 = {0,0,0,0};
 
+    SDL_Color FontColor_LoadingScreen = {67,19,115,255};
+    SDL_Color FontColor_SortingButton = {67,19,115,255};
+    SDL_Color FontColor_SortingButtonActive = {255,255,255,255};
+    SDL_Color FontColor_BeatmapDescription = {67,19,115,255};
+    SDL_Color FontColor_Pagination = {67,19,115,255};
+    SDL_Color FontColor_MenuButton = {67,19,115,255};
+    SDL_Color FontColor_MenuButtonActive = {255,255,255,255};
+    SDL_Color FontColor_SettingsLabel = {67,19,115,255};
+    SDL_Color FontColor_SettingsLabelActive = {255,255,255,255};
+    SDL_Color FontColor_EndGameScore = {67,19,115,255};
+
     bool ShowSliderEndCircle = true;
 } Skin;
+
+inline SDL_Color arr_to_clr(const json& j, const std::string& obj) {
+    std::array<int, 4> clrs = {};
+    j.at(obj).get_to(clrs);
+    return {clrs[0],clrs[1],clrs[2],clrs[3]};
+}
 
 inline void to_json(json& j, const Skin s) {
     j = json{
@@ -60,6 +77,17 @@ inline void to_json(json& j, const Skin s) {
         {"TintCustomColor3", {s.TintCustomColor3.r, s.TintCustomColor3.g, s.TintCustomColor3.b, s.TintCustomColor3.a}},
         {"TintCustomColor4", {s.TintCustomColor4.r, s.TintCustomColor4.g, s.TintCustomColor4.b, s.TintCustomColor4.a}},
 
+        {"FontColor_LoadingScreen", {s.FontColor_LoadingScreen.r, s.FontColor_LoadingScreen.g, s.FontColor_LoadingScreen.b, s.FontColor_LoadingScreen.a}},
+        {"FontColor_SortingButton", {s.FontColor_SortingButton.r, s.FontColor_SortingButton.g, s.FontColor_SortingButton.b, s.FontColor_SortingButton.a}},
+        {"FontColor_SortingButtonActive", {s.FontColor_SortingButtonActive.r, s.FontColor_SortingButtonActive.g, s.FontColor_SortingButtonActive.b, s.FontColor_SortingButtonActive.a}},
+        {"FontColor_BeatmapDescription", {s.FontColor_BeatmapDescription.r, s.FontColor_BeatmapDescription.g, s.FontColor_BeatmapDescription.b, s.FontColor_BeatmapDescription.a}},
+        {"FontColor_Pagination", {s.FontColor_Pagination.r, s.FontColor_Pagination.g, s.FontColor_Pagination.b, s.FontColor_Pagination.a}},
+        {"FontColor_MenuButton", {s.FontColor_MenuButton.r, s.FontColor_MenuButton.g, s.FontColor_MenuButton.b, s.FontColor_MenuButton.a}},
+        {"FontColor_MenuButtonActive", {s.FontColor_MenuButtonActive.r, s.FontColor_MenuButtonActive.g, s.FontColor_MenuButtonActive.b, s.FontColor_MenuButtonActive.a}},
+        {"FontColor_SettingsLabel", {s.FontColor_SettingsLabel.r, s.FontColor_SettingsLabel.g, s.FontColor_SettingsLabel.b, s.FontColor_SettingsLabel.a}},
+        {"FontColor_SettingsLabelActive", {s.FontColor_SettingsLabelActive.r, s.FontColor_SettingsLabelActive.g, s.FontColor_SettingsLabelActive.b, s.FontColor_SettingsLabelActive.a}},
+        {"FontColor_EndGameScore", {s.FontColor_EndGameScore.r, s.FontColor_EndGameScore.g, s.FontColor_EndGameScore.b, s.FontColor_EndGameScore.a}},
+
         {"ShowSliderEndCircle", s.ShowSliderEndCircle}
     };
 }
@@ -76,21 +104,21 @@ inline void from_json(const json& j, Skin& s) {
     j.at("TintSliderBall").get_to(s.TintSliderBall);
     j.at("TintUseBeatmapColors").get_to(s.TintUseBeatmapColors);
 
-    for (int i = 1; i <= 4; ++i) {
-        std::array<int, 4> clrs = {};
-        j.at("TintCustomColor" + std::to_string(i)).get_to(clrs);
-        SDL_Color c = {clrs[0],clrs[1],clrs[2],clrs[3]};
-        switch (i) {
-            case 1:
-                s.TintCustomColor1 = c; break;
-            case 2:
-                s.TintCustomColor2 = c; break;
-            case 3:
-                s.TintCustomColor3 = c; break;
-            case 4:
-                s.TintCustomColor4 = c; break;
-        }
-    }
+    s.TintCustomColor1 = arr_to_clr(j, "TintCustomColor1");
+    s.TintCustomColor2 = arr_to_clr(j, "TintCustomColor2");
+    s.TintCustomColor3 = arr_to_clr(j, "TintCustomColor3");
+    s.TintCustomColor4 = arr_to_clr(j, "TintCustomColor4");
+
+    s.FontColor_LoadingScreen = arr_to_clr(j, "FontColor_LoadingScreen");
+    s.FontColor_SortingButton = arr_to_clr(j, "FontColor_SortingButton");
+    s.FontColor_SortingButtonActive = arr_to_clr(j, "FontColor_SortingButtonActive");
+    s.FontColor_BeatmapDescription = arr_to_clr(j, "FontColor_BeatmapDescription");
+    s.FontColor_Pagination = arr_to_clr(j, "FontColor_Pagination");
+    s.FontColor_MenuButton = arr_to_clr(j, "FontColor_MenuButton");
+    s.FontColor_MenuButtonActive = arr_to_clr(j, "FontColor_MenuButtonActive");
+    s.FontColor_SettingsLabel = arr_to_clr(j, "FontColor_SettingsLabel");
+    s.FontColor_SettingsLabelActive = arr_to_clr(j, "FontColor_SettingsLabelActive");
+    s.FontColor_EndGameScore = arr_to_clr(j, "FontColor_EndGameScore");
 
     j.at("ShowSliderEndCircle").get_to(s.ShowSliderEndCircle);
 }

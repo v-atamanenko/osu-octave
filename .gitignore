@@ -9,3 +9,7 @@ build
 .vscode
 .DS_Store
 build-vita
+maps/
+
+data-clean.zip
+data-maps.zip

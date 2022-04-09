@@ -30,7 +30,7 @@ ModeAbout::ModeAbout() {
     spr->OnClick = ModeAbout_OnBtnAboutClick;
     spr->Clickable = true;
     mSpriteManager.Add(spr);
-    spr = new pText("About", FONT_PIXEL, 175, 308, SDL_Color({255,255,255}));
+    spr = new pText("About", FONT_PIXEL, 175, 308, Skins::get_options().FontColor_MenuButtonActive);
     spr->Z = -0.02;
     spr->Origin = ORIGIN_CENTER;
     mSpriteManager.Add(spr);
@@ -39,7 +39,7 @@ ModeAbout::ModeAbout() {
     spr->OnClick = ModeAbout_OnBtnSettingsClick;
     spr->Clickable = true;
     mSpriteManager.Add(spr);
-    spr = new pText("Settings", FONT_PIXEL, 175, 376, SDL_Color({67,19,115}));
+    spr = new pText("Settings", FONT_PIXEL, 175, 376, Skins::get_options().FontColor_MenuButton);
     spr->Z = -0.02;
     spr->Origin = ORIGIN_CENTER;
     mSpriteManager.Add(spr);
@@ -48,7 +48,7 @@ ModeAbout::ModeAbout() {
     spr->OnClick = ModeAbout_OnBtnQuitClick;
     spr->Clickable = true;
     mSpriteManager.Add(spr);
-    spr = new pText("Quit", FONT_PIXEL, 175, 445, SDL_Color({67,19,115}));
+    spr = new pText("Quit", FONT_PIXEL, 175, 445, Skins::get_options().FontColor_MenuButton);
     spr->Z = -0.02;
     spr->Origin = ORIGIN_CENTER;
     mSpriteManager.Add(spr);

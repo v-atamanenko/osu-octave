@@ -24,7 +24,7 @@ SDLInitializer::SDLInitializer() {
     SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, "0");
 #endif
 
-    window = SDL_CreateWindow("nano-dOsu",
+    window = SDL_CreateWindow("osu!octave",
                               SDL_WINDOWPOS_UNDEFINED,
                               SDL_WINDOWPOS_UNDEFINED,
                               SCREEN_WIDTH, SCREEN_HEIGHT,

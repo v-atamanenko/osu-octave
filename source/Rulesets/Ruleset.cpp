@@ -69,7 +69,7 @@ void Ruleset::OnGameOver()
     btn_retry->OnClick = OnBtnRetryClick;
     btn_retry->Clickable = true;
     scoreScreenSprites.push_back(btn_retry);
-    pText* btn_retry_label = new pText("Retry", FONT_PIXEL, 740, 364, SDL_Color({67,19,115}));
+    pText* btn_retry_label = new pText("Retry", FONT_PIXEL, 740, 364, Skins::get_options().FontColor_MenuButton);
     btn_retry_label->Origin = ORIGIN_CENTER;
     scoreScreenSprites.push_back(btn_retry_label);
 
@@ -77,7 +77,7 @@ void Ruleset::OnGameOver()
     btn_back->OnClick = OnBtnBackClick;
     btn_back->Clickable = true;
     scoreScreenSprites.push_back(btn_back);
-    pText* btn_back_label = new pText("Back", FONT_PIXEL, 740, 432, SDL_Color({67,19,115}));
+    pText* btn_back_label = new pText("Back", FONT_PIXEL, 740, 432, Skins::get_options().FontColor_MenuButton);
     btn_back_label->Origin = ORIGIN_CENTER;
     scoreScreenSprites.push_back(btn_back_label);
 
@@ -102,27 +102,27 @@ void Ruleset::OnGameOver()
     auto* rankspr = new pSprite(rankingtex, 741, 163, 212, 243, ORIGIN_CENTER, FIELD_SCREEN, SDL_Color(), 0, 0);
     scoreScreenSprites.push_back(rankspr);
 
-    auto scoreLbl = new pText(mCurrentScore.CurrentScoreFormatted(), FONT_NUMBERING, 480, 48, SDL_Color({67,19,115}));
+    auto scoreLbl = new pText(mCurrentScore.CurrentScoreFormatted(), FONT_NUMBERING, 480, 48, Skins::get_options().FontColor_EndGameScore);
     scoreLbl->Origin = ORIGIN_TOPRIGHT;
     scoreScreenSprites.push_back(scoreLbl);
 
-    scoreLbl = new pText(mCurrentScore.Count300Formatted(), FONT_NUMBERING, 152, 162, SDL_Color({67,19,115}));
+    scoreLbl = new pText(mCurrentScore.Count300Formatted(), FONT_NUMBERING, 152, 162, Skins::get_options().FontColor_EndGameScore);
     scoreScreenSprites.push_back(scoreLbl);
-    scoreLbl = new pText(mCurrentScore.Count100Formatted(), FONT_NUMBERING, 152, 237, SDL_Color({67,19,115}));
+    scoreLbl = new pText(mCurrentScore.Count100Formatted(), FONT_NUMBERING, 152, 237, Skins::get_options().FontColor_EndGameScore);
     scoreScreenSprites.push_back(scoreLbl);
-    scoreLbl = new pText(mCurrentScore.Count50Formatted(), FONT_NUMBERING, 152, 311, SDL_Color({67,19,115}));
-    scoreScreenSprites.push_back(scoreLbl);
-
-    scoreLbl = new pText(mCurrentScore.CountGekiFormatted(), FONT_NUMBERING, 369, 162, SDL_Color({67,19,115}));
-    scoreScreenSprites.push_back(scoreLbl);
-    scoreLbl = new pText(mCurrentScore.CountKatuFormatted(), FONT_NUMBERING, 369, 237, SDL_Color({67,19,115}));
-    scoreScreenSprites.push_back(scoreLbl);
-    scoreLbl = new pText(mCurrentScore.CountMissFormatted(), FONT_NUMBERING, 369, 311, SDL_Color({67,19,115}));
+    scoreLbl = new pText(mCurrentScore.Count50Formatted(), FONT_NUMBERING, 152, 311, Skins::get_options().FontColor_EndGameScore);
     scoreScreenSprites.push_back(scoreLbl);
 
-    scoreLbl = new pText(mCurrentScore.CountAccuracyFormatted(), FONT_NUMBERING, 77, 412, SDL_Color({67,19,115}));
+    scoreLbl = new pText(mCurrentScore.CountGekiFormatted(), FONT_NUMBERING, 369, 162, Skins::get_options().FontColor_EndGameScore);
     scoreScreenSprites.push_back(scoreLbl);
-    scoreLbl = new pText(mCurrentScore.MaxComboFormatted(), FONT_NUMBERING, 297, 412, SDL_Color({67,19,115}));
+    scoreLbl = new pText(mCurrentScore.CountKatuFormatted(), FONT_NUMBERING, 369, 237, Skins::get_options().FontColor_EndGameScore);
+    scoreScreenSprites.push_back(scoreLbl);
+    scoreLbl = new pText(mCurrentScore.CountMissFormatted(), FONT_NUMBERING, 369, 311, Skins::get_options().FontColor_EndGameScore);
+    scoreScreenSprites.push_back(scoreLbl);
+
+    scoreLbl = new pText(mCurrentScore.CountAccuracyFormatted(), FONT_NUMBERING, 77, 412, Skins::get_options().FontColor_EndGameScore);
+    scoreScreenSprites.push_back(scoreLbl);
+    scoreLbl = new pText(mCurrentScore.MaxComboFormatted(), FONT_NUMBERING, 297, 412, Skins::get_options().FontColor_EndGameScore);
     scoreScreenSprites.push_back(scoreLbl);
 
     for (auto s : scoreScreenSprites) {
@@ -162,7 +162,7 @@ void Ruleset::OnFailed()
     btn_retry->OnClick = OnBtnRetryClick;
     btn_retry->Clickable = true;
     scoreScreenSprites.push_back(btn_retry);
-    pText* btn_retry_label = new pText("Retry", FONT_PIXEL, 740, 364, SDL_Color({67,19,115}));
+    pText* btn_retry_label = new pText("Retry", FONT_PIXEL, 740, 364, Skins::get_options().FontColor_MenuButton);
     btn_retry_label->Origin = ORIGIN_CENTER;
     scoreScreenSprites.push_back(btn_retry_label);
 
@@ -170,34 +170,34 @@ void Ruleset::OnFailed()
     btn_back->OnClick = OnBtnBackClick;
     btn_back->Clickable = true;
     scoreScreenSprites.push_back(btn_back);
-    pText* btn_back_label = new pText("Back", FONT_PIXEL, 740, 432, SDL_Color({67,19,115}));
+    pText* btn_back_label = new pText("Back", FONT_PIXEL, 740, 432, Skins::get_options().FontColor_MenuButton);
     btn_back_label->Origin = ORIGIN_CENTER;
     scoreScreenSprites.push_back(btn_back_label);
 
     auto* rankspr = new pSprite(TX_RANKING_F_LG, 741, 163, 212, 243, ORIGIN_CENTER, FIELD_SCREEN, SDL_Color(), 0, 0);
     scoreScreenSprites.push_back(rankspr);
 
-    auto scoreLbl = new pText(mCurrentScore.CurrentScoreFormatted(), FONT_NUMBERING, 480, 48, SDL_Color({67,19,115}));
+    auto scoreLbl = new pText(mCurrentScore.CurrentScoreFormatted(), FONT_NUMBERING, 480, 48, Skins::get_options().FontColor_EndGameScore);
     scoreLbl->Origin = ORIGIN_TOPRIGHT;
     scoreScreenSprites.push_back(scoreLbl);
 
-    scoreLbl = new pText(mCurrentScore.Count300Formatted(), FONT_NUMBERING, 152, 162, SDL_Color({67,19,115}));
+    scoreLbl = new pText(mCurrentScore.Count300Formatted(), FONT_NUMBERING, 152, 162, Skins::get_options().FontColor_EndGameScore);
     scoreScreenSprites.push_back(scoreLbl);
-    scoreLbl = new pText(mCurrentScore.Count100Formatted(), FONT_NUMBERING, 152, 237, SDL_Color({67,19,115}));
+    scoreLbl = new pText(mCurrentScore.Count100Formatted(), FONT_NUMBERING, 152, 237, Skins::get_options().FontColor_EndGameScore);
     scoreScreenSprites.push_back(scoreLbl);
-    scoreLbl = new pText(mCurrentScore.Count50Formatted(), FONT_NUMBERING, 152, 311, SDL_Color({67,19,115}));
-    scoreScreenSprites.push_back(scoreLbl);
-
-    scoreLbl = new pText(mCurrentScore.CountGekiFormatted(), FONT_NUMBERING, 369, 162, SDL_Color({67,19,115}));
-    scoreScreenSprites.push_back(scoreLbl);
-    scoreLbl = new pText(mCurrentScore.CountKatuFormatted(), FONT_NUMBERING, 369, 237, SDL_Color({67,19,115}));
-    scoreScreenSprites.push_back(scoreLbl);
-    scoreLbl = new pText(mCurrentScore.CountMissFormatted(), FONT_NUMBERING, 369, 311, SDL_Color({67,19,115}));
+    scoreLbl = new pText(mCurrentScore.Count50Formatted(), FONT_NUMBERING, 152, 311, Skins::get_options().FontColor_EndGameScore);
     scoreScreenSprites.push_back(scoreLbl);
 
-    scoreLbl = new pText(mCurrentScore.CountAccuracyFormatted(), FONT_NUMBERING, 77, 412, SDL_Color({67,19,115}));
+    scoreLbl = new pText(mCurrentScore.CountGekiFormatted(), FONT_NUMBERING, 369, 162, Skins::get_options().FontColor_EndGameScore);
     scoreScreenSprites.push_back(scoreLbl);
-    scoreLbl = new pText(mCurrentScore.MaxComboFormatted(), FONT_NUMBERING, 297, 412, SDL_Color({67,19,115}));
+    scoreLbl = new pText(mCurrentScore.CountKatuFormatted(), FONT_NUMBERING, 369, 237, Skins::get_options().FontColor_EndGameScore);
+    scoreScreenSprites.push_back(scoreLbl);
+    scoreLbl = new pText(mCurrentScore.CountMissFormatted(), FONT_NUMBERING, 369, 311, Skins::get_options().FontColor_EndGameScore);
+    scoreScreenSprites.push_back(scoreLbl);
+
+    scoreLbl = new pText(mCurrentScore.CountAccuracyFormatted(), FONT_NUMBERING, 77, 412, Skins::get_options().FontColor_EndGameScore);
+    scoreScreenSprites.push_back(scoreLbl);
+    scoreLbl = new pText(mCurrentScore.MaxComboFormatted(), FONT_NUMBERING, 297, 412, Skins::get_options().FontColor_EndGameScore);
     scoreScreenSprites.push_back(scoreLbl);
 
     for (auto s : scoreScreenSprites) {
@@ -221,7 +221,7 @@ void Ruleset::OnPause() {
     btn_resume->OnClick = OnBtnResumeClick;
     btn_resume->Clickable = true;
     pauseMenuSprites.push_back(btn_resume);
-    auto* btn_resume_label = new pText("Resume", FONT_PIXEL, 479, 237, SDL_Color({67,19,115}));
+    auto* btn_resume_label = new pText("Resume", FONT_PIXEL, 479, 237, Skins::get_options().FontColor_MenuButton);
     btn_resume_label->Origin = ORIGIN_CENTER;
     btn_resume_label->Z = -1000002.f;
     pauseMenuSprites.push_back(btn_resume_label);
@@ -230,16 +230,16 @@ void Ruleset::OnPause() {
     btn_retry->OnClick = OnBtnRetryClick;
     btn_retry->Clickable = true;
     pauseMenuSprites.push_back(btn_retry);
-    pText* btn_retry_label = new pText("Retry", FONT_PIXEL, 479, 305, SDL_Color({67,19,115}));
+    auto* btn_retry_label = new pText("Retry", FONT_PIXEL, 479, 305, Skins::get_options().FontColor_MenuButton);
     btn_retry_label->Origin = ORIGIN_CENTER;
     btn_retry_label->Z = -1000002.f;
     pauseMenuSprites.push_back(btn_retry_label);
 
-    pSprite* btn_back = new pSprite(TX_BUTTON_BIG, 341, 346, 277, 55, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -1000001.f);
+    auto* btn_back = new pSprite(TX_BUTTON_BIG, 341, 346, 277, 55, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -1000001.f);
     btn_back->OnClick = OnBtnBackClick;
     btn_back->Clickable = true;
     pauseMenuSprites.push_back(btn_back);
-    pText* btn_back_label = new pText("Back", FONT_PIXEL, 479, 373, SDL_Color({67,19,115}));
+    auto* btn_back_label = new pText("Back", FONT_PIXEL, 479, 373, Skins::get_options().FontColor_MenuButton);
     btn_back_label->Origin = ORIGIN_CENTER;
     btn_back_label->Z = -1000002.f;
     pauseMenuSprites.push_back(btn_back_label);

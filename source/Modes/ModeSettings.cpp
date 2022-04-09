@@ -49,7 +49,7 @@ void ModeSettings::InitCommonSprites() {
     spr->OnClick = ModeSettings_OnBtnAboutClick;
     spr->Clickable = true;
     mSpriteManager.Add(spr);
-    spr = new pText("About", FONT_PIXEL, 175, 308, SDL_Color({67,19,115}));
+    spr = new pText("About", FONT_PIXEL, 175, 308, Skins::get_options().FontColor_MenuButton);
     spr->Z = -0.02;
     spr->Origin = ORIGIN_CENTER;
     mSpriteManager.Add(spr);
@@ -58,7 +58,7 @@ void ModeSettings::InitCommonSprites() {
     spr->OnClick = ModeSettings_OnBtnSettingsClick;
     spr->Clickable = true;
     mSpriteManager.Add(spr);
-    spr = new pText("Settings", FONT_PIXEL, 175, 376, SDL_Color({255,255,255}));
+    spr = new pText("Settings", FONT_PIXEL, 175, 376, Skins::get_options().FontColor_MenuButtonActive);
     spr->Z = -0.02;
     spr->Origin = ORIGIN_CENTER;
     mSpriteManager.Add(spr);
@@ -67,7 +67,7 @@ void ModeSettings::InitCommonSprites() {
     spr->OnClick = ModeSettings_OnBtnQuitClick;
     spr->Clickable = true;
     mSpriteManager.Add(spr);
-    spr = new pText("Quit", FONT_PIXEL, 175, 445, SDL_Color({67,19,115}));
+    spr = new pText("Quit", FONT_PIXEL, 175, 445, Skins::get_options().FontColor_MenuButton);
     spr->Z = -0.02;
     spr->Origin = ORIGIN_CENTER;
     mSpriteManager.Add(spr);
@@ -173,9 +173,9 @@ void ModeSettings::CreateValueSlider(OOInt x, OOInt y, const std::string& settin
     if (multiplier_mode) {
         char value_str[8];
         snprintf(value_str, 8, "%.2fx", (OOFloat)((OOInt)((lastValue+100) * 1 + .5)) / 100.f);
-        spr = new pText(value_str,FONT_PIXEL, x+266, y, SDL_Color({67,19,115}));
+        spr = new pText(value_str,FONT_PIXEL, x+266, y, Skins::get_options().FontColor_SettingsLabel);
     } else {
-        spr = new pText(std::to_string((OOInt)(round(lastValue))), FONT_PIXEL, x+266, y, SDL_Color({67,19,115}));
+        spr = new pText(std::to_string((OOInt)(round(lastValue))), FONT_PIXEL, x+266, y, Skins::get_options().FontColor_SettingsLabel);
     }
 
     spr->Z = -1.0;
