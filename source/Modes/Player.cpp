@@ -29,7 +29,7 @@ void Player::Update() {
                 mRuleset.OnGameOver();
             }
 
-            if (failed && !mNoFail) {
+            if (failed && !mNoFail && mPlayState != PLAYSTATE_GAMEOVER) {
                 mPlayState = PLAYSTATE_FAILED;
                 mRuleset.OnFailed();
             }
