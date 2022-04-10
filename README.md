@@ -179,7 +179,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 are subject to the same license above in p.1.
 
 3. **The code** in this repository (`.cpp`, `.c`, `.h`, `.hpp` files and their individual lines) that was commited before
-**January 15, 2022** is licensed under the [BSD 2-Clause license](LICENSE).
+**January 15, 2022** is licensed under the [BSD 2-Clause license](LICENSE) and copyright (c) 2009, Jonathan Chow.
 
 4. The graphical assets (`.png`) in other subdirectories of the `/skins/` directory, sounds (`.wav`, `.mp3` files) are
 the property of their respective owners/creators.
