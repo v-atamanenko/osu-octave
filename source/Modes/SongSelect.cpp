@@ -321,7 +321,14 @@ void SongSelect::UpdateSonglist(bool initial)
 
     OOUInt beatmap_list_offset = mCurrentPage * mEntriesPerPage;
     OOUInt entries_on_page = mEntriesPerPage;
-    if (beatmap_list_offset + (entries_on_page-1) >= mSongListSize) {
+
+    if (entries_on_page >= mSongListSize) {
+        entries_on_page = mSongListSize;
+        beatmap_list_offset = 0;
+        mCurrentPage = 0;
+    }
+
+    if (entries_on_page != 0 && (beatmap_list_offset + (entries_on_page-1) >= mSongListSize)) {
         entries_on_page = mSongListSize - beatmap_list_offset;
     }
 

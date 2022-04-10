@@ -26,6 +26,7 @@ class SongSelect : public Mode
 
         static void PageNext() {
             AudioManager::Engine().PlayUISound(UISOUND_CLICK_SHORT_CONFIRM);
+            if (mCountPages == 0) { return; }
             if (mCurrentPage < (mCountPages - 1)) {
                 PreviewBuffer::GetInstance().Update((OOInt)mCurrentPage, (mCurrentPage+1), mEntriesPerPage);
                 mCurrentPage++;
@@ -35,6 +36,7 @@ class SongSelect : public Mode
         };
         static void PagePrev() {
             AudioManager::Engine().PlayUISound(UISOUND_CLICK_SHORT_CONFIRM);
+            if (mCountPages == 0) { return; }
             if (mCurrentPage > 0) {
                 PreviewBuffer::GetInstance().Update((OOInt)mCurrentPage, (mCurrentPage-1), mEntriesPerPage);
                 mCurrentPage--;
@@ -44,6 +46,8 @@ class SongSelect : public Mode
         };
         static void PageRand() {
             AudioManager::Engine().PlayUISound(UISOUND_CLICK_SHORT_CONFIRM);
+            if (mCountPages == 0) { return; }
+
             if (mCountPages <= 1) {
                 shouldExpandRandomEntry = true;
                 return;
