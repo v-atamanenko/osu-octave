@@ -437,9 +437,11 @@ TimingPoint OsuParser::_ParseFieldAsTimingPoint(const string& field)
     tp.offset = stoll(args[0]);
     tp.msPerBeat = stod(args[1]);
 
-    if (tp.msPerBeat > 0)
+    if (tp.msPerBeat > 0 || msPerBeats.empty())
     {
-        tp.adjustedMsPerBeat = tp.msPerBeat;
+        // TODO: Here line 440 and 443 changed due to some beatmaps starting from -100 which is incorrect.
+        // Probably, 0 is not the best value to set here instead.
+        tp.adjustedMsPerBeat = (tp.msPerBeat > 0) ? tp.msPerBeat : 0;
 
         msPerBeats.push_back(tp.msPerBeat);
     }
@@ -562,6 +564,11 @@ HitObject OsuParser::_ParseFieldAsHitObject(const string& field)
             vector<string> values;
             SplitString(p, ":", values);
 
+            if (values.empty() || (values.size() == 1 && values[0].empty())) {
+                // Some beatmap creators do things like "377,137,8365,2,0,B", i.e. a slider with no curve points >_>
+                break;
+            }
+
             int x = stoi(values[0]);
             int y = stoi(values[1]);
 
@@ -635,11 +642,9 @@ void OsuParser::_ExtractExtras(const string& s, HitObject& o)
     o.extra.customIndex = (uint8_t)stoi(params[2]);
     o.extra.volume = (uint8_t)stoi(params[3]);
 
-    if (params.size() == 5 && mode != gmMania)
+    if (params.size() == 5)
     {
-        o.extra.volume = (uint8_t)stoi(params[4]);
-        //TODO: Find out what happens here. "&& mode != gmMania" this might have helped
-        //Failed on string "0:0:0:50:LR_Drum J Long Med Finish.wav"
+        o.extra.filename = params[4];
     }
 
     o.adjustedExtra = o.extra;
