@@ -192,7 +192,17 @@ void OsuParser::Parse()
     {
         for (auto&& f : t.second)
         {
-            timingPoints.push_back(_ParseFieldAsTimingPoint(f));
+            TimingPoint tp;
+            if (_ParseFieldAsTimingPoint(f, tp)) {
+                timingPoints.push_back(tp);
+            } else {
+                continue;
+            }
+        }
+
+        if (timingPoints.empty()) {
+            TimingPoint tp;
+            timingPoints.push_back(tp);
         }
 
         lowestBPM = 1234567.0;
@@ -425,14 +435,12 @@ Event OsuParser::_ParseFieldAsEvent(const string& field)
     return { eUnknown };
 }
 
-TimingPoint OsuParser::_ParseFieldAsTimingPoint(const string& field)
+bool OsuParser::_ParseFieldAsTimingPoint(const string& field, TimingPoint& tp)
 {
     string f = field;
 
     vector<string> args;
     SplitString(f, ",", args);
-
-    TimingPoint tp;
 
     tp.offset = stoll(args[0]);
     tp.msPerBeat = stod(args[1]);
@@ -450,7 +458,11 @@ TimingPoint OsuParser::_ParseFieldAsTimingPoint(const string& field)
         tp.adjustedMsPerBeat = (tp.msPerBeat / -100.0) * msPerBeats.back();
     }
 
-    tp.beatsPerMeasure = (uint8_t)stoi(args[2]);
+    if (args.size() < 6) {
+        return false;
+    }
+
+    tp.beatsPerMeasure = (uint8_t)stof(args[2]);
     tp.sampleSet = (SampleSet)stoi(args[3]);
     tp.sampleIndex = (uint8_t)stoi(args[4]);
     tp.volume = (uint8_t)stoi(args[5]);
@@ -461,7 +473,7 @@ TimingPoint OsuParser::_ParseFieldAsTimingPoint(const string& field)
         }
     }
 
-    return tp;
+    return true;
 }
 
 RGBAColor OsuParser::_ParseFieldAsRGBAColor(const string& field)

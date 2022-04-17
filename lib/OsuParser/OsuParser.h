@@ -173,7 +173,7 @@ namespace osuParser
 		template<typename T>
 		std::vector<T> _ParseSectionFieldAsList(const _OsSection & section, const std::string & fieldName, const std::string & delim);
 		Event _ParseFieldAsEvent(const std::string & field);
-		TimingPoint _ParseFieldAsTimingPoint(const std::string & field);
+		bool _ParseFieldAsTimingPoint(const std::string & field, TimingPoint& tp);
 		RGBAColor _ParseFieldAsRGBAColor(const std::string & field);
 		HitObject _ParseFieldAsHitObject(const std::string & field);
 		void _ExtractExtras(const std::string & s, HitObject & o);
