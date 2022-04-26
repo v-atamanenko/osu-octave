@@ -15,8 +15,8 @@
 #include "Helpers/PreviewBuffer.h"
 #include "Helpers/IO.h"
 
-#include "../lib/OsuParser/OsuParser.h"
-#include "../lib/osu_sr_calculator_cpp/osu_sr_calculator/osu_sr_calculator.h"
+#include "OsuParser/OsuParser.h"
+#include "osu_sr_calculator_cpp/osu_sr_calculator/osu_sr_calculator.h"
 
 class BeatmapManager
 {

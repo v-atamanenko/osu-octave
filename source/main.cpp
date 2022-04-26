@@ -5,8 +5,9 @@
 #include "System/TextManager.h"
 #include "DataStorage/Settings.h"
 #include "DataStorage/Skins.h"
+#include "DataStorage/I18n.h"
 
-#ifdef VITA
+#ifdef __vita__
 unsigned int _newlib_heap_size_user = 200 * 1024 * 1024;
 #include <psp2/power.h>
 #endif
@@ -21,6 +22,8 @@ int main() {
 
     Settings::load();
     Skins::init_skin();
+    I18n::load();
+
     SDLInitializer::initSDL();
     TextManager::Init();
 

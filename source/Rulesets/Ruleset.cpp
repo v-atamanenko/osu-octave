@@ -1,6 +1,7 @@
 #include "Ruleset.h"
 #include "Graphics/pText.h"
 #include "DataStorage/Scores.h"
+#include "DataStorage/I18n.h"
 
 void OnBtnResumeClick(pDrawable* self, OOInt x, OOInt y) {
     InputHelper::SimulateKeyDown(Control::IH_CONTROL_QUIT);
@@ -15,8 +16,7 @@ void OnBtnBackClick(pDrawable* self, OOInt x, OOInt y) {
 }
 
 
-Ruleset::Ruleset()
-{
+Ruleset::Ruleset() {
     mDarkenOverlay.AddToSpriteManager(mSpriteManager);
 	mLifebar.AddToSpriteManager(mSpriteManager);
 
@@ -28,8 +28,7 @@ Ruleset::~Ruleset() {
     if (mCursor) SDL_ShowCursor(SDL_ENABLE);
 }
 
-void Ruleset::Initialize()
-{
+void Ruleset::Initialize() {
     mDarkenOverlay.Initialize();
 	mLifebar.Initialize();
 
@@ -40,8 +39,7 @@ void Ruleset::Initialize()
     }
 }
 
-void Ruleset::Skip()
-{
+void Ruleset::Skip() {
     if (GameClock::Clock().Time() < BeatmapManager::Current().SkipTime())
 	{
         if (!mMusicStarted) {
@@ -56,8 +54,7 @@ void Ruleset::Skip()
 }
 
 
-void Ruleset::OnGameOver()
-{
+void Ruleset::OnGameOver() {
     int now = GameClock::Clock().Time();
     mCurrentScore.CalculateGrade();
     std::vector<pDrawable *> scoreScreenSprites;
@@ -69,7 +66,7 @@ void Ruleset::OnGameOver()
     btn_retry->OnClick = OnBtnRetryClick;
     btn_retry->Clickable = true;
     scoreScreenSprites.push_back(btn_retry);
-    pText* btn_retry_label = new pText("Retry", FONT_PIXEL, 740, 364, Skins::get_options().FontColor_MenuButton);
+    pText* btn_retry_label = new pText(I18n::get("btn_retry"), FONT_PIXEL, 740, 364, Skins::get_options().FontColor_MenuButton);
     btn_retry_label->Origin = ORIGIN_CENTER;
     scoreScreenSprites.push_back(btn_retry_label);
 
@@ -77,7 +74,7 @@ void Ruleset::OnGameOver()
     btn_back->OnClick = OnBtnBackClick;
     btn_back->Clickable = true;
     scoreScreenSprites.push_back(btn_back);
-    pText* btn_back_label = new pText("Back", FONT_PIXEL, 740, 432, Skins::get_options().FontColor_MenuButton);
+    pText* btn_back_label = new pText(I18n::get("btn_back"), FONT_PIXEL, 740, 432, Skins::get_options().FontColor_MenuButton);
     btn_back_label->Origin = ORIGIN_CENTER;
     scoreScreenSprites.push_back(btn_back_label);
 
@@ -148,8 +145,7 @@ void Ruleset::OnGameOver()
     }
 }
 
-void Ruleset::OnFailed()
-{
+void Ruleset::OnFailed() {
     AudioManager::Engine().PlayUISound(UISOUND_FAILSOUND);
 
     int now = GameClock::Clock().Time();
@@ -158,19 +154,19 @@ void Ruleset::OnFailed()
     auto* spr = new pSprite(TX_GAMEOVER_BG, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 0, 0);
     scoreScreenSprites.push_back(spr);
 
-    pSprite* btn_retry = new pSprite(TX_BUTTON_BIG, 602, 337, 277, 55, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
+    auto* btn_retry = new pSprite(TX_BUTTON_BIG, 602, 337, 277, 55, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
     btn_retry->OnClick = OnBtnRetryClick;
     btn_retry->Clickable = true;
     scoreScreenSprites.push_back(btn_retry);
-    pText* btn_retry_label = new pText("Retry", FONT_PIXEL, 740, 364, Skins::get_options().FontColor_MenuButton);
+    auto* btn_retry_label = new pText(I18n::get("btn_retry"), FONT_PIXEL, 740, 364, Skins::get_options().FontColor_MenuButton);
     btn_retry_label->Origin = ORIGIN_CENTER;
     scoreScreenSprites.push_back(btn_retry_label);
 
-    pSprite* btn_back = new pSprite(TX_BUTTON_BIG, 602, 405, 277, 55, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
+    auto* btn_back = new pSprite(TX_BUTTON_BIG, 602, 405, 277, 55, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01f);
     btn_back->OnClick = OnBtnBackClick;
     btn_back->Clickable = true;
     scoreScreenSprites.push_back(btn_back);
-    pText* btn_back_label = new pText("Back", FONT_PIXEL, 740, 432, Skins::get_options().FontColor_MenuButton);
+    auto* btn_back_label = new pText(I18n::get("btn_back"), FONT_PIXEL, 740, 432, Skins::get_options().FontColor_MenuButton);
     btn_back_label->Origin = ORIGIN_CENTER;
     scoreScreenSprites.push_back(btn_back_label);
 
@@ -221,7 +217,7 @@ void Ruleset::OnPause() {
     btn_resume->OnClick = OnBtnResumeClick;
     btn_resume->Clickable = true;
     pauseMenuSprites.push_back(btn_resume);
-    auto* btn_resume_label = new pText("Resume", FONT_PIXEL, 479, 237, Skins::get_options().FontColor_MenuButton);
+    auto* btn_resume_label = new pText(I18n::get("btn_resume"), FONT_PIXEL, 479, 237, Skins::get_options().FontColor_MenuButton);
     btn_resume_label->Origin = ORIGIN_CENTER;
     btn_resume_label->Z = -1000002.f;
     pauseMenuSprites.push_back(btn_resume_label);
@@ -230,7 +226,7 @@ void Ruleset::OnPause() {
     btn_retry->OnClick = OnBtnRetryClick;
     btn_retry->Clickable = true;
     pauseMenuSprites.push_back(btn_retry);
-    auto* btn_retry_label = new pText("Retry", FONT_PIXEL, 479, 305, Skins::get_options().FontColor_MenuButton);
+    auto* btn_retry_label = new pText(I18n::get("btn_retry"), FONT_PIXEL, 479, 305, Skins::get_options().FontColor_MenuButton);
     btn_retry_label->Origin = ORIGIN_CENTER;
     btn_retry_label->Z = -1000002.f;
     pauseMenuSprites.push_back(btn_retry_label);
@@ -239,7 +235,7 @@ void Ruleset::OnPause() {
     btn_back->OnClick = OnBtnBackClick;
     btn_back->Clickable = true;
     pauseMenuSprites.push_back(btn_back);
-    auto* btn_back_label = new pText("Back", FONT_PIXEL, 479, 373, Skins::get_options().FontColor_MenuButton);
+    auto* btn_back_label = new pText(I18n::get("btn_back"), FONT_PIXEL, 479, 373, Skins::get_options().FontColor_MenuButton);
     btn_back_label->Origin = ORIGIN_CENTER;
     btn_back_label->Z = -1000002.f;
     pauseMenuSprites.push_back(btn_back_label);
@@ -267,8 +263,7 @@ void Ruleset::UpdatePause() {
     mSpriteManager.Draw();
 }
 
-void Ruleset::UpdateGameOver()
-{
+void Ruleset::UpdateGameOver() {
     OOTime now = GameClock::Clock().Time();
     if (mCursor) {
         mCursorSprite->X = (int32_t)InputHelper::TouchRead().px;
@@ -285,8 +280,7 @@ void Ruleset::UpdateGameOver()
     mSpriteManager.Draw();
 }
 
-void Ruleset::UpdateFailed()
-{
+void Ruleset::UpdateFailed() {
     OOTime now = GameClock::Clock().Time();
     if (mCursor) {
         mCursorSprite->X = (int32_t)InputHelper::TouchRead().px;
@@ -303,8 +297,7 @@ void Ruleset::UpdateFailed()
     mSpriteManager.Draw();
 }
 
-bool Ruleset::Update()
-{
+bool Ruleset::Update() {
     OOTime now = GameClock::Clock().Time();
 
     if (mCursor) {
@@ -344,11 +337,11 @@ bool Ruleset::Update()
     if(mLifebar.GetCurrentHP() == 0.f && now > BeatmapManager::Current().SkipTime()) {
         return false; // Premature game over, HP is 0
     }
+
     return true;
 }
 
-void Ruleset::HandleInput()
-{
+void Ruleset::HandleInput() {
 	mHitObjectManager.HandleInput();
 }
 

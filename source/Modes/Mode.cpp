@@ -5,7 +5,6 @@
 #include "ModeSettings.h"
 #include "ModeAbout.h"
 #include "System/GameClock.h"
-#include "System/TextManager.h"
 
 Mode* Mode::sCurrentMode = nullptr;
 bool Mode::wantChangeMode = false;

@@ -7,7 +7,7 @@
 #include "defines.h"
 #include "types.h"
 
-#include "Helpers/JSON.hpp"
+#include "JSON.hpp"
 
 using json = nlohmann::json;
 
@@ -178,7 +178,8 @@ class Settings
                         {IH_CONTROL_SKIP, {{SDLK_SPACE, IH_KEY_KEYBOARD}, {SDL_CONTROLLER_BUTTON_A, IH_KEY_CONTROLLER}}},
                         {IH_CONTROL_QUIT, {{SDLK_ESCAPE, IH_KEY_KEYBOARD}, {SDL_CONTROLLER_BUTTON_START, IH_KEY_CONTROLLER}}}
                     }},
-                    {"alwaysShowCursor", false}
+                    {"alwaysShowCursor", false},
+                    {"language", "default"}
             };
         }
 

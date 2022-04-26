@@ -20,7 +20,7 @@
 #include "HitObjects/HitSpinner.h"
 
 #include "Graphics/SpriteManager.h"
-#include "../lib/OsuParser/OsuParser.h"
+#include "OsuParser/OsuParser.h"
 #include "Helpers/OsuSliderCurves.h"
 
 #include "DataStorage/Betmaps.h"

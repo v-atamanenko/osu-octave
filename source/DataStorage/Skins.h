@@ -5,7 +5,7 @@
 
 #include "../lib/EnumIterator.h"
 #include "Helpers/IO.h"
-#include "Helpers/JSON.hpp"
+#include "JSON.hpp"
 
 #include "DataStorage/Settings.h"
 

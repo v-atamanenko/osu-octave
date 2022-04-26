@@ -6,7 +6,7 @@
 
 #include "defines.h"
 
-#include "Helpers/JSON.hpp"
+#include "JSON.hpp"
 
 using json = nlohmann::json;
 

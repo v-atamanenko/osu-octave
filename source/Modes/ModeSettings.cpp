@@ -1,6 +1,7 @@
 #include "ModeSettings.h"
 #include "Helpers/AudioManager.h"
 #include "DataStorage/Skins.h"
+#include "DataStorage/I18n.h"
 
 uint8_t ModeSettings::SwitchTabTo = 0;
 
@@ -49,7 +50,7 @@ void ModeSettings::InitCommonSprites() {
     spr->OnClick = ModeSettings_OnBtnAboutClick;
     spr->Clickable = true;
     mSpriteManager.Add(spr);
-    spr = new pText("About", FONT_PIXEL, 175, 308, Skins::get_options().FontColor_MenuButton);
+    spr = new pText(I18n::get("btn_about"), FONT_PIXEL, 175, 308, Skins::get_options().FontColor_MenuButton);
     spr->Z = -0.02;
     spr->Origin = ORIGIN_CENTER;
     mSpriteManager.Add(spr);
@@ -58,7 +59,7 @@ void ModeSettings::InitCommonSprites() {
     spr->OnClick = ModeSettings_OnBtnSettingsClick;
     spr->Clickable = true;
     mSpriteManager.Add(spr);
-    spr = new pText("Settings", FONT_PIXEL, 175, 376, Skins::get_options().FontColor_MenuButtonActive);
+    spr = new pText(I18n::get("btn_settings"), FONT_PIXEL, 175, 376, Skins::get_options().FontColor_MenuButtonActive);
     spr->Z = -0.02;
     spr->Origin = ORIGIN_CENTER;
     mSpriteManager.Add(spr);
@@ -67,7 +68,7 @@ void ModeSettings::InitCommonSprites() {
     spr->OnClick = ModeSettings_OnBtnQuitClick;
     spr->Clickable = true;
     mSpriteManager.Add(spr);
-    spr = new pText("Quit", FONT_PIXEL, 175, 445, Skins::get_options().FontColor_MenuButton);
+    spr = new pText(I18n::get("btn_quit"), FONT_PIXEL, 175, 445, Skins::get_options().FontColor_MenuButton);
     spr->Z = -0.02;
     spr->Origin = ORIGIN_CENTER;
     mSpriteManager.Add(spr);
@@ -103,7 +104,6 @@ void RadioButton_saveDisplayedValue (bool val, const std::string& setting_name) 
     Settings::set_bool(setting_name, val);
 }
 
-
 void TernaryButton_saveDisplayedValue (uint8_t val, const std::string& setting_name) {
     Settings::set_int(setting_name, val);
 
@@ -119,8 +119,6 @@ void TernaryButton_saveDisplayedValue (uint8_t val, const std::string& setting_n
         // TernaryButtons are only used for control scheme selection for now.
     }
 }
-
-
 
 void ModeSettings::CreateRadioButton(OOInt x, OOInt y, const std::string& setting_name,
                                      const std::string& false_value_label, const std::string& true_value_label) {
@@ -234,10 +232,10 @@ void ModeSettings::TabGameplay() {
     spr->OnClick = ModeSettings_SwitchTabToGeneral;
     mSpriteManager.Add(spr);
 
-    CreateRadioButton(572, 155, "noFail", "Disable", "Enable");
-    CreateRadioButton(572, 280, "vitaUseBackTouch", "Front touch", "Back touch");
+    CreateRadioButton(572, 155, "noFail", I18n::get("btn_disable"), I18n::get("btn_enable"));
+    CreateRadioButton(572, 280, "vitaUseBackTouch", I18n::get("btn_front_touch"), I18n::get("btn_back_touch"));
     CreateTernaryButton(572, 326, "controlScheme", TX_SETTINGS_CONTROL_SELECTOR_1, TX_SETTINGS_CONTROL_SELECTOR_2, TX_SETTINGS_CONTROL_SELECTOR_3);
-    CreateRadioButton(572, 429, "enableStacking", "Disable", "Enable");
+    CreateRadioButton(572, 429, "enableStacking", I18n::get("btn_disable"), I18n::get("btn_enable"));
 }
 
 void ModeSettings::Update() {
