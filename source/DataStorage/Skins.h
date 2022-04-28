@@ -57,10 +57,15 @@ typedef struct Skin {
     bool ShowSliderEndCircle = true;
 } Skin;
 
-inline SDL_Color arr_to_clr(const json& j, const std::string& obj) {
+inline SDL_Color arr_to_clr(const json& j, const std::string& obj, SDL_Color fallback = {255,255,255}) {
     std::array<int, 4> clrs = {};
-    j.at(obj).get_to(clrs);
-    return {clrs[0],clrs[1],clrs[2],clrs[3]};
+
+    if (j.contains(obj)) {
+        j.at(obj).get_to(clrs);
+        return {clrs[0],clrs[1],clrs[2],clrs[3]};
+    } else {
+        return fallback;
+    }
 }
 
 inline void to_json(json& j, const Skin s) {
@@ -112,24 +117,25 @@ inline void from_json(const json& j, Skin& s) {
     j.at("TintSliderBall").get_to(s.TintSliderBall);
     j.at("TintUseBeatmapColors").get_to(s.TintUseBeatmapColors);
 
-    s.TintCustomColor1 = arr_to_clr(j, "TintCustomColor1");
-    s.TintCustomColor2 = arr_to_clr(j, "TintCustomColor2");
-    s.TintCustomColor3 = arr_to_clr(j, "TintCustomColor3");
-    s.TintCustomColor4 = arr_to_clr(j, "TintCustomColor4");
+    s.TintCustomColor1 = arr_to_clr(j, "TintCustomColor1", s.TintCustomColor1);
+    s.TintCustomColor2 = arr_to_clr(j, "TintCustomColor2", s.TintCustomColor2);
+    s.TintCustomColor3 = arr_to_clr(j, "TintCustomColor3", s.TintCustomColor3);
+    s.TintCustomColor4 = arr_to_clr(j, "TintCustomColor4", s.TintCustomColor4);
 
-    s.FontColor_LoadingScreen = arr_to_clr(j, "FontColor_LoadingScreen");
-    s.FontColor_SortingButton = arr_to_clr(j, "FontColor_SortingButton");
-    s.FontColor_SortingButtonActive = arr_to_clr(j, "FontColor_SortingButtonActive");
-    s.FontColor_BeatmapDescription = arr_to_clr(j, "FontColor_BeatmapDescription");
-    s.FontColor_Pagination = arr_to_clr(j, "FontColor_Pagination");
-    s.FontColor_MenuButton = arr_to_clr(j, "FontColor_MenuButton");
-    s.FontColor_MenuButtonActive = arr_to_clr(j, "FontColor_MenuButtonActive");
-    s.FontColor_SettingsLabel = arr_to_clr(j, "FontColor_SettingsLabel");
-    s.FontColor_SettingsLabelActive = arr_to_clr(j, "FontColor_SettingsLabelActive");
-    s.FontColor_EndGameScore = arr_to_clr(j, "FontColor_EndGameScore");
-    s.FontColor_CurrentScore = arr_to_clr(j, "FontColor_SettingsLabel");
-    s.FontColor_CurrentCombo = arr_to_clr(j, "FontColor_SettingsLabelActive");
-    s.FontColor_CurrentAccuracy = arr_to_clr(j, "FontColor_EndGameScore");
+    s.FontColor_LoadingScreen = arr_to_clr(j, "FontColor_LoadingScreen", s.FontColor_LoadingScreen);
+    s.FontColor_SortingButton = arr_to_clr(j, "FontColor_SortingButton", s.FontColor_SortingButton);
+    s.FontColor_SortingButtonActive = arr_to_clr(j, "FontColor_SortingButtonActive", s.FontColor_SortingButtonActive);
+    s.FontColor_BeatmapDescription = arr_to_clr(j, "FontColor_BeatmapDescription", s.FontColor_BeatmapDescription);
+    s.FontColor_Pagination = arr_to_clr(j, "FontColor_Pagination", s.FontColor_Pagination);
+    s.FontColor_MenuButton = arr_to_clr(j, "FontColor_MenuButton", s.FontColor_MenuButton);
+    s.FontColor_MenuButtonActive = arr_to_clr(j, "FontColor_MenuButtonActive", s.FontColor_MenuButtonActive);
+    s.FontColor_SettingsLabel = arr_to_clr(j, "FontColor_SettingsLabel", s.FontColor_SettingsLabel);
+    s.FontColor_SettingsLabelActive = arr_to_clr(j, "FontColor_SettingsLabelActive", s.FontColor_SettingsLabelActive);
+    s.FontColor_EndGameScore = arr_to_clr(j, "FontColor_EndGameScore", s.FontColor_EndGameScore);
+    s.FontColor_CurrentScore = arr_to_clr(j, "FontColor_CurrentScore", s.FontColor_CurrentScore);
+    s.FontColor_CurrentCombo = arr_to_clr(j, "FontColor_CurrentCombo", s.FontColor_CurrentCombo);
+    s.FontColor_CurrentAccuracy = arr_to_clr(j, "FontColor_CurrentAccuracy", s.FontColor_CurrentAccuracy);
+    s.FontColor_SettingsLabelNotice = arr_to_clr(j, "FontColor_SettingsLabelNotice", s.FontColor_SettingsLabelNotice);
 
     j.at("ShowSliderEndCircle").get_to(s.ShowSliderEndCircle);
 }
@@ -214,6 +220,7 @@ class Skins
         static bool loaded;
 
         static Skin skin_options;
+        static Skin skin_options_default;
         static std::map<HitSoundName, std::string> gameplay_sounds;
         static std::map<UISoundName, std::string> ui_sounds;
         static std::map<TextureType, std::string> textures;

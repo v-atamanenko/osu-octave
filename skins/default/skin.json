@@ -24,7 +24,11 @@
     "FontColor_MenuButtonActive": [255,255,255,255],
     "FontColor_SettingsLabel": [67,19,115,255],
     "FontColor_SettingsLabelActive": [255,255,255,255],
+    "FontColor_SettingsLabelNotice": [153,147,158,255],
     "FontColor_EndGameScore": [67,19,115,255],
+    "FontColor_CurrentAccuracy": [255,255,255,255],
+    "FontColor_CurrentCombo": [255,255,255,255],
+    "FontColor_CurrentScore": [255,255,255,255],
 
     "ShowSliderEndCircle": true
 }

@@ -9,22 +9,5 @@
     "TintSliderBorder": true,
     "TintSliderBall": false,
     "TintUseBeatmapColors": true,
-
-    "TintCustomColor1": [0,0,0,0],
-    "TintCustomColor2": [0,0,0,0],
-    "TintCustomColor3": [0,0,0,0],
-    "TintCustomColor4": [0,0,0,0],
-
-    "FontColor_LoadingScreen": [67,19,115,255],
-    "FontColor_SortingButton": [67,19,115,255],
-    "FontColor_SortingButtonActive": [255,255,255,255],
-    "FontColor_BeatmapDescription": [67,19,115,255],
-    "FontColor_Pagination": [67,19,115,255],
-    "FontColor_MenuButton": [67,19,115,255],
-    "FontColor_MenuButtonActive": [255,255,255,255],
-    "FontColor_SettingsLabel": [67,19,115,255],
-    "FontColor_SettingsLabelActive": [255,255,255,255],
-    "FontColor_EndGameScore": [67,19,115,255],
-
     "ShowSliderEndCircle": false
 }
