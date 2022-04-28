@@ -17,7 +17,7 @@ inline bool is_dir(char* p) {
     return false;
 }
 
-inline bool get_files_in_directory(const std::string& path, std::vector<std::string>& v) {
+inline bool get_files_in_directory(const std::string& path, std::vector<std::string>& v, bool strip_extension = false) {
     DIR *dir;
     struct dirent *ent;
 
@@ -25,7 +25,18 @@ inline bool get_files_in_directory(const std::string& path, std::vector<std::str
 
     if ((dir = opendir(path.c_str())) != nullptr) {
         while ((ent = readdir(dir)) != nullptr) {
-            v.emplace_back(ent->d_name);
+            if (ent->d_name[0] != '.') {
+                if (strip_extension) {
+                    std::string s = ent->d_name;
+                    size_t lastindex = s.find_last_of(".");
+                    if (lastindex != std::string::npos && lastindex != 0) {
+                        s = s.substr(0, lastindex);
+                    }
+                    v.emplace_back(s);
+                } else {
+                    v.emplace_back(ent->d_name);
+                }
+            }
         }
         closedir (dir);
     } else {

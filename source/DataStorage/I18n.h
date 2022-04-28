@@ -52,6 +52,30 @@ class I18n
                     {"btn_retry", "Retry"},
                     {"btn_settings", "Settings"},
 
+                    {"settings_tab_general", "general"},
+                    {"settings_tab_gameplay", "gameplay"},
+                    {"settings_tab_sound", "sound"},
+                    {"settings_volume_hitsounds", "Hit sounds"},
+                    {"settings_volume_music", "Music"},
+                    {"settings_volume_menumusic", "Menu music"},
+                    {"settings_volume_uisounds", "UI sounds"},
+                    {"settings_bgdim", "Background dim"},
+                    {"settings_hoscale", "Objects scaling"},
+                    {"settings_skin", "Skin"},
+                    {"settings_nofail", "No-Fail"},
+                    {"settings_vitaUseBackTouch", "Scheme"},
+                    {"settings_controlScheme", "Action button"},
+                    {"settings_enableStacking", "Stacking"},
+                    {"settings_appearance", "Appearance"},
+                    {"settings_system", "System"},
+                    {"settings_language", "Language"},
+                    {"settings_mods", "Mods"},
+                    {"settings_controls", "Controls"},
+                    {"settings_other", "Other"},
+                    {"settings_volume", "Volume"},
+                    {"settings_mods_notice", "Other mods are coming in the next versions..."},
+                    {"settings_stacking_notice", "(Experimental)"},
+
                     {"filter_all", "ALL"},
                     {"filter_a_e", "A-E"},
                     {"filter_f_j", "F-J"},
@@ -63,18 +87,34 @@ class I18n
             lang = lang_default;
         }
 
-        static void available_langs(std::vector<std::string>& langs) {
+        /**
+         * Get a vector of available languages in the languages directory.
+         * @param vec Reference to a vector of strings to put the available languages into
+         * @return Index of current (enabled) language in vec
+         */
+        static OOUInt get_available_langs(std::vector<std::string>& langs) {
             char path[PATH_MAX];
             snprintf(path, PATH_MAX, "%s%s",
                      DEF_DataDirectory, DEF_LanguagesSubdirectory);
 
-            get_files_in_directory(path, langs);
-            std::replace(langs.begin(), langs.end(), std::string{".json"}, std::string{""});
+            get_files_in_directory(path, langs, true);
 
             if (std::find(langs.begin(), langs.end(), "English") == langs.end()) {
                 // If English is not present, add it anyway as it is the default.
                 langs.emplace_back("English");
             }
+
+            std::string current_lang = Settings::get_str("language");
+            int ret = 0;
+            for (const auto& a_lang : langs) {
+                if (a_lang == current_lang) break;
+                ret++;
+            }
+            if (ret >= langs.size()) {
+                ret = langs.size() - 1;
+            }
+
+            return ret;
         }
 
         static void autodetect_language() {
