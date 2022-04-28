@@ -74,7 +74,8 @@ typedef enum DrawOrigin {
     ORIGIN_CENTER,
     ORIGIN_TOPLEFT,
     ORIGIN_BOTTOMLEFT,
-    ORIGIN_TOPRIGHT
+    ORIGIN_TOPRIGHT,
+    ORIGIN_CENTERLEFT
 } DrawOrigin;
 
 typedef enum FieldType {
@@ -87,13 +88,15 @@ typedef enum FieldType {
  */
 
 typedef enum FontName {
-    FONT_CONSOLE,
-    FONT_CONSOLE_BOLD,
-    FONT_CONSOLE_BIG,
-    FONT_CONSOLE_BIG_BOLD,
+    FONT_PRIMARY,
+    FONT_PRIMARY_BOLD,
+    FONT_PRIMARY_SMALL,
+    FONT_PRIMARY_SMALL_BOLD,
+    FONT_PRIMARY_SMALLER,
+    FONT_PRIMARY_SMALLER_BOLD,
+    FONT_PRIMARY_BIG,
     FONT_SCORE,
-    FONT_NUMBERING,
-    FONT_PIXEL,
+    FONT_NUMBERING
 } FontName;
 
 typedef enum UISoundName {

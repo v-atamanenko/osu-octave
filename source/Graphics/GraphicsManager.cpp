@@ -363,6 +363,14 @@ void GraphicsManager::Draw(TextureType tex, OOInt x, OOInt y, OOUInt width, OOUI
             y2 = ForceBounds(y + (OOInt)height);
             break;
 
+        case ORIGIN_CENTERLEFT:
+            height /= 2;
+            x1 = ForceBounds(x);
+            x2 = ForceBounds(x + (OOInt)width);
+            y1 = ForceBounds(y - (OOInt)height);
+            y2 = ForceBounds(y + (OOInt)height);
+            break;
+
         case ORIGIN_BOTTOMLEFT:
             x1 = ForceBounds(x);
             x2 = ForceBounds(x + (OOInt)width);

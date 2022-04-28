@@ -66,7 +66,7 @@ void Ruleset::OnGameOver() {
     btn_retry->OnClick = OnBtnRetryClick;
     btn_retry->Clickable = true;
     scoreScreenSprites.push_back(btn_retry);
-    pText* btn_retry_label = new pText(I18n::get("btn_retry"), FONT_PIXEL, 740, 364, Skins::get_options().FontColor_MenuButton);
+    pText* btn_retry_label = new pText(I18n::get("btn_retry"), FONT_PRIMARY, 740, 364, Skins::get_options().FontColor_MenuButton);
     btn_retry_label->Origin = ORIGIN_CENTER;
     scoreScreenSprites.push_back(btn_retry_label);
 
@@ -74,7 +74,7 @@ void Ruleset::OnGameOver() {
     btn_back->OnClick = OnBtnBackClick;
     btn_back->Clickable = true;
     scoreScreenSprites.push_back(btn_back);
-    pText* btn_back_label = new pText(I18n::get("btn_back"), FONT_PIXEL, 740, 432, Skins::get_options().FontColor_MenuButton);
+    pText* btn_back_label = new pText(I18n::get("btn_back"), FONT_PRIMARY, 740, 432, Skins::get_options().FontColor_MenuButton);
     btn_back_label->Origin = ORIGIN_CENTER;
     scoreScreenSprites.push_back(btn_back_label);
 
@@ -158,7 +158,7 @@ void Ruleset::OnFailed() {
     btn_retry->OnClick = OnBtnRetryClick;
     btn_retry->Clickable = true;
     scoreScreenSprites.push_back(btn_retry);
-    auto* btn_retry_label = new pText(I18n::get("btn_retry"), FONT_PIXEL, 740, 364, Skins::get_options().FontColor_MenuButton);
+    auto* btn_retry_label = new pText(I18n::get("btn_retry"), FONT_PRIMARY, 740, 364, Skins::get_options().FontColor_MenuButton);
     btn_retry_label->Origin = ORIGIN_CENTER;
     scoreScreenSprites.push_back(btn_retry_label);
 
@@ -166,7 +166,7 @@ void Ruleset::OnFailed() {
     btn_back->OnClick = OnBtnBackClick;
     btn_back->Clickable = true;
     scoreScreenSprites.push_back(btn_back);
-    auto* btn_back_label = new pText(I18n::get("btn_back"), FONT_PIXEL, 740, 432, Skins::get_options().FontColor_MenuButton);
+    auto* btn_back_label = new pText(I18n::get("btn_back"), FONT_PRIMARY, 740, 432, Skins::get_options().FontColor_MenuButton);
     btn_back_label->Origin = ORIGIN_CENTER;
     scoreScreenSprites.push_back(btn_back_label);
 
@@ -217,7 +217,7 @@ void Ruleset::OnPause() {
     btn_resume->OnClick = OnBtnResumeClick;
     btn_resume->Clickable = true;
     pauseMenuSprites.push_back(btn_resume);
-    auto* btn_resume_label = new pText(I18n::get("btn_resume"), FONT_PIXEL, 479, 237, Skins::get_options().FontColor_MenuButton);
+    auto* btn_resume_label = new pText(I18n::get("btn_resume"), FONT_PRIMARY, 479, 237, Skins::get_options().FontColor_MenuButton);
     btn_resume_label->Origin = ORIGIN_CENTER;
     btn_resume_label->Z = -1000002.f;
     pauseMenuSprites.push_back(btn_resume_label);
@@ -226,7 +226,7 @@ void Ruleset::OnPause() {
     btn_retry->OnClick = OnBtnRetryClick;
     btn_retry->Clickable = true;
     pauseMenuSprites.push_back(btn_retry);
-    auto* btn_retry_label = new pText(I18n::get("btn_retry"), FONT_PIXEL, 479, 305, Skins::get_options().FontColor_MenuButton);
+    auto* btn_retry_label = new pText(I18n::get("btn_retry"), FONT_PRIMARY, 479, 305, Skins::get_options().FontColor_MenuButton);
     btn_retry_label->Origin = ORIGIN_CENTER;
     btn_retry_label->Z = -1000002.f;
     pauseMenuSprites.push_back(btn_retry_label);
@@ -235,7 +235,7 @@ void Ruleset::OnPause() {
     btn_back->OnClick = OnBtnBackClick;
     btn_back->Clickable = true;
     pauseMenuSprites.push_back(btn_back);
-    auto* btn_back_label = new pText(I18n::get("btn_back"), FONT_PIXEL, 479, 373, Skins::get_options().FontColor_MenuButton);
+    auto* btn_back_label = new pText(I18n::get("btn_back"), FONT_PRIMARY, 479, 373, Skins::get_options().FontColor_MenuButton);
     btn_back_label->Origin = ORIGIN_CENTER;
     btn_back_label->Z = -1000002.f;
     pauseMenuSprites.push_back(btn_back_label);
@@ -330,9 +330,9 @@ bool Ruleset::Update() {
     // score/combo output
 
     TextManager::SetFont(FONT_SCORE);
-    TextManager::PrintLocate(940, 10, ORIGIN_TOPRIGHT, "  %08u", mCurrentScore.CurrentScore());
-    TextManager::PrintLocate(910, 44, ORIGIN_TOPRIGHT, "  %.2f%%", mCurrentScore.CountAccuracy());
-    TextManager::PrintLocate(20, 528, ORIGIN_BOTTOMLEFT, "%ix   ", mCurrentScore.CurrentCombo());
+    TextManager::PrintLocateColor(940, 10, ORIGIN_TOPRIGHT, SDL_Color({255, 255, 255}), "  %08u", mCurrentScore.CurrentScore());
+    TextManager::PrintLocateColor(910, 44, ORIGIN_TOPRIGHT, SDL_Color({255, 255, 255}), "  %.2f%%", mCurrentScore.CountAccuracy());
+    TextManager::PrintLocateColor(20, 528, ORIGIN_BOTTOMLEFT, SDL_Color({255, 255, 255}), "%ix   ", mCurrentScore.CurrentCombo());
 
     if(mLifebar.GetCurrentHP() == 0.f && now > BeatmapManager::Current().SkipTime()) {
         return false; // Premature game over, HP is 0

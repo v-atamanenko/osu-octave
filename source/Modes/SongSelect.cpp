@@ -121,7 +121,7 @@ SongSelect::SongSelect() {
     btn_about->OnClick = OnBtnAboutClick;
     btn_about->Clickable = true;
     mSpriteManager->Add(btn_about);
-    auto* btn_about_label = new pText(I18n::get("btn_about"), FONT_PIXEL, 175, 308, Skins::get_options().FontColor_MenuButton);
+    auto* btn_about_label = new pText(I18n::get("btn_about"), FONT_PRIMARY, 175, 308, Skins::get_options().FontColor_MenuButton);
     btn_about_label->Z = -0.02f;
     btn_about_label->Origin = ORIGIN_CENTER;
     mSpriteManager->Add(btn_about_label);
@@ -130,7 +130,7 @@ SongSelect::SongSelect() {
     btn_settings->OnClick = OnBtnSettingsClick;
     btn_settings->Clickable = true;
     mSpriteManager->Add(btn_settings);
-    auto* btn_settings_label = new pText(I18n::get("btn_settings"), FONT_PIXEL, 175, 376, Skins::get_options().FontColor_MenuButton);
+    auto* btn_settings_label = new pText(I18n::get("btn_settings"), FONT_PRIMARY, 175, 376, Skins::get_options().FontColor_MenuButton);
     btn_settings_label->Z = -0.02f;
     btn_settings_label->Origin = ORIGIN_CENTER;
     mSpriteManager->Add(btn_settings_label);
@@ -139,7 +139,7 @@ SongSelect::SongSelect() {
     btn_quit->OnClick = OnBtnQuitClick;
     btn_quit->Clickable = true;
     mSpriteManager->Add(btn_quit);
-    auto* btn_quit_label = new pText(I18n::get("btn_quit"), FONT_PIXEL, 175, 445, Skins::get_options().FontColor_MenuButton);
+    auto* btn_quit_label = new pText(I18n::get("btn_quit"), FONT_PRIMARY, 175, 445, Skins::get_options().FontColor_MenuButton);
     btn_quit_label->Z = -0.02f;
     btn_quit_label->Origin = ORIGIN_CENTER;
     mSpriteManager->Add(btn_quit_label);
@@ -148,7 +148,7 @@ SongSelect::SongSelect() {
     btn_random->OnClick = OnBtnRandomClick;
     btn_random->Clickable = true;
     mSpriteManager->Add(btn_random);
-    auto* btn_random_label = new pText(I18n::get("btn_random"), FONT_PIXEL, 503, 498, Skins::get_options().FontColor_MenuButton);
+    auto* btn_random_label = new pText(I18n::get("btn_random"), FONT_PRIMARY, 503, 498, Skins::get_options().FontColor_MenuButton);
     btn_random_label->Z = -0.02f;
     btn_random_label->Origin = ORIGIN_CENTER;
     mSpriteManager->Add(btn_random_label);
@@ -171,7 +171,7 @@ SongSelect::SongSelect() {
     btn_sort_all->Clickable = true;
     btn_sort_all->ExtendedClickableArea = true;
     mSpriteManager->Add(btn_sort_all);
-    btn_sort_all_label = new pText(I18n::get("filter_all"), FONT_PIXEL, 439, 45, Skins::get_options().FontColor_SortingButtonActive);
+    btn_sort_all_label = new pText(I18n::get("filter_all"), FONT_PRIMARY, 439, 45, Skins::get_options().FontColor_SortingButtonActive);
     btn_sort_all_label->Z = -0.02f;
     btn_sort_all_label->Origin = ORIGIN_CENTER;
     mSpriteManager->Add(btn_sort_all_label);
@@ -181,7 +181,7 @@ SongSelect::SongSelect() {
     btn_sort_a_e->Clickable = true;
     btn_sort_a_e->ExtendedClickableArea = true;
     mSpriteManager->Add(btn_sort_a_e);
-    btn_sort_a_e_label = new pText(I18n::get("filter_a_e"), FONT_PIXEL, 569, 45, Skins::get_options().FontColor_SortingButton);
+    btn_sort_a_e_label = new pText(I18n::get("filter_a_e"), FONT_PRIMARY, 569, 45, Skins::get_options().FontColor_SortingButton);
     btn_sort_a_e_label->Z = -0.02f;
     btn_sort_a_e_label->Origin = ORIGIN_CENTER;
     mSpriteManager->Add(btn_sort_a_e_label);
@@ -191,7 +191,7 @@ SongSelect::SongSelect() {
     btn_sort_f_j->Clickable = true;
     btn_sort_f_j->ExtendedClickableArea = true;
     mSpriteManager->Add(btn_sort_f_j);
-    btn_sort_f_j_label = new pText(I18n::get("filter_f_j"), FONT_PIXEL, 648, 45, Skins::get_options().FontColor_SortingButton);
+    btn_sort_f_j_label = new pText(I18n::get("filter_f_j"), FONT_PRIMARY, 648, 45, Skins::get_options().FontColor_SortingButton);
     btn_sort_f_j_label->Z = -0.02f;
     btn_sort_f_j_label->Origin = ORIGIN_CENTER;
     mSpriteManager->Add(btn_sort_f_j_label);
@@ -201,7 +201,7 @@ SongSelect::SongSelect() {
     btn_sort_k_o->Clickable = true;
     btn_sort_k_o->ExtendedClickableArea = true;
     mSpriteManager->Add(btn_sort_k_o);
-    btn_sort_k_o_label = new pText(I18n::get("filter_k_o"), FONT_PIXEL, 727, 45, Skins::get_options().FontColor_SortingButton);
+    btn_sort_k_o_label = new pText(I18n::get("filter_k_o"), FONT_PRIMARY, 727, 45, Skins::get_options().FontColor_SortingButton);
     btn_sort_k_o_label->Z = -0.02f;
     btn_sort_k_o_label->Origin = ORIGIN_CENTER;
     mSpriteManager->Add(btn_sort_k_o_label);
@@ -211,7 +211,7 @@ SongSelect::SongSelect() {
     btn_sort_p_t->Clickable = true;
     btn_sort_p_t->ExtendedClickableArea = true;
     mSpriteManager->Add(btn_sort_p_t);
-    btn_sort_p_t_label = new pText(I18n::get("filter_p_t"), FONT_PIXEL, 806, 45, Skins::get_options().FontColor_SortingButton);
+    btn_sort_p_t_label = new pText(I18n::get("filter_p_t"), FONT_PRIMARY, 806, 45, Skins::get_options().FontColor_SortingButton);
     btn_sort_p_t_label->Z = -0.02f;
     btn_sort_p_t_label->Origin = ORIGIN_CENTER;
     mSpriteManager->Add(btn_sort_p_t_label);
@@ -221,7 +221,7 @@ SongSelect::SongSelect() {
     btn_sort_u_z->Clickable = true;
     btn_sort_u_z->ExtendedClickableArea = true;
     mSpriteManager->Add(btn_sort_u_z);
-    btn_sort_u_z_label = new pText(I18n::get("filter_u_z"), FONT_PIXEL, 885, 45, Skins::get_options().FontColor_SortingButton);
+    btn_sort_u_z_label = new pText(I18n::get("filter_u_z"), FONT_PRIMARY, 885, 45, Skins::get_options().FontColor_SortingButton);
     btn_sort_u_z_label->Z = -0.02f;
     btn_sort_u_z_label->Origin = ORIGIN_CENTER;
     mSpriteManager->Add(btn_sort_u_z_label);
@@ -460,29 +460,29 @@ void SongSelect::UpdateSonglist(bool initial)
         SDL_Color font_color = Skins::get_options().FontColor_BeatmapDescription;
 
         if (isExpanded) {
-            auto* mapTitle = new pText(map.Title, FONT_CONSOLE_BIG_BOLD, 494, 117 + ((OOInt)i * 94) + extra_y_offset, font_color);
+            auto* mapTitle = new pText(map.Title, FONT_PRIMARY_SMALLER_BOLD, 494, 117 + ((OOInt)i * 94) + extra_y_offset, font_color);
             mapTitle->Z = -0.05f;
 
-            auto* mapArtist = new pText(map.Artist, FONT_CONSOLE, 494, 137 + ((OOInt)i * 94) + extra_y_offset, font_color);
+            auto* mapArtist = new pText(map.Artist, FONT_PRIMARY_SMALL, 494, 137 + ((OOInt)i * 94) + extra_y_offset, font_color);
             mapArtist->Z = -0.05f;
 
-            auto* mapVersion = new pText(map.Version, FONT_CONSOLE, 494, 154 + ((OOInt)i * 94) + extra_y_offset, font_color);
+            auto* mapVersion = new pText(map.Version, FONT_PRIMARY_SMALL, 494, 154 + ((OOInt)i * 94) + extra_y_offset, font_color);
             mapVersion->Z = -0.05f;
 
-            auto* highscoreTitle = new pText(I18n::get("personal_best"), FONT_CONSOLE_BIG_BOLD, 494, 184 + ((OOInt)i * 94) + extra_y_offset, font_color);
+            auto* highscoreTitle = new pText(I18n::get("personal_best"), FONT_PRIMARY_SMALLER_BOLD, 494, 184 + ((OOInt)i * 94) + extra_y_offset, font_color);
             highscoreTitle->Z = -0.06f;
-            auto* highscoreScoreTitle = new pText(I18n::get("score"), FONT_CONSOLE_BOLD, 494, 204 + ((OOInt)i * 94) + extra_y_offset, font_color);
+            auto* highscoreScoreTitle = new pText(I18n::get("score"), FONT_PRIMARY_SMALL_BOLD, 494, 204 + ((OOInt)i * 94) + extra_y_offset, font_color);
             highscoreScoreTitle->Z = -0.06f;
 
             char highscoreScore_text[32];
             sprintf(highscoreScore_text, "%i (%ix)", score.score, score.combo);
-            auto* highscoreScore = new pText(highscoreScore_text, FONT_CONSOLE, 540, 204 + ((OOInt)i * 94) + extra_y_offset, font_color);
+            auto* highscoreScore = new pText(highscoreScore_text, FONT_PRIMARY_SMALL, 540, 204 + ((OOInt)i * 94) + extra_y_offset, font_color);
             highscoreScore->Z = -0.06f;
-            auto* highscoreAccuracyTitle = new pText(I18n::get("accuracy"), FONT_CONSOLE_BOLD, 494, 222 + ((OOInt)i * 94) + extra_y_offset, font_color);
+            auto* highscoreAccuracyTitle = new pText(I18n::get("accuracy"), FONT_PRIMARY_SMALL_BOLD, 494, 222 + ((OOInt)i * 94) + extra_y_offset, font_color);
             highscoreAccuracyTitle->Z = -0.06f;
             char highscoreAccuracy_text[32];
             sprintf(highscoreAccuracy_text, "%.3f%%", score.accuracy);
-            auto* highscoreAccuracy = new pText(highscoreAccuracy_text, FONT_CONSOLE, 563, 222 + ((OOInt)i * 94) + extra_y_offset, font_color);
+            auto* highscoreAccuracy = new pText(highscoreAccuracy_text, FONT_PRIMARY_SMALL, 563, 222 + ((OOInt)i * 94) + extra_y_offset, font_color);
             highscoreAccuracy->Z = -0.06f;
 
             mSpriteManager->Add(mapTitle);
@@ -494,13 +494,13 @@ void SongSelect::UpdateSonglist(bool initial)
             mSpriteManager->Add(highscoreAccuracyTitle);
             mSpriteManager->Add(highscoreAccuracy);
         } else {
-            auto* mapTitle = new pText(map.Title, FONT_CONSOLE_BIG_BOLD, 494, 106 + ((OOInt)i * 94) + extra_y_offset, font_color);
+            auto* mapTitle = new pText(map.Title, FONT_PRIMARY_SMALLER_BOLD, 494, 106 + ((OOInt)i * 94) + extra_y_offset, font_color);
             mapTitle->Z = -0.05f;
 
-            auto* mapArtist = new pText(map.Artist, FONT_CONSOLE, 494, 126 + ((OOInt)i * 94) + extra_y_offset, font_color);
+            auto* mapArtist = new pText(map.Artist, FONT_PRIMARY_SMALL, 494, 126 + ((OOInt)i * 94) + extra_y_offset, font_color);
             mapArtist->Z = -0.05f;
 
-            auto* mapVersion = new pText(map.Version, FONT_CONSOLE, 494, 143 + ((OOInt)i * 94) + extra_y_offset, font_color);
+            auto* mapVersion = new pText(map.Version, FONT_PRIMARY_SMALL, 494, 143 + ((OOInt)i * 94) + extra_y_offset, font_color);
             mapVersion->Z = -0.05f;
 
             mSpriteManager->Add(mapTitle);
@@ -523,7 +523,7 @@ void SongSelect::UpdateSonglist(bool initial)
 
             char stars_text[32];
             sprintf(stars_text, "%.2f", map.starRating);
-            auto* starsText = new pText(stars_text, FONT_CONSOLE, 707, 161 + ((OOInt)i * 94) + extra_y_offset, font_color);
+            auto* starsText = new pText(stars_text, FONT_PRIMARY_SMALL, 707, 161 + ((OOInt)i * 94) + extra_y_offset, font_color);
             starsText->Z = -0.06f;
             starsText->Origin = ORIGIN_TOPRIGHT;
 
@@ -548,7 +548,7 @@ void SongSelect::UpdateSonglist(bool initial)
         mEntriesDisplayed++;
     }
 
-    auto* current_page_label = new pText(std::to_string(mCurrentPage+1)+"/"+std::to_string(mCountPages), FONT_PIXEL, 811, 498, Skins::get_options().FontColor_Pagination);
+    auto* current_page_label = new pText(std::to_string(mCurrentPage+1)+"/"+std::to_string(mCountPages), FONT_PRIMARY, 811, 498, Skins::get_options().FontColor_Pagination);
     current_page_label->Z = -0.02f;
     current_page_label->Origin = ORIGIN_CENTER;
     mSpriteManager->Add(current_page_label);

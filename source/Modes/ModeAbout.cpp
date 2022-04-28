@@ -31,7 +31,7 @@ ModeAbout::ModeAbout() {
     spr->OnClick = ModeAbout_OnBtnAboutClick;
     spr->Clickable = true;
     mSpriteManager.Add(spr);
-    spr = new pText(I18n::get("btn_about"), FONT_PIXEL, 175, 308, Skins::get_options().FontColor_MenuButtonActive);
+    spr = new pText(I18n::get("btn_about"), FONT_PRIMARY, 175, 308, Skins::get_options().FontColor_MenuButtonActive);
     spr->Z = -0.02;
     spr->Origin = ORIGIN_CENTER;
     mSpriteManager.Add(spr);
@@ -40,7 +40,7 @@ ModeAbout::ModeAbout() {
     spr->OnClick = ModeAbout_OnBtnSettingsClick;
     spr->Clickable = true;
     mSpriteManager.Add(spr);
-    spr = new pText(I18n::get("btn_settings"), FONT_PIXEL, 175, 376, Skins::get_options().FontColor_MenuButton);
+    spr = new pText(I18n::get("btn_settings"), FONT_PRIMARY, 175, 376, Skins::get_options().FontColor_MenuButton);
     spr->Z = -0.02;
     spr->Origin = ORIGIN_CENTER;
     mSpriteManager.Add(spr);
@@ -49,7 +49,7 @@ ModeAbout::ModeAbout() {
     spr->OnClick = ModeAbout_OnBtnQuitClick;
     spr->Clickable = true;
     mSpriteManager.Add(spr);
-    spr = new pText(I18n::get("btn_quit"), FONT_PIXEL, 175, 445, Skins::get_options().FontColor_MenuButton);
+    spr = new pText(I18n::get("btn_quit"), FONT_PRIMARY, 175, 445, Skins::get_options().FontColor_MenuButton);
     spr->Z = -0.02;
     spr->Origin = ORIGIN_CENTER;
     mSpriteManager.Add(spr);

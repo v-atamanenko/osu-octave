@@ -18,7 +18,7 @@
 typedef Iterator<TextureType, TextureType::TX_PLAY_CIRCLE, TextureType::TX_ABOUT> texTypeIterator;
 typedef Iterator<HitSoundName, HitSoundName::HITSOUND_NORMAL_HITNORMAL, HitSoundName::HITSOUND_SOFT_SPINNERBONUS> hitSoundsIterator;
 typedef Iterator<UISoundName, UISoundName::UISOUND_APPLAUSE, UISoundName::UISOUND_WELCOME_PIANO> uiSoundsIterator;
-typedef Iterator<FontName, FontName::FONT_CONSOLE, FontName::FONT_PIXEL> fontNamesIterator;
+typedef Iterator<FontName, FontName::FONT_PRIMARY, FontName::FONT_NUMBERING> fontNamesIterator;
 
 using json = nlohmann::json;
 
@@ -751,16 +751,24 @@ class Skins
                     case FONT_NUMBERING:
                         filename = "numbering.ttf";
                         break;
-                    case FONT_CONSOLE:
-                    case FONT_CONSOLE_BIG:
-                        filename = "sans.ttf";
+                    case FONT_PRIMARY:
+                    case FONT_PRIMARY_SMALL:
+                    case FONT_PRIMARY_SMALLER:
+                    case FONT_PRIMARY_BIG:
+                        filename = "primary.ttf";
                         break;
-                    case FONT_CONSOLE_BOLD:
-                    case FONT_CONSOLE_BIG_BOLD:
-                        filename = "sans-bold.ttf";
+                    case FONT_PRIMARY_BOLD:
+                    case FONT_PRIMARY_SMALL_BOLD:
+                    case FONT_PRIMARY_SMALLER_BOLD:
+                        filename = "primary-bold.ttf";
                         break;
                     case FONT_SCORE:
-                    case FONT_PIXEL:
+                        if (file_exists(path + "score.ttf")) {
+                            filename = "score.ttf";
+                        } else {
+                            filename = "primary.ttf";
+                        }
+                        break;
                     default:
                         filename = "primary.ttf";
                         break;

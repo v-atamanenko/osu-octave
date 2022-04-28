@@ -11,7 +11,7 @@ Welcome::Welcome() {
     mBG = new pSprite(TX_WELCOME_BG, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255);
     mLogo = new Logo(480, 272, false);
 
-    mStatus = new pText(I18n::get("loading_settings"), FONT_PIXEL, 480, 422, Skins::get_options().FontColor_LoadingScreen);
+    mStatus = new pText(I18n::get("loading_settings"), FONT_PRIMARY, 480, 422, Skins::get_options().FontColor_LoadingScreen);
     mStatus->Origin = ORIGIN_CENTER;
 
     mSpriteManager.Add(mBG);

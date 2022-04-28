@@ -67,7 +67,7 @@ bool pDrawable::InBounds(OOInt x, OOInt y) const {
 			return x >= s_x && x <= s_x+s_w
 				&& y >= s_y && y <= s_y+s_h;
 		}
-		
+
 		case ORIGIN_CENTER:
 		{
 			OOInt halfWidth = s_w>>1;
@@ -76,13 +76,20 @@ bool pDrawable::InBounds(OOInt x, OOInt y) const {
 			return x >= s_x-halfWidth && x <= s_x+halfWidth
 				&& y >= s_y-halfHeight && y <= s_y+halfHeight;
 		}
-		
+
+        case ORIGIN_CENTERLEFT:
+        {
+            OOInt halfHeight = s_h>>1;
+            return x >= s_x && x <= s_x+s_w
+               && y >= s_y-halfHeight && y <= s_y+halfHeight;
+        }
+
 		case ORIGIN_BOTTOMLEFT:
 		{
 			return x >= s_x && x <= s_x+s_w
 				&& y >= s_y-s_h && y <= s_y;
 		}
-		
+
 		default:
 			return false;
 	}
