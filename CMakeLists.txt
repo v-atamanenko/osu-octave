@@ -74,6 +74,7 @@ add_executable(${PROJECT_NAME}
         ${PROJECT_SOURCE_DIR}/source/Helpers/AudioManager.cpp
         ${PROJECT_SOURCE_DIR}/source/Helpers/OsuSliderCurves.cpp
         ${PROJECT_SOURCE_DIR}/source/Helpers/PreviewBuffer.cpp
+        ${PROJECT_SOURCE_DIR}/source/UIElements/UIElementsManager.cpp
 
         ${PROJECT_SOURCE_DIR}/lib/OsuParser/OsuParser.cpp
         ${PROJECT_SOURCE_DIR}/lib/OsuParser/OsUtils.cpp

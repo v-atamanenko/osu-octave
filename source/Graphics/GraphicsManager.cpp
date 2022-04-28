@@ -294,8 +294,13 @@ void GraphicsManager::LoadTexturesForMode(ModeType mod) {
             LoadTexture(TX_SETTINGS_CONTROL_SELECTOR_1);
             LoadTexture(TX_SETTINGS_CONTROL_SELECTOR_2);
             LoadTexture(TX_SETTINGS_CONTROL_SELECTOR_3);
-            LoadTexture(TX_SETTINGS_PANEL_GAMEPLAY);
-            LoadTexture(TX_SETTINGS_PANEL_GENERAL);
+            LoadTexture(TX_SETTINGS_SLIDER_LINE);
+            LoadTexture(TX_SETTINGS_STRING_SELECTOR);
+            LoadTexture(TX_SETTINGS_TAB);
+            LoadTexture(TX_SETTINGS_TAB_ACTIVE);
+            LoadTexture(TX_SETTINGS_PANEL);
+            LoadTexture(TX_SETTINGS_PANEL_BG_1);
+            LoadTexture(TX_SETTINGS_PANEL_BG_2);
             break;
         case MODE_ABOUT:
             LoadTexture(TX_LOGO);

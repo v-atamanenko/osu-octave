@@ -716,13 +716,33 @@ class Skins
                         subfolder = "ui/";
                         filename = "controls-selector-3.png";
                         break;
-                    case TX_SETTINGS_PANEL_GAMEPLAY:
+                    case TX_SETTINGS_SLIDER_LINE:
                         subfolder = "ui/";
-                        filename = "settings-panel-gameplay.png";
+                        filename = "settings-slider-line.png";
                         break;
-                    case TX_SETTINGS_PANEL_GENERAL:
+                    case TX_SETTINGS_STRING_SELECTOR:
                         subfolder = "ui/";
-                        filename = "settings-panel-general.png";
+                        filename = "settings-string-selector.png";
+                        break;
+                    case TX_SETTINGS_TAB:
+                        subfolder = "ui/";
+                        filename = "settings-tab.png";
+                        break;
+                    case TX_SETTINGS_TAB_ACTIVE:
+                        subfolder = "ui/";
+                        filename = "settings-tab-active.png";
+                        break;
+                    case TX_SETTINGS_PANEL:
+                        subfolder = "ui/";
+                        filename = "settings-panel.png";
+                        break;
+                    case TX_SETTINGS_PANEL_BG_1:
+                        subfolder = "ui/";
+                        filename = "settings-panel-bg-1.png";
+                        break;
+                    case TX_SETTINGS_PANEL_BG_2:
+                        subfolder = "ui/";
+                        filename = "settings-panel-bg-2.png";
                         break;
                     case TX_STARS:
                         subfolder = "ui/";

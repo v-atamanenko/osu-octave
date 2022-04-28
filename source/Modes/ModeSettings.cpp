@@ -3,7 +3,13 @@
 #include "DataStorage/Skins.h"
 #include "DataStorage/I18n.h"
 
-uint8_t ModeSettings::SwitchTabTo = 0;
+#include "DataStorage/Settings.h"
+#include "Graphics/pText.h"
+#include "System/TextManager.h"
+#include "Helpers/AudioManager.h"
+
+
+SettingsTab ModeSettings::SwitchTabTo = SettingsTab::SETTINGS_TAB_UNSET;
 
 void ModeSettings_OnBtnQuitClick(pDrawable* self, OOInt x, OOInt y) {
     SDL_Event sdlevent;
@@ -23,12 +29,17 @@ void ModeSettings_OnBtnAboutClick(pDrawable* self, OOInt x, OOInt y) {
 
 void ModeSettings_SwitchTabToGameplay(pDrawable* self, OOInt x, OOInt y) {
     AudioManager::Engine().PlayUISound(UISOUND_MENUCLICK);
-    ModeSettings::SwitchTabTo = 2;
+    ModeSettings::SwitchTabTo = SettingsTab::SETTINGS_TAB_GAMEPLAY;
 }
 
 void ModeSettings_SwitchTabToGeneral(pDrawable* self, OOInt x, OOInt y) {
     AudioManager::Engine().PlayUISound(UISOUND_MENUCLICK);
-    ModeSettings::SwitchTabTo = 1;
+    ModeSettings::SwitchTabTo = SettingsTab::SETTINGS_TAB_GENERAL;
+}
+
+void ModeSettings_SwitchTabToSound(pDrawable* self, OOInt x, OOInt y) {
+    AudioManager::Engine().PlayUISound(UISOUND_MENUCLICK);
+    ModeSettings::SwitchTabTo = SettingsTab::SETTINGS_TAB_SOUND;
 }
 
 ModeSettings::ModeSettings() {
@@ -36,21 +47,29 @@ ModeSettings::ModeSettings() {
     TabGeneral();
 }
 
-void ModeSettings::InitCommonSprites() {
+void ModeSettings::InitCommonSprites(int use_bg) {
     Clear();
 
     pDrawable* spr;
     spr = new pSprite(TX_MENU_BG, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, 0);
     mSpriteManager.Add(spr);
 
-    mLogo = new Logo(176, 145);
-    mLogo->AddToSpriteManager(mSpriteManager);
+    TextureType panelbg = TX_SETTINGS_PANEL;
+    if (use_bg == 1) {
+        panelbg = TX_SETTINGS_PANEL_BG_1;
+    } else if (use_bg == 2) {
+        panelbg = TX_SETTINGS_PANEL_BG_2;
+    }
+    spr = new pSprite(panelbg, 390, 86, 531, 413, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, 0);
+    mSpriteManager.Add(spr);
+
+    mUIElementsManager.CreateLogo(176, 145);
 
     spr = new pSprite(TX_BUTTON_BIG, 37, 281, 277, 55, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.01);
     spr->OnClick = ModeSettings_OnBtnAboutClick;
     spr->Clickable = true;
     mSpriteManager.Add(spr);
-    spr = new pText(I18n::get("btn_about"), FONT_PIXEL, 175, 308, Skins::get_options().FontColor_MenuButton);
+    spr = new pText(I18n::get("btn_about"), FONT_PRIMARY, 175, 308, Skins::get_options().FontColor_MenuButton);
     spr->Z = -0.02;
     spr->Origin = ORIGIN_CENTER;
     mSpriteManager.Add(spr);
@@ -59,7 +78,7 @@ void ModeSettings::InitCommonSprites() {
     spr->OnClick = ModeSettings_OnBtnSettingsClick;
     spr->Clickable = true;
     mSpriteManager.Add(spr);
-    spr = new pText(I18n::get("btn_settings"), FONT_PIXEL, 175, 376, Skins::get_options().FontColor_MenuButtonActive);
+    spr = new pText(I18n::get("btn_settings"), FONT_PRIMARY, 175, 376, Skins::get_options().FontColor_MenuButtonActive);
     spr->Z = -0.02;
     spr->Origin = ORIGIN_CENTER;
     mSpriteManager.Add(spr);
@@ -68,278 +87,142 @@ void ModeSettings::InitCommonSprites() {
     spr->OnClick = ModeSettings_OnBtnQuitClick;
     spr->Clickable = true;
     mSpriteManager.Add(spr);
-    spr = new pText(I18n::get("btn_quit"), FONT_PIXEL, 175, 445, Skins::get_options().FontColor_MenuButton);
+    spr = new pText(I18n::get("btn_quit"), FONT_PRIMARY, 175, 445, Skins::get_options().FontColor_MenuButton);
     spr->Z = -0.02;
     spr->Origin = ORIGIN_CENTER;
     mSpriteManager.Add(spr);
 }
 
-void ValueSlider_updateDisplayedValue (OOFloat val, pText* valLabel, bool multiplier_mode=false) {
-    if (multiplier_mode) {
-        char value_str[8];
-        snprintf(value_str, 8, "%.2fx", (OOFloat)((OOInt)((val+100) * 1 + .5)) / 100);
-        valLabel->Text = value_str;
-    } else {
-        valLabel->Text = std::to_string((OOInt)round(val));
+
+void ModeSettings::InitTabs(SettingsTab active_tab) {
+    void(*on_click)(pDrawable* self, OOInt x, OOInt y);
+    std::string label;
+    pDrawable* spr;
+
+    for (int i = 1; i < SettingsTab::SETTINGS_TAB_MAX; i++) {
+        auto t = static_cast<SettingsTab>(i);
+        switch (t) {
+            case SettingsTab::SETTINGS_TAB_GENERAL:
+                on_click = ModeSettings_SwitchTabToGeneral;
+                label = I18n::get("settings_tab_general");
+                break;
+            case SettingsTab::SETTINGS_TAB_GAMEPLAY:
+                on_click = ModeSettings_SwitchTabToGameplay;
+                label = I18n::get("settings_tab_gameplay");
+                break;
+            case SettingsTab::SETTINGS_TAB_SOUND:
+                on_click = ModeSettings_SwitchTabToSound;
+                label = I18n::get("settings_tab_sound");
+                break;
+            default:
+                assert(false);
+        }
+
+        spr = new pSprite(t == active_tab ? TX_SETTINGS_TAB_ACTIVE : TX_SETTINGS_TAB, 390+(162*(i-1)), 46, 150, 40,
+                          ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.1);
+        if (t != active_tab) {
+            spr->Clickable = true;
+            spr->OnClick = on_click;
+        }
+        mSpriteManager.Add(spr);
+
+        spr = new pText(label, FONT_PRIMARY, 465 + (162 * (i - 1)), 67,
+                        t == active_tab ? Skins::get_options().FontColor_MenuButtonActive : Skins::get_options().FontColor_MenuButton);
+        spr->Z = -0.2;
+        spr->Origin = ORIGIN_CENTER;
+        mSpriteManager.Add(spr);
     }
-}
-
-void ValueSlider_saveDisplayedValue (OOFloat val, const std::string& setting_name) {
-    Settings::set_float(setting_name, val);
-    if (setting_name == "volume_menumusic") {
-        AudioManager::Engine().UpdateMusicVolume(val);
-    }
-}
-
-void StringSelector_saveDisplayedValue (const std::string& val, const std::string& setting_name) {
-    Settings::set_str(setting_name, val);
-
-    if (setting_name == "skin") {
-        Skins::init_skin();
-        AudioManager::Engine().ResetSamples();
-    }
-}
-
-void RadioButton_saveDisplayedValue (bool val, const std::string& setting_name) {
-    Settings::set_bool(setting_name, val);
-}
-
-void TernaryButton_saveDisplayedValue (uint8_t val, const std::string& setting_name) {
-    Settings::set_int(setting_name, val);
-
-    if (setting_name == "controlScheme") {
-        bool temp = InputHelper::vitaUseBackTouch;
-
-        Settings::update_action_controls(val);
-        Settings::save();
-        InputHelper::InitInput();
-
-        InputHelper::vitaUseBackTouch = temp;
-    } else {
-        // TernaryButtons are only used for control scheme selection for now.
-    }
-}
-
-void ModeSettings::CreateRadioButton(OOInt x, OOInt y, const std::string& setting_name,
-                                     const std::string& false_value_label, const std::string& true_value_label) {
-    auto* rb = new RadioButton(x, y, false_value_label, true_value_label, Settings::get_bool(setting_name));
-
-    std::function<void(bool)> saveval_lambda = [setting_name](bool s) { return RadioButton_saveDisplayedValue(s, setting_name); };
-    rb->value_callback = saveval_lambda;
-
-    radioButtons.push_back(rb);
-    rb->AddToSpriteManager(mSpriteManager);
-}
-
-void ModeSettings::CreateTernaryButton(OOInt x, OOInt y, const std::string& setting_name,
-                                       TextureType bg1, TextureType bg2, TextureType bg3) {
-    auto* rb = new TernaryButton(x, y, Settings::get_int(setting_name), bg1, bg2, bg3);
-
-    std::function<void(uint8_t)> saveval_lambda = [setting_name](uint8_t s) { return TernaryButton_saveDisplayedValue(s, setting_name); };
-    rb->value_callback = saveval_lambda;
-
-    ternaryButtons.push_back(rb);
-    rb->AddToSpriteManager(mSpriteManager);
-}
-
-void ModeSettings::CreateStringSelector(OOInt x, OOInt y, const std::string& setting_name) {
-    OOInt current_value_index;
-
-    std::vector<std::string> available_values;
-    if (setting_name == "skin") {
-        current_value_index = Skins::get_available_skins(available_values);
-    } else {
-        assert(false); // StringSelectors are only used for skin selection for now.
-    }
-
-    auto* ss = new StringSelector(x, y);
-    ss->Init(current_value_index, available_values);
-
-    std::function<void(const std::string& s)> saveval_lambda = [setting_name](const std::string& s) { return StringSelector_saveDisplayedValue(s, setting_name); };
-    ss->value_callback = saveval_lambda;
-
-    stringSelectors.push_back(ss);
-    ss->AddToSpriteManager(mSpriteManager);
-}
-
-void ModeSettings::CreateValueSlider(OOInt x, OOInt y, const std::string& setting_name, bool multiplier_mode) {
-    OOFloat lastValue = Settings::get_float(setting_name);
-    auto* vs = new ValueSlider(x, y);
-    vs->Init(lastValue);
-    pText* spr;
-
-    if (multiplier_mode) {
-        char value_str[8];
-        snprintf(value_str, 8, "%.2fx", (OOFloat)((OOInt)((lastValue+100) * 1 + .5)) / 100.f);
-        spr = new pText(value_str,FONT_PIXEL, x+266, y, Skins::get_options().FontColor_SettingsLabel);
-    } else {
-        spr = new pText(std::to_string((OOInt)(round(lastValue))), FONT_PIXEL, x+266, y, Skins::get_options().FontColor_SettingsLabel);
-    }
-
-    spr->Z = -1.0;
-    spr->Origin = ORIGIN_CENTER;
-    mSpriteManager.Add(spr);
-
-    if (multiplier_mode) {
-        std::function<void(OOFloat)> updateval_lambda = [spr](OOFloat f) {
-            return ValueSlider_updateDisplayedValue(f, spr, true);
-        };
-        vs->value_change_callback = updateval_lambda;
-    } else {
-        std::function<void(OOFloat)> updateval_lambda = [spr](OOFloat f) {
-            return ValueSlider_updateDisplayedValue(f, spr);
-        };
-        vs->value_change_callback = updateval_lambda;
-    }
-
-    std::function<void(OOFloat)> saveval_lambda = [setting_name](OOFloat f) { return ValueSlider_saveDisplayedValue(f, setting_name); };
-    vs->value_callback = saveval_lambda;
-
-    valueSliders.push_back(vs);
-    vs->AddToSpriteManager(mSpriteManager);
 }
 
 void ModeSettings::TabGeneral() {
-    InitCommonSprites();
+    InitCommonSprites(1);
+    InitTabs(SettingsTab::SETTINGS_TAB_GENERAL);
 
-    pDrawable* spr;
-    spr = new pSprite(TX_SETTINGS_PANEL_GENERAL, 390, 46, 531, 453, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.1);
-    mSpriteManager.Add(spr);
+    auto * lbl = new pText(I18n::get("settings_appearance"), FONT_PRIMARY_BIG, 413, 108,
+                           Skins::get_options().FontColor_SettingsLabel);
+    mSpriteManager.Add(lbl);
 
-    spr = new pSprite(TX_BUTTON_BIG, 558, 42, 158, 44, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 0);
-    spr->Clickable = true;
-    spr->OnClick = ModeSettings_SwitchTabToGameplay;
-    mSpriteManager.Add(spr);
+    mUIElementsManager.CreateStringSelector(413, 175, I18n::get("settings_skin"), "skin");
+    mUIElementsManager.CreateValueSlider(413, 175+43, I18n::get("settings_bgdim"), "bgdim");
+    mUIElementsManager.CreateValueSlider(413, 175+43+43, I18n::get("settings_hoscale"), "hoscale", true);
 
-    CreateValueSlider(589, 153, "volume_hitsounds");
-    CreateValueSlider(589, 197, "volume_music");
-    CreateValueSlider(589, 241, "volume_menumusic");
-    CreateValueSlider(589, 285, "volume_uisounds");
-    CreateStringSelector(589, 360, "skin");
-    CreateValueSlider(589, 419, "bgdim");
-    CreateValueSlider(589, 463, "hoscale", true);
+    lbl = new pText(I18n::get("settings_system"), FONT_PRIMARY_BIG, 413, 298,
+                           Skins::get_options().FontColor_SettingsLabel);
+    mSpriteManager.Add(lbl);
+    mUIElementsManager.CreateStringSelector(413, 365, I18n::get("settings_language"), "language");
 }
 
 void ModeSettings::TabGameplay() {
     InitCommonSprites();
+    InitTabs(SettingsTab::SETTINGS_TAB_GAMEPLAY);
 
-    pDrawable* spr;
-    spr = new pSprite(TX_SETTINGS_PANEL_GAMEPLAY, 390, 46, 531, 453, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.1);
-    mSpriteManager.Add(spr);
+    auto * lbl = new pText(I18n::get("settings_mods"), FONT_PRIMARY_BIG, 413, 108,
+                           Skins::get_options().FontColor_SettingsLabel);
+    mSpriteManager.Add(lbl);
+    mUIElementsManager.CreateRadioButton(413, 175, I18n::get("settings_nofail"), "noFail", I18n::get("btn_disable"), I18n::get("btn_enable"));
 
-    spr = new pSprite(TX_BUTTON_BIG, 393, 42, 158, 44, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 0);
-    spr->Clickable = true;
-    spr->OnClick = ModeSettings_SwitchTabToGeneral;
-    mSpriteManager.Add(spr);
+    lbl = new pText(I18n::get("settings_mods_notice"), FONT_PRIMARY_SMALLER, 413, 197,
+                           Skins::get_options().FontColor_SettingsLabelNotice);
+    mSpriteManager.Add(lbl);
 
-    CreateRadioButton(572, 155, "noFail", I18n::get("btn_disable"), I18n::get("btn_enable"));
-    CreateRadioButton(572, 280, "vitaUseBackTouch", I18n::get("btn_front_touch"), I18n::get("btn_back_touch"));
-    CreateTernaryButton(572, 326, "controlScheme", TX_SETTINGS_CONTROL_SELECTOR_1, TX_SETTINGS_CONTROL_SELECTOR_2, TX_SETTINGS_CONTROL_SELECTOR_3);
-    CreateRadioButton(572, 429, "enableStacking", I18n::get("btn_disable"), I18n::get("btn_enable"));
+    lbl = new pText(I18n::get("settings_controls"), FONT_PRIMARY_BIG, 413, 237,
+                    Skins::get_options().FontColor_SettingsLabel);
+    mSpriteManager.Add(lbl);
+
+    mUIElementsManager.CreateRadioButton(413, 299, I18n::get("settings_vitaUseBackTouch"), "vitaUseBackTouch", I18n::get("btn_front_touch"), I18n::get("btn_back_touch"));
+    mUIElementsManager.CreateTernaryButton(413, 299+43, I18n::get("settings_controlScheme"), "controlScheme", TX_SETTINGS_CONTROL_SELECTOR_1, TX_SETTINGS_CONTROL_SELECTOR_2, TX_SETTINGS_CONTROL_SELECTOR_3);
+
+    lbl = new pText(I18n::get("settings_other"), FONT_PRIMARY_BIG, 413, 378,
+                    Skins::get_options().FontColor_SettingsLabel);
+    mSpriteManager.Add(lbl);
+
+    mUIElementsManager.CreateRadioButton(413, 378+62, I18n::get("settings_enableStacking"), "enableStacking", I18n::get("btn_disable"), I18n::get("btn_enable"));
+    lbl = new pText(I18n::get("settings_stacking_notice"), FONT_PRIMARY_SMALLER, 413, 378+62+9,
+                    Skins::get_options().FontColor_SettingsLabelNotice);
+    mSpriteManager.Add(lbl);
+}
+
+void ModeSettings::TabSound() {
+    InitCommonSprites(2);
+    InitTabs(SettingsTab::SETTINGS_TAB_SOUND);
+
+    auto * lbl = new pText(I18n::get("settings_volume"), FONT_PRIMARY_BIG, 413, 108,
+                           Skins::get_options().FontColor_SettingsLabel);
+    mSpriteManager.Add(lbl);
+
+    mUIElementsManager.CreateValueSlider(413, 130+41, I18n::get("settings_volume_hitsounds"), "volume_hitsounds");
+    mUIElementsManager.CreateValueSlider(413, 197+18, I18n::get("settings_volume_music"), "volume_music");
+    mUIElementsManager.CreateValueSlider(413, 241+18, I18n::get("settings_volume_menumusic"), "volume_menumusic");
+    mUIElementsManager.CreateValueSlider(413, 285+18, I18n::get("settings_volume_uisounds"), "volume_uisounds");
 }
 
 void ModeSettings::Update() {
     switch (ModeSettings::SwitchTabTo) {
-        case 1:
+        case SETTINGS_TAB_GENERAL:
             TabGeneral();
-            SwitchTabTo = 0;
             break;
-        case 2:
+        case SETTINGS_TAB_GAMEPLAY:
             TabGameplay();
-            SwitchTabTo = 0;
+            break;
+        case SETTINGS_TAB_SOUND:
+            TabSound();
             break;
         default:
             break;
     }
+    SwitchTabTo = SETTINGS_TAB_UNSET;
 
     mSpriteManager.Draw();
-    mLogo->Update();
+    mUIElementsManager.Update();
 }
 
 void ModeSettings::Clear() {
     mSpriteManager.Clear();
-    for (auto v : valueSliders) {
-        delete v;
-    }
-    valueSliders.clear();
-
-    for (auto v : stringSelectors) {
-        delete v;
-    }
-    stringSelectors.clear();
-
-    for (auto v : radioButtons) {
-        delete v;
-    }
-    radioButtons.clear();
-
-    for (auto v : ternaryButtons) {
-        delete v;
-    }
-    ternaryButtons.clear();
-
-    delete mLogo;
+    mUIElementsManager.Clear();
 }
 
 void ModeSettings::HandleInput() {
-    touchPosition touch = InputHelper::TouchRead();
-
-    for(auto v : valueSliders) {
-        if (InputHelper::KeyDown(Control::IH_CONTROL_ACTION) && v->InBounds(touch.px, touch.py)) {
-            v->OnTouchDown(touch);
-            return;
-        }
-        if (InputHelper::KeyHeld(Control::IH_CONTROL_ACTION)) {
-            if (v->OnTouch(touch))
-                return;
-        }
-
-        if (InputHelper::KeyUp(Control::IH_CONTROL_ACTION)) {
-            if (v->OnTouchUp(touch))
-                return;
-        }
-    }
-
-    for(auto v : stringSelectors) {
-        if (InputHelper::KeyDown(Control::IH_CONTROL_ACTION) && v->InBounds(touch.px, touch.py)) {
-            v->OnTouchDown(touch);
-            return;
-        }
-
-        if (InputHelper::KeyHeld(Control::IH_CONTROL_ACTION)) {
-            if (v->OnTouch(touch))
-                return;
-        }
-
-        if (InputHelper::KeyUp(Control::IH_CONTROL_ACTION) && v->InBounds(touch.px, touch.py)) {
-            if (v->OnTouchUp(touch))
-                return;
-        }
-    }
-
-    for(auto v : radioButtons) {
-        if (InputHelper::KeyDown(Control::IH_CONTROL_ACTION) && v->InBounds(touch.px, touch.py)) {
-            v->OnTouchDown(touch);
-            return;
-        }
-
-        if (InputHelper::KeyUp(Control::IH_CONTROL_ACTION) && v->InBounds(touch.px, touch.py)) {
-            if (v->OnTouchUp(touch))
-                return;
-        }
-    }
-
-    for(auto v : ternaryButtons) {
-        if (InputHelper::KeyDown(Control::IH_CONTROL_ACTION) && v->InBounds(touch.px, touch.py)) {
-            v->OnTouchDown(touch);
-            return;
-        }
-
-        if (InputHelper::KeyUp(Control::IH_CONTROL_ACTION) && v->InBounds(touch.px, touch.py)) {
-            if (v->OnTouchUp(touch))
-                return;
-        }
-    }
+    mUIElementsManager.HandleInput();
 }
 
 ModeSettings::~ModeSettings() {
