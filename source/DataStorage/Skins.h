@@ -799,6 +799,12 @@ class Skins
                     case FONT_PRIMARY_SMALL_BOLD:
                     case FONT_PRIMARY_SMALLER_BOLD:
                         filename = "primary-bold.ttf";
+
+                        // Fallback for legacy skin support
+                        if (!file_exists(path + "primary-bold.ttf") && !file_exists(path_default + "primary-bold.ttf")) {
+                            filename = "sans-bold.ttf";
+                        }
+
                         break;
                     case FONT_SCORE:
                         if (file_exists(path + "score.ttf")) {

@@ -114,6 +114,7 @@ if (BUILDTARGET STREQUAL "vita")
             SceAudio_stub
             SceSysmodule_stub
             SceGxm_stub
+            SceIme_stub
             SceCommonDialog_stub
             SceAppMgr_stub
             SceTouch_stub
@@ -148,7 +149,7 @@ endif()
 if (BUILDTARGET STREQUAL "vita")
     vita_create_self(eboot.bin ${PROJECT_NAME})
     vita_create_vpk(osu-octave.vpk "OSU000001" eboot.bin
-            VERSION "01.12"
+            VERSION "01.20"
             NAME "osu!octave"
             FILE livearea/icon0.png sce_sys/icon0.png
             FILE livearea/bg.png sce_sys/livearea/contents/bg.png

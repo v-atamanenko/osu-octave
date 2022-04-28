@@ -51,7 +51,7 @@ void ModeSettings::InitCommonSprites(int use_bg) {
     Clear();
 
     pDrawable* spr;
-    spr = new pSprite(TX_MENU_BG, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, 0);
+    spr = new pSprite(TX_MENU_BG, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.001);
     mSpriteManager.Add(spr);
 
     TextureType panelbg = TX_SETTINGS_PANEL;
@@ -60,7 +60,7 @@ void ModeSettings::InitCommonSprites(int use_bg) {
     } else if (use_bg == 2) {
         panelbg = TX_SETTINGS_PANEL_BG_2;
     }
-    spr = new pSprite(panelbg, 390, 86, 531, 413, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, 0);
+    spr = new pSprite(panelbg, 390, 86, 531, 413, ORIGIN_TOPLEFT, FIELD_SCREEN, SDL_Color(), 255, -0.002);
     mSpriteManager.Add(spr);
 
     mUIElementsManager.CreateLogo(176, 145);
