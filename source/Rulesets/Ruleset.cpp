@@ -331,8 +331,8 @@ bool Ruleset::Update() {
 
     TextManager::SetFont(FONT_SCORE);
     TextManager::PrintLocateColor(940, 10, ORIGIN_TOPRIGHT, Skins::get_options().FontColor_CurrentScore, "  %08u", mCurrentScore.CurrentScore());
-    TextManager::PrintLocateColor(910, 44, ORIGIN_TOPRIGHT, Skins::get_options().FontColor_CurrentAccuracy, "  %.2f%%", mCurrentScore.CountAccuracy());
-    TextManager::PrintLocateColor(20, 528, ORIGIN_BOTTOMLEFT, Skins::get_options().FontColor_CurrentCombo, "%ix   ", mCurrentScore.CurrentCombo());
+    TextManager::PrintLocateColor(910, 50, ORIGIN_TOPRIGHT, Skins::get_options().FontColor_CurrentAccuracy, "  %.2f%%", mCurrentScore.CountAccuracy());
+    TextManager::PrintLocateColor(20, SCREEN_HEIGHT-10, ORIGIN_BOTTOMLEFT, Skins::get_options().FontColor_CurrentCombo, "%ix   ", mCurrentScore.CurrentCombo());
 
     if(mLifebar.GetCurrentHP() == 0.f && now > BeatmapManager::Current().SkipTime()) {
         return false; // Premature game over, HP is 0

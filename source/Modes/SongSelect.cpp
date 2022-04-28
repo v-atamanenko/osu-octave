@@ -476,13 +476,13 @@ void SongSelect::UpdateSonglist(bool initial)
 
             char highscoreScore_text[32];
             sprintf(highscoreScore_text, "%i (%ix)", score.score, score.combo);
-            auto* highscoreScore = new pText(highscoreScore_text, FONT_PRIMARY_SMALL, 540, 204 + ((OOInt)i * 94) + extra_y_offset, font_color);
+            auto* highscoreScore = new pText(highscoreScore_text, FONT_PRIMARY_SMALL, 544, 204 + ((OOInt)i * 94) + extra_y_offset, font_color);
             highscoreScore->Z = -0.06f;
             auto* highscoreAccuracyTitle = new pText(I18n::get("accuracy"), FONT_PRIMARY_SMALL_BOLD, 494, 222 + ((OOInt)i * 94) + extra_y_offset, font_color);
             highscoreAccuracyTitle->Z = -0.06f;
             char highscoreAccuracy_text[32];
             sprintf(highscoreAccuracy_text, "%.3f%%", score.accuracy);
-            auto* highscoreAccuracy = new pText(highscoreAccuracy_text, FONT_PRIMARY_SMALL, 563, 222 + ((OOInt)i * 94) + extra_y_offset, font_color);
+            auto* highscoreAccuracy = new pText(highscoreAccuracy_text, FONT_PRIMARY_SMALL, 570, 222 + ((OOInt)i * 94) + extra_y_offset, font_color);
             highscoreAccuracy->Z = -0.06f;
 
             mSpriteManager->Add(mapTitle);
