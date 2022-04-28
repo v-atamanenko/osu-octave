@@ -48,7 +48,11 @@ typedef struct Skin {
     SDL_Color FontColor_MenuButtonActive = {255,255,255,255};
     SDL_Color FontColor_SettingsLabel = {67,19,115,255};
     SDL_Color FontColor_SettingsLabelActive = {255,255,255,255};
+    SDL_Color FontColor_SettingsLabelNotice = {153,147,158,255};
     SDL_Color FontColor_EndGameScore = {67,19,115,255};
+    SDL_Color FontColor_CurrentScore = {255,255,255,255};
+    SDL_Color FontColor_CurrentCombo = {255,255,255,255};
+    SDL_Color FontColor_CurrentAccuracy = {255,255,255,255};
 
     bool ShowSliderEndCircle = true;
 } Skin;
@@ -87,6 +91,10 @@ inline void to_json(json& j, const Skin s) {
         {"FontColor_SettingsLabel", {s.FontColor_SettingsLabel.r, s.FontColor_SettingsLabel.g, s.FontColor_SettingsLabel.b, s.FontColor_SettingsLabel.a}},
         {"FontColor_SettingsLabelActive", {s.FontColor_SettingsLabelActive.r, s.FontColor_SettingsLabelActive.g, s.FontColor_SettingsLabelActive.b, s.FontColor_SettingsLabelActive.a}},
         {"FontColor_EndGameScore", {s.FontColor_EndGameScore.r, s.FontColor_EndGameScore.g, s.FontColor_EndGameScore.b, s.FontColor_EndGameScore.a}},
+        {"FontColor_CurrentScore", {s.FontColor_CurrentScore.r, s.FontColor_CurrentScore.g, s.FontColor_CurrentScore.b, s.FontColor_CurrentScore.a}},
+        {"FontColor_CurrentCombo", {s.FontColor_CurrentCombo.r, s.FontColor_CurrentCombo.g, s.FontColor_CurrentCombo.b, s.FontColor_CurrentCombo.a}},
+        {"FontColor_CurrentAccuracy", {s.FontColor_CurrentAccuracy.r, s.FontColor_CurrentAccuracy.g, s.FontColor_CurrentAccuracy.b, s.FontColor_CurrentAccuracy.a}},
+        {"FontColor_SettingsLabelNotice", {s.FontColor_SettingsLabelNotice.r, s.FontColor_SettingsLabelNotice.g, s.FontColor_SettingsLabelNotice.b, s.FontColor_SettingsLabelNotice.a}},
 
         {"ShowSliderEndCircle", s.ShowSliderEndCircle}
     };
@@ -119,6 +127,9 @@ inline void from_json(const json& j, Skin& s) {
     s.FontColor_SettingsLabel = arr_to_clr(j, "FontColor_SettingsLabel");
     s.FontColor_SettingsLabelActive = arr_to_clr(j, "FontColor_SettingsLabelActive");
     s.FontColor_EndGameScore = arr_to_clr(j, "FontColor_EndGameScore");
+    s.FontColor_CurrentScore = arr_to_clr(j, "FontColor_SettingsLabel");
+    s.FontColor_CurrentCombo = arr_to_clr(j, "FontColor_SettingsLabelActive");
+    s.FontColor_CurrentAccuracy = arr_to_clr(j, "FontColor_EndGameScore");
 
     j.at("ShowSliderEndCircle").get_to(s.ShowSliderEndCircle);
 }
