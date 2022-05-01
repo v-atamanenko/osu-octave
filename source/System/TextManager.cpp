@@ -5,13 +5,11 @@ std::map<std::string, InMemoryFont> TextManager::mTTF;
 FontName TextManager::currentFont;
 
 void TextManager::Init() {
-    std::string path = std::string(DEF_DataDirectory) + std::string(DEF_SkinsSubdirectory) + Settings::get_str("skin") + "/fonts/";
     AddFont(FONT_PRIMARY, Skins::get_res_path(FONT_PRIMARY), 20, SDL_Color({67, 19, 115, 255}));
     currentFont = FONT_PRIMARY;
 }
 
 void TextManager::InitDeferred() {
-    std::string path = std::string(DEF_DataDirectory) + std::string(DEF_SkinsSubdirectory) + Settings::get_str("skin") + "/fonts/";
     AddFont(FONT_PRIMARY_BOLD, Skins::get_res_path(FONT_PRIMARY_BOLD), 20, SDL_Color({67, 19, 115, 255}));
     AddFont(FONT_PRIMARY_BIG, Skins::get_res_path(FONT_PRIMARY_BIG), 28, SDL_Color({67, 19, 115, 255}));
     AddFont(FONT_PRIMARY_SMALLER, Skins::get_res_path(FONT_PRIMARY_SMALLER), 16);
@@ -20,6 +18,24 @@ void TextManager::InitDeferred() {
     AddFont(FONT_PRIMARY_SMALL_BOLD, Skins::get_res_path(FONT_PRIMARY_SMALL_BOLD), 14);
     AddFont(FONT_SCORE, Skins::get_res_path(FONT_SCORE), 36, SDL_Color({250, 245, 239, 255}));
     AddFont(FONT_NUMBERING, Skins::get_res_path(FONT_NUMBERING), 60, SDL_Color({67, 19, 155, 255}));
+}
+
+void TextManager::FullReload() {
+    Skins::init_skin();
+
+    for (int i = 0; i < NUMBER_OF_FONTS; i++) {
+        if (mFonts[i] == nullptr) {
+            continue;
+        }
+
+        FC_ClearFont(mFonts[i]);
+    }
+
+    // No need to free buffers inside, FC_ClearFont does that
+    mTTF.clear();
+
+    Init();
+    InitDeferred();
 }
 
 void TextManager::AddFont(FontName font, const std::string& path, int ptsize, SDL_Color c) {

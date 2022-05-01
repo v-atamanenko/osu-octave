@@ -781,6 +781,7 @@ class Skins
                     "/fonts/";
             std::string path_default =
                     std::string(DEF_DataDirectory) + std::string(DEF_SkinsSubdirectory) + "default" + "/fonts/";
+            std::string lang = Settings::get_str("language");
 
             for (FontName fn: fontNamesIterator()) {
                 std::string filename;
@@ -794,11 +795,18 @@ class Skins
                     case FONT_PRIMARY_SMALLER:
                     case FONT_PRIMARY_BIG:
                         filename = "primary.ttf";
+                        if (lang == "Chinese") {
+                            filename = "primary_chinese.ttf";
+                        }
                         break;
                     case FONT_PRIMARY_BOLD:
                     case FONT_PRIMARY_SMALL_BOLD:
                     case FONT_PRIMARY_SMALLER_BOLD:
                         filename = "primary-bold.ttf";
+
+                        if (lang == "Chinese") {
+                            filename = "primary_chinese.ttf";
+                        }
 
                         // Fallback for legacy skin support
                         if (!file_exists(path + "primary-bold.ttf") && !file_exists(path_default + "primary-bold.ttf")) {
@@ -815,6 +823,9 @@ class Skins
                         break;
                     default:
                         filename = "primary.ttf";
+                        if (lang == "Chinese") {
+                            filename = "primary_chinese.ttf";
+                        }
                         break;
                 }
 

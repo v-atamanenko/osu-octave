@@ -8,6 +8,8 @@
 
 #include "DataStorage/I18n.h"
 
+#include "Modes/ModeSettings.h"
+
 void TernaryButton_saveDisplayedValue (uint8_t val, const std::string& setting_name);
 void RadioButton_saveDisplayedValue (bool val, const std::string& setting_name);
 void StringSelector_saveDisplayedValue (const std::string& val, const std::string& setting_name);
@@ -194,6 +196,7 @@ void ValueSlider_saveDisplayedValue (OOFloat val, const std::string& setting_nam
 }
 
 void StringSelector_saveDisplayedValue (const std::string& val, const std::string& setting_name) {
+    std::string val_old = Settings::get_str(setting_name);
     Settings::set_str(setting_name, val);
 
     if (setting_name == "skin") {
@@ -203,7 +206,15 @@ void StringSelector_saveDisplayedValue (const std::string& val, const std::strin
 
     if (setting_name == "language") {
         I18n::load();
+
+        // Chinese language uses its own font, so we force font reload here
+        if (val_old == "Chinese" || val == "Chinese") {
+            TextManager::FullReload();
+        }
     }
+
+    // FIXME: This is very hacky way to force redraw settings
+    ModeSettings::SwitchTabTo = SETTINGS_TAB_GENERAL;
 }
 
 void RadioButton_saveDisplayedValue (bool val, const std::string& setting_name) {

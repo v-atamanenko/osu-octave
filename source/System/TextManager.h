@@ -25,6 +25,7 @@ class TextManager
 	public:
         static void Init();
         static void InitDeferred();
+        static void FullReload();
         static void SetFont(FontName font);
 
         static void PrintLocateColor(OOInt x, OOInt y, DrawOrigin origin, SDL_Color clr, const char *fmt, ...);
